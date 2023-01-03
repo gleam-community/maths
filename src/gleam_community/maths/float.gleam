@@ -19,11 +19,42 @@
 ////    .katex { font-size: 1.1em; }
 ////</style>
 ////
-//// A module containing several different kinds of mathematical functions and constants.
+//// A module containing several different kinds of mathematical constants and 
+//// functions applying to real numbers.
 ////
+//// Function naming has been adopted from <a href="https://en.wikipedia.org/wiki/C_mathematical_functions"> C mathematical function</a>.
+//// 
 //// ---
 ////
-//// * **Standard mathematical functions**
+//// * **Rounding functions**
+////   * [`ceiling`](#ceiling)
+////   * [`floor`](#floor)
+////   * [`truncate`](#truncate)
+////   * [`round`](#round)
+//// * **Division functions**
+////   * [`gcd`](#gcd)
+////   * [`lcm`](#lcm)
+//// * **Sign and absolute value functions**
+////   * [`abs2`](#abs2)
+////   * [`absdiff`](#abs_diff)
+////   * [`sign`](#sign)
+////   * [`flipsign`](#flipsign)
+////   * [`copysign`](#copysign)
+//// * **Powers, logs and roots**
+////   * [`exp`](#exp)
+////   * [`log`](#log)
+////   * [`log10`](#log10)
+////   * [`log2`](#log2)
+////   * [`pow`](#pow)
+////
+////   * [`isqrt`](#isqrt)
+////   * [`icbrt`](#icbrt)
+////
+////   * [`sqrt`](#sqrt)
+////   * [`cbrt`](#cbrt)
+////   * [`nthrt`](#nthrt)
+////   * [`hypot`](#hypot)
+//// * **Trigonometric and hyperbolic functions**
 ////   * [`acos`](#acos)
 ////   * [`acosh`](#acosh)
 ////   * [`asin`](#asin)
@@ -31,39 +62,37 @@
 ////   * [`atan`](#atan)
 ////   * [`atan2`](#atan2)
 ////   * [`atanh`](#atanh)
-////   * [`ceil`](#ceil)
 ////   * [`cos`](#cos)
 ////   * [`cosh`](#cosh)
-////   * [`exp`](#exp)
-////   * [`floor`](#floor)
-////   * [`log`](#log)
-////   * [`log10`](#log10)
-////   * [`log2`](#log2)
-////   * [`pow`](#pow)
-////   * [`sign`](#sign)
 ////   * [`sin`](#sin)
 ////   * [`sinh`](#sinh)
 ////   * [`tan`](#tan)
 ////   * [`tanh`](#tanh)
-////   * [`to_degrees`](#to_degrees)
-////   * [`to_radians`](#to_radians)
+////   * [`deg2rad`](#deg2rad)
+////   * [`rad2deg`](#rad2deg)
+//// * **Mathematical functions**
+////   * [`min`](#min)
+////   * [`max`](#max)
+////   * [`minmax`](#minmax)
 //// * **Special mathematical functions**
 ////   * [`beta`](#beta)
 ////   * [`erf`](#erf)
 ////   * [`gamma`](#gamma)
 ////   * [`gammainc`](#gammainc)
-////   * [`round`](#round)
-//// * **Combinatorial functions**
-////   * [`combination`](#combination)
-////   * [`factorial`](#factorial)
-////   * [`permutation`](#permutation)
 //// * **Mathematical constants**
 ////   * [`pi`](#pi)
 ////   * [`tau`](#tau)
+//// * **Tests**
+////   * [`ispow2`](#ispow2)
+////   * [`isclose`](#isclose)
+////   * [`iseven`](#iseven)
+////   * [`isodd`](#isodd)
 
 import gleam/list
 import gleam/int
 import gleam/float
+import gleam/option
+import gleam/io
 
 /// <div style="text-align: right;">
 ///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
@@ -85,16 +114,16 @@ import gleam/float
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_stats/math
+///     import gleam_community/maths/float as floatx
 ///
 ///     pub fn example() {
-///       math.acos(1.0)
+///       floatx.acos(1.0)
 ///       |> should.equal(Ok(0.0))
 ///
-///       math.acos(1.1)
+///       floatx.acos(1.1)
 ///       |> should.be_error()
 ///
-///       math.acos(-1.1)
+///       floatx.acos(-1.1)
 ///       |> should.be_error()
 ///     }
 /// </details>
@@ -146,13 +175,13 @@ if javascript {
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_stats/math
+///     import gleam_community/maths/float as floatx
 ///
 ///     pub fn example() {
-///       math.acosh(1.0)
+///       floatx.acosh(1.0)
 ///       |> should.equal(Ok(0.0))
 ///
-///       math.acosh(0.0)
+///       floatx.acosh(0.0)
 ///       |> should.be_error()
 ///     }
 /// </details>
@@ -462,49 +491,6 @@ if javascript {
 ///     </a>
 /// </div>
 ///
-/// The ceiling function.
-///
-/// <details>
-///     <summary>Example:</summary>
-///
-///     import gleeunit/should
-///     import gleam_stats/math
-///
-///     pub fn example() {
-///       math.ceil(0.2)
-///       |> should.equal(1.0)
-///
-///       math.ceil(0.8)
-///       |> should.equal(1.0)
-///     }
-/// </details>
-///
-/// <div style="text-align: right;">
-///     <a href="#">
-///         <small>Back to top ↑</small>
-///     </a>
-/// </div>
-///
-pub fn ceil(x: Float) -> Float {
-  do_ceil(x)
-}
-
-if erlang {
-  external fn do_ceil(Float) -> Float =
-    "math" "ceil"
-}
-
-if javascript {
-  external fn do_ceil(Float) -> Float =
-    "../math.mjs" "ceil"
-}
-
-/// <div style="text-align: right;">
-///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
-///         <small>Spot a typo? Open an issue!</small>
-///     </a>
-/// </div>
-///
 /// The cosine function:
 ///
 /// \\[
@@ -649,49 +635,6 @@ if javascript {
 ///     </a>
 /// </div>
 ///
-/// The floor function.
-///
-/// <details>
-///     <summary>Example:</summary>
-///
-///     import gleeunit/should
-///     import gleam_stats/math
-///
-///     pub fn example() {
-///       math.floor(0.2)
-///       |> should.equal(0.0)
-///
-///       math.floor(0.8)
-///       |> should.equal(0.0)
-///     }
-/// </details>
-///
-/// <div style="text-align: right;">
-///     <a href="#">
-///         <small>Back to top ↑</small>
-///     </a>
-/// </div>
-///
-pub fn floor(x: Float) -> Float {
-  do_floor(x)
-}
-
-if erlang {
-  external fn do_floor(Float) -> Float =
-    "math" "floor"
-}
-
-if javascript {
-  external fn do_floor(Float) -> Float =
-    "../math.mjs" "floor"
-}
-
-/// <div style="text-align: right;">
-///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
-///         <small>Spot a typo? Open an issue!</small>
-///     </a>
-/// </div>
-///
 /// The natural logarithm function:
 ///
 /// \\[
@@ -727,7 +670,43 @@ if javascript {
 ///     </a>
 /// </div>
 ///
-pub fn log(x: Float) -> Result(Float, String) {
+pub fn log(x: Float, base: option.Option) -> Result(Float, String) {
+  case x >. 0.0 {
+    True -> {
+      case base {
+        option.Some(a) -> {
+          case a >. 0.0 && a != 1.0 {
+            True -> {
+              // Apply the change of base formula
+              assert Ok(numerator) = log10(x)
+              assert Ok(denominator) = log10(b)
+              numerator /. denominator
+              |> Ok
+            }
+            False ->
+              "Invalid input argument: base <= 0 or base == 1. Valid input is base > 0 and base != 1."
+              |> Error
+          }
+          case 
+        }
+        _ -> {
+          "Invalid input argument: x <= 0. Valid input is x > 0."
+          |> Error
+        }
+      }
+    }
+  }
+  // case x >. 0.0 {
+  //   True ->
+  //     do_log(x)
+  //     |> Ok
+  //   False ->
+  //     "Invalid input argument: x <= 0. Valid input is x > 0."
+  //     |> Error
+  // }
+}
+
+pub fn ln(x: Float) -> Result(Float, String) {
   case x >. 0.0 {
     True ->
       do_log(x)
@@ -870,6 +849,67 @@ if javascript {
     "../math.mjs" "log2"
 }
 
+// pub fn logb(x: Float, b: Float) -> Result(Float, String) {
+//   case x >. 0.0 {
+//     True ->
+//       case b >. 0.0 && b != 1.0 {
+//         True -> {
+//           // Apply the change of base formula
+//           assert Ok(numerator) = log10(x)
+//           assert Ok(denominator) = log10(b)
+//           numerator /. denominator
+//           |> Ok
+//         }
+//         False ->
+//           "Invalid input argument: b <= 0 or b == 1. Valid input is b > 0 and b != 1."
+//           |> Error
+//       }
+//     False ->
+//       "Invalid input argument: x <= 0. Valid input is x > 0."
+//       |> Error
+//   }
+// }
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// The The base-2 logarithm function:
+///
+/// \\[
+/// \forall x \in \(0, \infty),   \\; \log_{2}{(x)} = y \in \(-\infty, +\infty\)
+/// \\]
+///
+/// The function takes a number $$x$$ in its domain $$\(0, \infty\)$$ as input and returns
+/// a numeric value $$y$$ that lies in the range $$\(-\infty, \infty\)$$.
+/// If the input value is outside the domain of the function an error is returned.
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_stats/math
+///
+///     pub fn example () {
+///       math.log2(1.0)
+///       |> should.equal(Ok(0.0))
+///
+///       math.log2(2.0)
+///       |> should.equal(Ok(1.0))
+///
+///       math.log2(-1.0)
+///       |> should.be_error()
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
 /// <div style="text-align: right;">
 ///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
 ///         <small>Spot a typo? Open an issue!</small>
@@ -944,8 +984,29 @@ if javascript {
 ///     </a>
 /// </div>
 ///
-/// The sign function which returns the sign of the input, indicating
-/// whether it is positive, negative, or zero.
+/// The square root function: $$y = \sqrt[2]{x} = x^{\frac{1}{2}}$$.
+///
+/// Note that the function is not defined if:
+/// 1. The base is negative ($$x < 0$$). An error will be returned
+///    as an imaginary number will otherwise have to be returned.
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_stats/math
+///
+///     pub fn example() {
+///       math.sqrt(1.0)
+///       |> should.equal(1.0)
+///
+///       math.sqrt(4.0)
+///       |> should.equal(2.0)
+///
+///       math.sqrt(-1.0)
+///       |> should.be_error()
+///     }
+/// </details>
 ///
 /// <div style="text-align: right;">
 ///     <a href="#">
@@ -953,26 +1014,124 @@ if javascript {
 ///     </a>
 /// </div>
 ///
-pub fn sign(x: Float) -> Float {
-  do_sign(x)
-}
-
-if erlang {
-  fn do_sign(x: Float) -> Float {
-    case x <. 0.0 {
-      True -> -1.0
-      False ->
-        case x == 0.0 {
-          True -> 0.0
-          False -> 1.0
-        }
+pub fn sqrt(x: Float) -> Result(Float, String) {
+  // In the following check:
+  // 1. If x is negative then return an error as it will otherwise be an 
+  // imaginary number
+  case x <. 0.0 {
+    True ->
+      "Invalid input argument: x < 0."
+      |> Error
+    False -> {
+      assert Ok(result) = pow(x, 1.0 /. 2.0)
+      result
+      |> Ok
     }
   }
 }
 
-if javascript {
-  external fn do_sign(Float) -> Float =
-    "../math.mjs" "sign"
+/// <div style="text-align: right;">
+///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// The cube root function: $$y = \sqrt[3]{x} = x^{\frac{1}{3}}$$.
+///
+/// Note that the function is not defined if:
+/// 1. The base is negative ($$x < 0$$). An error will be returned
+///    as an imaginary number will otherwise have to be returned.
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_stats/math
+///
+///     pub fn example() {
+///       math.cbrt(1.0)
+///       |> should.equal(1.0)
+///
+///       math.cbrt(27.0)
+///       |> should.equal(3.0)
+///
+///       math.cbrt(-1.0)
+///       |> should.be_error()
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn cbrt(x: Float) -> Result(Float, String) {
+  // In the following check:
+  // 1. If x is negative then return an error as it will otherwise be an 
+  // imaginary number
+  case x <. 0.0 {
+    True ->
+      "Invalid input argument: x < 0."
+      |> Error
+    False -> {
+      assert Ok(result) = pow(x, 1.0 /. 3.0)
+      result
+      |> Ok
+    }
+  }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// A function to compute the hypotenuse of a right-angled triangle: $$\sqrt[2](x^2 + y^2)$$.
+///
+/// The function can also be used to calculate the Euclidean distance in 2 dimensions. 
+///
+/// Naive (unfused) and corrected (unfused) in [https://arxiv.org/pdf/1904.09481.pdf]("An Improved Algorithm for Hypot(A, B)" by Borges, C. F)
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_stats/math
+///
+///     pub fn example() {
+///
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn hypot(x: Float, y: Float, corrected: option.Option(Bool)) -> Float {
+  assert Ok(term1) = pow(x, 2.0)
+  assert Ok(term2) = pow(y, 2.0)
+  assert Ok(h) = sqrt(term1 +. term2)
+  case corrected {
+    option.Some(True) -> {
+      let ax = float.absolute_value(x)
+      let ay = float.absolute_value(y)
+      case ay >. ax {
+        True -> {
+
+        }
+        False -> {
+
+        }
+      }
+    }
+    _ -> {
+      h
+    }
+  }
 }
 
 /// <div style="text-align: right;">
@@ -1191,10 +1350,10 @@ if javascript {
 ///     import gleam_stats/math
 ///
 ///     pub fn example() {
-///       math.to_degrees(0.0)
+///       math.rad2deg(0.0)
 ///       |> should.equal(0.0)
 ///
-///       math.to_degrees(2 *. pi())
+///       math.rad2deg(2. *. pi())
 ///       |> should.equal(360.)
 ///     }
 /// </details>
@@ -1205,7 +1364,7 @@ if javascript {
 ///     </a>
 /// </div>
 ///
-pub fn to_degrees(x: Float) -> Float {
+pub fn rad2deg(x: Float) -> Float {
   x *. 180.0 /. pi()
 }
 
@@ -1225,7 +1384,85 @@ pub fn to_degrees(x: Float) -> Float {
 ///     import gleam_stats/math
 ///
 ///     pub fn example() {
-///       math.sin(0.0)
+///       math.deg2rad(360.)
+///       |> should.equal(2. *. pi())
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn deg2rad(x: Float) -> Float {
+  x *. pi() /. 180.0
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// The ceiling function that rounds given input $$x \in \mathbb{R}$$ towards $$+\infty$$. 
+/// ceil(x) returns the nearest integral value of the same type as x that is greater than or equal to x.
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_stats/math
+///
+///     pub fn example() {
+///       math.ceil(0.2)
+///       |> should.equal(1.0)
+///
+///       math.ceil(0.8)
+///       |> should.equal(1.0)
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn ceil(x: Float) -> Float {
+  do_ceil(x)
+}
+
+if erlang {
+  external fn do_ceil(Float) -> Float =
+    "math" "ceil"
+}
+
+if javascript {
+  external fn do_ceil(Float) -> Float =
+    "../math.mjs" "ceil"
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// The floor function that rounds given input $$x \in \mathbb{R}$$ towards $$-\infty$$. 
+/// floor(x) returns the nearest integral value of the same type as x that is less than or equal to x.
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_stats/math
+///
+///     pub fn example() {
+///       math.floor(0.2)
+///       |> should.equal(0.0)
+///
+///       math.floor(0.8)
 ///       |> should.equal(0.0)
 ///     }
 /// </details>
@@ -1236,8 +1473,399 @@ pub fn to_degrees(x: Float) -> Float {
 ///     </a>
 /// </div>
 ///
-pub fn to_radians(x: Float) -> Float {
-  x *. pi() /. 180.0
+pub fn floor(x: Float) -> Float {
+  do_floor(x)
+}
+
+if erlang {
+  external fn do_floor(Float) -> Float =
+    "math" "floor"
+}
+
+if javascript {
+  external fn do_floor(Float) -> Float =
+    "../math.mjs" "floor"
+}
+
+fn to_int(x: Float) -> Int {
+  do_to_int(x)
+}
+
+if erlang {
+  external fn do_to_int(Float) -> Int =
+    "erlang" "trunc"
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// The function rounds a floating point number to a specific decimal precision.
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_stats/math
+///
+///     pub fn example() {
+///       math.round(0.4444, 2)
+///       |> should.equal(0.44)
+///
+///       math.round(0.4445, 2)
+///       |> should.equal(0.44)
+///
+///       math.round(0.4455, 2)
+///       |> should.equal(0.45)
+///
+///       math.round(0.4555, 2)
+///       |> should.equal(0.46)
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn round(
+  x: Float,
+  digits: option.Option(Int),
+  mode: option.Option(String),
+) -> Result(Float, String) {
+  case digits {
+    option.Some(a) ->
+      case mode {
+        option.Some("Nearest") -> {
+          let positive = x >. 0.0
+          // let geq_tie =
+          //   float.absolute_value(x) -. float.absolute_value(truncate(x)) >=. 0.5
+          let xabs = float.absolute_value(x)
+          let geq_tie = xabs -. truncate(xabs) >=. 0.5
+          assert Ok(is_even) = int.modulo(to_int(xabs), 2)
+          io.debug(is_even)
+          case geq_tie {
+            True ->
+              case is_even == 0 {
+                True -> {
+                  assert Ok(p) = pow(10.0, int.to_float(a))
+                  sign(x) *. truncate({ xabs +. 0.0 } *. p) /. p
+                  |> Ok
+                }
+                False -> {
+                  assert Ok(p) = pow(10.0, int.to_float(a))
+                  sign(x) *. truncate({ xabs +. 1.0 } *. p) /. p
+                  |> Ok
+                }
+              }
+            False -> {
+              assert Ok(p) = pow(10.0, int.to_float(a))
+              sign(x) *. truncate({ xabs +. 0.0 } *. p) /. p
+              |> Ok
+            }
+          }
+        }
+        option.Some("TiesAway") -> {
+          let positive = x >. 0.0
+          let xabs = float.absolute_value(x)
+          let g_tie = xabs -. truncate(xabs) >=. 0.5
+          io.debug(xabs -. truncate(xabs))
+          //   assert Ok(p) = pow(10.0, int.to_float(a))
+          //   sign(x) *. truncate({ float.absolute_value(x) +. 1.0 } *. p) /. p
+          //   |> Ok
+          case g_tie {
+            True -> {
+              assert Ok(p) = pow(10.0, int.to_float(a))
+              sign(x) *. truncate({ xabs +. 1.0 } *. p) /. p
+              |> Ok
+            }
+            False -> {
+              assert Ok(p) = pow(10.0, int.to_float(a))
+              truncate(x *. p) /. p
+              |> Ok
+            }
+          }
+        }
+        // assert Ok(p) = pow(10.0, int.to_float(a))
+        // sign(x) *. truncate({ float.absolute_value(x) +. 1.0 } *. p) /. p
+        // |> Ok
+        // Round towards positive infinity
+        option.Some("TiesUp") -> {
+          let positive = x >. 0.0
+          // let geq_tie =
+          //   float.absolute_value(x) -. float.absolute_value(truncate(x)) >=. 0.5
+          let xabs = float.absolute_value(x)
+          let geq_tie = xabs -. truncate(xabs) >=. 0.5
+          case geq_tie {
+            True ->
+              case positive {
+                True -> {
+                  assert Ok(p) = pow(10.0, int.to_float(a))
+                  sign(x) *. truncate({ xabs +. 1.0 } *. p) /. p
+                  |> Ok
+                }
+                False -> {
+                  assert Ok(p) = pow(10.0, int.to_float(a))
+                  sign(x) *. truncate({ xabs +. 0.0 } *. p) /. p
+                  |> Ok
+                }
+              }
+            False ->
+              case positive {
+                True -> {
+                  assert Ok(p) = pow(10.0, int.to_float(a))
+                  sign(x) *. truncate({ xabs +. 0.0 } *. p) /. p
+                  |> Ok
+                }
+                False -> {
+                  assert Ok(p) = pow(10.0, int.to_float(a))
+                  sign(x) *. truncate({ xabs +. 0.0 } *. p) /. p
+                  |> Ok
+                }
+              }
+          }
+        }
+        option.Some("ToZero") -> {
+          assert Ok(p) = pow(10.0, int.to_float(a))
+          truncate(x *. p) /. p
+          |> Ok
+        }
+        option.Some("Down") -> {
+          assert Ok(p) = pow(10.0, int.to_float(a))
+          floor(x *. p) /. p
+          |> Ok
+        }
+        option.Some("Up") -> {
+          assert Ok(p) = pow(10.0, int.to_float(a))
+          ceil(x *. p) /. p
+          |> Ok
+        }
+        _ ->
+          "Invalid Rounding Mode!"
+          |> Error
+      }
+    _ ->
+      "Invalid!"
+      |> Error
+  }
+  // assert Ok(p) = pow(10.0, int.to_float(digits))
+  // int.to_float(float.round(x *. p)) /. p
+}
+
+pub fn truncate(x: Float) -> Float {
+  do_truncate(x)
+}
+
+if erlang {
+  external fn do_truncate(Float) -> Float =
+    "erlang" "trunc"
+}
+
+// pub fn round_to_nearest_ties_away(x: Float, digits: Int) -> Float {
+//   assert Ok(p) = pow(10.0, int.to_float(digits))
+//   int.to_float(float.round(x *. p)) /. p
+// }
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+///
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_stats/math
+///
+///     pub fn example() {
+///       math.round(0.4444, 2)
+///       |> should.equal(0.44)
+///
+///       math.round(0.4445, 2)
+///       |> should.equal(0.44)
+///
+///       math.round(0.4455, 2)
+///       |> should.equal(0.45)
+///
+///       math.round(0.4555, 2)
+///       |> should.equal(0.46)
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn trunc(x: Float, precision: Int) -> Float {
+  assert Ok(p) = pow(10.0, int.to_float(precision))
+  int.to_float(float.round(x *. p)) /. p
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// The min function.
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_stats/math
+///
+///     pub fn example() {
+///       math.min(2.0, 1.5)
+///       |> should.equal(1.5)
+///
+///       math.min(1.5, 2.0)
+///       |> should.equal(1.5)
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn min(x: Float, y: Float) -> Float {
+  case x <. y {
+    True -> x
+    False -> y
+  }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// The min function.
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_stats/math
+///
+///     pub fn example() {
+///       math.min(2.0, 1.5)
+///       |> should.equal(1.5)
+///
+///       math.min(1.5, 2.0)
+///       |> should.equal(1.5)
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn max(x: Float, y: Float) -> Float {
+  case x >. y {
+    True -> x
+    False -> y
+  }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// The minmax function.
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_stats/math
+///
+///     pub fn example() {
+///       math.minmax(2.0, 1.5)
+///       |> should.equal(#(1.5, 2.0))
+///
+///       math.minmax(1.5, 2.0)
+///       |> should.equal(#(1.5, 2.0))
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn minmax(x: Float, y: Float) -> #(Float, Float) {
+  #(min(x, y), max(x, y))
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// The sign function which returns the sign of the input, indicating
+/// whether it is positive, negative, or zero.
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn sign(x: Float) -> Float {
+  do_sign(x)
+}
+
+if erlang {
+  fn do_sign(x: Float) -> Float {
+    case x <. 0.0 {
+      True -> -1.0
+      False ->
+        case x == 0.0 {
+          True -> 0.0
+          False -> 1.0
+        }
+    }
+  }
+}
+
+if javascript {
+  external fn do_sign(Float) -> Float =
+    "../math.mjs" "sign"
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn flipsign(x: Float) -> Float {
+  -1.0 *. x
 }
 
 /// <div style="text-align: right;">
@@ -1402,253 +2030,6 @@ fn gammainc_sum(a: Float, x: Float, t: Float, s: Float, n: Float) -> Float {
 ///     </a>
 /// </div>
 ///
-/// The function rounds a floating point number to a specific decimal precision.
-///
-/// <details>
-///     <summary>Example:</summary>
-///
-///     import gleeunit/should
-///     import gleam_stats/math
-///
-///     pub fn example() {
-///       math.round(0.4444, 2)
-///       |> should.equal(0.44)
-///
-///       math.round(0.4445, 2)
-///       |> should.equal(0.44)
-///
-///       math.round(0.4455, 2)
-///       |> should.equal(0.45)
-///
-///       math.round(0.4555, 2)
-///       |> should.equal(0.46)
-///     }
-/// </details>
-///
-/// <div style="text-align: right;">
-///     <a href="#">
-///         <small>Back to top ↑</small>
-///     </a>
-/// </div>
-///
-pub fn round(x: Float, precision: Int) -> Float {
-  assert Ok(p) = pow(10.0, int.to_float(precision))
-  int.to_float(float.round(x *. p)) /. p
-}
-
-/// <div style="text-align: right;">
-///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
-///         <small>Spot a typo? Open an issue!</small>
-///     </a>
-/// </div>
-///
-/// A combinatorial function for computing the number of a $$k$$-combinations of $$n$$ elements:
-///
-/// \\[
-/// C(n, k) = \binom{n}{k} = \frac{n!}{k! (n-k)!}
-/// \\]
-/// Also known as "$$n$$ choose $$k$$" or the binomial coefficient.
-///
-/// The implementation uses the effecient iterative multiplicative formula for the computation.
-///
-/// <details>
-///     <summary>Example:</summary>
-///
-///     import gleeunit/should
-///     import gleam_stats/math
-///
-///     pub fn example() {
-///       // Invalid input gives an error
-///       // Error on: n = -1 < 0
-///       math.combination(-1, 1)
-///       |> should.be_error()
-///
-///       // Valid input returns a result
-///       math.combination(4, 0)
-///       |> should.equal(Ok(1))
-///
-///       math.combination(4, 4)
-///       |> should.equal(Ok(1))
-///
-///       math.combination(4, 2)
-///       |> should.equal(Ok(6))
-///     }
-/// </details>
-///
-/// <div style="text-align: right;">
-///     <a href="#">
-///         <small>Back to top ↑</small>
-///     </a>
-/// </div>
-///
-pub fn combination(n: Int, k: Int) -> Result(Int, String) {
-  case n < 0 {
-    True ->
-      "Invalid input argument: n < 0. Valid input is n > 0."
-      |> Error
-    False ->
-      case k < 0 || k > n {
-        True ->
-          0
-          |> Ok
-        False ->
-          case k == 0 || k == n {
-            True ->
-              1
-              |> Ok
-            False -> {
-              let min = case k < n - k {
-                True -> k
-                False -> n - k
-              }
-              list.range(1, min + 1)
-              |> list.fold(
-                1,
-                fn(acc: Int, x: Int) -> Int { acc * { n + 1 - x } / x },
-              )
-              |> Ok
-            }
-          }
-      }
-  }
-}
-
-/// <div style="text-align: right;">
-///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
-///         <small>Spot a typo? Open an issue!</small>
-///     </a>
-/// </div>
-///
-/// A combinatorial function for computing the total number of combinations of $$n$$
-/// elements, that is $$n!$$.
-///
-/// <details>
-///     <summary>Example:</summary>
-///
-///     import gleeunit/should
-///     import gleam_stats/math
-///
-///     pub fn example() {
-///       // Invalid input gives an error
-///       math.factorial(-1)
-///       |> should.be_error()
-///
-///       // Valid input returns a result
-///       math.factorial(0)
-///       |> should.equal(Ok(1))
-///       math.factorial(1)
-///       |> should.equal(Ok(1))
-///       math.factorial(2)
-///       |> should.equal(Ok(2))
-///       math.factorial(3)
-///       |> should.equal(Ok(6))
-///       math.factorial(4)
-///       |> should.equal(Ok(24))
-///     }
-/// </details>
-///
-/// <div style="text-align: right;">
-///     <a href="#">
-///         <small>Back to top ↑</small>
-///     </a>
-/// </div>
-///
-pub fn factorial(n) -> Result(Int, String) {
-  case n < 0 {
-    True ->
-      "Invalid input argument: n < 0. Valid input is n > 0."
-      |> Error
-    False ->
-      case n {
-        0 ->
-          1
-          |> Ok
-        1 ->
-          1
-          |> Ok
-        _ ->
-          list.range(1, n + 1)
-          |> list.fold(1, fn(acc: Int, x: Int) { acc * x })
-          |> Ok
-      }
-  }
-}
-
-/// <div style="text-align: right;">
-///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
-///         <small>Spot a typo? Open an issue!</small>
-///     </a>
-/// </div>
-///
-/// A combinatorial function for computing the number of $$k$$-permuations (without repetitions)
-/// of $$n$$ elements:
-///
-/// \\[
-/// P(n, k) = \frac{n!}{(n - k)!}
-/// \\]
-///
-/// <details>
-///     <summary>Example:</summary>
-///
-///     import gleeunit/should
-///     import gleam_stats/math
-///
-///     pub fn example() {
-///       // Invalid input gives an error
-///       // Error on: n = -1 < 0
-///       math.permutation(-1, 1)
-///       |> should.be_error()
-///
-///       // Valid input returns a result
-///       math.permutation(4, 0)
-///       |> should.equal(Ok(1))
-///
-///       math.permutation(4, 4)
-///       |> should.equal(Ok(1))
-///
-///       math.permutation(4, 2)
-///       |> should.equal(Ok(12))
-///     }
-/// </details>
-///
-/// <div style="text-align: right;">
-///     <a href="#">
-///         <small>Back to top ↑</small>
-///     </a>
-/// </div>
-///
-pub fn permutation(n: Int, k: Int) -> Result(Int, String) {
-  case n < 0 {
-    True ->
-      "Invalid input argument: n < 0. Valid input is n > 0."
-      |> Error
-    False ->
-      case k < 0 || k > n {
-        True ->
-          0
-          |> Ok
-        False ->
-          case k == n {
-            True ->
-              1
-              |> Ok
-            False -> {
-              assert Ok(v1) = factorial(n)
-              assert Ok(v2) = factorial(n - k)
-              v1 / v2
-              |> Ok
-            }
-          }
-      }
-  }
-}
-
-/// <div style="text-align: right;">
-///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
-///         <small>Spot a typo? Open an issue!</small>
-///     </a>
-/// </div>
-///
 /// The mathematical constant pi: $$\pi \approx 3.1415\dots$$
 ///
 /// <div style="text-align: right;">
@@ -1689,38 +2070,91 @@ pub fn tau() -> Float {
   2.0 *. pi()
 }
 
-/// Returns the absolute difference of the inputs as a positive Int.
+/// <div style="text-align: right;">
+///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
 ///
-/// ## Examples
+/// The absolute difference:
 ///
-/// ```gleam
-/// > absolute_int_difference(-10, 10)
-/// > 20
-/// ```
+/// \\[
+///  \forall x, y \in \mathbb{R}, \\; |x - y|  \in \mathbb{R}_{+}. 
+/// \\]
 ///
-/// ```gleam
-/// > absolute_int_difference(0, -2)
-/// 2
+/// The function takes two inputs $$x$$ and $$y$$ and returns a positive float
+/// value which is the the absolute difference of the inputs.
 ///
-pub fn absolute_int_difference(a: Int, b: Int) -> Int {
-  a - b
-  |> int.absolute_value()
-}
-
-/// Returns the absolute difference of the inputs as a positive Float.
+/// <details>
+///     <summary>Example:</summary>
 ///
-/// ## Examples
+///     import gleeunit/should
+///     import gleam_stats/math
 ///
-/// ```gleam
-/// > absolute_float_difference(-10, 10)
-/// > 20
-/// ```
+///     pub fn example() {
+///       math.absdiff(-10.0, 10.0)
+///       |> should.equal(20.0)
 ///
-/// ```gleam
-/// > absolute_float_difference(0, -2)
-/// 2
+///       math.absdiff(0.0, -2.0)
+///       |> should.equal(2.0)
+///     }
+/// </details>
 ///
-pub fn absolute_float_difference(a: Float, b: Float) -> Float {
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn absdiff(a: Float, b: Float) -> Float {
   a -. b
   |> float.absolute_value()
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// Determine if a given value $$a$$ is close to or equivalent to a reference value 
+/// $$b$$ based on supplied relative $$r_{tol}$$ and absolute $$a_{tol}$$ tolerance values.
+/// The equivalance of the two given values are then determined based on the equation:
+///
+/// \\[
+///     \|a - b\| \leq (a_{tol} + r_{tol} \cdot \|b\|)
+/// \\]
+///
+/// `True` is returned if statement holds, otherwise `False` is returned. 
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_stats/stats
+///
+///     pub fn example () {
+///       let val: Float = 99.
+///       let ref_val: Float = 100.
+///       // We set 'atol' and 'rtol' such that the values are equivalent
+///       // if 'val' is within 1 percent of 'ref_val' +/- 0.1
+///       let rtol: Float = 0.01
+///       let atol: Float = 0.10
+///       stats.isclose(val, ref_val, rtol, atol)
+///       |> should.be_true()
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn isclose(a: Float, b: Float, rtol: Float, atol: Float) -> Bool {
+  let x: Float = float.absolute_value(a -. b)
+  let y: Float = atol +. rtol *. float.absolute_value(b)
+  case x <=. y {
+    True -> True
+    False -> False
+  }
 }
