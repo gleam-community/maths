@@ -277,7 +277,6 @@ pub fn amin(arr: List(Float)) -> Result(Float, String) {
 ///     </a>
 /// </div>
 ///
-/// Returns the minimum value of a list. 
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -306,23 +305,4 @@ pub fn amin(arr: List(Float)) -> Result(Float, String) {
 ///
 pub fn extrema(arr: List(Float)) -> Result(#(Float, Float), String) {
   todo
-  // case arr {
-  //   [] ->
-  //     "Invalid input argument: The list is empty."
-  //     |> Error
-  //   _ -> {
-  //     assert Ok(val0) = list.at(arr, 0)
-  //     arr
-  //     |> list.fold(
-  //       val0,
-  //       fn(acc: Float, a: Float) {
-  //         case a <. acc {
-  //           True -> a
-  //           False -> acc
-  //         }
-  //       },
-  //     )
-  //     |> Ok
-  //   }
-  // }
 }

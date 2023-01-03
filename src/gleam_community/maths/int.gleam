@@ -26,14 +26,29 @@
 ////
 //// ---
 ////
-//// * **Mathematical functions**
+//// * **Sign and absolute value functions**
+////   * [`abs2`](#abs2)
 ////   * [`absdiff`](#abs_diff)
-////   * [`flipsign`](#flipsign)
-////   * [`max`](#max)
-////   * [`min`](#min)
-////   * [`minmax`](#minmax)
-////   * [`round`](#round)
 ////   * [`sign`](#sign)
+////   * [`copysign`](#copysign)
+////   * [`flipsign`](#flipsign)
+//// * **Powers, logs and roots**
+////   * [`exp`](#exp)
+////   * [`ln`](#ln)
+////   * [`log`](#log)
+////   * [`log10`](#log10)
+////   * [`log2`](#log2)
+////   * [`pow`](#pow)
+////   * [`sqrt`](#sqrt)
+////   * [`cbrt`](#cbrt)
+////   * [`hypot`](#hypot)
+//// * **Misc. mathematical functions**
+////   * [`min`](#min)
+////   * [`max`](#max)
+////   * [`minmax`](#minmax)
+//// * **Division functions**
+////   * [`gcd`](#gcd)
+////   * [`lcm`](#lcm)
 //// * **Combinatorial functions**
 ////   * [`combination`](#combination)
 ////   * [`factorial`](#factorial)
@@ -42,6 +57,8 @@
 ////   * [`ispow2`](#ispow2)
 ////   * [`iseven`](#iseven)
 ////   * [`isodd`](#isodd)
+//// * **Misc. functions**
+////   * [`to_float`](#to_float)
 
 import gleam/list
 import gleam/int

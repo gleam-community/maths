@@ -27,32 +27,25 @@
 //// ---
 ////
 //// * **Rounding functions**
-////   * [`ceiling`](#ceiling)
+////   * [`ceil`](#ceil)
 ////   * [`floor`](#floor)
-////   * [`truncate`](#truncate)
+////   * [`trunc`](#trunc)
 ////   * [`round`](#round)
-//// * **Division functions**
-////   * [`gcd`](#gcd)
-////   * [`lcm`](#lcm)
 //// * **Sign and absolute value functions**
 ////   * [`abs2`](#abs2)
-////   * [`absdiff`](#abs_diff)
+////   * [`absdiff`](#absdiff)
 ////   * [`sign`](#sign)
-////   * [`flipsign`](#flipsign)
 ////   * [`copysign`](#copysign)
+////   * [`flipsign`](#flipsign)
 //// * **Powers, logs and roots**
 ////   * [`exp`](#exp)
+////   * [`ln`](#ln)
 ////   * [`log`](#log)
 ////   * [`log10`](#log10)
 ////   * [`log2`](#log2)
 ////   * [`pow`](#pow)
-////
-////   * [`isqrt`](#isqrt)
-////   * [`icbrt`](#icbrt)
-////
 ////   * [`sqrt`](#sqrt)
 ////   * [`cbrt`](#cbrt)
-////   * [`nthrt`](#nthrt)
 ////   * [`hypot`](#hypot)
 //// * **Trigonometric and hyperbolic functions**
 ////   * [`acos`](#acos)
@@ -70,7 +63,7 @@
 ////   * [`tanh`](#tanh)
 ////   * [`deg2rad`](#deg2rad)
 ////   * [`rad2deg`](#rad2deg)
-//// * **Mathematical functions**
+//// * **Misc. mathematical functions**
 ////   * [`min`](#min)
 ////   * [`max`](#max)
 ////   * [`minmax`](#minmax)
@@ -83,10 +76,10 @@
 ////   * [`pi`](#pi)
 ////   * [`tau`](#tau)
 //// * **Tests**
-////   * [`ispow2`](#ispow2)
 ////   * [`isclose`](#isclose)
-////   * [`iseven`](#iseven)
-////   * [`isodd`](#isodd)
+//// * **Misc. functions**
+////   * [`to_int`](#to_int)
+
 
 import gleam/list
 import gleam/int
