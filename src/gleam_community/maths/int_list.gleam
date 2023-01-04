@@ -27,13 +27,10 @@
 //// ---
 ////
 //// * **Miscellaneous functions**
-////   * [`allclose`](#allclose)
 ////   * [`amax`](#amax)
 ////   * [`amin`](#amin)
 ////   * [`argmax`](#argmax)
 ////   * [`argmin`](#argmin)
-////   * [`allclose`](#allclose)
-////   * [`trim`](#trim)
 
 import gleam/list
 import gleam/int
