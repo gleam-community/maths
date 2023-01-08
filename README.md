@@ -29,7 +29,7 @@ pub fn main() {
   // Returns Tuple: Ok(#(3.0, 50.0))
 
   // Find the list indices of the largest values 
-  int_list.argmax([10, 3, 50, 20, 3])
+  int_list.arg_maximum([10, 3, 50, 20, 3])
   // Returns  List: Ok([1, 4])  
 }
 

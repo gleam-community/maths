@@ -4,29 +4,29 @@ import gleeunit/should
 import gleam/result
 import gleam/io
 
-pub fn int_absdiff_test() {
-  intx.absdiff(0, 0)
+pub fn int_absolute_difference_test() {
+  intx.absolute_difference(0, 0)
   |> should.equal(0)
 
-  intx.absdiff(1, 2)
+  intx.absolute_difference(1, 2)
   |> should.equal(1)
 
-  intx.absdiff(2, 1)
+  intx.absolute_difference(2, 1)
   |> should.equal(1)
 
-  intx.absdiff(-1, 0)
+  intx.absolute_difference(-1, 0)
   |> should.equal(1)
 
-  intx.absdiff(0, -1)
+  intx.absolute_difference(0, -1)
   |> should.equal(1)
 
-  intx.absdiff(10, 20)
+  intx.absolute_difference(10, 20)
   |> should.equal(10)
 
-  intx.absdiff(-10, -20)
+  intx.absolute_difference(-10, -20)
   |> should.equal(10)
 
-  intx.absdiff(-10, 10)
+  intx.absolute_difference(-10, 10)
   |> should.equal(20)
 }
 
@@ -92,31 +92,31 @@ pub fn math_permutation_test() {
   |> should.equal(Ok(12))
 }
 
-pub fn float_min_test() {
-  intx.min(75, 50)
+pub fn float_minimum_test() {
+  intx.minimum(75, 50)
   |> should.equal(50)
 
-  intx.min(50, 75)
+  intx.minimum(50, 75)
   |> should.equal(50)
 
-  intx.min(-75, 50)
+  intx.minimum(-75, 50)
   |> should.equal(-75)
 
-  intx.min(-75, 50)
+  intx.minimum(-75, 50)
   |> should.equal(-75)
 }
 
-pub fn float_max_test() {
-  intx.max(75, 50)
+pub fn float_maximum_test() {
+  intx.maximum(75, 50)
   |> should.equal(75)
 
-  intx.max(50, 75)
+  intx.maximum(50, 75)
   |> should.equal(75)
 
-  intx.max(-75, 50)
+  intx.maximum(-75, 50)
   |> should.equal(50)
 
-  intx.max(-75, 50)
+  intx.maximum(-75, 50)
   |> should.equal(50)
 }
 
@@ -145,13 +145,27 @@ pub fn int_sign_test() {
   |> should.equal(-1)
 }
 
-pub fn int_flipsign_test() {
-  intx.flipsign(100)
+pub fn int_flip_sign_test() {
+  intx.flip_sign(100)
   |> should.equal(-100)
 
-  intx.flipsign(0)
+  intx.flip_sign(0)
   |> should.equal(-0)
 
-  intx.flipsign(-100)
+  intx.flip_sign(-100)
   |> should.equal(100)
+}
+
+pub fn int_is_power_test() {
+  intx.is_power(10, 10)
+  |> should.equal(True)
+
+  intx.is_power(11, 10)
+  |> should.equal(False)
+
+  intx.is_power(4, 2)
+  |> should.equal(True)
+
+  intx.is_power(5, 2)
+  |> should.equal(False)
 }

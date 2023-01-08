@@ -22,29 +22,27 @@
 //// A module containing several different kinds of mathematical functions 
 //// applying to integer numbers.
 ////
-//// Function naming has been adopted from <a href="https://en.wikipedia.org/wiki/C_mathematical_functions"> C mathematical function</a>.
-////
 //// ---
 ////
 //// * **Sign and absolute value functions**
-////   * [`abs2`](#abs2)
-////   * [`absdiff`](#abs_diff)
+////   * [`absolute_difference`](#absolute_difference)
 ////   * [`sign`](#sign)
-////   * [`copysign`](#copysign)
-////   * [`flipsign`](#flipsign)
+////   * [`copy_sign`](#copysign)
+////   * [`flip_sign`](#flipsign)
 //// * **Powers, logs and roots**
-////   * [`exp`](#exp)
-////   * [`ln`](#ln)
-////   * [`log`](#log)
-////   * [`log10`](#log10)
-////   * [`log2`](#log2)
-////   * [`pow`](#pow)
-////   * [`sqrt`](#sqrt)
-////   * [`cbrt`](#cbrt)
-////   * [`hypot`](#hypot)
+////   * [`exponential`](#exp)
+////   * [`natural_logarithm`](#ln)
+////   * [`logarithm`](#logarithm)
+////   * [`logarithm_10`](#logarithm_10)
+////   * [`logarithm_2`](#logarithm_2)
+////   * [`power`](#power)
+////   * [`square_root`](#square_root)
+////   * [`cube_root`](#cube_root)
+////   * [`nth_root`](#nth_root)
+////   * [`hypotenuse`](#hypotenuse)
 //// * **Misc. mathematical functions**
-////   * [`min`](#min)
-////   * [`max`](#max)
+////   * [`minimum`](#min)
+////   * [`maxximum`](#max)
 ////   * [`minmax`](#minmax)
 //// * **Division functions**
 ////   * [`gcd`](#gcd)
@@ -54,15 +52,18 @@
 ////   * [`factorial`](#factorial)
 ////   * [`permutation`](#permutation)
 //// * **Tests**
-////   * [`ispow2`](#ispow2)
-////   * [`iseven`](#iseven)
-////   * [`isodd`](#isodd)
+////   * [`is_power`](#is_power_of)
+////   * [`is_even`](#is_even)
+////   * [`is_odd`](#isodd)
 //// * **Misc. functions**
 ////   * [`to_float`](#to_float)
 
 import gleam/list
 import gleam/int
 import gleam/float
+import gleam/io
+import gleam/option
+import gleam_community/maths/float as floatx
 
 /// <div style="text-align: right;">
 ///     <a href="https://github.com/gleam-community/maths/issues">
@@ -79,10 +80,10 @@ import gleam/float
 ///     import gleam_stats/math
 ///
 ///     pub fn example() {
-///       math.min(2.0, 1.5)
+///       math.minimum(2.0, 1.5)
 ///       |> should.equal(1.5)
 ///
-///       math.min(1.5, 2.0)
+///       math.minimum(1.5, 2.0)
 ///       |> should.equal(1.5)
 ///     }
 /// </details>
@@ -93,7 +94,7 @@ import gleam/float
 ///     </a>
 /// </div>
 ///
-pub fn min(x: Int, y: Int) -> Int {
+pub fn minimum(x: Int, y: Int) -> Int {
   case x < y {
     True -> x
     False -> y
@@ -106,7 +107,7 @@ pub fn min(x: Int, y: Int) -> Int {
 ///     </a>
 /// </div>
 ///
-/// The min function.
+/// The maximum function.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -115,10 +116,10 @@ pub fn min(x: Int, y: Int) -> Int {
 ///     import gleam_stats/math
 ///
 ///     pub fn example() {
-///       math.min(2.0, 1.5)
+///       math.maximum(2.0, 1.5)
 ///       |> should.equal(1.5)
 ///
-///       math.min(1.5, 2.0)
+///       math.maximum(1.5, 2.0)
 ///       |> should.equal(1.5)
 ///     }
 /// </details>
@@ -129,7 +130,7 @@ pub fn min(x: Int, y: Int) -> Int {
 ///     </a>
 /// </div>
 ///
-pub fn max(x: Int, y: Int) -> Int {
+pub fn maximum(x: Int, y: Int) -> Int {
   case x > y {
     True -> x
     False -> y
@@ -166,7 +167,7 @@ pub fn max(x: Int, y: Int) -> Int {
 /// </div>
 ///
 pub fn minmax(x: Int, y: Int) -> #(Int, Int) {
-  #(min(x, y), max(x, y))
+  #(minimum(x, y), maximum(x, y))
 }
 
 /// <div style="text-align: right;">
@@ -219,7 +220,7 @@ if javascript {
 ///     </a>
 /// </div>
 ///
-pub fn flipsign(x: Int) -> Int {
+pub fn flip_sign(x: Int) -> Int {
   -1 * x
 }
 
@@ -452,10 +453,10 @@ pub fn permutation(n: Int, k: Int) -> Result(Int, String) {
 ///     import gleam_stats/math
 ///
 ///     pub fn example() {
-///       math.absdiff(-10.0, 10.0)
+///       math.absolute_difference(-10.0, 10.0)
 ///       |> should.equal(20.0)
 ///
-///       math.absdiff(0.0, -2.0)
+///       math.absolute_difference(0.0, -2.0)
 ///       |> should.equal(2.0)
 ///     }
 /// </details>
@@ -466,7 +467,38 @@ pub fn permutation(n: Int, k: Int) -> Result(Int, String) {
 ///     </a>
 /// </div>
 ///
-pub fn absdiff(a: Int, b: Int) -> Int {
+pub fn absolute_difference(a: Int, b: Int) -> Int {
   a - b
   |> int.absolute_value()
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_stats/math
+///
+///     pub fn example() {
+///
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn is_power(x: Int, y: Int) -> Bool {
+  assert Ok(value) =
+    floatx.logarithm(int.to_float(x), option.Some(int.to_float(y)))
+  assert Ok(truncated) = floatx.truncate(value, 0)
+  let rem = value -. truncated
+  rem == 0.0
 }

@@ -1573,17 +1573,28 @@ if erlang {
 ///     </a>
 /// </div>
 ///
-/// The function rounds a floating point number to a specific decimal precision using a given rounding mode.
+/// The function rounds a floating point number to a specific number of digits using a given rounding mode.
 ///
 /// Valid rounding modes include:
 /// - `Nearest` (default): If the last digit is equal to 5, then the previous digit is rounded to nearest even integer value.
-///   - An alias for this rounding mode is [`truncate`](#truncate)
 /// - `TiesAway`: If the last digit is equal to 5, then the previous digit is rounded away from zero (C/C++ rounding behavior).
 /// - `TiesUp`: If the last digit is equal to 5, then the previous digit is rounded towards $$+\infty$$ (Java/JavaScript rounding behaviour).
-/// - `ToZero`: If the last digit is equal to 5, then the previous digit is rounded towards $$0$$.
+/// - `ToZero`: The last digit is rounded towards $$0$$.
+///   - An alias for this rounding mode is [`truncate`](#truncate)
 /// - `Down`: If the last digit larger than 0, then the previous digit is rounded towards $$-\infty$$.
 ///   - An alias for this rounding mode is [`floor`](#floor)
 /// - `Up`: If the last digit is larger than 0, then the previous digit is rounded towards $$+\infty$$.
+///   - An alias for this rounding mode is [`ceiling`](#ceiling)
+///
+/// Valid rounding modes include:
+/// - `Nearest` (default): The specified digit is rounded to nearest even integer value if the following digit + 1 is equal to 5.
+/// - `TiesAway`: The specified digit is rounded away from zero (C/C++ rounding behavior) if the following digit + 1 is equal to 5.
+/// - `TiesUp`: The specified digit is rounded towards $$+\infty$$ (Java/JavaScript rounding behaviour) if the following digit + 1 is equal to 5.
+/// - `ToZero`: The input value is truncated at the specified digit.
+///   - An alias for this rounding mode is [`truncate`](#truncate)
+/// - `Down`: The specified digit is rounded towards $$-\infty$$ if the following digit + 1 is larger than 0.
+///   - An alias for this rounding mode is [`floor`](#floor)
+/// - `Up`: The specified digit is rounded towards $$+\infty$$ if the following digit + 1 is larger than 0.
 ///   - An alias for this rounding mode is [`ceiling`](#ceiling)
 ///
 /// <details>
@@ -1763,10 +1774,8 @@ if erlang {
 ///     </a>
 /// </div>
 ///
-pub fn truncate(x: Float, precision: Int) -> Float {
-  todo
-  // assert Ok(p) = power(10.0, int.to_float(precision))
-  // int.to_float(float.round(x *. p)) /. p
+pub fn truncate(x: Float, digits: Int) -> Result(Float, String) {
+  round(x, option.Some(digits), option.Some("ToZero"))
 }
 
 /// <div style="text-align: right;">
