@@ -28,22 +28,22 @@
 ////
 //// * **Distances, sums and products**
 ////   * [`sum`](#sum)
-////   * [`prod`](#prod)
+////   * [`product`](#product)
 ////   * [`norm`](#norm)
-////   * [`cumsum`](#cumsum)
-////   * [`cumprod`](#cumprod)
+////   * [`cumulative_sum`](#cumulative_sum)
+////   * [`cumulative_product`](#cumulative_product)
 //// * **Ranges and intervals**
-////   * [`linspace`](#linspace)
-////   * [`logspace`](#linspace)
-////   * [`geomspace`](#linspace)
+////   * [`linear_space`](#linear_space)
+////   * [`logarithm_space`](#logarithm_space)
+////   * [`geometric_space`](#geometric_space)
 //// * **Misc. mathematical functions**
-////   * [`amax`](#amax)
-////   * [`amin`](#amin)
-////   * [`argmax`](#argmax)
-////   * [`argmin`](#argmin)
+////   * [`maximum`](#maximum)
+////   * [`minimum`](#minimum)
 ////   * [`extrema`](#extrema)
+////   * [`argmax`](#arg_maximum)
+////   * [`argmin`](#arg_minimum)
 //// * **Tests**
-////   * [`allclose`](#allclose)
+////   * [`all_close`](#all_close)
 //// * **Misc. functions**
 ////   * [`trim`](#trim)
 
@@ -51,10 +51,11 @@ import gleam/list
 import gleam/int
 import gleam/float
 import gleam/pair
+import gleam/option
 import gleam_community/maths/float as floatx
 
 /// <div style="text-align: right;">
-///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
+///     <a href="https://github.com/gleam-community/maths/issues">
 ///         <small>Spot a typo? Open an issue!</small>
 ///     </a>
 /// </div>
@@ -67,7 +68,7 @@ import gleam_community/maths/float as floatx
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_stats/stats
+///     import gleam_community/maths/float_list
 ///
 ///     pub fn example () {
 ///
@@ -80,30 +81,29 @@ import gleam_community/maths/float as floatx
 ///     </a>
 /// </div>
 ///
-pub fn linspace(
+pub fn linear_space(
   start: Float,
   stop: Float,
   num: Int,
-  endpoint: option.Option,
-  retstep: option.Option,
+  endpoint: option.Option(Bool),
 ) -> List(Float) {
   todo
 }
 
 /// <div style="text-align: right;">
-///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
+///     <a href="https://github.com/gleam-community/maths/issues">
 ///         <small>Spot a typo? Open an issue!</small>
 ///     </a>
 /// </div>
 ///
-/// Return numbers spaced evenly on a log scale.
+/// Return numbers spaced evenly on a logarrithmic scale.
 /// In linear space, the sequence starts at base ** start (base to the power of start) and ends with base ** stop.
 ///
 /// <details>
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_stats/stats
+///     import gleam_community/maths/float_list
 ///
 ///     pub fn example () {
 ///
@@ -116,19 +116,18 @@ pub fn linspace(
 ///     </a>
 /// </div>
 ///
-pub fn logspace(
+pub fn logarithm_space(
   start: Float,
   stop: Float,
   num: Int,
-  endpoint: option.Option,
-  retstep: option.Option,
+  endpoint: option.Option(Bool),
   base: Int,
 ) -> List(Float) {
   todo
 }
 
 /// <div style="text-align: right;">
-///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
+///     <a href="https://github.com/gleam-community/maths/issues">
 ///         <small>Spot a typo? Open an issue!</small>
 ///     </a>
 /// </div>
@@ -140,7 +139,7 @@ pub fn logspace(
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_stats/stats
+///     import gleam_community/maths/float_list
 ///
 ///     pub fn example () {
 ///
@@ -153,18 +152,17 @@ pub fn logspace(
 ///     </a>
 /// </div>
 ///
-pub fn geomspace(
+pub fn geometric_space(
   start: Float,
   stop: Float,
   num: Int,
-  endpoint: option.Option,
-  retstep: option.Option,
+  endpoint: option.Option(Bool),
 ) -> List(Float) {
   todo
 }
 
 /// <div style="text-align: right;">
-///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
+///     <a href="https://github.com/gleam-community/maths/issues">
 ///         <small>Spot a typo? Open an issue!</small>
 ///     </a>
 /// </div>
@@ -182,17 +180,17 @@ pub fn geomspace(
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_stats/stats
+///     import gleam_community/maths/float_list
 ///
 ///     pub fn example () {
 ///       // An empty list returns an error
 ///       []
-///       |> stats.sum()
+///       |> float_list.sum()
 ///       |> should.equal(0.)
 ///
 ///       // Valid input returns a result
 ///       [1., 2., 3.]
-///       |> stats.sum()
+///       |> float_list.sum()
 ///       |> should.equal(6.)
 ///     }
 /// </details>
@@ -213,7 +211,7 @@ pub fn sum(arr: List(Float)) -> Float {
 }
 
 /// <div style="text-align: right;">
-///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
+///     <a href="https://github.com/gleam-community/maths/issues">
 ///         <small>Spot a typo? Open an issue!</small>
 ///     </a>
 /// </div>
@@ -231,17 +229,17 @@ pub fn sum(arr: List(Float)) -> Float {
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_stats/stats
+///     import gleam_community/maths/float_list
 ///
 ///     pub fn example () {
 ///       // An empty list returns an error
 ///       []
-///       |> stats.sum()
+///       |> float_list.sum()
 ///       |> should.equal(0.)
 ///
 ///       // Valid input returns a result
 ///       [1., 2., 3.]
-///       |> stats.prod()
+///       |> float_list.product()
 ///       |> should.equal(6.)
 ///     }
 /// </details>
@@ -252,7 +250,7 @@ pub fn sum(arr: List(Float)) -> Float {
 ///     </a>
 /// </div>
 ///
-pub fn prod(arr: List(Float)) -> Float {
+pub fn product(arr: List(Float)) -> Float {
   case arr {
     [] -> 0.0
     _ ->
@@ -262,7 +260,7 @@ pub fn prod(arr: List(Float)) -> Float {
 }
 
 /// <div style="text-align: right;">
-///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
+///     <a href="https://github.com/gleam-community/maths/issues">
 ///         <small>Spot a typo? Open an issue!</small>
 ///     </a>
 /// </div>
@@ -280,18 +278,17 @@ pub fn prod(arr: List(Float)) -> Float {
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_stats/stats
+///     import gleam_community/maths/float_list
 ///
 ///     pub fn example () {
-///       // An empty list returns an error
 ///       []
-///       |> stats.sum()
-///       |> should.equal(0.)
+///       |> float_list.cumulative_sum()
+///       |> should.equal([])
 ///
 ///       // Valid input returns a result
-///       [1., 2., 3.]
-///       |> stats.sum()
-///       |> should.equal(6.)
+///       [1.0, 2.0, 3.0]
+///       |> float_list.cumulative_sum()
+///       |> should.equal([1.0, 3.0, 6.0])
 ///     }
 /// </details>
 ///
@@ -301,12 +298,12 @@ pub fn prod(arr: List(Float)) -> Float {
 ///     </a>
 /// </div>
 ///
-pub fn cumsum(arr: List(Float)) -> List(Float) {
+pub fn cumulative_sum(arr: List(Float)) -> List(Float) {
   todo
 }
 
 /// <div style="text-align: right;">
-///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
+///     <a href="https://github.com/gleam-community/maths/issues">
 ///         <small>Spot a typo? Open an issue!</small>
 ///     </a>
 /// </div>
@@ -324,18 +321,18 @@ pub fn cumsum(arr: List(Float)) -> List(Float) {
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_stats/stats
+///     import gleam_community/maths/float_list
 ///
 ///     pub fn example () {
 ///       // An empty list returns an error
 ///       []
-///       |> stats.sum()
+///       |> float_list.sum()
 ///       |> should.equal(0.)
 ///
 ///       // Valid input returns a result
-///       [1., 2., 3.]
-///       |> stats.prod()
-///       |> should.equal(6.)
+///       [1.0, 2.0, 3.0]
+///       |> float_list.cumulative_product()
+///       |> should.equal([1.0, 2.0, 6.0])
 ///     }
 /// </details>
 ///
@@ -345,12 +342,12 @@ pub fn cumsum(arr: List(Float)) -> List(Float) {
 ///     </a>
 /// </div>
 ///
-pub fn cumprod(arr: List(Float)) -> List(Float) {
+pub fn cumumlative_product(arr: List(Float)) -> List(Float) {
   todo
 }
 
 /// <div style="text-align: right;">
-///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
+///     <a href="https://github.com/gleam-community/maths/issues">
 ///         <small>Spot a typo? Open an issue!</small>
 ///     </a>
 /// </div>
@@ -360,7 +357,7 @@ pub fn cumprod(arr: List(Float)) -> List(Float) {
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_stats/stats
+///     import gleam_community/maths/float_list
 ///
 ///     pub fn example () {
 ///
@@ -378,7 +375,7 @@ pub fn norm(xarr: List(Float), yarr: List(Float), p: Int) -> List(Float) {
 }
 
 /// <div style="text-align: right;">
-///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
+///     <a href="https://github.com/gleam-community/maths/issues">
 ///         <small>Spot a typo? Open an issue!</small>
 ///     </a>
 /// </div>
@@ -389,17 +386,17 @@ pub fn norm(xarr: List(Float), yarr: List(Float), p: Int) -> List(Float) {
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_stats/stats
+///     import gleam_community/maths/float_list
 ///
 ///     pub fn example () {
 ///       // An empty lists returns an error
 ///       []
-///       |> stats.amax()
+///       |> float_list.maximum()
 ///       |> should.be_error()
 ///
 ///       // Valid input returns a result
 ///       [4., 4., 3., 2., 1.]
-///       |> stats.amax()
+///       |> float_list.maximum()
 ///       |> should.equal(Ok(4.))
 ///     }
 /// </details>
@@ -410,7 +407,7 @@ pub fn norm(xarr: List(Float), yarr: List(Float), p: Int) -> List(Float) {
 ///     </a>
 /// </div>
 ///
-pub fn amax(arr: List(Float)) -> Result(Float, String) {
+pub fn maximum(arr: List(Float)) -> Result(Float, String) {
   case arr {
     [] ->
       "Invalid input argument: The list is empty."
@@ -433,7 +430,7 @@ pub fn amax(arr: List(Float)) -> Result(Float, String) {
 }
 
 /// <div style="text-align: right;">
-///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
+///     <a href="https://github.com/gleam-community/maths/issues">
 ///         <small>Spot a typo? Open an issue!</small>
 ///     </a>
 /// </div>
@@ -444,17 +441,17 @@ pub fn amax(arr: List(Float)) -> Result(Float, String) {
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_stats/stats
+///     import gleam_community/maths/float_list
 ///
 ///     pub fn example () {
 ///       // An empty lists returns an error
 ///       []
-///       |> stats.amin()
+///       |> float_list.minimum()
 ///       |> should.be_error()
 ///     
 ///       // Valid input returns a result
 ///       [4., 4., 3., 2., 1.]
-///       |> stats.amin()
+///       |> float_list.minimum()
 ///       |> should.equal(Ok(1.))
 ///     }
 /// </details>
@@ -465,7 +462,7 @@ pub fn amax(arr: List(Float)) -> Result(Float, String) {
 ///     </a>
 /// </div>
 ///
-pub fn amin(arr: List(Float)) -> Result(Float, String) {
+pub fn minimum(arr: List(Float)) -> Result(Float, String) {
   case arr {
     [] ->
       "Invalid input argument: The list is empty."
@@ -488,7 +485,7 @@ pub fn amin(arr: List(Float)) -> Result(Float, String) {
 }
 
 /// <div style="text-align: right;">
-///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
+///     <a href="https://github.com/gleam-community/maths/issues">
 ///         <small>Spot a typo? Open an issue!</small>
 ///     </a>
 /// </div>
@@ -499,17 +496,17 @@ pub fn amin(arr: List(Float)) -> Result(Float, String) {
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_stats/stats
+///     import gleam_community/maths/float_list
 ///
 ///     pub fn example () {
 ///       // An empty lists returns an error
 ///       []
-///       |> stats.argmax()
+///       |> float_list.arg_maximum()
 ///       |> should.be_error()
 ///     
 ///       // Valid input returns a result
 ///       [4., 4., 3., 2., 1.]
-///       |> stats.argmax()
+///       |> float_list.arg_maximum()
 ///       |> should.equal(Ok([0, 1]))
 ///     }
 /// </details>
@@ -520,7 +517,7 @@ pub fn amin(arr: List(Float)) -> Result(Float, String) {
 ///     </a>
 /// </div>
 ///
-pub fn argmax(arr: List(Float)) -> Result(List(Int), String) {
+pub fn arg_maximum(arr: List(Float)) -> Result(List(Int), String) {
   case arr {
     [] ->
       "Invalid input argument: The list is empty."
@@ -528,7 +525,7 @@ pub fn argmax(arr: List(Float)) -> Result(List(Int), String) {
     _ -> {
       assert Ok(max) =
         arr
-        |> amax()
+        |> maximum()
       arr
       |> list.index_map(fn(index: Int, a: Float) -> Int {
         case a -. max {
@@ -548,7 +545,7 @@ pub fn argmax(arr: List(Float)) -> Result(List(Int), String) {
 }
 
 /// <div style="text-align: right;">
-///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
+///     <a href="https://github.com/gleam-community/maths/issues">
 ///         <small>Spot a typo? Open an issue!</small>
 ///     </a>
 /// </div>
@@ -559,17 +556,17 @@ pub fn argmax(arr: List(Float)) -> Result(List(Int), String) {
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_stats/stats
+///     import gleam_community/maths/float_list
 ///
 ///     pub fn example () {
 ///       // An empty lists returns an error
 ///       []
-///       |> stats.argmin()
+///       |> float_list.arg_minimum()
 ///       |> should.be_error()
 ///     
 ///       // Valid input returns a result
 ///       [4., 4., 3., 2., 1.]
-///       |> stats.argmin()
+///       |> float_list.arg_minimum()
 ///       |> should.equal(Ok([4]))
 ///     }
 /// </details>
@@ -580,7 +577,7 @@ pub fn argmax(arr: List(Float)) -> Result(List(Int), String) {
 ///     </a>
 /// </div>
 ///
-pub fn argmin(arr: List(Float)) -> Result(List(Int), String) {
+pub fn arg_mininmum(arr: List(Float)) -> Result(List(Int), String) {
   case arr {
     [] ->
       "Invalid input argument: The list is empty."
@@ -588,7 +585,7 @@ pub fn argmin(arr: List(Float)) -> Result(List(Int), String) {
     _ -> {
       assert Ok(min) =
         arr
-        |> amin()
+        |> minimum()
       arr
       |> list.index_map(fn(index: Int, a: Float) -> Int {
         case a -. min {
@@ -608,7 +605,7 @@ pub fn argmin(arr: List(Float)) -> Result(List(Int), String) {
 }
 
 /// <div style="text-align: right;">
-///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
+///     <a href="https://github.com/gleam-community/maths/issues">
 ///         <small>Spot a typo? Open an issue!</small>
 ///     </a>
 /// </div>
@@ -619,17 +616,17 @@ pub fn argmin(arr: List(Float)) -> Result(List(Int), String) {
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_stats/stats
+///     import gleam_community/maths/float_list
 ///
 ///     pub fn example () {
 ///       // An empty lists returns an error
 ///       []
-///       |> stats.amin()
+///       |> float_list.extrema()
 ///       |> should.be_error()
 ///     
 ///       // Valid input returns a result
 ///       [4., 4., 3., 2., 1.]
-///       |> stats.amin()
+///       |> float_list.extrema()
 ///       |> should.equal(Ok(1.))
 ///     }
 /// </details>
@@ -645,7 +642,7 @@ pub fn extrema(arr: List(Float)) -> Result(#(Float, Float), String) {
 }
 
 /// <div style="text-align: right;">
-///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
+///     <a href="https://github.com/gleam-community/maths/issues">
 ///         <small>Spot a typo? Open an issue!</small>
 ///     </a>
 /// </div>
@@ -657,7 +654,8 @@ pub fn extrema(arr: List(Float)) -> Result(#(Float, Float), String) {
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_stats/stats
+///     import gleam/list
+///     import gleam_community/maths/float_list
 ///
 ///     pub fn example () {
 ///       let val: Float = 99.
@@ -668,7 +666,7 @@ pub fn extrema(arr: List(Float)) -> Result(#(Float, Float), String) {
 ///       // if 'val' is within 1 percent of 'ref_val' +/- 0.1
 ///       let rtol: Float = 0.01
 ///       let atol: Float = 0.10
-///       stats.allclose(xarr, yarr, rtol, atol)
+///       float_list.all_close(xarr, yarr, rtol, atol)
 ///       |> fn(zarr: Result(List(Bool), String)) -> Result(Bool, Nil) {
 ///         case zarr {
 ///           Ok(arr) ->
@@ -688,7 +686,7 @@ pub fn extrema(arr: List(Float)) -> Result(#(Float, Float), String) {
 ///     </a>
 /// </div>
 ///
-pub fn allclose(
+pub fn all_close(
   xarr: List(Float),
   yarr: List(Float),
   rtol: Float,
@@ -703,7 +701,7 @@ pub fn allclose(
     True ->
       list.zip(xarr, yarr)
       |> list.map(fn(z: #(Float, Float)) -> Bool {
-        floatx.isclose(pair.first(z), pair.second(z), rtol, atol)
+        floatx.is_close(pair.first(z), pair.second(z), rtol, atol)
       })
       |> Ok
   }

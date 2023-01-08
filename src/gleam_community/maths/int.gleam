@@ -65,7 +65,7 @@ import gleam/int
 import gleam/float
 
 /// <div style="text-align: right;">
-///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
+///     <a href="https://github.com/gleam-community/maths/issues">
 ///         <small>Spot a typo? Open an issue!</small>
 ///     </a>
 /// </div>
@@ -101,7 +101,7 @@ pub fn min(x: Int, y: Int) -> Int {
 }
 
 /// <div style="text-align: right;">
-///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
+///     <a href="https://github.com/gleam-community/maths/issues">
 ///         <small>Spot a typo? Open an issue!</small>
 ///     </a>
 /// </div>
@@ -137,7 +137,7 @@ pub fn max(x: Int, y: Int) -> Int {
 }
 
 /// <div style="text-align: right;">
-///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
+///     <a href="https://github.com/gleam-community/maths/issues">
 ///         <small>Spot a typo? Open an issue!</small>
 ///     </a>
 /// </div>
@@ -170,7 +170,7 @@ pub fn minmax(x: Int, y: Int) -> #(Int, Int) {
 }
 
 /// <div style="text-align: right;">
-///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
+///     <a href="https://github.com/gleam-community/maths/issues">
 ///         <small>Spot a typo? Open an issue!</small>
 ///     </a>
 /// </div>
@@ -207,7 +207,7 @@ if javascript {
 }
 
 /// <div style="text-align: right;">
-///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
+///     <a href="https://github.com/gleam-community/maths/issues">
 ///         <small>Spot a typo? Open an issue!</small>
 ///     </a>
 /// </div>
@@ -224,7 +224,7 @@ pub fn flipsign(x: Int) -> Int {
 }
 
 /// <div style="text-align: right;">
-///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
+///     <a href="https://github.com/gleam-community/maths/issues">
 ///         <small>Spot a typo? Open an issue!</small>
 ///     </a>
 /// </div>
@@ -301,7 +301,7 @@ pub fn combination(n: Int, k: Int) -> Result(Int, String) {
 }
 
 /// <div style="text-align: right;">
-///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
+///     <a href="https://github.com/gleam-community/maths/issues">
 ///         <small>Spot a typo? Open an issue!</small>
 ///     </a>
 /// </div>
@@ -362,7 +362,7 @@ pub fn factorial(n) -> Result(Int, String) {
 }
 
 /// <div style="text-align: right;">
-///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
+///     <a href="https://github.com/gleam-community/maths/issues">
 ///         <small>Spot a typo? Open an issue!</small>
 ///     </a>
 /// </div>
@@ -431,7 +431,7 @@ pub fn permutation(n: Int, k: Int) -> Result(Int, String) {
 }
 
 /// <div style="text-align: right;">
-///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
+///     <a href="https://github.com/gleam-community/maths/issues">
 ///         <small>Spot a typo? Open an issue!</small>
 ///     </a>
 /// </div>

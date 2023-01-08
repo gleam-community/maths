@@ -22,7 +22,7 @@ pub fn main() {
 
   // Find the greatest common divisor
   intx.gcd(54, 24)
-  // Returns Int: 6
+  // Returns   Int: 6
 
   // Find the minimum and maximum of a list
   float_list.extrema([10.0, 3.0, 50.0, 20.0, 3.0])

@@ -39,7 +39,7 @@ import gleam/pair
 import gleam_community/maths/int as intx
 
 /// <div style="text-align: right;">
-///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
+///     <a href="https://github.com/gleam-community/maths/issues">
 ///         <small>Spot a typo? Open an issue!</small>
 ///     </a>
 /// </div>
@@ -99,7 +99,7 @@ pub fn argmin(arr: List(Float)) -> Result(List(Int), String) {
 }
 
 /// <div style="text-align: right;">
-///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
+///     <a href="https://github.com/gleam-community/maths/issues">
 ///         <small>Spot a typo? Open an issue!</small>
 ///     </a>
 /// </div>
@@ -159,7 +159,7 @@ pub fn argmax(arr: List(Float)) -> Result(List(Int), String) {
 }
 
 /// <div style="text-align: right;">
-///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
+///     <a href="https://github.com/gleam-community/maths/issues">
 ///         <small>Spot a typo? Open an issue!</small>
 ///     </a>
 /// </div>
@@ -214,7 +214,7 @@ pub fn amax(arr: List(Float)) -> Result(Float, String) {
 }
 
 /// <div style="text-align: right;">
-///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
+///     <a href="https://github.com/gleam-community/maths/issues">
 ///         <small>Spot a typo? Open an issue!</small>
 ///     </a>
 /// </div>
@@ -269,7 +269,7 @@ pub fn amin(arr: List(Float)) -> Result(Float, String) {
 }
 
 /// <div style="text-align: right;">
-///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
+///     <a href="https://github.com/gleam-community/maths/issues">
 ///         <small>Spot a typo? Open an issue!</small>
 ///     </a>
 /// </div>
