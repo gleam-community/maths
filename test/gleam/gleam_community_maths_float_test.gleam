@@ -513,19 +513,55 @@ pub fn float_to_radian_test() {
 }
 
 pub fn float_ceiling_test() {
-  floatx.ceiling(0.1)
-  |> should.equal(1.0)
+  // Round based on 3. digit AFTER decimal point 
+  floatx.ceiling(12.0654, option.Some(3))
+  |> should.equal(Ok(12.066))
 
-  floatx.ceiling(0.9)
-  |> should.equal(1.0)
+  // Round based on 2. digit AFTER decimal point 
+  floatx.ceiling(12.0654, option.Some(2))
+  |> should.equal(Ok(12.07))
+
+  // Round based on 1. digit AFTER decimal point 
+  floatx.ceiling(12.0654, option.Some(1))
+  |> should.equal(Ok(12.1))
+
+  // Round based on 0. digit BEFORE decimal point 
+  floatx.ceiling(12.0654, option.Some(0))
+  |> should.equal(Ok(13.0))
+
+  // Round based on 1. digit BEFORE decimal point 
+  floatx.ceiling(12.0654, option.Some(-1))
+  |> should.equal(Ok(20.0))
+
+  // Round based on 2. digit BEFORE decimal point 
+  floatx.ceiling(12.0654, option.Some(-2))
+  |> should.equal(Ok(100.0))
 }
 
 pub fn float_floor_test() {
-  floatx.floor(0.1)
-  |> should.equal(0.0)
+  // Round based on 3. digit AFTER decimal point 
+  floatx.floor(12.0654, option.Some(3))
+  |> should.equal(Ok(12.065))
 
-  floatx.floor(0.9)
-  |> should.equal(0.0)
+  // Round based on 2. digit AFTER decimal point 
+  floatx.floor(12.0654, option.Some(2))
+  |> should.equal(Ok(12.06))
+
+  // Round based on 1. digit AFTER decimal point 
+  floatx.floor(12.0654, option.Some(1))
+  |> should.equal(Ok(12.0))
+
+  // Round based on 0. digit BEFORE decimal point 
+  floatx.floor(12.0654, option.Some(0))
+  |> should.equal(Ok(12.0))
+
+  // Round based on 1. digit BEFORE decimal point 
+  floatx.floor(12.0654, option.Some(-1))
+  |> should.equal(Ok(10.0))
+
+  // Round based on 2. digit BEFORE decimal point 
+  floatx.floor(12.0654, option.Some(-2))
+  |> should.equal(Ok(0.0))
 }
 
 pub fn float_minimum_test() {
@@ -570,27 +606,27 @@ pub fn float_minmax_test() {
   |> should.equal(#(-0.75, 0.5))
 }
 
-// pub fn float_sign_test() {
-//   floatx.sign(100.0)
-//   |> should.equal(1.0)
+pub fn float_sign_test() {
+  floatx.sign(100.0)
+  |> should.equal(1.0)
 
-//   floatx.sign(0.0)
-//   |> should.equal(0.0)
+  floatx.sign(0.0)
+  |> should.equal(0.0)
 
-//   floatx.sign(-100.0)
-//   |> should.equal(-1.0)
-// }
+  floatx.sign(-100.0)
+  |> should.equal(-1.0)
+}
 
-// pub fn float_flipsign_test() {
-//   floatx.flipsign(100.0)
-//   |> should.equal(-100.0)
+pub fn float_flip_sign_test() {
+  floatx.flip_sign(100.0)
+  |> should.equal(-100.0)
 
-//   floatx.flipsign(0.0)
-//   |> should.equal(-0.0)
+  floatx.flip_sign(0.0)
+  |> should.equal(-0.0)
 
-//   floatx.flipsign(-100.0)
-//   |> should.equal(100.0)
-// }
+  floatx.flip_sign(-100.0)
+  |> should.equal(100.0)
+}
 
 pub fn float_beta_function_test() {
   io.debug("TODO: Implement tests for 'float.beta'.")

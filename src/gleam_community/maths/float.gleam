@@ -19,8 +19,8 @@
 ////    .katex { font-size: 1.1em; }
 ////</style>
 ////
-//// A module containing several different kinds of mathematical constants and 
-//// functions that apply to real numbers (floats).
+//// A module containing several different kinds of mathematical functions and constants  
+//// that apply to real numbers (floats).
 ////
 //// ---
 ////
@@ -84,6 +84,325 @@ import gleam/int
 import gleam/float
 import gleam/io
 import gleam/option
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// The ceiling function rounds a given input value $$x \in \mathbb{R}$$ towards $$+\infty$$ at specified number of digits.
+/// For example, $$12.0654$$ is rounded to:
+/// - $$100.0$$ at digit -2
+/// - $$10.0$$ at digit -1
+/// - $$12.0$ at digit 0
+/// - $$12.1$$ at digit 1
+/// - $$12.07$$ at digit 2
+/// - $$12.066$$ at digit 3
+///
+/// See also the concrete code example below. 
+///
+/// Note: The ceiling function is used as an alias for the rounding function `round` with rounding mode `"Up"`.
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam/option
+///     import gleam_community/maths/float as floatx
+///
+///     pub fn example() {
+///       floatx.ceiling(12.0654, option.Some(3))
+///       |> should.equal(12.066)
+///
+///       floatx.ceiling(12.0654, option.Some(2))
+///       |> should.equal(12.07)
+///
+///       floatx.ceiling(12.0654, option.Some(1))
+///       |> should.equal(12.1)
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn ceiling(x: Float, digits: option.Option(Int)) -> Result(Float, String) {
+  round(x, digits, option.Some("Up"))
+}
+
+// pub fn floor(x: Float) -> Float {
+//   do_floor(x)
+// }
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// The floor function that rounds given input $$x \in \mathbb{R}$$ towards $$-\infty$$. 
+/// floor(x) returns the nearest integral value of the same type as x that is less than or equal to x.
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths/float as floatx
+///
+///     pub fn example() {
+///       floatx.floor(0.2)
+///       |> should.equal(0.0)
+///
+///       floatx.floor(0.8)
+///       |> should.equal(0.0)
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn floor(x: Float, digits: option.Option(Int)) -> Result(Float, String) {
+  round(x, digits, option.Some("Down"))
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+///
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths/float as floatx
+///
+///     pub fn example() {
+///       floatx.round(0.4444, 2)
+///       |> should.equal(0.44)
+///
+///       floatx.round(0.4445, 2)
+///       |> should.equal(0.44)
+///
+///       floatx.round(0.4455, 2)
+///       |> should.equal(0.45)
+///
+///       floatx.round(0.4555, 2)
+///       |> should.equal(0.46)
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn truncate(x: Float, digits: Int) -> Result(Float, String) {
+  round(x, option.Some(digits), option.Some("ToZero"))
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// The function rounds a floating point number to a specific number of digits using a given rounding mode.
+///
+/// Valid rounding modes include:
+/// - `Nearest` (default): If the last digit is equal to 5, then the previous digit is rounded to nearest even integer value.
+/// - `TiesAway`: If the last digit is equal to 5, then the previous digit is rounded away from zero (C/C++ rounding behavior).
+/// - `TiesUp`: If the last digit is equal to 5, then the previous digit is rounded towards $$+\infty$$ (Java/JavaScript rounding behaviour).
+/// - `ToZero`: The last digit is rounded towards $$0$$.
+///   - An alias for this rounding mode is [`truncate`](#truncate)
+/// - `Down`: If the last digit larger than 0, then the previous digit is rounded towards $$-\infty$$.
+///   - An alias for this rounding mode is [`floor`](#floor)
+/// - `Up`: If the last digit is larger than 0, then the previous digit is rounded towards $$+\infty$$.
+///   - An alias for this rounding mode is [`ceiling`](#ceiling)
+///
+/// Valid rounding modes include:
+/// - `Nearest` (default): The specified digit is rounded to nearest even integer value if the following digit + 1 is equal to 5.
+/// - `TiesAway`: The specified digit is rounded away from zero (C/C++ rounding behavior) if the following digit + 1 is equal to 5.
+/// - `TiesUp`: The specified digit is rounded towards $$+\infty$$ (Java/JavaScript rounding behaviour) if the following digit + 1 is equal to 5.
+/// - `ToZero`: The input value is truncated at the specified digit.
+///   - An alias for this rounding mode is [`truncate`](#truncate)
+/// - `Down`: The specified digit is rounded towards $$-\infty$$ if the following digit + 1 is larger than 0.
+///   - An alias for this rounding mode is [`floor`](#floor)
+/// - `Up`: The specified digit is rounded towards $$+\infty$$ if the following digit + 1 is larger than 0.
+///   - An alias for this rounding mode is [`ceiling`](#ceiling)
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam/option
+///     import gleam_community/maths/float as floatx
+///
+///     pub fn example() {
+///       floatx.round(0.4444, 2)
+///       |> should.equal(0.44)
+///
+///       floatx.round(0.4445, 2)
+///       |> should.equal(0.44)
+///
+///       floatx.round(0.4455, 2)
+///       |> should.equal(0.45)
+///
+///       floatx.round(0.4555, 2)
+///       |> should.equal(0.46)
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn round(
+  x: Float,
+  digits: option.Option(Int),
+  mode: option.Option(String),
+) -> Result(Float, String) {
+  case digits {
+    option.Some(a) -> {
+      assert Ok(p) = power(10.0, int.to_float(a))
+      case mode {
+        // Rounding mode choices
+        option.Some("Nearest") ->
+          round_nearest(p, x)
+          |> Ok
+        option.Some("TiesAway") ->
+          round_ties_away(p, x)
+          |> Ok
+        option.Some("TiesUp") ->
+          round_ties_up(p, x)
+          |> Ok
+        option.Some("ToZero") ->
+          round_to_zero(p, x)
+          |> Ok
+        option.Some("Down") ->
+          round_down(p, x)
+          |> Ok
+        option.Some("Up") ->
+          round_up(p, x)
+          |> Ok
+        // Default rounding mode
+        option.None ->
+          round_nearest(p, x)
+          |> Ok
+        _ ->
+          "Invalid Rounding Mode!"
+          |> Error
+      }
+    }
+    _ ->
+      "Invalid!"
+      |> Error
+  }
+}
+
+fn round_nearest(p: Float, x: Float) -> Float {
+  let positive = x >. 0.0
+  let xabs = float.absolute_value(x)
+  let geq_tie = xabs -. truncate_float(xabs) >=. 0.5
+  assert Ok(is_even) = int.modulo(to_int(xabs), 2)
+  io.debug(is_even)
+  case geq_tie {
+    True ->
+      case is_even == 0 {
+        True -> sign(x) *. truncate_float({ xabs +. 0.0 } *. p) /. p
+        False -> sign(x) *. truncate_float({ xabs +. 1.0 } *. p) /. p
+      }
+    False -> sign(x) *. truncate_float({ xabs +. 0.0 } *. p) /. p
+  }
+}
+
+fn round_ties_away(p: Float, x: Float) -> Float {
+  let positive = x >. 0.0
+  let xabs = float.absolute_value(x)
+  let g_tie = xabs -. truncate_float(xabs) >=. 0.5
+  case g_tie {
+    True -> sign(x) *. truncate_float({ xabs +. 1.0 } *. p) /. p
+    False -> truncate_float(x *. p) /. p
+  }
+}
+
+fn round_ties_up(p: Float, x: Float) -> Float {
+  let positive = x >. 0.0
+  let xabs = float.absolute_value(x)
+  let geq_tie = xabs -. truncate_float(xabs) >=. 0.5
+  case geq_tie {
+    True ->
+      case positive {
+        True -> sign(x) *. truncate_float({ xabs +. 1.0 } *. p) /. p
+        False -> sign(x) *. truncate_float({ xabs +. 0.0 } *. p) /. p
+      }
+    False ->
+      case positive {
+        True -> sign(x) *. truncate_float({ xabs +. 0.0 } *. p) /. p
+        False -> sign(x) *. truncate_float({ xabs +. 0.0 } *. p) /. p
+      }
+  }
+}
+
+fn round_to_zero(p: Float, x: Float) -> Float {
+  truncate_float(x *. p) /. p
+}
+
+fn round_down(p: Float, x: Float) -> Float {
+  do_floor(x *. p) /. p
+}
+
+fn round_up(p: Float, x: Float) -> Float {
+  do_ceiling(x *. p) /. p
+}
+
+fn truncate_float(x: Float) -> Float {
+  do_truncate_float(x)
+}
+
+if erlang {
+  external fn do_ceiling(Float) -> Float =
+    "math" "ceil"
+}
+
+if javascript {
+  external fn do_ceiling(Float) -> Float =
+    "../floatx.mjs" "ceil"
+}
+
+if erlang {
+  external fn do_truncate_float(Float) -> Float =
+    "erlang" "trunc"
+}
+
+if erlang {
+  external fn do_floor(Float) -> Float =
+    "math" "floor"
+}
+
+if javascript {
+  external fn do_floor(Float) -> Float =
+    "../floatx.mjs" "floor"
+}
+
+fn to_int(x: Float) -> Int {
+  do_to_int(x)
+}
+
+if erlang {
+  external fn do_to_int(Float) -> Int =
+    "erlang" "trunc"
+}
 
 /// <div style="text-align: right;">
 ///     <a href="https://github.com/gleam-community/maths/issues">
@@ -977,7 +1296,10 @@ if javascript {
 /// </div>
 ///
 pub fn power(x: Float, y: Float) -> Result(Float, String) {
-  let fractional: Bool = ceiling(y) -. y >. 0.0
+  // assert Ok(y_ceiling) = ceiling(y, option.Some(0))
+  // io.debug(y_ceiling)
+  // let fractional: Bool = y_ceiling -. y >. 0.0
+  let fractional: Bool = do_ceiling(y) -. y >. 0.0
   // In the following check:
   // 1. If the base (x) is negative and the exponent (y) is fractional
   //    then return an error as it will otherwise be an imaginary number
@@ -1468,314 +1790,6 @@ pub fn to_degree(x: Float) -> Float {
 ///
 pub fn to_radian(x: Float) -> Float {
   x *. pi() /. 180.0
-}
-
-/// <div style="text-align: right;">
-///     <a href="https://github.com/gleam-community/maths/issues">
-///         <small>Spot a typo? Open an issue!</small>
-///     </a>
-/// </div>
-///
-/// The ceiling function that rounds given input $$x \in \mathbb{R}$$ towards $$+\infty$$. 
-/// ceiling(x) returns the nearest integral value of the same type as x that is greater than or equal to x.
-///
-/// <details>
-///     <summary>Example:</summary>
-///
-///     import gleeunit/should
-///     import gleam_community/maths/float as floatx
-///
-///     pub fn example() {
-///       floatx.ceiling(0.2)
-///       |> should.equal(1.0)
-///
-///       floatx.ceiling(0.8)
-///       |> should.equal(1.0)
-///     }
-/// </details>
-///
-/// <div style="text-align: right;">
-///     <a href="#">
-///         <small>Back to top ↑</small>
-///     </a>
-/// </div>
-///
-pub fn ceiling(x: Float) -> Float {
-  do_ceiling(x)
-}
-
-if erlang {
-  external fn do_ceiling(Float) -> Float =
-    "math" "ceil"
-}
-
-if javascript {
-  external fn do_ceiling(Float) -> Float =
-    "../floatx.mjs" "ceil"
-}
-
-/// <div style="text-align: right;">
-///     <a href="https://github.com/gleam-community/maths/issues">
-///         <small>Spot a typo? Open an issue!</small>
-///     </a>
-/// </div>
-///
-/// The floor function that rounds given input $$x \in \mathbb{R}$$ towards $$-\infty$$. 
-/// floor(x) returns the nearest integral value of the same type as x that is less than or equal to x.
-///
-/// <details>
-///     <summary>Example:</summary>
-///
-///     import gleeunit/should
-///     import gleam_community/maths/float as floatx
-///
-///     pub fn example() {
-///       floatx.floor(0.2)
-///       |> should.equal(0.0)
-///
-///       floatx.floor(0.8)
-///       |> should.equal(0.0)
-///     }
-/// </details>
-///
-/// <div style="text-align: right;">
-///     <a href="#">
-///         <small>Back to top ↑</small>
-///     </a>
-/// </div>
-///
-pub fn floor(x: Float) -> Float {
-  do_floor(x)
-}
-
-if erlang {
-  external fn do_floor(Float) -> Float =
-    "math" "floor"
-}
-
-if javascript {
-  external fn do_floor(Float) -> Float =
-    "../floatx.mjs" "floor"
-}
-
-fn to_int(x: Float) -> Int {
-  do_to_int(x)
-}
-
-if erlang {
-  external fn do_to_int(Float) -> Int =
-    "erlang" "trunc"
-}
-
-/// <div style="text-align: right;">
-///     <a href="https://github.com/gleam-community/maths/issues">
-///         <small>Spot a typo? Open an issue!</small>
-///     </a>
-/// </div>
-///
-/// The function rounds a floating point number to a specific number of digits using a given rounding mode.
-///
-/// Valid rounding modes include:
-/// - `Nearest` (default): If the last digit is equal to 5, then the previous digit is rounded to nearest even integer value.
-/// - `TiesAway`: If the last digit is equal to 5, then the previous digit is rounded away from zero (C/C++ rounding behavior).
-/// - `TiesUp`: If the last digit is equal to 5, then the previous digit is rounded towards $$+\infty$$ (Java/JavaScript rounding behaviour).
-/// - `ToZero`: The last digit is rounded towards $$0$$.
-///   - An alias for this rounding mode is [`truncate`](#truncate)
-/// - `Down`: If the last digit larger than 0, then the previous digit is rounded towards $$-\infty$$.
-///   - An alias for this rounding mode is [`floor`](#floor)
-/// - `Up`: If the last digit is larger than 0, then the previous digit is rounded towards $$+\infty$$.
-///   - An alias for this rounding mode is [`ceiling`](#ceiling)
-///
-/// Valid rounding modes include:
-/// - `Nearest` (default): The specified digit is rounded to nearest even integer value if the following digit + 1 is equal to 5.
-/// - `TiesAway`: The specified digit is rounded away from zero (C/C++ rounding behavior) if the following digit + 1 is equal to 5.
-/// - `TiesUp`: The specified digit is rounded towards $$+\infty$$ (Java/JavaScript rounding behaviour) if the following digit + 1 is equal to 5.
-/// - `ToZero`: The input value is truncated at the specified digit.
-///   - An alias for this rounding mode is [`truncate`](#truncate)
-/// - `Down`: The specified digit is rounded towards $$-\infty$$ if the following digit + 1 is larger than 0.
-///   - An alias for this rounding mode is [`floor`](#floor)
-/// - `Up`: The specified digit is rounded towards $$+\infty$$ if the following digit + 1 is larger than 0.
-///   - An alias for this rounding mode is [`ceiling`](#ceiling)
-///
-/// <details>
-///     <summary>Example:</summary>
-///
-///     import gleeunit/should
-///     import gleam/option
-///     import gleam_community/maths/float as floatx
-///
-///     pub fn example() {
-///       floatx.round(0.4444, 2)
-///       |> should.equal(0.44)
-///
-///       floatx.round(0.4445, 2)
-///       |> should.equal(0.44)
-///
-///       floatx.round(0.4455, 2)
-///       |> should.equal(0.45)
-///
-///       floatx.round(0.4555, 2)
-///       |> should.equal(0.46)
-///     }
-/// </details>
-///
-/// <div style="text-align: right;">
-///     <a href="#">
-///         <small>Back to top ↑</small>
-///     </a>
-/// </div>
-///
-pub fn round(
-  x: Float,
-  digits: option.Option(Int),
-  mode: option.Option(String),
-) -> Result(Float, String) {
-  // sigdigits: option.Option(Int),
-  case digits {
-    option.Some(a) -> {
-      assert Ok(p) = power(10.0, int.to_float(a))
-      case mode {
-        // Rounding mode choices
-        option.Some("Nearest") ->
-          round_nearest(p, x)
-          |> Ok
-        option.Some("TiesAway") ->
-          round_ties_away(p, x)
-          |> Ok
-        option.Some("TiesUp") ->
-          round_ties_up(p, x)
-          |> Ok
-        option.Some("ToZero") ->
-          round_to_zero(p, x)
-          |> Ok
-        option.Some("Down") ->
-          round_down(p, x)
-          |> Ok
-        option.Some("Up") ->
-          round_up(p, x)
-          |> Ok
-        // Default rounding mode
-        option.None ->
-          round_nearest(p, x)
-          |> Ok
-        _ ->
-          "Invalid Rounding Mode!"
-          |> Error
-      }
-    }
-    _ ->
-      "Invalid!"
-      |> Error
-  }
-}
-
-fn round_nearest(p: Float, x: Float) -> Float {
-  let positive = x >. 0.0
-  let xabs = float.absolute_value(x)
-  let geq_tie = xabs -. truncate_float(xabs) >=. 0.5
-  assert Ok(is_even) = int.modulo(to_int(xabs), 2)
-  io.debug(is_even)
-  case geq_tie {
-    True ->
-      case is_even == 0 {
-        True -> sign(x) *. truncate_float({ xabs +. 0.0 } *. p) /. p
-        False -> sign(x) *. truncate_float({ xabs +. 1.0 } *. p) /. p
-      }
-    False -> sign(x) *. truncate_float({ xabs +. 0.0 } *. p) /. p
-  }
-}
-
-fn round_ties_away(p: Float, x: Float) -> Float {
-  let positive = x >. 0.0
-  let xabs = float.absolute_value(x)
-  let g_tie = xabs -. truncate_float(xabs) >=. 0.5
-  case g_tie {
-    True -> sign(x) *. truncate_float({ xabs +. 1.0 } *. p) /. p
-    False -> truncate_float(x *. p) /. p
-  }
-}
-
-fn round_ties_up(p: Float, x: Float) -> Float {
-  let positive = x >. 0.0
-  let xabs = float.absolute_value(x)
-  let geq_tie = xabs -. truncate_float(xabs) >=. 0.5
-  case geq_tie {
-    True ->
-      case positive {
-        True -> sign(x) *. truncate_float({ xabs +. 1.0 } *. p) /. p
-        False -> sign(x) *. truncate_float({ xabs +. 0.0 } *. p) /. p
-      }
-    False ->
-      case positive {
-        True -> sign(x) *. truncate_float({ xabs +. 0.0 } *. p) /. p
-        False -> sign(x) *. truncate_float({ xabs +. 0.0 } *. p) /. p
-      }
-  }
-}
-
-fn round_to_zero(p: Float, x: Float) -> Float {
-  truncate_float(x *. p) /. p
-}
-
-fn round_down(p: Float, x: Float) -> Float {
-  floor(x *. p) /. p
-}
-
-fn round_up(p: Float, x: Float) -> Float {
-  ceiling(x *. p) /. p
-}
-
-fn truncate_float(x: Float) -> Float {
-  do_truncate_float(x)
-}
-
-if erlang {
-  external fn do_truncate_float(Float) -> Float =
-    "erlang" "trunc"
-}
-
-// pub fn round_to_nearest_ties_away(x: Float, digits: Int) -> Float {
-//   assert Ok(p) = power(10.0, int.to_float(digits))
-//   int.to_float(float.round(x *. p)) /. p
-// }
-
-/// <div style="text-align: right;">
-///     <a href="https://github.com/gleam-community/maths/issues">
-///         <small>Spot a typo? Open an issue!</small>
-///     </a>
-/// </div>
-///
-///
-///
-/// <details>
-///     <summary>Example:</summary>
-///
-///     import gleeunit/should
-///     import gleam_community/maths/float as floatx
-///
-///     pub fn example() {
-///       floatx.round(0.4444, 2)
-///       |> should.equal(0.44)
-///
-///       floatx.round(0.4445, 2)
-///       |> should.equal(0.44)
-///
-///       floatx.round(0.4455, 2)
-///       |> should.equal(0.45)
-///
-///       floatx.round(0.4555, 2)
-///       |> should.equal(0.46)
-///     }
-/// </details>
-///
-/// <div style="text-align: right;">
-///     <a href="#">
-///         <small>Back to top ↑</small>
-///     </a>
-/// </div>
-///
-pub fn truncate(x: Float, digits: Int) -> Result(Float, String) {
-  round(x, option.Some(digits), option.Some("ToZero"))
 }
 
 /// <div style="text-align: right;">
