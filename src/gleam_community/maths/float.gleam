@@ -91,14 +91,15 @@ import gleam/option
 ///     </a>
 /// </div>
 ///
-/// The ceiling function rounds a given input value $$x \in \mathbb{R}$$ towards $$+\infty$$ at specified number of digits.
+/// The ceiling function rounds a given input value $$x \in \mathbb{R}$$ towards $$+\infty$$ at a specified number of digits.
 /// For example, $$12.0654$$ is rounded to:
-/// - $$100.0$$ at digit -2
-/// - $$10.0$$ at digit -1
-/// - $$12.0$ at digit 0
-/// - $$12.1$$ at digit 1
-/// - $$12.07$$ at digit 2
-/// - $$12.066$$ at digit 3
+/// - $$1000.0$$ at the 3rd digit before the decimal point (`digit = -3`)
+/// - $$100.0$$ at the 2nd digit before the decimal point (`digit = -2`)
+/// - $$20.0$$ the 1st digit before the decimal point (`digit = -1`)
+/// - $$13.0$ at the 0th digit before the decimal point (`digit = 0`)
+/// - $$12.1$$ at the 1st digit after the decimal point (`digit = 1`)
+/// - $$12.07$$ at the 2nd digit after the decimal point (`digit = 2`)
+/// - $$12.066$$ at the 3rd digit after the decimal point (`digit = 3`)
 ///
 /// See also the concrete code example below. 
 ///
@@ -133,30 +134,42 @@ pub fn ceiling(x: Float, digits: option.Option(Int)) -> Result(Float, String) {
   round(x, digits, option.Some("Up"))
 }
 
-// pub fn floor(x: Float) -> Float {
-//   do_floor(x)
-// }
 /// <div style="text-align: right;">
 ///     <a href="https://github.com/gleam-community/maths/issues">
 ///         <small>Spot a typo? Open an issue!</small>
 ///     </a>
 /// </div>
 ///
-/// The floor function that rounds given input $$x \in \mathbb{R}$$ towards $$-\infty$$. 
-/// floor(x) returns the nearest integral value of the same type as x that is less than or equal to x.
+/// The floor function rounds a given input value $$x \in \mathbb{R}$$ towards $$-\infty$$ at a specified number of digits.
+/// For example, $$12.0654$$ is rounded to:
+/// - $$0.0$$ at the 3rd digit before the decimal point (`digit = -3`)
+/// - $$0.0$$ at the 2nd digit before the decimal point (`digit = -2`)
+/// - $$10.0$$ the 1st digit before the decimal point (`digit = -1`)
+/// - $$12.0$ at the 0th digit before the decimal point (`digit = 0`)
+/// - $$12.0$$ at the 1st digit after the decimal point (`digit = 1`)
+/// - $$12.06$$ at the 2nd digit after the decimal point (`digit = 2`)
+/// - $$12.065$$ at the 3rd digit after the decimal point (`digit = 3`)
+///
+/// See also the concrete code example below. 
+///
+/// Note: The floor function is used as an alias for the rounding function `round` with rounding mode `"Down"`.
 ///
 /// <details>
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
+///     import gleam/option
 ///     import gleam_community/maths/float as floatx
 ///
 ///     pub fn example() {
-///       floatx.floor(0.2)
-///       |> should.equal(0.0)
+///       floatx.ceiling(12.0654, option.Some(3))
+///       |> should.equal(12.065)
 ///
-///       floatx.floor(0.8)
-///       |> should.equal(0.0)
+///       floatx.ceiling(12.0654, option.Some(2))
+///       |> should.equal(12.06)
+///
+///       floatx.ceiling(12.0654, option.Some(1))
+///       |> should.equal(12.0)
 ///     }
 /// </details>
 ///

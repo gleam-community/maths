@@ -536,6 +536,10 @@ pub fn float_ceiling_test() {
   // Round based on 2. digit BEFORE decimal point 
   floatx.ceiling(12.0654, option.Some(-2))
   |> should.equal(Ok(100.0))
+
+  // Round based on 3. digit BEFORE decimal point 
+  floatx.ceiling(12.0654, option.Some(-3))
+  |> should.equal(Ok(1000.0))
 }
 
 pub fn float_floor_test() {
@@ -561,6 +565,10 @@ pub fn float_floor_test() {
 
   // Round based on 2. digit BEFORE decimal point 
   floatx.floor(12.0654, option.Some(-2))
+  |> should.equal(Ok(0.0))
+
+  // Round based on 2. digit BEFORE decimal point 
+  floatx.floor(12.0654, option.Some(-3))
   |> should.equal(Ok(0.0))
 }
 
