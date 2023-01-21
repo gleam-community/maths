@@ -19,8 +19,7 @@
 ////    .katex { font-size: 1.1em; }
 ////</style>
 ////
-//// A module containing several different kinds of mathematical functions 
-//// applying to integer numbers.
+//// A module containing mathematical functions applying to integer (int) numbers.
 ////
 //// ---
 ////
@@ -77,13 +76,13 @@ import gleam_community/maths/float as floatx
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_stats/math
+///     import gleam_community/maths/int as intx
 ///
 ///     pub fn example() {
-///       math.minimum(2.0, 1.5)
+///       intx.minimum(2.0, 1.5)
 ///       |> should.equal(1.5)
 ///
-///       math.minimum(1.5, 2.0)
+///       intx.minimum(1.5, 2.0)
 ///       |> should.equal(1.5)
 ///     }
 /// </details>
@@ -113,13 +112,13 @@ pub fn minimum(x: Int, y: Int) -> Int {
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_stats/math
+///     import gleam_community/maths/int as intx
 ///
 ///     pub fn example() {
-///       math.maximum(2.0, 1.5)
+///       intx.maximum(2.0, 1.5)
 ///       |> should.equal(1.5)
 ///
-///       math.maximum(1.5, 2.0)
+///       intx.maximum(1.5, 2.0)
 ///       |> should.equal(1.5)
 ///     }
 /// </details>
@@ -149,13 +148,13 @@ pub fn maximum(x: Int, y: Int) -> Int {
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_stats/math
+///     import gleam_community/maths/int as intx
 ///
 ///     pub fn example() {
-///       math.minmax(2.0, 1.5)
+///       intx.minmax(2.0, 1.5)
 ///       |> should.equal(#(1.5, 2.0))
 ///
-///       math.minmax(1.5, 2.0)
+///       intx.minmax(1.5, 2.0)
 ///       |> should.equal(#(1.5, 2.0))
 ///     }
 /// </details>
@@ -204,7 +203,7 @@ if erlang {
 
 if javascript {
   external fn do_sign(Int) -> Int =
-    "../math.mjs" "sign"
+    "../intx.mjs" "sign"
 }
 
 /// <div style="text-align: right;">
@@ -230,6 +229,31 @@ pub fn flip_sign(x: Int) -> Int {
 ///     </a>
 /// </div>
 ///
+/// The function takes two arguments $$x$$ and $$y$$ and returns $$x$$ such that it has the same sign as $$y$$.
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn copy_sign(x: Int, y: Int) -> Int {
+  case sign(x) == sign(y) {
+    // x and y have the same sign, just return x
+    True -> x
+    // x and y have different signs:
+    // - x is positive and y is negative, then flip sign of x
+    // - x is negative and y is positive, then flip sign of x
+    False -> flip_sign(x)
+  }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
 /// A combinatorial function for computing the number of a $$k$$-combinations of $$n$$ elements:
 ///
 /// \\[
@@ -243,22 +267,22 @@ pub fn flip_sign(x: Int) -> Int {
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_stats/math
+///     import gleam_community/maths/int as intx
 ///
 ///     pub fn example() {
 ///       // Invalid input gives an error
 ///       // Error on: n = -1 < 0
-///       math.combination(-1, 1)
+///       intx.combination(-1, 1)
 ///       |> should.be_error()
 ///
 ///       // Valid input returns a result
-///       math.combination(4, 0)
+///       intx.combination(4, 0)
 ///       |> should.equal(Ok(1))
 ///
-///       math.combination(4, 4)
+///       intx.combination(4, 4)
 ///       |> should.equal(Ok(1))
 ///
-///       math.combination(4, 2)
+///       intx.combination(4, 2)
 ///       |> should.equal(Ok(6))
 ///     }
 /// </details>
@@ -314,23 +338,23 @@ pub fn combination(n: Int, k: Int) -> Result(Int, String) {
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_stats/math
+///     import gleam_community/maths/int as intx
 ///
 ///     pub fn example() {
 ///       // Invalid input gives an error
-///       math.factorial(-1)
+///       intx.factorial(-1)
 ///       |> should.be_error()
 ///
 ///       // Valid input returns a result
-///       math.factorial(0)
+///       intx.factorial(0)
 ///       |> should.equal(Ok(1))
-///       math.factorial(1)
+///       intx.factorial(1)
 ///       |> should.equal(Ok(1))
-///       math.factorial(2)
+///       intx.factorial(2)
 ///       |> should.equal(Ok(2))
-///       math.factorial(3)
+///       intx.factorial(3)
 ///       |> should.equal(Ok(6))
-///       math.factorial(4)
+///       intx.factorial(4)
 ///       |> should.equal(Ok(24))
 ///     }
 /// </details>
@@ -379,22 +403,22 @@ pub fn factorial(n) -> Result(Int, String) {
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_stats/math
+///     import gleam_community/maths/int as intx
 ///
 ///     pub fn example() {
 ///       // Invalid input gives an error
 ///       // Error on: n = -1 < 0
-///       math.permutation(-1, 1)
+///       intx.permutation(-1, 1)
 ///       |> should.be_error()
 ///
 ///       // Valid input returns a result
-///       math.permutation(4, 0)
+///       intx.permutation(4, 0)
 ///       |> should.equal(Ok(1))
 ///
-///       math.permutation(4, 4)
+///       intx.permutation(4, 4)
 ///       |> should.equal(Ok(1))
 ///
-///       math.permutation(4, 2)
+///       intx.permutation(4, 2)
 ///       |> should.equal(Ok(12))
 ///     }
 /// </details>
@@ -450,13 +474,13 @@ pub fn permutation(n: Int, k: Int) -> Result(Int, String) {
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_stats/math
+///     import gleam_community/maths/int as intx
 ///
 ///     pub fn example() {
-///       math.absolute_difference(-10.0, 10.0)
+///       intx.absolute_difference(-10.0, 10.0)
 ///       |> should.equal(20.0)
 ///
-///       math.absolute_difference(0.0, -2.0)
+///       intx.absolute_difference(0.0, -2.0)
 ///       |> should.equal(2.0)
 ///     }
 /// </details>
@@ -482,7 +506,7 @@ pub fn absolute_difference(a: Int, b: Int) -> Int {
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_stats/math
+///     import gleam_community/maths/int as intx
 ///
 ///     pub fn example() {
 ///
@@ -498,7 +522,7 @@ pub fn absolute_difference(a: Int, b: Int) -> Int {
 pub fn is_power(x: Int, y: Int) -> Bool {
   assert Ok(value) =
     floatx.logarithm(int.to_float(x), option.Some(int.to_float(y)))
-  assert Ok(truncated) = floatx.truncate(value, 0)
+  assert Ok(truncated) = floatx.truncate(value, option.Some(0))
   let rem = value -. truncated
   rem == 0.0
 }

@@ -513,62 +513,92 @@ pub fn float_to_radian_test() {
 }
 
 pub fn float_ceiling_test() {
-  // Round based on 3. digit AFTER decimal point 
+  // Round 3. digit AFTER decimal point 
   floatx.ceiling(12.0654, option.Some(3))
   |> should.equal(Ok(12.066))
 
-  // Round based on 2. digit AFTER decimal point 
+  // Round 2. digit AFTER decimal point 
   floatx.ceiling(12.0654, option.Some(2))
   |> should.equal(Ok(12.07))
 
-  // Round based on 1. digit AFTER decimal point 
+  // Round 1. digit AFTER decimal point 
   floatx.ceiling(12.0654, option.Some(1))
   |> should.equal(Ok(12.1))
 
-  // Round based on 0. digit BEFORE decimal point 
+  // Round 0. digit BEFORE decimal point 
   floatx.ceiling(12.0654, option.Some(0))
   |> should.equal(Ok(13.0))
 
-  // Round based on 1. digit BEFORE decimal point 
+  // Round 1. digit BEFORE decimal point 
   floatx.ceiling(12.0654, option.Some(-1))
   |> should.equal(Ok(20.0))
 
-  // Round based on 2. digit BEFORE decimal point 
+  // Round 2. digit BEFORE decimal point 
   floatx.ceiling(12.0654, option.Some(-2))
   |> should.equal(Ok(100.0))
 
-  // Round based on 3. digit BEFORE decimal point 
+  // Round 3. digit BEFORE decimal point 
   floatx.ceiling(12.0654, option.Some(-3))
   |> should.equal(Ok(1000.0))
 }
 
 pub fn float_floor_test() {
-  // Round based on 3. digit AFTER decimal point 
+  // Round 3. digit AFTER decimal point 
   floatx.floor(12.0654, option.Some(3))
   |> should.equal(Ok(12.065))
 
-  // Round based on 2. digit AFTER decimal point 
+  // Round 2. digit AFTER decimal point 
   floatx.floor(12.0654, option.Some(2))
   |> should.equal(Ok(12.06))
 
-  // Round based on 1. digit AFTER decimal point 
+  // Round 1. digit AFTER decimal point 
   floatx.floor(12.0654, option.Some(1))
   |> should.equal(Ok(12.0))
 
-  // Round based on 0. digit BEFORE decimal point 
+  // Round 0. digit BEFORE decimal point 
   floatx.floor(12.0654, option.Some(0))
   |> should.equal(Ok(12.0))
 
-  // Round based on 1. digit BEFORE decimal point 
+  // Round 1. digit BEFORE decimal point 
   floatx.floor(12.0654, option.Some(-1))
   |> should.equal(Ok(10.0))
 
-  // Round based on 2. digit BEFORE decimal point 
+  // Round 2. digit BEFORE decimal point 
   floatx.floor(12.0654, option.Some(-2))
   |> should.equal(Ok(0.0))
 
-  // Round based on 2. digit BEFORE decimal point 
+  // Round 2. digit BEFORE decimal point 
   floatx.floor(12.0654, option.Some(-3))
+  |> should.equal(Ok(0.0))
+}
+
+pub fn float_truncate_test() {
+  // Round 3. digit AFTER decimal point 
+  floatx.truncate(12.0654, option.Some(3))
+  |> should.equal(Ok(12.065))
+
+  // Round 2. digit AFTER decimal point 
+  floatx.truncate(12.0654, option.Some(2))
+  |> should.equal(Ok(12.06))
+
+  // Round 1. digit AFTER decimal point 
+  floatx.truncate(12.0654, option.Some(1))
+  |> should.equal(Ok(12.0))
+
+  // Round 0. digit BEFORE decimal point 
+  floatx.truncate(12.0654, option.Some(0))
+  |> should.equal(Ok(12.0))
+
+  // Round 1. digit BEFORE decimal point 
+  floatx.truncate(12.0654, option.Some(-1))
+  |> should.equal(Ok(10.0))
+
+  // Round 2. digit BEFORE decimal point 
+  floatx.truncate(12.0654, option.Some(-2))
+  |> should.equal(Ok(0.0))
+
+  // Round 2. digit BEFORE decimal point 
+  floatx.truncate(12.0654, option.Some(-3))
   |> should.equal(Ok(0.0))
 }
 
@@ -636,6 +666,20 @@ pub fn float_flip_sign_test() {
   |> should.equal(100.0)
 }
 
+pub fn float_copy_sign_test() {
+  floatx.copy_sign(100.0, 10.0)
+  |> should.equal(100.0)
+
+  floatx.copy_sign(-100.0, 10.0)
+  |> should.equal(100.0)
+
+  floatx.copy_sign(100.0, -10.0)
+  |> should.equal(-100.0)
+
+  floatx.copy_sign(-100.0, -10.0)
+  |> should.equal(-100.0)
+}
+
 pub fn float_beta_function_test() {
   io.debug("TODO: Implement tests for 'float.beta'.")
 }
@@ -649,6 +693,7 @@ pub fn float_gamma_function_test() {
 }
 
 pub fn math_round_to_nearest_test() {
+  // Try with positive values
   floatx.round(1.50, option.Some(0), option.Some("Nearest"))
   |> should.equal(Ok(2.0))
 
@@ -664,14 +709,45 @@ pub fn math_round_to_nearest_test() {
   floatx.round(4.50, option.Some(0), option.Some("Nearest"))
   |> should.equal(Ok(4.0))
 
+  // Try with negative values
   floatx.round(-3.50, option.Some(0), option.Some("Nearest"))
   |> should.equal(Ok(-4.0))
 
   floatx.round(-4.50, option.Some(0), option.Some("Nearest"))
   |> should.equal(Ok(-4.0))
+
+  // Round 3. digit AFTER decimal point 
+  floatx.round(12.0654, option.Some(3), option.Some("Nearest"))
+  |> should.equal(Ok(12.065))
+
+  // Round 2. digit AFTER decimal point 
+  floatx.round(12.0654, option.Some(2), option.Some("Nearest"))
+  |> should.equal(Ok(12.07))
+
+  // Round 1. digit AFTER decimal point 
+  floatx.round(12.0654, option.Some(1), option.Some("Nearest"))
+  |> should.equal(Ok(12.1))
+
+  // Round 0. digit BEFORE decimal point 
+  floatx.round(12.0654, option.Some(0), option.Some("Nearest"))
+  |> should.equal(Ok(12.0))
+
+  // Round 1. digit BEFORE decimal point 
+  floatx.round(12.0654, option.Some(-1), option.Some("Nearest"))
+  |> should.equal(Ok(10.0))
+
+  // Round 2. digit BEFORE decimal point 
+  floatx.round(12.0654, option.Some(-2), option.Some("Nearest"))
+  |> should.equal(Ok(0.0))
+
+  // Round 3. digit BEFORE decimal point 
+  floatx.round(12.0654, option.Some(-3), option.Some("Nearest"))
+  |> should.equal(Ok(0.0))
 }
 
 pub fn math_round_up_test() {
+  // Note: Rounding mode "Up" is an alias for the ceiling function
+  // Try with positive values
   floatx.round(0.45, option.Some(0), option.Some("Up"))
   |> should.equal(Ok(1.0))
 
@@ -689,9 +765,29 @@ pub fn math_round_up_test() {
 
   floatx.round(0.505, option.Some(2), option.Some("Up"))
   |> should.equal(Ok(0.51))
+
+  // Try with negative values
+  floatx.round(-0.45, option.Some(0), option.Some("Up"))
+  |> should.equal(Ok(-0.0))
+
+  floatx.round(-0.50, option.Some(0), option.Some("Up"))
+  |> should.equal(Ok(-0.0))
+
+  floatx.round(-0.45, option.Some(1), option.Some("Up"))
+  |> should.equal(Ok(-0.4))
+
+  floatx.round(-0.50, option.Some(1), option.Some("Up"))
+  |> should.equal(Ok(-0.5))
+
+  floatx.round(-0.4550, option.Some(2), option.Some("Up"))
+  |> should.equal(Ok(-0.45))
+
+  floatx.round(-0.5050, option.Some(2), option.Some("Up"))
+  |> should.equal(Ok(-0.5))
 }
 
 pub fn math_round_down_test() {
+  // Note: Rounding mode "Down" is an alias for the floor function
   // Try with positive values
   floatx.round(0.45, option.Some(0), option.Some("Down"))
   |> should.equal(Ok(0.0))
@@ -732,6 +828,8 @@ pub fn math_round_down_test() {
 }
 
 pub fn math_round_to_zero_test() {
+  // Note: Rounding mode "ToZero" is an alias for the truncate function
+  // Try with positive values
   floatx.round(0.50, option.Some(0), option.Some("ToZero"))
   |> should.equal(Ok(0.0))
 
@@ -749,9 +847,39 @@ pub fn math_round_to_zero_test() {
 
   floatx.round(0.5075, option.Some(2), option.Some("ToZero"))
   |> should.equal(Ok(0.50))
+
+  // Try with negative values
+  floatx.round(-0.50, option.Some(0), option.Some("ToZero"))
+  |> should.equal(Ok(0.0))
+
+  floatx.round(-0.75, option.Some(0), option.Some("ToZero"))
+  |> should.equal(Ok(0.0))
+
+  floatx.round(-0.45, option.Some(1), option.Some("ToZero"))
+  |> should.equal(Ok(-0.4))
+
+  floatx.round(-0.57, option.Some(1), option.Some("ToZero"))
+  |> should.equal(Ok(-0.50))
+
+  floatx.round(-0.4575, option.Some(2), option.Some("ToZero"))
+  |> should.equal(Ok(-0.45))
+
+  floatx.round(-0.5075, option.Some(2), option.Some("ToZero"))
+  |> should.equal(Ok(-0.50))
 }
 
 pub fn math_round_ties_away_test() {
+  // Try with positive values
+  floatx.round(1.40, option.Some(0), option.Some("TiesAway"))
+  |> should.equal(Ok(1.0))
+
+  floatx.round(1.50, option.Some(0), option.Some("TiesAway"))
+  |> should.equal(Ok(2.0))
+
+  floatx.round(2.50, option.Some(0), option.Some("TiesAway"))
+  |> should.equal(Ok(3.0))
+
+  // Try with negative values
   floatx.round(-1.40, option.Some(0), option.Some("TiesAway"))
   |> should.equal(Ok(-1.0))
 
@@ -764,17 +892,47 @@ pub fn math_round_ties_away_test() {
   floatx.round(-2.50, option.Some(0), option.Some("TiesAway"))
   |> should.equal(Ok(-3.0))
 
-  floatx.round(1.40, option.Some(0), option.Some("TiesAway"))
-  |> should.equal(Ok(1.0))
+  // Round 3. digit AFTER decimal point 
+  floatx.round(12.0654, option.Some(3), option.Some("TiesAway"))
+  |> should.equal(Ok(12.065))
 
-  floatx.round(1.50, option.Some(0), option.Some("TiesAway"))
-  |> should.equal(Ok(2.0))
+  // Round 2. digit AFTER decimal point 
+  floatx.round(12.0654, option.Some(2), option.Some("TiesAway"))
+  |> should.equal(Ok(12.07))
 
-  floatx.round(2.50, option.Some(0), option.Some("TiesAway"))
-  |> should.equal(Ok(3.0))
+  // Round 1. digit AFTER decimal point 
+  floatx.round(12.0654, option.Some(1), option.Some("TiesAway"))
+  |> should.equal(Ok(12.1))
+
+  // Round 0. digit BEFORE decimal point 
+  floatx.round(12.0654, option.Some(0), option.Some("TiesAway"))
+  |> should.equal(Ok(12.0))
+
+  // Round 1. digit BEFORE decimal point 
+  floatx.round(12.0654, option.Some(-1), option.Some("TiesAway"))
+  |> should.equal(Ok(10.0))
+
+  // Round 2. digit BEFORE decimal point 
+  floatx.round(12.0654, option.Some(-2), option.Some("TiesAway"))
+  |> should.equal(Ok(0.0))
+
+  // Round 2. digit BEFORE decimal point 
+  floatx.round(12.0654, option.Some(-3), option.Some("TiesAway"))
+  |> should.equal(Ok(0.0))
 }
 
 pub fn math_round_ties_up_test() {
+  // Try with positive values
+  floatx.round(1.40, option.Some(0), option.Some("TiesUp"))
+  |> should.equal(Ok(1.0))
+
+  floatx.round(1.50, option.Some(0), option.Some("TiesUp"))
+  |> should.equal(Ok(2.0))
+
+  floatx.round(2.50, option.Some(0), option.Some("TiesUp"))
+  |> should.equal(Ok(3.0))
+
+  // Try with negative values
   floatx.round(-1.40, option.Some(0), option.Some("TiesUp"))
   |> should.equal(Ok(-1.0))
 
@@ -787,14 +945,56 @@ pub fn math_round_ties_up_test() {
   floatx.round(-2.50, option.Some(0), option.Some("TiesUp"))
   |> should.equal(Ok(-2.0))
 
-  floatx.round(1.40, option.Some(0), option.Some("TiesUp"))
-  |> should.equal(Ok(1.0))
+  // Round 3. digit AFTER decimal point 
+  floatx.round(12.0654, option.Some(3), option.Some("TiesUp"))
+  |> should.equal(Ok(12.065))
 
-  floatx.round(1.50, option.Some(0), option.Some("TiesUp"))
-  |> should.equal(Ok(2.0))
+  // Round 2. digit AFTER decimal point 
+  floatx.round(12.0654, option.Some(2), option.Some("TiesUp"))
+  |> should.equal(Ok(12.07))
 
-  floatx.round(2.50, option.Some(0), option.Some("TiesUp"))
-  |> should.equal(Ok(3.0))
+  // Round 1. digit AFTER decimal point 
+  floatx.round(12.0654, option.Some(1), option.Some("TiesUp"))
+  |> should.equal(Ok(12.1))
+
+  // Round 0. digit BEFORE decimal point 
+  floatx.round(12.0654, option.Some(0), option.Some("TiesUp"))
+  |> should.equal(Ok(12.0))
+
+  // Round 1. digit BEFORE decimal point 
+  floatx.round(12.0654, option.Some(-1), option.Some("TiesUp"))
+  |> should.equal(Ok(10.0))
+
+  // Round 2. digit BEFORE decimal point 
+  floatx.round(12.0654, option.Some(-2), option.Some("TiesUp"))
+  |> should.equal(Ok(0.0))
+
+  // Round 2. digit BEFORE decimal point 
+  floatx.round(12.0654, option.Some(-3), option.Some("TiesUp"))
+  |> should.equal(Ok(0.0))
+}
+
+pub fn math_round_error_test() {
+  // Test invalid rounding mode
+  floatx.round(-1.50, option.Some(0), option.Some("XYZ"))
+  |> should.be_error()
+}
+
+pub fn math_round_edge_cases_test() {
+  // The default number of digits is 0 if None is provided
+  floatx.round(12.0654, option.None, option.Some("Nearest"))
+  |> should.equal(Ok(12.0))
+
+  // The default rounding mode is "Nearest" if None is provided 
+  floatx.round(12.0654, option.None, option.None)
+  |> should.equal(Ok(12.0))
+
+  // Test invalid rounding mode
+  floatx.round(12.0654, option.None, option.Some("XYZ"))
+  |> should.be_error()
+
+  floatx.round(-1.50, option.Some(0), option.Some("XYZ"))
+  |> should.be_error()
 }
 
 pub fn float_incomplete_gamma_function_test() {
@@ -863,5 +1063,16 @@ pub fn float_constants_test() {
 
   floatx.pi()
   |> floatx.is_close(3.14159, 0.0, 0.00001)
+  |> should.be_true()
+}
+
+pub fn float_is_close_test() {
+  let val: Float = 99.0
+  let ref_val: Float = 100.0
+  // We set 'atol' and 'rtol' such that the values are equivalent
+  // if 'val' is within 1 percent of 'ref_val' +/- 0.1
+  let rtol: Float = 0.01
+  let atol: Float = 0.10
+  floatx.is_close(val, ref_val, rtol, atol)
   |> should.be_true()
 }

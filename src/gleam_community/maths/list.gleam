@@ -19,11 +19,8 @@
 ////    .katex { font-size: 1.1em; }
 ////</style>
 ////
-//// A module containing several different kinds of mathematical functions 
-//// applying to lists of real numbers.
+//// A module containing general utility functions applying to lists.
 ////
-//// Function naming has been adopted from <a href="https://en.wikipedia.org/wiki/C_mathematical_functions"> C mathematical function</a>.
-//// 
 //// ---
 ////
 //// * **Miscellaneous functions**
@@ -39,24 +36,23 @@ import gleam/float
 ///     </a>
 /// </div>
 ///
-/// Trim a list to a certain size given min/max indices. The min/max indices 
-/// are inclusive. 
+/// Trim a list to a certain size given min/max indices. The min/max indices are inclusive. 
 ///
 /// <details>
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_stats/stats
+///     import gleam_community/maths/list as listx
 ///
 ///     pub fn example () {
 ///       // An empty lists returns an error
 ///       []
-///       |> stats.trim(0, 0)
+///       |> listx.trim(0, 0)
 ///       |> should.be_error()
 ///     
 ///       // Trim the list to only the middle part of list
 ///       [1., 2., 3., 4., 5., 6.]
-///       |> stats.trim(1, 4)
+///       |> listx.trim(1, 4)
 ///       |> should.equal(Ok([2., 3., 4., 5.]))
 ///     }
 /// </details>

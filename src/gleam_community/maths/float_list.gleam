@@ -40,12 +40,10 @@
 ////   * [`maximum`](#maximum)
 ////   * [`minimum`](#minimum)
 ////   * [`extrema`](#extrema)
-////   * [`argmax`](#arg_maximum)
-////   * [`argmin`](#arg_minimum)
+////   * [`arg_maximum`](#arg_maximum)
+////   * [`arg_minimum`](#arg_minimum)
 //// * **Tests**
 ////   * [`all_close`](#all_close)
-//// * **Misc. functions**
-////   * [`trim`](#trim)
 
 import gleam/list
 import gleam/int
@@ -173,8 +171,7 @@ pub fn geometric_space(
 /// \sum_{i=1}^n x_i
 /// \\]
 ///
-/// In the formula, $$n$$ is the length of the list and 
-/// $$x_i$$ is the value in the input list indexed by $$i$$.
+/// In the formula, $$n$$ is the length of the list and $$x_i$$ is the value in the input list indexed by $$i$$.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -222,8 +219,7 @@ pub fn sum(arr: List(Float)) -> Float {
 /// \prod_{i=1}^n x_i
 /// \\]
 ///
-/// In the formula, $$n$$ is the length of the list and 
-/// $$x_i$$ is the value in the input list indexed by $$i$$.
+/// In the formula, $$n$$ is the length of the list and $$x_i$$ is the value in the input list indexed by $$i$$.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -271,8 +267,7 @@ pub fn product(arr: List(Float)) -> Float {
 /// \sum_{i=1}^n x_i
 /// \\]
 ///
-/// In the formula, $$n$$ is the length of the list and 
-/// $$x_i$$ is the value in the input list indexed by $$i$$.
+/// In the formula, $$n$$ is the length of the list and $$x_i$$ is the value in the input list indexed by $$i$$.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -314,8 +309,7 @@ pub fn cumulative_sum(arr: List(Float)) -> List(Float) {
 /// \prod_{i=1}^n x_i
 /// \\]
 ///
-/// In the formula, $$n$$ is the length of the list and 
-/// $$x_i$$ is the value in the input list indexed by $$i$$.
+/// In the formula, $$n$$ is the length of the list and $$x_i$$ is the value in the input list indexed by $$i$$.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -395,9 +389,9 @@ pub fn norm(xarr: List(Float), yarr: List(Float), p: Int) -> List(Float) {
 ///       |> should.be_error()
 ///
 ///       // Valid input returns a result
-///       [4., 4., 3., 2., 1.]
+///       [4.0, 4.0, 3.0, 2.0, 1.0]
 ///       |> float_list.maximum()
-///       |> should.equal(Ok(4.))
+///       |> should.equal(Ok(4.0))
 ///     }
 /// </details>
 ///
@@ -450,9 +444,9 @@ pub fn maximum(arr: List(Float)) -> Result(Float, String) {
 ///       |> should.be_error()
 ///     
 ///       // Valid input returns a result
-///       [4., 4., 3., 2., 1.]
+///       [4.0, 4.0, 3.0, 2.0, 1.0]
 ///       |> float_list.minimum()
-///       |> should.equal(Ok(1.))
+///       |> should.equal(Ok(1.0))
 ///     }
 /// </details>
 ///
@@ -505,7 +499,7 @@ pub fn minimum(arr: List(Float)) -> Result(Float, String) {
 ///       |> should.be_error()
 ///     
 ///       // Valid input returns a result
-///       [4., 4., 3., 2., 1.]
+///       [4.0, 4.0, 3.0, 2.0, 1.0]
 ///       |> float_list.arg_maximum()
 ///       |> should.equal(Ok([0, 1]))
 ///     }
@@ -565,7 +559,7 @@ pub fn arg_maximum(arr: List(Float)) -> Result(List(Int), String) {
 ///       |> should.be_error()
 ///     
 ///       // Valid input returns a result
-///       [4., 4., 3., 2., 1.]
+///       [4.0, 4.0, 3.0, 2.0, 1.0]
 ///       |> float_list.arg_minimum()
 ///       |> should.equal(Ok([4]))
 ///     }
@@ -577,7 +571,7 @@ pub fn arg_maximum(arr: List(Float)) -> Result(List(Int), String) {
 ///     </a>
 /// </div>
 ///
-pub fn arg_mininmum(arr: List(Float)) -> Result(List(Int), String) {
+pub fn arg_minimum(arr: List(Float)) -> Result(List(Int), String) {
   case arr {
     [] ->
       "Invalid input argument: The list is empty."
@@ -625,9 +619,9 @@ pub fn arg_mininmum(arr: List(Float)) -> Result(List(Int), String) {
 ///       |> should.be_error()
 ///     
 ///       // Valid input returns a result
-///       [4., 4., 3., 2., 1.]
+///       [4.0, 4.0, 3.0, 2.0, 1.0]
 ///       |> float_list.extrema()
-///       |> should.equal(Ok(1.))
+///       |> should.equal(Ok(#(1.0, 4.0)))
 ///     }
 /// </details>
 ///
@@ -638,7 +632,30 @@ pub fn arg_mininmum(arr: List(Float)) -> Result(List(Int), String) {
 /// </div>
 ///
 pub fn extrema(arr: List(Float)) -> Result(#(Float, Float), String) {
-  todo
+  case arr {
+    [] ->
+      "Invalid input argument: The list is empty."
+      |> Error
+    _ -> {
+      assert Ok(val_max) = list.at(arr, 0)
+      assert Ok(val_min) = list.at(arr, 0)
+      arr
+      |> list.fold(
+        #(val_min, val_max),
+        fn(acc: #(Float, Float), a: Float) {
+          let first: Float = pair.first(acc)
+          let second: Float = pair.second(acc)
+          case a <. first, a >. second {
+            True, True -> #(a, a)
+            True, False -> #(a, second)
+            False, True -> #(first, a)
+            False, False -> #(first, second)
+          }
+        },
+      )
+      |> Ok
+    }
+  }
 }
 
 /// <div style="text-align: right;">

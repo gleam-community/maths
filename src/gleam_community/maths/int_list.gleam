@@ -26,11 +26,18 @@
 //// 
 //// ---
 ////
-//// * **Miscellaneous functions**
-////   * [`amax`](#amax)
-////   * [`amin`](#amin)
-////   * [`argmax`](#argmax)
-////   * [`argmin`](#argmin)
+//// * **Distances, sums and products**
+////   * [`sum`](#sum)
+////   * [`product`](#product)
+////   * [`norm`](#norm)
+////   * [`cumulative_sum`](#cumulative_sum)
+////   * [`cumulative_product`](#cumulative_product)
+//// * **Misc. mathematical functions**
+////   * [`maximum`](#maximum)
+////   * [`minimum`](#minimum)
+////   * [`extrema`](#extrema)
+////   * [`arg_maximum`](#arg_maximum)
+////   * [`arg_minimum`](#arg_minimum)
 
 import gleam/list
 import gleam/int
@@ -50,17 +57,17 @@ import gleam_community/maths/int as intx
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_stats/stats
+///     import gleam_community/maths/int_list
 ///
 ///     pub fn example () {
 ///       // An empty lists returns an error
 ///       []
-///       |> stats.argmin()
+///       |> int_list.arg_minimum()
 ///       |> should.be_error()
 ///     
 ///       // Valid input returns a result
-///       [4., 4., 3., 2., 1.]
-///       |> stats.argmin()
+///       [4, 4, 3, 2, 1]
+///       |> stats.arg_minimum()
 ///       |> should.equal(Ok([4]))
 ///     }
 /// </details>
@@ -71,7 +78,7 @@ import gleam_community/maths/int as intx
 ///     </a>
 /// </div>
 ///
-pub fn argmin(arr: List(Float)) -> Result(List(Int), String) {
+pub fn arg_minimum(arr: List(Int)) -> Result(List(Int), String) {
   case arr {
     [] ->
       "Invalid input argument: The list is empty."
@@ -79,11 +86,11 @@ pub fn argmin(arr: List(Float)) -> Result(List(Int), String) {
     _ -> {
       assert Ok(min) =
         arr
-        |> amin()
+        |> minimum()
       arr
-      |> list.index_map(fn(index: Int, a: Float) -> Int {
-        case a -. min {
-          0. -> index
+      |> list.index_map(fn(index: Int, a: Int) -> Int {
+        case a - min {
+          0 -> index
           _ -> -1
         }
       })
@@ -110,17 +117,17 @@ pub fn argmin(arr: List(Float)) -> Result(List(Int), String) {
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_stats/stats
+///     import gleam_community/maths/int_list
 ///
 ///     pub fn example () {
 ///       // An empty lists returns an error
 ///       []
-///       |> stats.argmax()
+///       |> int_list.arg_maximum()
 ///       |> should.be_error()
 ///     
 ///       // Valid input returns a result
-///       [4., 4., 3., 2., 1.]
-///       |> stats.argmax()
+///       [4, 4, 3, 2, 1]
+///       |> int_list.arg_maximum()
 ///       |> should.equal(Ok([0, 1]))
 ///     }
 /// </details>
@@ -131,7 +138,7 @@ pub fn argmin(arr: List(Float)) -> Result(List(Int), String) {
 ///     </a>
 /// </div>
 ///
-pub fn argmax(arr: List(Float)) -> Result(List(Int), String) {
+pub fn arg_maximum(arr: List(Int)) -> Result(List(Int), String) {
   case arr {
     [] ->
       "Invalid input argument: The list is empty."
@@ -139,11 +146,11 @@ pub fn argmax(arr: List(Float)) -> Result(List(Int), String) {
     _ -> {
       assert Ok(max) =
         arr
-        |> amax()
+        |> maximum()
       arr
-      |> list.index_map(fn(index: Int, a: Float) -> Int {
-        case a -. max {
-          0. -> index
+      |> list.index_map(fn(index: Int, a: Int) -> Int {
+        case a - max {
+          0 -> index
           _ -> -1
         }
       })
@@ -170,18 +177,18 @@ pub fn argmax(arr: List(Float)) -> Result(List(Int), String) {
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_stats/stats
+///     import gleam_community/maths/int_list
 ///
 ///     pub fn example () {
 ///       // An empty lists returns an error
 ///       []
-///       |> stats.amax()
+///       |> int_list.maximum()
 ///       |> should.be_error()
 ///
 ///       // Valid input returns a result
-///       [4., 4., 3., 2., 1.]
-///       |> stats.amax()
-///       |> should.equal(Ok(4.))
+///       [4, 4, 3, 2, 1]
+///       |> int_list.maximum()
+///       |> should.equal(Ok(4))
 ///     }
 /// </details>
 ///
@@ -191,7 +198,7 @@ pub fn argmax(arr: List(Float)) -> Result(List(Int), String) {
 ///     </a>
 /// </div>
 ///
-pub fn amax(arr: List(Float)) -> Result(Float, String) {
+pub fn maximum(arr: List(Int)) -> Result(Int, String) {
   case arr {
     [] ->
       "Invalid input argument: The list is empty."
@@ -201,8 +208,8 @@ pub fn amax(arr: List(Float)) -> Result(Float, String) {
       arr
       |> list.fold(
         val0,
-        fn(acc: Float, a: Float) {
-          case a >. acc {
+        fn(acc: Int, a: Int) {
+          case a > acc {
             True -> a
             False -> acc
           }
@@ -225,18 +232,18 @@ pub fn amax(arr: List(Float)) -> Result(Float, String) {
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_stats/stats
+///     import gleam_community/maths/int_list
 ///
 ///     pub fn example () {
 ///       // An empty lists returns an error
 ///       []
-///       |> stats.amin()
+///       |> int_list.minimum()
 ///       |> should.be_error()
 ///     
 ///       // Valid input returns a result
-///       [4., 4., 3., 2., 1.]
-///       |> stats.amin()
-///       |> should.equal(Ok(1.))
+///       [4, 4, 3, 2, 1]
+///       |> int_list.minimum()
+///       |> should.equal(Ok(1))
 ///     }
 /// </details>
 ///
@@ -246,7 +253,7 @@ pub fn amax(arr: List(Float)) -> Result(Float, String) {
 ///     </a>
 /// </div>
 ///
-pub fn amin(arr: List(Float)) -> Result(Float, String) {
+pub fn minimum(arr: List(Int)) -> Result(Int, String) {
   case arr {
     [] ->
       "Invalid input argument: The list is empty."
@@ -256,8 +263,8 @@ pub fn amin(arr: List(Float)) -> Result(Float, String) {
       arr
       |> list.fold(
         val0,
-        fn(acc: Float, a: Float) {
-          case a <. acc {
+        fn(acc: Int, a: Int) {
+          case a < acc {
             True -> a
             False -> acc
           }
@@ -279,18 +286,18 @@ pub fn amin(arr: List(Float)) -> Result(Float, String) {
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_stats/stats
+///     import gleam_community/maths/int_list
 ///
 ///     pub fn example () {
 ///       // An empty lists returns an error
 ///       []
-///       |> stats.amin()
+///       |> int_list.extrema()
 ///       |> should.be_error()
 ///     
 ///       // Valid input returns a result
-///       [4., 4., 3., 2., 1.]
-///       |> stats.amin()
-///       |> should.equal(Ok(1.))
+///       [4, 4, 3, 2, 1]
+///       |> int_list.extrema()
+///       |> should.equal(Ok(#(1, 4)))
 ///     }
 /// </details>
 ///
@@ -300,6 +307,29 @@ pub fn amin(arr: List(Float)) -> Result(Float, String) {
 ///     </a>
 /// </div>
 ///
-pub fn extrema(arr: List(Float)) -> Result(#(Float, Float), String) {
-  todo
+pub fn extrema(arr: List(Int)) -> Result(#(Int, Int), String) {
+  case arr {
+    [] ->
+      "Invalid input argument: The list is empty."
+      |> Error
+    _ -> {
+      assert Ok(val_max) = list.at(arr, 0)
+      assert Ok(val_min) = list.at(arr, 0)
+      arr
+      |> list.fold(
+        #(val_min, val_max),
+        fn(acc: #(Int, Int), a: Int) {
+          let first: Int = pair.first(acc)
+          let second: Int = pair.second(acc)
+          case a < first, a > second {
+            True, True -> #(a, a)
+            True, False -> #(a, second)
+            False, True -> #(first, a)
+            False, False -> #(first, second)
+          }
+        },
+      )
+      |> Ok
+    }
+  }
 }

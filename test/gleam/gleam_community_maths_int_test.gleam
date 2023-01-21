@@ -156,6 +156,20 @@ pub fn int_flip_sign_test() {
   |> should.equal(100)
 }
 
+pub fn int_copy_sign_test() {
+  intx.copy_sign(100, 10)
+  |> should.equal(100)
+
+  intx.copy_sign(-100, 10)
+  |> should.equal(100)
+
+  intx.copy_sign(100, -10)
+  |> should.equal(-100)
+
+  intx.copy_sign(-100, -10)
+  |> should.equal(-100)
+}
+
 pub fn int_is_power_test() {
   intx.is_power(10, 10)
   |> should.equal(True)

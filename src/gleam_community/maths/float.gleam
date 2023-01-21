@@ -19,8 +19,7 @@
 ////    .katex { font-size: 1.1em; }
 ////</style>
 ////
-//// A module containing several different kinds of mathematical functions and constants  
-//// that apply to real numbers (floats).
+//// A module containing mathematical functions and constants that apply to real numbers (floats).
 ////
 //// ---
 ////
@@ -92,35 +91,42 @@ import gleam/option
 /// </div>
 ///
 /// The ceiling function rounds a given input value $$x \in \mathbb{R}$$ towards $$+\infty$$ at a specified number of digits.
-/// For example, $$12.0654$$ is rounded to:
-/// - $$1000.0$$ at the 3rd digit before the decimal point (`digit = -3`)
-/// - $$100.0$$ at the 2nd digit before the decimal point (`digit = -2`)
-/// - $$20.0$$ the 1st digit before the decimal point (`digit = -1`)
-/// - $$13.0$ at the 0th digit before the decimal point (`digit = 0`)
-/// - $$12.1$$ at the 1st digit after the decimal point (`digit = 1`)
-/// - $$12.07$$ at the 2nd digit after the decimal point (`digit = 2`)
-/// - $$12.066$$ at the 3rd digit after the decimal point (`digit = 3`)
 ///
-/// See also the concrete code example below. 
-///
-/// Note: The ceiling function is used as an alias for the rounding function `round` with rounding mode `"Up"`.
+/// Note: The ceiling function is used as an alias for the rounding function [`round`](#round) with rounding mode `"Up"`.
 ///
 /// <details>
-///     <summary>Example:</summary>
+///     <summary>Details</summary>
+///
+///   For example, $$12.0654$$ is rounded to:
+///   - $$13.0$$ for 0 digits after the decimal point (`digits = 0`)
+///   - $$12.1$$ for 1 digit after the decimal point (`digits = 1`)
+///   - $$12.07$$ for 2 digits after the decimal point (`digits = 2`)
+///   - $$12.066$$ for 3 digits after the decimal point (`digits = 3`)
+///
+///   It is also possible to specify a negative number of digits. In that case, the negative number refers to the digits before the decimal point.
+///   For example, $$12.0654$$ is rounded to:
+///   - $$20.0$$ for 1 digit places before the decimal point (`digit = -1`)
+///   - $$100.0$$ for 2 digits before the decimal point (`digits = -2`)
+///   - $$1000.0$$ for 3 digits before the decimal point (`digits = -3`)
+///
+/// </details>
+///
+/// <details>
+///     <summary>Example</summary>
 ///
 ///     import gleeunit/should
 ///     import gleam/option
 ///     import gleam_community/maths/float as floatx
 ///
 ///     pub fn example() {
-///       floatx.ceiling(12.0654, option.Some(3))
-///       |> should.equal(12.066)
+///       floatx.ceiling(12.0654, option.Some(1))
+///       |> should.equal(Ok(12.1))
 ///
 ///       floatx.ceiling(12.0654, option.Some(2))
-///       |> should.equal(12.07)
+///       |> should.equal(Ok(12.07))
 ///
-///       floatx.ceiling(12.0654, option.Some(1))
-///       |> should.equal(12.1)
+///       floatx.ceiling(12.0654, option.Some(3))
+///       |> should.equal(Ok(12.066))
 ///     }
 /// </details>
 ///
@@ -141,35 +147,41 @@ pub fn ceiling(x: Float, digits: option.Option(Int)) -> Result(Float, String) {
 /// </div>
 ///
 /// The floor function rounds a given input value $$x \in \mathbb{R}$$ towards $$-\infty$$ at a specified number of digits.
-/// For example, $$12.0654$$ is rounded to:
-/// - $$0.0$$ at the 3rd digit before the decimal point (`digit = -3`)
-/// - $$0.0$$ at the 2nd digit before the decimal point (`digit = -2`)
-/// - $$10.0$$ the 1st digit before the decimal point (`digit = -1`)
-/// - $$12.0$ at the 0th digit before the decimal point (`digit = 0`)
-/// - $$12.0$$ at the 1st digit after the decimal point (`digit = 1`)
-/// - $$12.06$$ at the 2nd digit after the decimal point (`digit = 2`)
-/// - $$12.065$$ at the 3rd digit after the decimal point (`digit = 3`)
 ///
-/// See also the concrete code example below. 
-///
-/// Note: The floor function is used as an alias for the rounding function `round` with rounding mode `"Down"`.
+/// Note: The floor function is used as an alias for the rounding function [`round`](#round) with rounding mode `"Down"`.
 ///
 /// <details>
-///     <summary>Example:</summary>
+///     <summary>Details</summary>
+///
+///   For example, $$12.0654$$ is rounded to:
+///   - $$12.0$$ for 0 digits after the decimal point (`digits = 0`)
+///   - $$12.0$$ for 1 digits after the decimal point (`digits = 1`)
+///   - $$12.06$$ for 2 digits after the decimal point (`digits = 2`)
+///   - $$12.065$$ for 3 digits after the decimal point (`digits = 3`)
+///
+///   It is also possible to specify a negative number of digits. In that case, the negative number refers to the digits before the decimal point.
+///   - $$10.0$$ for 1 digit before the decimal point (`digits = -1`)
+///   - $$0.0$$ for 2 digits before the decimal point (`digits = -2`)
+///   - $$0.0$$ for 3 digits before the decimal point (`digits = -3`)
+///
+/// </details>
+///
+/// <details>
+///     <summary>Example</summary>
 ///
 ///     import gleeunit/should
 ///     import gleam/option
 ///     import gleam_community/maths/float as floatx
 ///
 ///     pub fn example() {
-///       floatx.ceiling(12.0654, option.Some(3))
-///       |> should.equal(12.065)
+///       floatx.floor(12.0654, option.Some(1))
+///       |> should.equal(Ok(12.0))
 ///
-///       floatx.ceiling(12.0654, option.Some(2))
-///       |> should.equal(12.06)
+///       floatx.floor(12.0654, option.Some(2))
+///       |> should.equal(Ok(12.06))
 ///
-///       floatx.ceiling(12.0654, option.Some(1))
-///       |> should.equal(12.0)
+///       floatx.floor(12.0654, option.Some(3))
+///       |> should.equal(Ok(12.065))
 ///     }
 /// </details>
 ///
@@ -189,26 +201,42 @@ pub fn floor(x: Float, digits: option.Option(Int)) -> Result(Float, String) {
 ///     </a>
 /// </div>
 ///
+/// The truncate function rounds a given input value $$x \in \mathbb{R}$$ towards $$0$$ at a specified number of digits.
 ///
+/// Note: The truncate function is used as an alias for the rounding function [`round`](#round) with rounding mode `"ToZero"`.
 ///
 /// <details>
-///     <summary>Example:</summary>
+///     <summary>Details</summary>
+///
+///   For example, $$12.0654$$ is rounded to:
+///   - $$12.0$$ for 0 digits after the decimal point (`digits = 0`)
+///   - $$12.0$$ for 1 digits after the decimal point (`digits = 1`)
+///   - $$12.06$$ for 2 digits after the decimal point (`digits = 2`)
+///   - $$12.065$$ for 3 digits after the decimal point (`digits = 3`)
+///
+///   It is also possible to specify a negative number of digits. In that case, the negative number refers to the digits before the decimal point.
+///   - $$10.0$$ for 1 digit before the decimal point (`digits = -1`)
+///   - $$0.0$$ for 2 digits before the decimal point (`digits = -2`)
+///   - $$0.0$$ for 3 digits before the decimal point (`digits = -3`)
+///
+/// </details>
+///
+/// <details>
+///     <summary>Example</summary>
 ///
 ///     import gleeunit/should
+///     import gleam/option
 ///     import gleam_community/maths/float as floatx
 ///
 ///     pub fn example() {
-///       floatx.round(0.4444, 2)
-///       |> should.equal(0.44)
+///       floatx.truncate(12.0654, option.Some(1))
+///       |> should.equal(Ok(12.0))
 ///
-///       floatx.round(0.4445, 2)
-///       |> should.equal(0.44)
+///       floatx.truncate(12.0654, option.Some(2))
+///       |> should.equal(Ok(12.0))
 ///
-///       floatx.round(0.4455, 2)
-///       |> should.equal(0.45)
-///
-///       floatx.round(0.4555, 2)
-///       |> should.equal(0.46)
+///       floatx.truncate(12.0654, option.Some(3))
+///       |> should.equal(Ok(12.0))
 ///     }
 /// </details>
 ///
@@ -218,8 +246,8 @@ pub fn floor(x: Float, digits: option.Option(Int)) -> Result(Float, String) {
 ///     </a>
 /// </div>
 ///
-pub fn truncate(x: Float, digits: Int) -> Result(Float, String) {
-  round(x, option.Some(digits), option.Some("ToZero"))
+pub fn truncate(x: Float, digits: option.Option(Int)) -> Result(Float, String) {
+  round(x, digits, option.Some("ToZero"))
 }
 
 /// <div style="text-align: right;">
@@ -228,49 +256,125 @@ pub fn truncate(x: Float, digits: Int) -> Result(Float, String) {
 ///     </a>
 /// </div>
 ///
-/// The function rounds a floating point number to a specific number of digits using a given rounding mode.
+/// The function rounds a float to a specific number of digits (after the decimal place or before if negative) using a specified rounding mode.
 ///
 /// Valid rounding modes include:
-/// - `Nearest` (default): If the last digit is equal to 5, then the previous digit is rounded to nearest even integer value.
-/// - `TiesAway`: If the last digit is equal to 5, then the previous digit is rounded away from zero (C/C++ rounding behavior).
-/// - `TiesUp`: If the last digit is equal to 5, then the previous digit is rounded towards $$+\infty$$ (Java/JavaScript rounding behaviour).
-/// - `ToZero`: The last digit is rounded towards $$0$$.
-///   - An alias for this rounding mode is [`truncate`](#truncate)
-/// - `Down`: If the last digit larger than 0, then the previous digit is rounded towards $$-\infty$$.
-///   - An alias for this rounding mode is [`floor`](#floor)
-/// - `Up`: If the last digit is larger than 0, then the previous digit is rounded towards $$+\infty$$.
-///   - An alias for this rounding mode is [`ceiling`](#ceiling)
-///
-/// Valid rounding modes include:
-/// - `Nearest` (default): The specified digit is rounded to nearest even integer value if the following digit + 1 is equal to 5.
-/// - `TiesAway`: The specified digit is rounded away from zero (C/C++ rounding behavior) if the following digit + 1 is equal to 5.
-/// - `TiesUp`: The specified digit is rounded towards $$+\infty$$ (Java/JavaScript rounding behaviour) if the following digit + 1 is equal to 5.
-/// - `ToZero`: The input value is truncated at the specified digit.
-///   - An alias for this rounding mode is [`truncate`](#truncate)
-/// - `Down`: The specified digit is rounded towards $$-\infty$$ if the following digit + 1 is larger than 0.
-///   - An alias for this rounding mode is [`floor`](#floor)
-/// - `Up`: The specified digit is rounded towards $$+\infty$$ if the following digit + 1 is larger than 0.
-///   - An alias for this rounding mode is [`ceiling`](#ceiling)
+/// - `"Nearest"` (default): The input $$x$$ is rounded to the nearest integer value (at the specified digit) with ties (fractional values of 0.5) being rounded to the nearest even integer.
+/// - `"TiesAway"`: The input $$x$$ is rounded to the nearest integer value (at the specified digit) with ties (fractional values of 0.5) being rounded away from zero (C/C++ rounding behavior).
+/// - `"TiesUp"`: The input $$x$$ is rounded to the nearest integer value (at the specified digit) with ties (fractional values of 0.5) being rounded towards $$+\infty$$ (Java/JavaScript rounding behaviour).
+/// - `"ToZero"`: The input $$x$$ is rounded to the nearest integer value (at the specified digit) that is less than or equal to the absolute value of the input $$x$$. An alias for this rounding mode is [`truncate`](#truncate).
+/// - `"Down"`: The input $$x$$ is rounded to the nearest integer value (at the specified digit) that is less than or equal to the input $$x$$. An alias for this rounding mode is [`floor`](#floor).
+/// - `"Up"`: The input $$x$$ is rounded to the nearest integer value (at the specified digit) that is larger than or equal to the input $$x$$. An alias for this rounding mode is [`ceiling`](#ceiling).
 ///
 /// <details>
-///     <summary>Example:</summary>
+/// <summary>Details</summary>
+///
+///   The `"Nearest"` rounding mode, rounds $$12.0654$$ to:
+///   - $$12.0$$ for 0 digits after the decimal point (`digits = 0`)
+///   - $$12.1$$ for 1 digit after the decimal point (`digits = 1`)
+///   - $$12.07$$ for 2 digits after the decimal point (`digits = 2`)
+///   - $$12.065$$ for 3 digits after the decimal point (`digits = 3`)
+///
+///   It is also possible to specify a negative number of digits. In that case, the negative number refers to the digits before the decimal point.
+///   - $$10.0$$ for 1 digit before the decimal point (`digits = -1`)
+///   - $$0.0$$ for 2 digits before the decimal point (`digits = -2`)
+///   - $$0.0$$ for 3 digits before the decimal point (`digits = -3`)
+///
+///   The `"TiesAway"` rounding mode, rounds $$12.0654$$ to:
+///   - $$12.0$$ for 0 digits after the decimal point (`digits = 0`)
+///   - $$12.1$$ for 1 digit after the decimal point (`digits = 1`)
+///   - $$12.07$$ for 2 digits after the decimal point (`digits = 2`)
+///   - $$12.065$$ for 3 digits after the decimal point (`digits = 3`)
+///
+///   It is also possible to specify a negative number of digits. In that case, the negative number refers to the digits before the decimal point.
+///   - $$10.0$$ for 1 digit before the decimal point (`digits = -1`)
+///   - $$0.0$$ for 2 digits before the decimal point (`digits = -2`)
+///   - $$0.0$$ for 3 digits before the decimal point (`digits = -3`)
+///
+///   The `"TiesUp"` rounding mode, rounds $$12.0654$$ to:
+///   - $$12.0$$ for 0 digits after the decimal point (`digits = 0`)
+///   - $$12.1$$ for 1 digits after the decimal point (`digits = 1`)
+///   - $$12.07$$ for 2 digits after the decimal point (`digits = 2`)
+///   - $$12.065$$ for 3 digits after the decimal point (`digits = 3`)
+///
+///   It is also possible to specify a negative number of digits. In that case, the negative number refers to the digits before the decimal point.
+///   - $$10.0$$ for 1 digit before the decimal point (`digits = -1`)
+///   - $$0.0$$ for 2 digits before the decimal point (`digits = -2`)
+///   - $$0.0$$ for 3 digits before the decimal point (`digits = -3`)
+///
+///   The `"ToZero"` rounding mode, rounds $$12.0654$$ to:
+///   - $$12.0$$ for 0 digits after the decimal point (`digits = 0`)
+///   - $$12.0$$ for 1 digit after the decimal point (`digits = 1`)
+///   - $$12.06$$ for 2 digits after the decimal point (`digits = 2`)
+///   - $$12.065$$ for 3 digits after the decimal point (`digits = 3`)
+///
+///   It is also possible to specify a negative number of digits. In that case, the negative number refers to the digits before the decimal point.
+///   - $$10.0$$ for 1 digit before the decimal point (`digits = -1`)
+///   - $$0.0$$ for 2 digits before the decimal point (`digits = -2`)
+///   - $$0.0$$ for 3 digits before the decimal point (`digits = -3`)
+///
+///   The `"Down"` rounding mode, rounds $$12.0654$$ to:
+///   - $$12.0$$ for 0 digits after the decimal point (`digits = 0`)
+///   - $$12.0$$ for 1 digits after the decimal point (`digits = 1`)
+///   - $$12.06$$ for 2 digits after the decimal point (`digits = 2`)
+///   - $$12.065$$ for 3 digits after the decimal point (`digits = 3`)
+///
+///   It is also possible to specify a negative number of digits. In that case, the negative number refers to the digits before the decimal point.
+///   - $$10.0$$ for 1 digit before the decimal point (`digits = -1`)
+///   - $$0.0$$ for 2 digits before the decimal point (`digits = -2`)
+///   - $$0.0$$ for 3 digits before the decimal point (`digits = -3`)
+///
+///   The `"Up"` rounding mode, rounds $$12.0654$$ to:
+///   - $$13.0$$ for 0 digits after the decimal point (`digits = 0`)
+///   - $$12.1$$ for 1 digit after the decimal point (`digits = 1`)
+///   - $$12.07$$ for 2 digits after the decimal point (`digits = 2`)
+///   - $$12.066$$ for 3 digits after the decimal point (`digits = 3`)
+///
+///   It is also possible to specify a negative number of digits. In that case, the negative number refers to the digits before the decimal point.
+///   - $$20.0$$ for 1 digit places before the decimal point (`digit = -1`)
+///   - $$100.0$$ for 2 digits before the decimal point (`digits = -2`)
+///   - $$1000.0$$ for 3 digits before the decimal point (`digits = -3`)
+///
+/// </details>
+///
+/// <details>
+///     <summary>Example</summary>
 ///
 ///     import gleeunit/should
 ///     import gleam/option
 ///     import gleam_community/maths/float as floatx
 ///
 ///     pub fn example() {
-///       floatx.round(0.4444, 2)
-///       |> should.equal(0.44)
+///       // The default number of digits is 0 if None is provided
+///       floatx.round(12.0654, option.None, option.Some("Nearest"))
+///       |> should.equal(Ok(12.0))
 ///
-///       floatx.round(0.4445, 2)
-///       |> should.equal(0.44)
+///       // The default rounding mode is "Nearest" if None is provided 
+///       floatx.round(12.0654, option.None, option.None)
+///       |> should.equal(Ok(12.0))
 ///
-///       floatx.round(0.4455, 2)
-///       |> should.equal(0.45)
+///       // We get an error if an invalid rounding mode is provided 
+///       floatx.round(12.0654, option.None, option.Some("XYZ"))
+///       |> should.be_error()
 ///
-///       floatx.round(0.4555, 2)
-///       |> should.equal(0.46)
+///       // Try different rounding modes
+///       floatx.round(12.0654, option.Some(2), option.Some("Nearest"))
+///       |> should.equal(Ok(12.07))
+///
+///       floatx.round(12.0654, option.Some(2), option.Some("TiesAway"))
+///       |> should.equal(Ok(12.07))
+///
+///       floatx.round(12.0654, option.Some(2), option.Some("TiesUp"))
+///       |> should.equal(Ok(12.07)
+///
+///       floatx.round(12.0654, option.Some(2), option.Some("ToZero"))
+///       |> should.equal(Ok(12.06))
+///
+///       floatx.round(12.0654, option.Some(2), option.Some("Down"))
+///       |> should.equal(Ok(12.06))
+///
+///       floatx.round(12.0654, option.Some(2), option.Some("Up"))
+///       |> should.equal(Ok(12.07))
 ///     }
 /// </details>
 ///
@@ -288,82 +392,78 @@ pub fn round(
   case digits {
     option.Some(a) -> {
       assert Ok(p) = power(10.0, int.to_float(a))
-      case mode {
-        // Rounding mode choices
-        option.Some("Nearest") ->
-          round_nearest(p, x)
-          |> Ok
-        option.Some("TiesAway") ->
-          round_ties_away(p, x)
-          |> Ok
-        option.Some("TiesUp") ->
-          round_ties_up(p, x)
-          |> Ok
-        option.Some("ToZero") ->
-          round_to_zero(p, x)
-          |> Ok
-        option.Some("Down") ->
-          round_down(p, x)
-          |> Ok
-        option.Some("Up") ->
-          round_up(p, x)
-          |> Ok
-        // Default rounding mode
-        option.None ->
-          round_nearest(p, x)
-          |> Ok
-        _ ->
-          "Invalid Rounding Mode!"
-          |> Error
-      }
+      do_round(p, x, mode)
     }
+    option.None -> do_round(1.0, x, mode)
+  }
+}
+
+fn do_round(
+  p: Float,
+  x: Float,
+  mode: option.Option(String),
+) -> Result(Float, String) {
+  case mode {
+    // Rounding mode choices
+    option.Some("Nearest") ->
+      round_nearest(p, x)
+      |> Ok
+    option.Some("TiesAway") ->
+      round_ties_away(p, x)
+      |> Ok
+    option.Some("TiesUp") ->
+      round_ties_up(p, x)
+      |> Ok
+    option.Some("ToZero") ->
+      round_to_zero(p, x)
+      |> Ok
+    option.Some("Down") ->
+      round_down(p, x)
+      |> Ok
+    option.Some("Up") ->
+      round_up(p, x)
+      |> Ok
+    // Default rounding mode. The default is "Nearest"
+    option.None ->
+      round_nearest(p, x)
+      |> Ok
     _ ->
-      "Invalid!"
+      "Invalid rounding mode. Valid input is 'Nearest', 'TiesAway', 'TiesUp', 'ToZero', 'Down', 'Up'."
       |> Error
   }
 }
 
 fn round_nearest(p: Float, x: Float) -> Float {
-  let positive = x >. 0.0
-  let xabs = float.absolute_value(x)
-  let geq_tie = xabs -. truncate_float(xabs) >=. 0.5
-  assert Ok(is_even) = int.modulo(to_int(xabs), 2)
-  io.debug(is_even)
-  case geq_tie {
-    True ->
+  let xabs = float.absolute_value(x) *. p
+  let rem = xabs -. truncate_float(xabs)
+  case rem {
+    _ if rem >. 0.5 -> sign(x) *. truncate_float(xabs +. 1.0) /. p
+    _ if rem == 0.5 -> {
+      assert Ok(is_even) = int.modulo(to_int(xabs), 2)
       case is_even == 0 {
-        True -> sign(x) *. truncate_float({ xabs +. 0.0 } *. p) /. p
-        False -> sign(x) *. truncate_float({ xabs +. 1.0 } *. p) /. p
+        True -> sign(x) *. truncate_float(xabs) /. p
+        False -> sign(x) *. truncate_float(xabs +. 1.0) /. p
       }
-    False -> sign(x) *. truncate_float({ xabs +. 0.0 } *. p) /. p
+    }
+    _ -> sign(x) *. truncate_float(xabs) /. p
   }
 }
 
 fn round_ties_away(p: Float, x: Float) -> Float {
-  let positive = x >. 0.0
-  let xabs = float.absolute_value(x)
-  let g_tie = xabs -. truncate_float(xabs) >=. 0.5
-  case g_tie {
-    True -> sign(x) *. truncate_float({ xabs +. 1.0 } *. p) /. p
-    False -> truncate_float(x *. p) /. p
+  let xabs = float.absolute_value(x) *. p
+  let rem = xabs -. truncate_float(xabs)
+  case rem {
+    _ if rem >=. 0.5 -> sign(x) *. truncate_float(xabs +. 1.0) /. p
+    _ -> sign(x) *. truncate_float(xabs) /. p
   }
 }
 
 fn round_ties_up(p: Float, x: Float) -> Float {
-  let positive = x >. 0.0
-  let xabs = float.absolute_value(x)
-  let geq_tie = xabs -. truncate_float(xabs) >=. 0.5
-  case geq_tie {
-    True ->
-      case positive {
-        True -> sign(x) *. truncate_float({ xabs +. 1.0 } *. p) /. p
-        False -> sign(x) *. truncate_float({ xabs +. 0.0 } *. p) /. p
-      }
-    False ->
-      case positive {
-        True -> sign(x) *. truncate_float({ xabs +. 0.0 } *. p) /. p
-        False -> sign(x) *. truncate_float({ xabs +. 0.0 } *. p) /. p
-      }
+  let xabs = float.absolute_value(x) *. p
+  let rem = xabs -. truncate_float(xabs)
+  case rem {
+    _ if rem >=. 0.5 && x >=. 0.0 -> sign(x) *. truncate_float(xabs +. 1.0) /. p
+    _ -> sign(x) *. truncate_float(xabs) /. p
   }
 }
 
@@ -434,7 +534,7 @@ if erlang {
 /// If the input value is outside the domain of the function an error is returned.
 ///
 /// <details>
-///     <summary>Example:</summary>
+///     <summary>Example</summary>
 ///
 ///     import gleeunit/should
 ///     import gleam_community/maths/float as floatx
@@ -495,7 +595,7 @@ if javascript {
 /// If the input value is outside the domain of the function an error is returned.
 ///
 /// <details>
-///     <summary>Example:</summary>
+///     <summary>Example</summary>
 ///
 ///     import gleeunit/should
 ///     import gleam_community/maths/float as floatx
@@ -553,7 +653,7 @@ if javascript {
 /// If the input value is outside the domain of the function an error is returned.
 ///
 /// <details>
-///     <summary>Example:</summary>
+///     <summary>Example</summary>
 ///
 ///     import gleeunit/should
 ///     import gleam_community/maths/float as floatx
@@ -613,7 +713,7 @@ if javascript {
 /// a numeric value $$y$$ that lies in the range $$\(-\infty, +\infty\)$$ (an angle in radians).
 ///
 /// <details>
-///     <summary>Example:</summary>
+///     <summary>Example</summary>
 ///
 ///     import gleeunit/should
 ///     import gleam_community/maths/float as floatx
@@ -660,7 +760,7 @@ if javascript {
 /// a numeric value $$y$$ that lies in the range $$\[-\frac{\pi}{2}, \frac{\pi}{2}\]$$ (an angle in radians).
 ///
 /// <details>
-///     <summary>Example:</summary>
+///     <summary>Example</summary>
 ///
 ///     import gleeunit/should
 ///     import gleam_community/maths/float as floatx
@@ -716,7 +816,7 @@ if javascript {
 /// returned by $$\text{atan2}(y, x)$$ is in the range $$\[-\pi, \pi\]$$.
 ///
 /// <details>
-///     <summary>Example:</summary>
+///     <summary>Example</summary>
 ///
 ///     import gleeunit/should
 ///     import gleam_community/maths/float as floatx
@@ -764,7 +864,7 @@ if javascript {
 /// If the input value is outside the domain of the function an error is returned.
 ///
 /// <details>
-///     <summary>Example:</summary>
+///     <summary>Example</summary>
 ///
 ///     import gleeunit/should
 ///     import gleam_community/maths/float as floatx
@@ -824,7 +924,7 @@ if javascript {
 /// as input and returns a numeric value $$y$$ that lies in the range $$\[-1, 1\]$$.
 ///
 /// <details>
-///     <summary>Example:</summary>
+///     <summary>Example</summary>
 ///
 ///     import gleeunit/should
 ///     import gleam_community/maths/float as floatx
@@ -875,7 +975,7 @@ if javascript {
 /// If the input value is too large an overflow error might occur.
 ///
 /// <details>
-///     <summary>Example:</summary>
+///     <summary>Example</summary>
 ///
 ///     import gleeunit/should
 ///     import gleam_community/maths/float as floatx
@@ -923,7 +1023,7 @@ if javascript {
 /// Note: If the input value $$x$$ is too large an overflow error might occur.
 ///
 /// <details>
-///     <summary>Example:</summary>
+///     <summary>Example</summary>
 ///
 ///     import gleeunit/should
 ///     import gleam_community/maths/float as floatx
@@ -971,7 +1071,7 @@ if javascript {
 /// If the input value is outside the domain of the function an error is returned.
 ///
 /// <details>
-///     <summary>Example:</summary>
+///     <summary>Example</summary>
 ///
 ///     import gleeunit/should
 ///     import gleam/option
@@ -1040,7 +1140,7 @@ pub fn logarithm(x: Float, base: option.Option(Float)) -> Result(Float, String) 
 /// If the input value is outside the domain of the function an error is returned.
 ///
 /// <details>
-///     <summary>Example:</summary>
+///     <summary>Example</summary>
 ///
 ///     import gleeunit/should
 ///     import gleam_community/maths/float as floatx
@@ -1102,7 +1202,7 @@ if javascript {
 /// If the input value is outside the domain of the function an error is returned.
 ///
 /// <details>
-///     <summary>Example:</summary>
+///     <summary>Example</summary>
 ///
 ///     import gleeunit/should
 ///     import gleam_community/maths/float as floatx
@@ -1163,7 +1263,7 @@ if javascript {
 /// If the input value is outside the domain of the function an error is returned.
 ///
 /// <details>
-///     <summary>Example:</summary>
+///     <summary>Example</summary>
 ///
 ///     import gleeunit/should
 ///     import gleam_community/maths/float as floatx
@@ -1207,61 +1307,6 @@ if javascript {
     "../floatx.mjs" "log2"
 }
 
-// pub fn logb(x: Float, b: Float) -> Result(Float, String) {
-//   case x >. 0.0 {
-//     True ->
-//       case b >. 0.0 && b != 1.0 {
-//         True -> {
-//           // Apply the change of base formula
-//           assert Ok(numerator) = log10(x)
-//           assert Ok(denominator) = log10(b)
-//           numerator /. denominator
-//           |> Ok
-//         }
-//         False ->
-//           "Invalid input argument: b <= 0 or b == 1. Valid input is b > 0 and b != 1."
-//           |> Error
-//       }
-//     False ->
-//       "Invalid input argument: x <= 0. Valid input is x > 0."
-//       |> Error
-//   }
-// }
-
-/// <div style="text-align: right;">
-///     <a href="https://github.com/gleam-community/maths/issues">
-///         <small>Spot a typo? Open an issue!</small>
-///     </a>
-/// </div>
-///
-/// The The base-2 logarithm function:
-///
-/// \\[
-/// \forall x \in \(0, \infty),   \\; \log_{2}{(x)} = y \in \(-\infty, +\infty\)
-/// \\]
-///
-/// The function takes a number $$x$$ in its domain $$\(0, \infty\)$$ as input and returns
-/// a numeric value $$y$$ that lies in the range $$\(-\infty, \infty\)$$.
-/// If the input value is outside the domain of the function an error is returned.
-///
-/// <details>
-///     <summary>Example:</summary>
-///
-///     import gleeunit/should
-///     import gleam_community/maths/float as floatx
-///
-///     pub fn example () {
-///       floatx.logarithm_2(1.0)
-///       |> should.equal(Ok(0.0))
-///
-///       floatx.logarithm_2(2.0)
-///       |> should.equal(Ok(1.0))
-///
-///       floatx.logarithm_2(-1.0)
-///       |> should.be_error()
-///     }
-/// </details>
-///
 /// <div style="text-align: right;">
 ///     <a href="#">
 ///         <small>Back to top ↑</small>
@@ -1285,7 +1330,7 @@ if javascript {
 ///    error will have to be returned as the expression is otherwise undefined.
 ///
 /// <details>
-///     <summary>Example:</summary>
+///     <summary>Example</summary>
 ///
 ///     import gleeunit/should
 ///     import gleam_community/maths/float as floatx
@@ -1309,9 +1354,6 @@ if javascript {
 /// </div>
 ///
 pub fn power(x: Float, y: Float) -> Result(Float, String) {
-  // assert Ok(y_ceiling) = ceiling(y, option.Some(0))
-  // io.debug(y_ceiling)
-  // let fractional: Bool = y_ceiling -. y >. 0.0
   let fractional: Bool = do_ceiling(y) -. y >. 0.0
   // In the following check:
   // 1. If the base (x) is negative and the exponent (y) is fractional
@@ -1352,7 +1394,7 @@ if javascript {
 ///    as an imaginary number will otherwise have to be returned.
 ///
 /// <details>
-///     <summary>Example:</summary>
+///     <summary>Example</summary>
 ///
 ///     import gleeunit/should
 ///     import gleam_community/maths/float as floatx
@@ -1404,7 +1446,7 @@ pub fn square_root(x: Float) -> Result(Float, String) {
 ///    as an imaginary number will otherwise have to be returned.
 ///
 /// <details>
-///     <summary>Example:</summary>
+///     <summary>Example</summary>
 ///
 ///     import gleeunit/should
 ///     import gleam_community/maths/float as floatx
@@ -1456,7 +1498,7 @@ pub fn cube_root(x: Float) -> Result(Float, String) {
 ///    as an imaginary number will otherwise have to be returned.
 ///
 /// <details>
-///     <summary>Example:</summary>
+///     <summary>Example</summary>
 ///
 ///     import gleeunit/should
 ///     import gleam_community/maths/float as floatx
@@ -1517,7 +1559,7 @@ pub fn nth_root(x: Float, n: Int) -> Result(Float, String) {
 /// Naive (unfused) and corrected (unfused) in [https://arxiv.org/pdf/1904.09481.pdf]("An Improved Algorithm for Hypot(A, B)" by Borges, C. F)
 ///
 /// <details>
-///     <summary>Example:</summary>
+///     <summary>Example</summary>
 ///
 ///     import gleeunit/should
 ///     import gleam_community/maths/float as floatx
@@ -1556,7 +1598,7 @@ pub fn hypotenuse(x: Float, y: Float) -> Float {
 /// as input and returns a numeric value $$y$$ that lies in the range $$\[-1, 1\]$$.
 ///
 /// <details>
-///     <summary>Example:</summary>
+///     <summary>Example</summary>
 ///
 ///     import gleeunit/should
 ///     import gleam_community/maths/float as floatx
@@ -1608,7 +1650,7 @@ if javascript {
 /// occur.
 ///
 /// <details>
-///     <summary>Example:</summary>
+///     <summary>Example</summary>
 ///
 ///     import gleeunit/should
 ///     import gleam_community/maths/float as floatx
@@ -1656,7 +1698,7 @@ if javascript {
 /// $$\(-\infty, +\infty\)$$.
 ///
 /// <details>
-///     <summary>Example:</summary>
+///     <summary>Example</summary>
 ///
 ///     import gleeunit/should
 ///     import gleam_community/maths/float as floatx
@@ -1703,7 +1745,7 @@ if javascript {
 /// and returns a numeric value $$y$$ that lies in the range $$\[-1, 1\]$$.
 ///
 /// <details>
-///     <summary>Example:</summary>
+///     <summary>Example</summary>
 ///
 ///     import gleeunit/should
 ///     import gleam_community/maths/float as floatx
@@ -1750,7 +1792,7 @@ if javascript {
 /// That is, $$1 \text{ radians } = \frac{180}{\pi} \text{ degrees }$$.
 ///
 /// <details>
-///     <summary>Example:</summary>
+///     <summary>Example</summary>
 ///
 ///     import gleeunit/should
 ///     import gleam_community/maths/float as floatx
@@ -1784,7 +1826,7 @@ pub fn to_degree(x: Float) -> Float {
 /// That is, $$1 \text{ degrees } = \frac{\pi}{180} \text{ radians }$$.
 ///
 /// <details>
-///     <summary>Example:</summary>
+///     <summary>Example</summary>
 ///
 ///     import gleeunit/should
 ///     import gleam_community/maths/float as floatx
@@ -1814,7 +1856,7 @@ pub fn to_radian(x: Float) -> Float {
 /// The min function.
 ///
 /// <details>
-///     <summary>Example:</summary>
+///     <summary>Example</summary>
 ///
 ///     import gleeunit/should
 ///     import gleam_community/maths/float as floatx
@@ -1850,7 +1892,7 @@ pub fn minimum(x: Float, y: Float) -> Float {
 /// The min function.
 ///
 /// <details>
-///     <summary>Example:</summary>
+///     <summary>Example</summary>
 ///
 ///     import gleeunit/should
 ///     import gleam_community/maths/float as floatx
@@ -1886,7 +1928,7 @@ pub fn maximum(x: Float, y: Float) -> Float {
 /// The minmax function.
 ///
 /// <details>
-///     <summary>Example:</summary>
+///     <summary>Example</summary>
 ///
 ///     import gleeunit/should
 ///     import gleam_community/maths/float as floatx
@@ -1916,8 +1958,7 @@ pub fn minmax(x: Float, y: Float) -> #(Float, Float) {
 ///     </a>
 /// </div>
 ///
-/// The sign function which returns the sign of the input, indicating
-/// whether it is positive, negative, or zero.
+/// The sign function which returns the sign of the input, indicating whether it is positive, negative, or zero.
 ///
 /// <div style="text-align: right;">
 ///     <a href="#">
@@ -1953,7 +1994,7 @@ if javascript {
 ///     </a>
 /// </div>
 ///
-/// The function returns $$x$$ such that it has the same sign as $$y$$.
+/// The function takes two arguments $$x$$ and $$y$$ and returns $$x$$ such that it has the same sign as $$y$$.
 ///
 /// <div style="text-align: right;">
 ///     <a href="#">
@@ -1962,18 +2003,14 @@ if javascript {
 /// </div>
 ///
 pub fn copy_sign(x: Float, y: Float) -> Float {
-  // let signx: Float = sign(x)
-  // let signy: Float = sign(y)
-  // case signx == signy {
-  //   True -> y
-  //   False -> {
-  //     case signx >. signy {
-  //       True ->
-  //     }
-
-  //   }
-  // } 
-  todo
+  case sign(x) == sign(y) {
+    // x and y have the same sign, just return x
+    True -> x
+    // x and y have different signs:
+    // - x is positive and y is negative, then flip sign of x
+    // - x is negative and y is positive, then flip sign of x
+    False -> flip_sign(x)
+  }
 }
 
 /// <div style="text-align: right;">
@@ -1982,6 +2019,7 @@ pub fn copy_sign(x: Float, y: Float) -> Float {
 ///     </a>
 /// </div>
 ///
+/// The function flips the sign of a given input value.
 ///
 /// <div style="text-align: right;">
 ///     <a href="#">
@@ -2212,7 +2250,7 @@ pub fn tau() -> Float {
 /// Note: If the input value $$x$$ is too large an overflow error might occur.
 ///
 /// <details>
-///     <summary>Example:</summary>
+///     <summary>Example</summary>
 ///
 ///     import gleeunit/should
 ///     import gleam_community/maths/float as floatx
@@ -2250,7 +2288,7 @@ pub fn e() -> Float {
 /// value which is the the absolute difference of the inputs.
 ///
 /// <details>
-///     <summary>Example:</summary>
+///     <summary>Example</summary>
 ///
 ///     import gleeunit/should
 ///     import gleam_community/maths/float as floatx
@@ -2291,10 +2329,10 @@ pub fn absolute_difference(a: Float, b: Float) -> Float {
 ///
 /// `True` is returned if statement holds, otherwise `False` is returned. 
 /// <details>
-///     <summary>Example:</summary>
+///     <summary>Example</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_stats/stats
+///     import gleam_community/maths/float as floatx
 ///
 ///     pub fn example () {
 ///       let val: Float = 99.
@@ -2303,7 +2341,7 @@ pub fn absolute_difference(a: Float, b: Float) -> Float {
 ///       // if 'val' is within 1 percent of 'ref_val' +/- 0.1
 ///       let rtol: Float = 0.01
 ///       let atol: Float = 0.10
-///       stats.is_close(val, ref_val, rtol, atol)
+///       floatx.is_close(val, ref_val, rtol, atol)
 ///       |> should.be_true()
 ///     }
 /// </details>
