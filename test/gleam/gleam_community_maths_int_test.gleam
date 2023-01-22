@@ -182,4 +182,98 @@ pub fn int_is_power_test() {
 
   intx.is_power(5, 2)
   |> should.equal(False)
+
+  intx.is_power(27, 3)
+  |> should.equal(True)
+
+  intx.is_power(28, 3)
+  |> should.equal(False)
+}
+
+pub fn int_is_even_test() {
+  intx.is_even(0)
+  |> should.equal(True)
+
+  intx.is_even(2)
+  |> should.equal(True)
+
+  intx.is_even(12)
+  |> should.equal(True)
+
+  intx.is_even(5)
+  |> should.equal(False)
+
+  intx.is_even(-3)
+  |> should.equal(False)
+
+  intx.is_even(-4)
+  |> should.equal(True)
+}
+
+pub fn int_is_odd_test() {
+  intx.is_odd(0)
+  |> should.equal(False)
+
+  intx.is_odd(3)
+  |> should.equal(True)
+
+  intx.is_odd(13)
+  |> should.equal(True)
+
+  intx.is_odd(4)
+  |> should.equal(False)
+
+  intx.is_odd(-3)
+  |> should.equal(True)
+
+  intx.is_odd(-4)
+  |> should.equal(False)
+}
+
+pub fn int_gcd_test() {
+  intx.gcd(1, 1)
+  |> should.equal(1)
+
+  intx.gcd(100, 10)
+  |> should.equal(10)
+
+  intx.gcd(10, 100)
+  |> should.equal(10)
+
+  intx.gcd(100, -10)
+  |> should.equal(10)
+
+  intx.gcd(-36, -17)
+  |> should.equal(1)
+
+  intx.gcd(-30, -42)
+  |> should.equal(6)
+}
+
+pub fn int_lcm_test() {
+  intx.lcm(1, 1)
+  |> should.equal(1)
+
+  intx.lcm(100, 10)
+  |> should.equal(100)
+
+  intx.lcm(10, 100)
+  |> should.equal(100)
+
+  intx.lcm(100, -10)
+  |> should.equal(100)
+
+  intx.lcm(-36, -17)
+  |> should.equal(612)
+
+  intx.lcm(-30, -42)
+  |> should.equal(210)
+}
+
+pub fn int_to_float_test() {
+  intx.to_float(-1)
+  |> should.equal(-1.0)
+
+  intx.to_float(1)
+  |> should.equal(1.0)
 }

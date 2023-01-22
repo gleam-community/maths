@@ -19,7 +19,7 @@
 ////    .katex { font-size: 1.1em; }
 ////</style>
 ////
-//// A module containing mathematical functions applying to integer (int) numbers.
+//// A module containing mathematical functions applying to integers.
 ////
 //// ---
 ////
@@ -28,17 +28,6 @@
 ////   * [`sign`](#sign)
 ////   * [`copy_sign`](#copysign)
 ////   * [`flip_sign`](#flipsign)
-//// * **Powers, logs and roots**
-////   * [`exponential`](#exp)
-////   * [`natural_logarithm`](#ln)
-////   * [`logarithm`](#logarithm)
-////   * [`logarithm_10`](#logarithm_10)
-////   * [`logarithm_2`](#logarithm_2)
-////   * [`power`](#power)
-////   * [`square_root`](#square_root)
-////   * [`cube_root`](#cube_root)
-////   * [`nth_root`](#nth_root)
-////   * [`hypotenuse`](#hypotenuse)
 //// * **Misc. mathematical functions**
 ////   * [`minimum`](#min)
 ////   * [`maxximum`](#max)
@@ -46,12 +35,14 @@
 //// * **Division functions**
 ////   * [`gcd`](#gcd)
 ////   * [`lcm`](#lcm)
+////   * [`divisors`](#divisors)
 //// * **Combinatorial functions**
 ////   * [`combination`](#combination)
 ////   * [`factorial`](#factorial)
 ////   * [`permutation`](#permutation)
 //// * **Tests**
-////   * [`is_power`](#is_power_of)
+////   * [`is_power`](#is_power)
+////   * [`is_perfect`](#is_perfect)
 ////   * [`is_even`](#is_even)
 ////   * [`is_odd`](#isodd)
 //// * **Misc. functions**
@@ -70,7 +61,7 @@ import gleam_community/maths/float as floatx
 ///     </a>
 /// </div>
 ///
-/// The min function.
+/// The minimum function that takes two arguments $$x, y \in \mathbb{Z}$$ and returns the smallest of the two.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -79,11 +70,11 @@ import gleam_community/maths/float as floatx
 ///     import gleam_community/maths/int as intx
 ///
 ///     pub fn example() {
-///       intx.minimum(2.0, 1.5)
-///       |> should.equal(1.5)
+///       intx.minimum(2, 1)
+///       |> should.equal(1)
 ///
-///       intx.minimum(1.5, 2.0)
-///       |> should.equal(1.5)
+///       intx.minimum(1, 2)
+///       |> should.equal(1)
 ///     }
 /// </details>
 ///
@@ -106,7 +97,7 @@ pub fn minimum(x: Int, y: Int) -> Int {
 ///     </a>
 /// </div>
 ///
-/// The maximum function.
+/// The maximum function that takes two arguments $$x, y \in \mathbb{Z}$$ and returns the largest of the two.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -115,11 +106,11 @@ pub fn minimum(x: Int, y: Int) -> Int {
 ///     import gleam_community/maths/int as intx
 ///
 ///     pub fn example() {
-///       intx.maximum(2.0, 1.5)
-///       |> should.equal(1.5)
+///       intx.maximum(2, 1)
+///       |> should.equal(1)
 ///
-///       intx.maximum(1.5, 2.0)
-///       |> should.equal(1.5)
+///       intx.maximum(1, 2)
+///       |> should.equal(1)
 ///     }
 /// </details>
 ///
@@ -142,7 +133,7 @@ pub fn maximum(x: Int, y: Int) -> Int {
 ///     </a>
 /// </div>
 ///
-/// The minmax function.
+/// The minmax function that takes two arguments $$x, y \in \mathbb{Z}$$ and returns a tuple with the smallest value first and largest second.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -151,11 +142,11 @@ pub fn maximum(x: Int, y: Int) -> Int {
 ///     import gleam_community/maths/int as intx
 ///
 ///     pub fn example() {
-///       intx.minmax(2.0, 1.5)
-///       |> should.equal(#(1.5, 2.0))
+///       intx.minmax(2, 1)
+///       |> should.equal(#(1, 2))
 ///
-///       intx.minmax(1.5, 2.0)
-///       |> should.equal(#(1.5, 2.0))
+///       intx.minmax(1, 2)
+///       |> should.equal(#(1, 2))
 ///     }
 /// </details>
 ///
@@ -176,7 +167,7 @@ pub fn minmax(x: Int, y: Int) -> #(Int, Int) {
 /// </div>
 ///
 /// The sign function which returns the sign of the input, indicating
-/// whether it is positive, negative, or zero.
+/// whether it is positive (+1), negative (-1), or zero (0).
 ///
 /// <div style="text-align: right;">
 ///     <a href="#">
@@ -212,6 +203,7 @@ if javascript {
 ///     </a>
 /// </div>
 ///
+/// The function flips the sign of a given input value.
 ///
 /// <div style="text-align: right;">
 ///     <a href="#">
@@ -229,7 +221,7 @@ pub fn flip_sign(x: Int) -> Int {
 ///     </a>
 /// </div>
 ///
-/// The function takes two arguments $$x$$ and $$y$$ and returns $$x$$ such that it has the same sign as $$y$$.
+/// The function takes two arguments $$x, y \in \mathbb{Z}$$ and returns $$x$$ such that it has the same sign as $$y$$.
 ///
 /// <div style="text-align: right;">
 ///     <a href="#">
@@ -467,8 +459,7 @@ pub fn permutation(n: Int, k: Int) -> Result(Int, String) {
 ///  \forall x, y \in \mathbb{Z}, \\; |x - y|  \in \mathbb{Z}_{+}. 
 /// \\]
 ///
-/// The function takes two inputs $$x$$ and $$y$$ and returns a positive integer
-/// value which is the the absolute difference of the inputs.
+/// The function takes two inputs $$x$$ and $$y$$ and returns a positive integer value which is the the absolute difference of the inputs.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -502,6 +493,8 @@ pub fn absolute_difference(a: Int, b: Int) -> Int {
 ///     </a>
 /// </div>
 ///
+/// A function that tests whether a given integer value $$x \in \mathbb{Z}$$ is a power of another integer value $$y \in \mathbb{Z}$$.  
+///
 /// <details>
 ///     <summary>Example:</summary>
 ///
@@ -509,7 +502,13 @@ pub fn absolute_difference(a: Int, b: Int) -> Int {
 ///     import gleam_community/maths/int as intx
 ///
 ///     pub fn example() {
+///       // Check if 4 is a power of 2 (it is)
+///       intx.is_power(4, 2)
+///       |> should.equal(True)
 ///
+///       // Check if 5 is a power of 2 (it is not)
+///       intx.is_power(5, 2)
+///       |> should.equal(False)
 ///     }
 /// </details>
 ///
@@ -525,4 +524,268 @@ pub fn is_power(x: Int, y: Int) -> Bool {
   assert Ok(truncated) = floatx.truncate(value, option.Some(0))
   let rem = value -. truncated
   rem == 0.0
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// A function that tests whether a given integer value $$x \in \mathbb{Z}$$ is a perfect number. A number is perfect if it is equal to the sum of its proper positive divisors.
+/// 
+/// <details>
+///     <summary>Details</summary>
+///
+///   For example:
+///   - $$6$$ is a perfect number since the divisors of 6 are $$1 + 2 + 3 = 6$$.
+///   - $$28$$ is a perfect number since the divisors of 28 are $$1 + 2 + 4 + 7 + 14 = 28$$
+///
+/// </details>
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths/int as intx
+///
+///     pub fn example() {
+///       intx.is_perfect(6)
+///       |> should.equal(True)
+///
+///       intx.is_perfect(28)
+///       |> should.equal(True)
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn is_perfect(x: Int, y: Int) -> Bool {
+  todo
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// The function returns all the positive divisors of an integer.
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths/int as intx
+///
+///     pub fn example() {
+///       intx.divisors(4)
+///       |> should.equal([1, 2, 4])
+///
+///       intx.divisors(6)
+///       |> should.equal([1, 2, 3, 6])
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn divisors(x: Int) -> List(Int) {
+  todo
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// The function calculates the greatest common multiple of two integers $$x, y \in \mathbb{Z}$$.
+/// The greatest common multiple is the largest positive integer that is divisible by both $$x$$ and $$y$$.
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths/int as intx
+///
+///     pub fn example() {
+///       intx.lcm(1, 1)
+///       |> should.equal(1)
+///   
+///       intx.lcm(100, 10)
+///       |> should.equal(10)
+///
+///       intx.gcd(-36, -17)
+///       |> should.equal(1)
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn gcd(x: Int, y: Int) -> Int {
+  let absx: Int = int.absolute_value(x)
+  let absy: Int = int.absolute_value(y)
+  do_gcd(absx, absy)
+}
+
+pub fn do_gcd(x: Int, y: Int) -> Int {
+  case x == 0 {
+    True -> y
+    False -> {
+      assert Ok(z) = int.modulo(y, x)
+      do_gcd(z, x)
+    }
+  }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// The function calculates the least common multiple of two integers $$x, y \in \mathbb{Z}$$.
+/// The least common multiple is the smallest positive integer that has both $$x$$ and $$y$$ as factors.
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths/int as intx
+///
+///     pub fn example() {
+///       intx.lcm(1, 1)
+///       |> should.equal(1)
+///   
+///       intx.lcm(100, 10)
+///       |> should.equal(100)
+///
+///       intx.lcm(-36, -17)
+///       |> should.equal(612)
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn lcm(x: Int, y: Int) -> Int {
+  let absx: Int = int.absolute_value(x)
+  let absy: Int = int.absolute_value(y)
+  absx * absy / do_gcd(absx, absy)
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// A function that tests whether a given integer value $$x \in \mathbb{Z}$$ is odd.  
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths/int as intx
+///
+///     pub fn example() {
+///       intx.is_odd(-3)
+///       |> should.equal(True)
+///     
+///       intx.is_odd(-4)
+///       |> should.equal(False)
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn is_odd(x: Int) -> Bool {
+  x % 2 != 0
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// A function that tests whether a given integer value $$x \in \mathbb{Z}$$ is even.  
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths/int as intx
+///
+///     pub fn example() {
+///       intx.is_even(-3)
+///       |> should.equal(False)
+///     
+///       intx.is_even(-4)
+///       |> should.equal(True)
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn is_even(x: Int) -> Bool {
+  x % 2 == 0
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// A function that produces a number of type `Float` and from an `Int`.
+/// 
+/// Note: The function is equivalent to the similar function in the Gleam stdlib.
+/// 
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths/int as intx
+///
+///     pub fn example() {
+///       intx.to_float(-1)
+///       |> should.equal(-1.0)
+///     
+///       intx.is_even(1)
+///       |> should.equal(1.0)
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn to_float(x: Int) -> Float {
+  int.to_float(x)
 }

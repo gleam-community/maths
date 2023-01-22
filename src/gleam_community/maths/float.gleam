@@ -19,7 +19,7 @@
 ////    .katex { font-size: 1.1em; }
 ////</style>
 ////
-//// A module containing mathematical functions and constants that apply to real numbers (floats).
+//// A module containing mathematical functions and constants that apply to floats.
 ////
 //// ---
 ////
@@ -1902,7 +1902,7 @@ pub fn to_radian(x: Float) -> Float {
 ///     </a>
 /// </div>
 ///
-/// The minimum function that takes two arguments $$x$$ and $$y$$ and returns the smallest of the two.
+/// The minimum function that takes two arguments $$x, y \in \mathbb{R}$$ and returns the smallest of the two.
 ///
 /// <details>
 ///     <summary>Example</summary>
@@ -1938,7 +1938,7 @@ pub fn minimum(x: Float, y: Float) -> Float {
 ///     </a>
 /// </div>
 ///
-/// The maximum function that takes two arguments $$x$$ and $$y$$ and returns the largest of the two.
+/// The maximum function that takes two arguments $$x, y \in \mathbb{R}$$ and returns the largest of the two.
 ///
 /// <details>
 ///     <summary>Example</summary>
@@ -1974,7 +1974,7 @@ pub fn maximum(x: Float, y: Float) -> Float {
 ///     </a>
 /// </div>
 ///
-/// The minmax function that takes two arguments $$x$$ and $$y$$ and returns a tuple with the smallest value first and largest second.
+/// The minmax function that takes two arguments $$x, y \in \mathbb{R}$$ and returns a tuple with the smallest value first and largest second.
 ///
 /// <details>
 ///     <summary>Example</summary>

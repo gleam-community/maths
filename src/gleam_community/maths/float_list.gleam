@@ -19,17 +19,19 @@
 ////    .katex { font-size: 1.1em; }
 ////</style>
 ////
-//// A module containing several different kinds of mathematical functions 
-//// applying to lists of real numbers.
+//// A module containing mathematical functions applying to one or more lists of floats.
 ////
-//// Function naming has been adopted from <a href="https://en.wikipedia.org/wiki/C_mathematical_functions"> C mathematical function</a>.
-//// 
 //// ---
 ////
-//// * **Distances, sums and products**
+//// * **Distances, sums, and products**
 ////   * [`sum`](#sum)
 ////   * [`product`](#product)
 ////   * [`norm`](#norm)
+////   * [`minkowski`](#minkowski)
+////   * [`euclidean`](#euclidean)
+////   * [`manhatten`](#manhatten)
+////   * [`root_mean_squared_error`](#root_mean_squared_error)
+////   * [`mean_squared_error`](#mean_squared_error)
 ////   * [`cumulative_sum`](#cumulative_sum)
 ////   * [`cumulative_product`](#cumulative_product)
 //// * **Ranges and intervals**
@@ -51,6 +53,168 @@ import gleam/float
 import gleam/pair
 import gleam/option
 import gleam_community/maths/float as floatx
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths/float_list
+///
+///     pub fn example () {
+///
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn norm(xarr: List(Float), p: Int) -> Float {
+  todo
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths/float_list
+///
+///     pub fn example () {
+///
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn minkowski(xarr: List(Float), yarr: List(Float), p: Int) -> Float {
+  todo
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths/float_list
+///
+///     pub fn example () {
+///
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn euclidean(xarr: List(Float), yarr: List(Float)) -> Float {
+  todo
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths/float_list
+///
+///     pub fn example () {
+///
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn manhatten(xarr: List(Float), yarr: List(Float)) -> Float {
+  todo
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths/float_list
+///
+///     pub fn example () {
+///
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn mean_squared_error(xarr: List(Float), yarr: List(Float)) -> Float {
+  todo
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths/float_list
+///
+///     pub fn example () {
+///
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn root_mean_squared_error(xarr: List(Float), yarr: List(Float)) -> Float {
+  todo
+}
 
 /// <div style="text-align: right;">
 ///     <a href="https://github.com/gleam-community/maths/issues">
@@ -337,34 +501,6 @@ pub fn cumulative_sum(arr: List(Float)) -> List(Float) {
 /// </div>
 ///
 pub fn cumumlative_product(arr: List(Float)) -> List(Float) {
-  todo
-}
-
-/// <div style="text-align: right;">
-///     <a href="https://github.com/gleam-community/maths/issues">
-///         <small>Spot a typo? Open an issue!</small>
-///     </a>
-/// </div>
-///
-///
-/// <details>
-///     <summary>Example:</summary>
-///
-///     import gleeunit/should
-///     import gleam_community/maths/float_list
-///
-///     pub fn example () {
-///
-///     }
-/// </details>
-///
-/// <div style="text-align: right;">
-///     <a href="#">
-///         <small>Back to top ↑</small>
-///     </a>
-/// </div>
-///
-pub fn norm(xarr: List(Float), yarr: List(Float), p: Int) -> List(Float) {
   todo
 }
 

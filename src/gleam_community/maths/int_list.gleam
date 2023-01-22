@@ -19,11 +19,8 @@
 ////    .katex { font-size: 1.1em; }
 ////</style>
 ////
-//// A module containing several different kinds of mathematical functions 
-//// applying to lists of real numbers.
+//// A module containing mathematical functions applying to one or more lists of integers.
 ////
-//// Function naming has been adopted from <a href="https://en.wikipedia.org/wiki/C_mathematical_functions"> C mathematical function</a>.
-//// 
 //// ---
 ////
 //// * **Distances, sums and products**
