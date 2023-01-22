@@ -28,8 +28,8 @@ pub fn main() {
   float_list.extrema([10.0, 3.0, 50.0, 20.0, 3.0])
   // Returns Tuple: Ok(#(3.0, 50.0))
 
-  // Find the list indices of the largest values 
-  int_list.arg_maximum([10, 3, 50, 20, 3])
+  // Find the list indices of the smallest value 
+  int_list.arg_minimum([10, 3, 50, 20, 3])
   // Returns  List: Ok([1, 4])  
 }
 
