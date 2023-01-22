@@ -90,7 +90,7 @@ import gleam/option
 ///     </a>
 /// </div>
 ///
-/// The ceiling function rounds a given input value $$x \in \mathbb{R}$$ towards $$+\infty$$ at a specified number of digits.
+/// The ceiling function rounds a given input value $$x \in \mathbb{R}$$ to the nearest integer value (at the specified digit) that is larger than or equal to the input $$x$$. 
 ///
 /// Note: The ceiling function is used as an alias for the rounding function [`round`](#round) with rounding mode `"Up"`.
 ///
@@ -146,7 +146,7 @@ pub fn ceiling(x: Float, digits: option.Option(Int)) -> Result(Float, String) {
 ///     </a>
 /// </div>
 ///
-/// The floor function rounds a given input value $$x \in \mathbb{R}$$ towards $$-\infty$$ at a specified number of digits.
+/// The floor function rounds input $$x \in \mathbb{R}$$ to the nearest integer value (at the specified digit) that is less than or equal to the input $$x$$
 ///
 /// Note: The floor function is used as an alias for the rounding function [`round`](#round) with rounding mode `"Down"`.
 ///
@@ -201,7 +201,7 @@ pub fn floor(x: Float, digits: option.Option(Int)) -> Result(Float, String) {
 ///     </a>
 /// </div>
 ///
-/// The truncate function rounds a given input value $$x \in \mathbb{R}$$ towards $$0$$ at a specified number of digits.
+/// The truncate function rounds a given input $$x \in \mathbb{R}$$ to the nearest integer value (at the specified digit) that is less than or equal to the absolute value of the input $$x$$.
 ///
 /// Note: The truncate function is used as an alias for the rounding function [`round`](#round) with rounding mode `"ToZero"`.
 ///
@@ -392,8 +392,10 @@ pub fn round(
   case digits {
     option.Some(a) -> {
       assert Ok(p) = power(10.0, int.to_float(a))
+      // Round the given input x using at the specified digit
       do_round(p, x, mode)
     }
+    // Round the given input x using at the default digit
     option.None -> do_round(1.0, x, mode)
   }
 }
@@ -404,9 +406,9 @@ fn do_round(
   mode: option.Option(String),
 ) -> Result(Float, String) {
   case mode {
-    // Rounding mode choices
+    // Determine the rounding mode
     option.Some("Nearest") ->
-      round_nearest(p, x)
+      round_to_nearest(p, x)
       |> Ok
     option.Some("TiesAway") ->
       round_ties_away(p, x)
@@ -423,9 +425,9 @@ fn do_round(
     option.Some("Up") ->
       round_up(p, x)
       |> Ok
-    // Default rounding mode. The default is "Nearest"
+    // Otherwise, use the Default rounding mode
     option.None ->
-      round_nearest(p, x)
+      round_to_nearest(p, x)
       |> Ok
     _ ->
       "Invalid rounding mode. Valid input is 'Nearest', 'TiesAway', 'TiesUp', 'ToZero', 'Down', 'Up'."
@@ -433,50 +435,46 @@ fn do_round(
   }
 }
 
-fn round_nearest(p: Float, x: Float) -> Float {
+fn round_to_nearest(p: Float, x: Float) -> Float {
   let xabs = float.absolute_value(x) *. p
-  let rem = xabs -. truncate_float(xabs)
-  case rem {
-    _ if rem >. 0.5 -> sign(x) *. truncate_float(xabs +. 1.0) /. p
-    _ if rem == 0.5 -> {
+  let xabs_truncated = truncate_float(xabs)
+  let remainder = xabs -. xabs_truncated
+  case remainder {
+    _ if remainder >. 0.5 -> sign(x) *. truncate_float(xabs +. 1.0) /. p
+    _ if remainder == 0.5 -> {
       assert Ok(is_even) = int.modulo(to_int(xabs), 2)
       case is_even == 0 {
-        True -> sign(x) *. truncate_float(xabs) /. p
+        True -> sign(x) *. xabs_truncated /. p
         False -> sign(x) *. truncate_float(xabs +. 1.0) /. p
       }
     }
-    _ -> sign(x) *. truncate_float(xabs) /. p
+    _ -> sign(x) *. xabs_truncated /. p
   }
 }
 
 fn round_ties_away(p: Float, x: Float) -> Float {
   let xabs = float.absolute_value(x) *. p
-  let rem = xabs -. truncate_float(xabs)
-  case rem {
-    _ if rem >=. 0.5 -> sign(x) *. truncate_float(xabs +. 1.0) /. p
+  let remainder = xabs -. truncate_float(xabs)
+  case remainder {
+    _ if remainder >=. 0.5 -> sign(x) *. truncate_float(xabs +. 1.0) /. p
     _ -> sign(x) *. truncate_float(xabs) /. p
   }
 }
 
 fn round_ties_up(p: Float, x: Float) -> Float {
   let xabs = float.absolute_value(x) *. p
-  let rem = xabs -. truncate_float(xabs)
-  case rem {
-    _ if rem >=. 0.5 && x >=. 0.0 -> sign(x) *. truncate_float(xabs +. 1.0) /. p
-    _ -> sign(x) *. truncate_float(xabs) /. p
+  let xabs_truncated = truncate_float(xabs)
+  let remainder = xabs -. xabs_truncated
+  case remainder {
+    _ if remainder >=. 0.5 && x >=. 0.0 ->
+      sign(x) *. truncate_float(xabs +. 1.0) /. p
+    _ -> sign(x) *. xabs_truncated /. p
   }
 }
 
+// Rounding mode: ToZero / Truncate
 fn round_to_zero(p: Float, x: Float) -> Float {
   truncate_float(x *. p) /. p
-}
-
-fn round_down(p: Float, x: Float) -> Float {
-  do_floor(x *. p) /. p
-}
-
-fn round_up(p: Float, x: Float) -> Float {
-  do_ceiling(x *. p) /. p
 }
 
 fn truncate_float(x: Float) -> Float {
@@ -484,18 +482,18 @@ fn truncate_float(x: Float) -> Float {
 }
 
 if erlang {
-  external fn do_ceiling(Float) -> Float =
-    "math" "ceil"
+  external fn do_truncate_float(Float) -> Float =
+    "erlang" "trunc"
 }
 
 if javascript {
-  external fn do_ceiling(Float) -> Float =
-    "../floatx.mjs" "ceil"
+  external fn do_to_int(Float) -> Int =
+    "../floatx.mjs" "trunc"
 }
 
-if erlang {
-  external fn do_truncate_float(Float) -> Float =
-    "erlang" "trunc"
+// Rounding mode: Down / Floor
+fn round_down(p: Float, x: Float) -> Float {
+  do_floor(x *. p) /. p
 }
 
 if erlang {
@@ -508,13 +506,67 @@ if javascript {
     "../floatx.mjs" "floor"
 }
 
-fn to_int(x: Float) -> Int {
+// Rounding mode: Up / Ceiling
+fn round_up(p: Float, x: Float) -> Float {
+  do_ceiling(x *. p) /. p
+}
+
+if erlang {
+  external fn do_ceiling(Float) -> Float =
+    "math" "ceil"
+}
+
+if javascript {
+  external fn do_ceiling(Float) -> Float =
+    "../floatx.mjs" "ceil"
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// The function returns the integral part of a given floating point value.
+/// That is, everything after the decimal point of a given floating point value is discarded and only the integer value before the decimal point is returned. 
+///
+/// <details>
+///     <summary>Example</summary>
+///
+///     import gleeunit/should
+///     import gleam/option
+///     import gleam_community/maths/float as floatx
+///
+///     pub fn example() {
+///       floatx.to_int(12.0654)
+///       |> should.equal(12)
+///       
+///       // Note: Making the following function call is equivalent
+///       // but instead of returning a value of type 'Int' a value
+///       // of type 'Float' is returned.
+///       floatx.round(12.0654, option.Some(0), option.Some("ToZero"))
+///       |> should.equal(Ok(12.0))
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn to_int(x: Float) -> Int {
   do_to_int(x)
 }
 
 if erlang {
   external fn do_to_int(Float) -> Int =
     "erlang" "trunc"
+}
+
+if javascript {
+  external fn do_to_int(Float) -> Int =
+    "../floatx.mjs" "to_int"
 }
 
 /// <div style="text-align: right;">
@@ -1029,7 +1081,7 @@ if javascript {
 ///     import gleam_community/maths/float as floatx
 ///
 ///     pub fn example() {
-///       floatx.exp(0.0)
+///       floatx.exponential(0.0)
 ///       |> should.equal(1.0)
 ///     }
 /// </details>
@@ -1040,17 +1092,17 @@ if javascript {
 ///     </a>
 /// </div>
 ///
-pub fn exp(x: Float) -> Float {
-  do_exp(x)
+pub fn exponential(x: Float) -> Float {
+  do_exponential(x)
 }
 
 if erlang {
-  external fn do_exp(Float) -> Float =
+  external fn do_exponential(Float) -> Float =
     "math" "exp"
 }
 
 if javascript {
-  external fn do_exp(Float) -> Float =
+  external fn do_exponential(Float) -> Float =
     "../floatx.mjs" "exp"
 }
 
@@ -1553,10 +1605,7 @@ pub fn nth_root(x: Float, n: Int) -> Result(Float, String) {
 /// </div>
 ///
 /// A function to compute the hypotenuse of a right-angled triangle: $$\sqrt[2](x^2 + y^2)$$.
-///
 /// The function can also be used to calculate the Euclidean distance in 2 dimensions. 
-///
-/// Naive (unfused) and corrected (unfused) in [https://arxiv.org/pdf/1904.09481.pdf]("An Improved Algorithm for Hypot(A, B)" by Borges, C. F)
 ///
 /// <details>
 ///     <summary>Example</summary>
@@ -1853,7 +1902,7 @@ pub fn to_radian(x: Float) -> Float {
 ///     </a>
 /// </div>
 ///
-/// The min function.
+/// The minimum function that takes two arguments $$x$$ and $$y$$ and returns the smallest of the two.
 ///
 /// <details>
 ///     <summary>Example</summary>
@@ -1889,7 +1938,7 @@ pub fn minimum(x: Float, y: Float) -> Float {
 ///     </a>
 /// </div>
 ///
-/// The min function.
+/// The maximum function that takes two arguments $$x$$ and $$y$$ and returns the largest of the two.
 ///
 /// <details>
 ///     <summary>Example</summary>
@@ -1925,7 +1974,7 @@ pub fn maximum(x: Float, y: Float) -> Float {
 ///     </a>
 /// </div>
 ///
-/// The minmax function.
+/// The minmax function that takes two arguments $$x$$ and $$y$$ and returns a tuple with the smallest value first and largest second.
 ///
 /// <details>
 ///     <summary>Example</summary>
@@ -1958,7 +2007,7 @@ pub fn minmax(x: Float, y: Float) -> #(Float, Float) {
 ///     </a>
 /// </div>
 ///
-/// The sign function which returns the sign of the input, indicating whether it is positive, negative, or zero.
+/// The sign function that returns the sign of the input, indicating whether it is positive (+1), negative (-1), or zero (0).
 ///
 /// <div style="text-align: right;">
 ///     <a href="#">
@@ -2085,7 +2134,7 @@ pub fn erf(x: Float) -> Float {
   // Formula 7.1.26 given in Abramowitz and Stegun.
   let t = 1.0 /. { 1.0 +. p *. x }
   let y =
-    1.0 -. { { { { a5 *. t +. a4 } *. t +. a3 } *. t +. a2 } *. t +. a1 } *. t *. exp(
+    1.0 -. { { { { a5 *. t +. a4 } *. t +. a3 } *. t +. a2 } *. t +. a1 } *. t *. exponential(
       -1.0 *. x *. x,
     )
   sign *. y
@@ -2140,7 +2189,7 @@ fn gamma_lanczos(x: Float) -> Float {
       let t: Float = z +. lanczos_g +. 0.5
       assert Ok(v1) = power(2.0 *. pi(), 0.5)
       assert Ok(v2) = power(t, z +. 0.5)
-      v1 *. v2 *. exp(-1.0 *. t) *. x
+      v1 *. v2 *. exponential(-1.0 *. t) *. x
     }
   }
 }
@@ -2166,7 +2215,13 @@ pub fn incomplete_gamma(a: Float, x: Float) -> Result(Float, String) {
   case a >. 0.0 && x >=. 0.0 {
     True -> {
       assert Ok(v) = power(x, a)
-      v *. exp(-1.0 *. x) *. incomplete_gamma_sum(a, x, 1.0 /. a, 0.0, 1.0)
+      v *. exponential(-1.0 *. x) *. incomplete_gamma_sum(
+        a,
+        x,
+        1.0 /. a,
+        0.0,
+        1.0,
+      )
       |> Ok
     }
 
@@ -2247,8 +2302,6 @@ pub fn tau() -> Float {
 ///
 /// Euler's number $$e \approx 2.71828\dots$$.
 ///
-/// Note: If the input value $$x$$ is too large an overflow error might occur.
-///
 /// <details>
 ///     <summary>Example</summary>
 ///
@@ -2256,6 +2309,7 @@ pub fn tau() -> Float {
 ///     import gleam_community/maths/float as floatx
 ///
 ///     pub fn example() {
+///       // Test that the constant is approximately equal to 2.7128...
 ///       floatx.e()
 ///       |> floatx.is_close(2.7128, 0.0, 0.000001)
 ///       |> should.be_true()
@@ -2269,7 +2323,7 @@ pub fn tau() -> Float {
 /// </div>
 ///
 pub fn e() -> Float {
-  exp(1.0)
+  exponential(1.0)
 }
 
 /// <div style="text-align: right;">

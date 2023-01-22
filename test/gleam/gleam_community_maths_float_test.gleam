@@ -209,16 +209,16 @@ pub fn float_exponential_test() {
   assert Ok(tol) = floatx.power(-10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
-  floatx.exp(0.0)
+  floatx.exponential(0.0)
   |> floatx.is_close(1.0, 0.0, tol)
   |> should.be_true()
 
-  floatx.exp(0.5)
+  floatx.exponential(0.5)
   |> floatx.is_close(1.648721, 0.0, tol)
   |> should.be_true()
   // An (overflow) error might occur when given an input
   // value that will result in a too large output value
-  // e.g. floatx.exp(1000.0) but this is a property of the
+  // e.g. floatx.exponential(1000.0) but this is a property of the
   // runtime.
 }
 
@@ -1075,4 +1075,9 @@ pub fn float_is_close_test() {
   let atol: Float = 0.10
   floatx.is_close(val, ref_val, rtol, atol)
   |> should.be_true()
+}
+
+pub fn float_to_int_test() {
+  floatx.to_int(12.0654)
+  |> should.equal(12)
 }
