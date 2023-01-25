@@ -1,6 +1,6 @@
 import { opendir } from "fs/promises";
 
-const dir = "build/dev/javascript/gleam_community_maths/dist/gleam/";
+const dir = "build/dev/javascript/gleam_community_maths/gleam/";
 
 export async function main() {
   console.log("Running tests...");

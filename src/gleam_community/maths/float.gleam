@@ -489,8 +489,8 @@ if erlang {
 }
 
 if javascript {
-  external fn do_to_int(Float) -> Int =
-    "../floatx.mjs" "trunc"
+  external fn do_truncate_float(Float) -> Float =
+    "../../maths.mjs" "truncate"
 }
 
 // Rounding mode: Down / Floor
@@ -505,7 +505,7 @@ if erlang {
 
 if javascript {
   external fn do_floor(Float) -> Float =
-    "../floatx.mjs" "floor"
+    "../../maths.mjs" "floor"
 }
 
 // Rounding mode: Up / Ceiling
@@ -520,7 +520,7 @@ if erlang {
 
 if javascript {
   external fn do_ceiling(Float) -> Float =
-    "../floatx.mjs" "ceil"
+    "../../maths.mjs" "ceiling"
 }
 
 /// <div style="text-align: right;">
@@ -568,7 +568,7 @@ if erlang {
 
 if javascript {
   external fn do_to_int(Float) -> Int =
-    "../floatx.mjs" "to_int"
+    "../../maths.mjs" "truncate"
 }
 
 /// <div style="text-align: right;">
@@ -629,7 +629,7 @@ if erlang {
 
 if javascript {
   external fn do_acos(Float) -> Float =
-    "../floatx.mjs" "acos"
+    "../../maths.mjs" "acos"
 }
 
 /// <div style="text-align: right;">
@@ -687,7 +687,7 @@ if erlang {
 
 if javascript {
   external fn do_acosh(Float) -> Float =
-    "../floatx.mjs" "acosh"
+    "../../maths.mjs" "acosh"
 }
 
 /// <div style="text-align: right;">
@@ -748,7 +748,7 @@ if erlang {
 
 if javascript {
   external fn do_asin(Float) -> Float =
-    "../floatx.mjs" "asin"
+    "../../maths.mjs" "asin"
 }
 
 /// <div style="text-align: right;">
@@ -795,7 +795,7 @@ if erlang {
 
 if javascript {
   external fn do_asinh(Float) -> Float =
-    "../floatx.mjs" "asinh"
+    "../../maths.mjs" "asinh"
 }
 
 /// <div style="text-align: right;">
@@ -842,7 +842,7 @@ if erlang {
 
 if javascript {
   external fn do_atan(Float) -> Float =
-    "../floatx.mjs" "atan"
+    "../../maths.mjs" "atan"
 }
 
 /// <div style="text-align: right;">
@@ -898,7 +898,7 @@ if erlang {
 
 if javascript {
   external fn do_atan2(Float, Float) -> Float =
-    "../floatx.mjs" "atan2"
+    "../../maths.mjs" "atan2"
 }
 
 /// <div style="text-align: right;">
@@ -959,7 +959,7 @@ if erlang {
 
 if javascript {
   external fn do_atanh(Float) -> Float =
-    "../floatx.mjs" "atanh"
+    "../../maths.mjs" "atanh"
 }
 
 /// <div style="text-align: right;">
@@ -1009,7 +1009,7 @@ if erlang {
 
 if javascript {
   external fn do_cos(Float) -> Float =
-    "../floatx.mjs" "cos"
+    "../../maths.mjs" "cos"
 }
 
 /// <div style="text-align: right;">
@@ -1057,7 +1057,7 @@ if erlang {
 
 if javascript {
   external fn do_cosh(Float) -> Float =
-    "../floatx.mjs" "cosh"
+    "../../maths.mjs" "cosh"
 }
 
 /// <div style="text-align: right;">
@@ -1105,7 +1105,7 @@ if erlang {
 
 if javascript {
   external fn do_exponential(Float) -> Float =
-    "../floatx.mjs" "exp"
+    "../../maths.mjs" "exponential"
 }
 
 /// <div style="text-align: right;">
@@ -1236,7 +1236,7 @@ if erlang {
 
 if javascript {
   external fn do_natural_logarithm(Float) -> Float =
-    "../floatx.mjs" "log"
+    "../../maths.mjs" "logarithm"
 }
 
 /// <div style="text-align: right;">
@@ -1297,7 +1297,7 @@ if erlang {
 
 if javascript {
   external fn do_logarithm_10(Float) -> Float =
-    "../floatx.mjs" "log10"
+    "../../maths.mjs" "logarithm_10"
 }
 
 /// <div style="text-align: right;">
@@ -1358,7 +1358,7 @@ if erlang {
 
 if javascript {
   external fn do_logarithm_2(Float) -> Float =
-    "../floatx.mjs" "log2"
+    "../../maths.mjs" "logarithm_2"
 }
 
 /// <div style="text-align: right;">
@@ -1432,7 +1432,7 @@ if erlang {
 
 if javascript {
   external fn do_power(Float, Float) -> Float =
-    "../floatx.mjs" "pow"
+    "../../maths.mjs" "power"
 }
 
 /// <div style="text-align: right;">
@@ -1680,7 +1680,7 @@ if erlang {
 
 if javascript {
   external fn do_sin(Float) -> Float =
-    "../floatx.mjs" "sin"
+    "../../maths.mjs" "sin"
 }
 
 /// <div style="text-align: right;">
@@ -1729,7 +1729,7 @@ if erlang {
 
 if javascript {
   external fn do_sinh(Float) -> Float =
-    "../floatx.mjs" "sinh"
+    "../../maths.mjs" "sinh"
 }
 
 /// <div style="text-align: right;">
@@ -1777,7 +1777,7 @@ if erlang {
 
 if javascript {
   external fn do_tan(Float) -> Float =
-    "../floatx.mjs" "tan"
+    "../../maths.mjs" "tan"
 }
 
 /// <div style="text-align: right;">
@@ -1830,7 +1830,7 @@ if erlang {
 
 if javascript {
   external fn do_tanh(Float) -> Float =
-    "../floatx.mjs" "tanh"
+    "../../maths.mjs" "tanh"
 }
 
 /// <div style="text-align: right;">
@@ -2036,7 +2036,7 @@ if erlang {
 
 if javascript {
   external fn do_sign(Float) -> Float =
-    "../floatx.mjs" "sign"
+    "../../maths.mjs" "sign"
 }
 
 /// <div style="text-align: right;">
@@ -2271,7 +2271,7 @@ if erlang {
 
 if javascript {
   external fn do_pi() -> Float =
-    "../floatx.mjs" "pi"
+    "../../maths.mjs" "pi"
 }
 
 /// <div style="text-align: right;">

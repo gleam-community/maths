@@ -194,7 +194,7 @@ if erlang {
 
 if javascript {
   external fn do_sign(Int) -> Int =
-    "../intx.mjs" "sign"
+    "../../maths.mjs" "sign"
 }
 
 /// <div style="text-align: right;">
