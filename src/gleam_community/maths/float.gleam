@@ -92,7 +92,7 @@ import gleam/option
 ///
 /// The ceiling function rounds a given input value $$x \in \mathbb{R}$$ to the nearest integer value (at the specified digit) that is larger than or equal to the input $$x$$. 
 ///
-/// Note: The ceiling function is used as an alias for the rounding function [`round`](#round) with rounding mode `"Up"`.
+/// Note: The ceiling function is used as an alias for the rounding function [`round`](#round) with rounding mode `RoundUp`.
 ///
 /// <details>
 ///     <summary>Details</summary>
@@ -137,7 +137,7 @@ import gleam/option
 /// </div>
 ///
 pub fn ceiling(x: Float, digits: option.Option(Int)) -> Result(Float, String) {
-  round(x, digits, option.Some("Up"))
+  round(x, digits, option.Some(RoundUp))
 }
 
 /// <div style="text-align: right;">
@@ -148,7 +148,7 @@ pub fn ceiling(x: Float, digits: option.Option(Int)) -> Result(Float, String) {
 ///
 /// The floor function rounds input $$x \in \mathbb{R}$$ to the nearest integer value (at the specified digit) that is less than or equal to the input $$x$$
 ///
-/// Note: The floor function is used as an alias for the rounding function [`round`](#round) with rounding mode `"Down"`.
+/// Note: The floor function is used as an alias for the rounding function [`round`](#round) with rounding mode `RoundDown`.
 ///
 /// <details>
 ///     <summary>Details</summary>
@@ -192,7 +192,7 @@ pub fn ceiling(x: Float, digits: option.Option(Int)) -> Result(Float, String) {
 /// </div>
 ///
 pub fn floor(x: Float, digits: option.Option(Int)) -> Result(Float, String) {
-  round(x, digits, option.Some("Down"))
+  round(x, digits, option.Some(RoundDown))
 }
 
 /// <div style="text-align: right;">
@@ -203,7 +203,7 @@ pub fn floor(x: Float, digits: option.Option(Int)) -> Result(Float, String) {
 ///
 /// The truncate function rounds a given input $$x \in \mathbb{R}$$ to the nearest integer value (at the specified digit) that is less than or equal to the absolute value of the input $$x$$.
 ///
-/// Note: The truncate function is used as an alias for the rounding function [`round`](#round) with rounding mode `"ToZero"`.
+/// Note: The truncate function is used as an alias for the rounding function [`round`](#round) with rounding mode `RoundToZero`.
 ///
 /// <details>
 ///     <summary>Details</summary>
@@ -247,7 +247,7 @@ pub fn floor(x: Float, digits: option.Option(Int)) -> Result(Float, String) {
 /// </div>
 ///
 pub fn truncate(x: Float, digits: option.Option(Int)) -> Result(Float, String) {
-  round(x, digits, option.Some("ToZero"))
+  round(x, digits, option.Some(RoundToZero))
 }
 
 /// <div style="text-align: right;">
@@ -259,17 +259,17 @@ pub fn truncate(x: Float, digits: option.Option(Int)) -> Result(Float, String) {
 /// The function rounds a float to a specific number of digits (after the decimal place or before if negative) using a specified rounding mode.
 ///
 /// Valid rounding modes include:
-/// - `"Nearest"` (default): The input $$x$$ is rounded to the nearest integer value (at the specified digit) with ties (fractional values of 0.5) being rounded to the nearest even integer.
-/// - `"TiesAway"`: The input $$x$$ is rounded to the nearest integer value (at the specified digit) with ties (fractional values of 0.5) being rounded away from zero (C/C++ rounding behavior).
-/// - `"TiesUp"`: The input $$x$$ is rounded to the nearest integer value (at the specified digit) with ties (fractional values of 0.5) being rounded towards $$+\infty$$ (Java/JavaScript rounding behaviour).
-/// - `"ToZero"`: The input $$x$$ is rounded to the nearest integer value (at the specified digit) that is less than or equal to the absolute value of the input $$x$$. An alias for this rounding mode is [`truncate`](#truncate).
-/// - `"Down"`: The input $$x$$ is rounded to the nearest integer value (at the specified digit) that is less than or equal to the input $$x$$. An alias for this rounding mode is [`floor`](#floor).
-/// - `"Up"`: The input $$x$$ is rounded to the nearest integer value (at the specified digit) that is larger than or equal to the input $$x$$. An alias for this rounding mode is [`ceiling`](#ceiling).
+/// - `RoundNearest` (default): The input $$x$$ is rounded to the nearest integer value (at the specified digit) with ties (fractional values of 0.5) being rounded to the nearest even integer.
+/// - `RoundTiesAway`: The input $$x$$ is rounded to the nearest integer value (at the specified digit) with ties (fractional values of 0.5) being rounded away from zero (C/C++ rounding behavior).
+/// - `RoundTiesUp`: The input $$x$$ is rounded to the nearest integer value (at the specified digit) with ties (fractional values of 0.5) being rounded towards $$+\infty$$ (Java/JavaScript rounding behaviour).
+/// - `RoundToZero`: The input $$x$$ is rounded to the nearest integer value (at the specified digit) that is less than or equal to the absolute value of the input $$x$$. An alias for this rounding mode is [`truncate`](#truncate).
+/// - `RoundDown`: The input $$x$$ is rounded to the nearest integer value (at the specified digit) that is less than or equal to the input $$x$$. An alias for this rounding mode is [`floor`](#floor).
+/// - `RoundUp`: The input $$x$$ is rounded to the nearest integer value (at the specified digit) that is larger than or equal to the input $$x$$. An alias for this rounding mode is [`ceiling`](#ceiling).
 ///
 /// <details>
 /// <summary>Details</summary>
 ///
-///   The `"Nearest"` rounding mode, rounds $$12.0654$$ to:
+///   The `RoundNearest` rounding mode, rounds $$12.0654$$ to:
 ///   - $$12.0$$ for 0 digits after the decimal point (`digits = 0`)
 ///   - $$12.1$$ for 1 digit after the decimal point (`digits = 1`)
 ///   - $$12.07$$ for 2 digits after the decimal point (`digits = 2`)
@@ -280,7 +280,7 @@ pub fn truncate(x: Float, digits: option.Option(Int)) -> Result(Float, String) {
 ///   - $$0.0$$ for 2 digits before the decimal point (`digits = -2`)
 ///   - $$0.0$$ for 3 digits before the decimal point (`digits = -3`)
 ///
-///   The `"TiesAway"` rounding mode, rounds $$12.0654$$ to:
+///   The `RoundTiesAway` rounding mode, rounds $$12.0654$$ to:
 ///   - $$12.0$$ for 0 digits after the decimal point (`digits = 0`)
 ///   - $$12.1$$ for 1 digit after the decimal point (`digits = 1`)
 ///   - $$12.07$$ for 2 digits after the decimal point (`digits = 2`)
@@ -291,7 +291,7 @@ pub fn truncate(x: Float, digits: option.Option(Int)) -> Result(Float, String) {
 ///   - $$0.0$$ for 2 digits before the decimal point (`digits = -2`)
 ///   - $$0.0$$ for 3 digits before the decimal point (`digits = -3`)
 ///
-///   The `"TiesUp"` rounding mode, rounds $$12.0654$$ to:
+///   The `RoundTiesUp` rounding mode, rounds $$12.0654$$ to:
 ///   - $$12.0$$ for 0 digits after the decimal point (`digits = 0`)
 ///   - $$12.1$$ for 1 digits after the decimal point (`digits = 1`)
 ///   - $$12.07$$ for 2 digits after the decimal point (`digits = 2`)
@@ -302,7 +302,7 @@ pub fn truncate(x: Float, digits: option.Option(Int)) -> Result(Float, String) {
 ///   - $$0.0$$ for 2 digits before the decimal point (`digits = -2`)
 ///   - $$0.0$$ for 3 digits before the decimal point (`digits = -3`)
 ///
-///   The `"ToZero"` rounding mode, rounds $$12.0654$$ to:
+///   The `RoundToZero` rounding mode, rounds $$12.0654$$ to:
 ///   - $$12.0$$ for 0 digits after the decimal point (`digits = 0`)
 ///   - $$12.0$$ for 1 digit after the decimal point (`digits = 1`)
 ///   - $$12.06$$ for 2 digits after the decimal point (`digits = 2`)
@@ -313,7 +313,7 @@ pub fn truncate(x: Float, digits: option.Option(Int)) -> Result(Float, String) {
 ///   - $$0.0$$ for 2 digits before the decimal point (`digits = -2`)
 ///   - $$0.0$$ for 3 digits before the decimal point (`digits = -3`)
 ///
-///   The `"Down"` rounding mode, rounds $$12.0654$$ to:
+///   The `RoundDown` rounding mode, rounds $$12.0654$$ to:
 ///   - $$12.0$$ for 0 digits after the decimal point (`digits = 0`)
 ///   - $$12.0$$ for 1 digits after the decimal point (`digits = 1`)
 ///   - $$12.06$$ for 2 digits after the decimal point (`digits = 2`)
@@ -324,7 +324,7 @@ pub fn truncate(x: Float, digits: option.Option(Int)) -> Result(Float, String) {
 ///   - $$0.0$$ for 2 digits before the decimal point (`digits = -2`)
 ///   - $$0.0$$ for 3 digits before the decimal point (`digits = -3`)
 ///
-///   The `"Up"` rounding mode, rounds $$12.0654$$ to:
+///   The `RoundUp` rounding mode, rounds $$12.0654$$ to:
 ///   - $$13.0$$ for 0 digits after the decimal point (`digits = 0`)
 ///   - $$12.1$$ for 1 digit after the decimal point (`digits = 1`)
 ///   - $$12.07$$ for 2 digits after the decimal point (`digits = 2`)
@@ -346,34 +346,30 @@ pub fn truncate(x: Float, digits: option.Option(Int)) -> Result(Float, String) {
 ///
 ///     pub fn example() {
 ///       // The default number of digits is 0 if None is provided
-///       floatx.round(12.0654, option.None, option.Some("Nearest"))
+///       floatx.round(12.0654, option.None, option.Some(floatx.RoundNearest))
 ///       |> should.equal(Ok(12.0))
 ///
-///       // The default rounding mode is "Nearest" if None is provided 
+///       // The default rounding mode is "RoundNearest" if None is provided 
 ///       floatx.round(12.0654, option.None, option.None)
 ///       |> should.equal(Ok(12.0))
 ///
-///       // We get an error if an invalid rounding mode is provided 
-///       floatx.round(12.0654, option.None, option.Some("XYZ"))
-///       |> should.be_error()
-///
 ///       // Try different rounding modes
-///       floatx.round(12.0654, option.Some(2), option.Some("Nearest"))
+///       floatx.round(12.0654, option.Some(2), option.Some(floatx.RoundNearest))
 ///       |> should.equal(Ok(12.07))
 ///
-///       floatx.round(12.0654, option.Some(2), option.Some("TiesAway"))
+///       floatx.round(12.0654, option.Some(2), option.Some(floatx.RoundTiesAway))
 ///       |> should.equal(Ok(12.07))
 ///
-///       floatx.round(12.0654, option.Some(2), option.Some("TiesUp"))
+///       floatx.round(12.0654, option.Some(2), option.Some(floatx.RoundTiesUp))
 ///       |> should.equal(Ok(12.07)
 ///
-///       floatx.round(12.0654, option.Some(2), option.Some("ToZero"))
+///       floatx.round(12.0654, option.Some(2), option.Some(floatx.RoundToZero))
 ///       |> should.equal(Ok(12.06))
 ///
-///       floatx.round(12.0654, option.Some(2), option.Some("Down"))
+///       floatx.round(12.0654, option.Some(2), option.Some(floatx.RoundDown))
 ///       |> should.equal(Ok(12.06))
 ///
-///       floatx.round(12.0654, option.Some(2), option.Some("Up"))
+///       floatx.round(12.0654, option.Some(2), option.Some(floatx.RoundUp))
 ///       |> should.equal(Ok(12.07))
 ///     }
 /// </details>
@@ -387,7 +383,7 @@ pub fn truncate(x: Float, digits: option.Option(Int)) -> Result(Float, String) {
 pub fn round(
   x: Float,
   digits: option.Option(Int),
-  mode: option.Option(String),
+  mode: option.Option(RoundingMode),
 ) -> Result(Float, String) {
   case digits {
     option.Some(a) -> {
@@ -400,45 +396,51 @@ pub fn round(
   }
 }
 
+pub type RoundingMode {
+  RoundNearest
+  RoundTiesAway
+  RoundTiesUp
+  RoundToZero
+  RoundDown
+  RoundUp
+}
+
 fn do_round(
   p: Float,
   x: Float,
-  mode: option.Option(String),
+  mode: option.Option(RoundingMode),
 ) -> Result(Float, String) {
   case mode {
     // Determine the rounding mode
-    option.Some("Nearest") ->
+    option.Some(RoundNearest) ->
       round_to_nearest(p, x)
       |> Ok
-    option.Some("TiesAway") ->
+    option.Some(RoundTiesAway) ->
       round_ties_away(p, x)
       |> Ok
-    option.Some("TiesUp") ->
+    option.Some(RoundTiesUp) ->
       round_ties_up(p, x)
       |> Ok
-    option.Some("ToZero") ->
+    option.Some(RoundToZero) ->
       round_to_zero(p, x)
       |> Ok
-    option.Some("Down") ->
+    option.Some(RoundDown) ->
       round_down(p, x)
       |> Ok
-    option.Some("Up") ->
+    option.Some(RoundUp) ->
       round_up(p, x)
       |> Ok
     // Otherwise, use the Default rounding mode
     option.None ->
       round_to_nearest(p, x)
       |> Ok
-    _ ->
-      "Invalid rounding mode. Valid input is 'Nearest', 'TiesAway', 'TiesUp', 'ToZero', 'Down', 'Up'."
-      |> Error
   }
 }
 
 fn round_to_nearest(p: Float, x: Float) -> Float {
-  let xabs = float.absolute_value(x) *. p
-  let xabs_truncated = truncate_float(xabs)
-  let remainder = xabs -. xabs_truncated
+  let xabs: Float = float.absolute_value(x) *. p
+  let xabs_truncated: Float = truncate_float(xabs)
+  let remainder: Float = xabs -. xabs_truncated
   case remainder {
     _ if remainder >. 0.5 -> sign(x) *. truncate_float(xabs +. 1.0) /. p
     _ if remainder == 0.5 -> {
@@ -453,8 +455,8 @@ fn round_to_nearest(p: Float, x: Float) -> Float {
 }
 
 fn round_ties_away(p: Float, x: Float) -> Float {
-  let xabs = float.absolute_value(x) *. p
-  let remainder = xabs -. truncate_float(xabs)
+  let xabs: Float = float.absolute_value(x) *. p
+  let remainder: Float = xabs -. truncate_float(xabs)
   case remainder {
     _ if remainder >=. 0.5 -> sign(x) *. truncate_float(xabs +. 1.0) /. p
     _ -> sign(x) *. truncate_float(xabs) /. p
@@ -462,9 +464,9 @@ fn round_ties_away(p: Float, x: Float) -> Float {
 }
 
 fn round_ties_up(p: Float, x: Float) -> Float {
-  let xabs = float.absolute_value(x) *. p
-  let xabs_truncated = truncate_float(xabs)
-  let remainder = xabs -. xabs_truncated
+  let xabs: Float = float.absolute_value(x) *. p
+  let xabs_truncated: Float = truncate_float(xabs)
+  let remainder: Float = xabs -. xabs_truncated
   case remainder {
     _ if remainder >=. 0.5 && x >=. 0.0 ->
       sign(x) *. truncate_float(xabs +. 1.0) /. p
@@ -544,7 +546,7 @@ if javascript {
 ///       // Note: Making the following function call is equivalent
 ///       // but instead of returning a value of type 'Int' a value
 ///       // of type 'Float' is returned.
-///       floatx.round(12.0654, option.Some(0), option.Some("ToZero"))
+///       floatx.round(12.0654, option.Some(0), option.Some(floatx.RoundToZero))
 ///       |> should.equal(Ok(12.0))
 ///     }
 /// </details>
@@ -2119,21 +2121,17 @@ pub fn beta(x: Float, y: Float) -> Float {
 /// </div>
 ///
 pub fn erf(x: Float) -> Float {
-  let [a1, a2, a3, a4, a5] = [
+  let [a1, a2, a3, a4, a5]: List(Float) = [
     0.254829592, -0.284496736, 1.421413741, -1.453152027, 1.061405429,
   ]
-  let p = 0.3275911
+  let p: Float = 0.3275911
 
-  // TODO: Use the implemented sign function
-  let sign = case x <. 0.0 {
-    True -> -1.0
-    False -> 1.0
-  }
-  let x = float.absolute_value(x)
+  let sign: Float = sign(x)
+  let x: Float = float.absolute_value(x)
 
   // Formula 7.1.26 given in Abramowitz and Stegun.
-  let t = 1.0 /. { 1.0 +. p *. x }
-  let y =
+  let t: Float = 1.0 /. { 1.0 +. p *. x }
+  let y: Float =
     1.0 -. { { { { a5 *. t +. a4 } *. t +. a3 } *. t +. a2 } *. t +. a1 } *. t *. exponential(
       -1.0 *. x *. x,
     )
