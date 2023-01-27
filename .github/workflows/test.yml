@@ -26,4 +26,4 @@ jobs:
 
       - run: gleam test --target=erlang
 
-      - run: gleam test --target=javscript
+      - run: gleam test --target=javascript
