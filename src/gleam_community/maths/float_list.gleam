@@ -27,11 +27,9 @@
 ////   * [`sum`](#sum)
 ////   * [`product`](#product)
 ////   * [`norm`](#norm)
-////   * [`minkowski`](#minkowski)
-////   * [`euclidean`](#euclidean)
-////   * [`manhatten`](#manhatten)
-////   * [`root_mean_squared_error`](#root_mean_squared_error)
-////   * [`mean_squared_error`](#mean_squared_error)
+////   * [`minkowski_distance`](#minkowski_distance)
+////   * [`euclidean_distance`](#euclidean_distance)
+////   * [`manhatten_distance`](#manhatten_distance)
 ////   * [`cumulative_sum`](#cumulative_sum)
 ////   * [`cumulative_product`](#cumulative_product)
 //// * **Ranges and intervals**
@@ -53,12 +51,85 @@ import gleam/float
 import gleam/pair
 import gleam/option
 import gleam_community/maths/float as floatx
+import gleam_community/maths/int as intx
+import gleam/io
 
 /// <div style="text-align: right;">
 ///     <a href="https://github.com/gleam-community/maths/issues">
 ///         <small>Spot a typo? Open an issue!</small>
 ///     </a>
 /// </div>
+///
+/// Calculcate the $$p$$-norm of a list (representing a vector):
+///
+/// \\[
+/// \left( \sum_{i=1}^n \left|x_i\right|^{p} \right)^{\frac{1}{p}}
+/// \\]
+///
+/// In the formula, $$n$$ is the length of the list and $$x_i$$ is the value in the input list indexed by $$i$$.
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths/float as floatx
+///     import gleam_community/maths/float_list
+///
+///     pub fn example () {
+///       assert Ok(tol) = floatx.power(-10.0, -6.0)
+///
+///       [1.0, 1.0, 1.0]
+///       |> float_list.norm(1.0)
+///       |> floatx.is_close(3.0, 0.0, tol)
+///       |> should.be_true()
+///
+///       [1.0, 1.0, 1.0]
+///       |> float_list.norm(-1.0)
+///       |> floatx.is_close(0.3333333333333333, 0.0, tol)
+///       |> should.be_true()
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn norm(arr: List(Float), p: Float) -> Float {
+  case arr {
+    [] -> 0.0
+    _ -> {
+      let agg: Float =
+        arr
+        |> list.fold(
+          0.0,
+          fn(acc: Float, a: Float) -> Float {
+            assert Ok(result) = floatx.power(float.absolute_value(a), p)
+            result +. acc
+          },
+        )
+      assert Ok(result) = floatx.power(agg, 1.0 /. p)
+      result
+    }
+  }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// Calculcate the Minkowski distance between two lists (representing vectors):
+///
+/// \\[
+/// \left( \sum_{i=1}^n \left|x_i - x_j \right|^{p} \right)^{\frac{1}{p}}
+/// \\]
+///
+/// In the formula, $$n$$ is the length of the two lists and $$x_i, y_i$$ are the values in the respective input lists indexed by $$i, j$$.
+///
+/// The Minkowski distance is a generalization of both the Euclidean distance ($$p=2$$) and the Manhattan distance ($$p = 1$$).
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -77,8 +148,69 @@ import gleam_community/maths/float as floatx
 ///     </a>
 /// </div>
 ///
-pub fn norm(xarr: List(Float), p: Int) -> Float {
-  todo
+pub fn minkowski_distance(
+  xarr: List(Float),
+  yarr: List(Float),
+  p: Float,
+) -> Result(Float, String) {
+  let xlen: Int = list.length(xarr)
+  let ylen: Int = list.length(yarr)
+  case xlen == ylen {
+    False ->
+      "Invalid input argument: length(xarr) != length(yarr). Valid input is when length(xarr) == length(yarr)."
+      |> Error
+    True ->
+      case p <. 1.0 {
+        True ->
+          "Invalid input argument: p < 1. Valid input is p >= 1."
+          |> Error
+        False ->
+          list.zip(xarr, yarr)
+          |> list.map(fn(tuple: #(Float, Float)) -> Float {
+            pair.first(tuple) -. pair.second(tuple)
+          })
+          |> norm(p)
+          |> Ok
+      }
+  }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// Calculcate the Euclidean distance between two lists (representing vectors):
+///
+/// \\[
+/// \left( \sum_{i=1}^n \left|x_i - x_j \right|^{p} \right)^{\frac{1}{p}}
+/// \\]
+///
+/// In the formula, $$n$$ is the length of the two lists and $$x_i, y_i$$ are the values in the respective input lists indexed by $$i, j$$.
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths/float_list
+///
+///     pub fn example () {
+///
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn euclidean_distance(
+  xarr: List(Float),
+  yarr: List(Float),
+) -> Result(Float, String) {
+  minkowski_distance(xarr, yarr, 2.0)
 }
 
 /// <div style="text-align: right;">
@@ -104,116 +236,11 @@ pub fn norm(xarr: List(Float), p: Int) -> Float {
 ///     </a>
 /// </div>
 ///
-pub fn minkowski(xarr: List(Float), yarr: List(Float), p: Int) -> Float {
-  todo
-}
-
-/// <div style="text-align: right;">
-///     <a href="https://github.com/gleam-community/maths/issues">
-///         <small>Spot a typo? Open an issue!</small>
-///     </a>
-/// </div>
-///
-/// <details>
-///     <summary>Example:</summary>
-///
-///     import gleeunit/should
-///     import gleam_community/maths/float_list
-///
-///     pub fn example () {
-///
-///     }
-/// </details>
-///
-/// <div style="text-align: right;">
-///     <a href="#">
-///         <small>Back to top ↑</small>
-///     </a>
-/// </div>
-///
-pub fn euclidean(xarr: List(Float), yarr: List(Float)) -> Float {
-  todo
-}
-
-/// <div style="text-align: right;">
-///     <a href="https://github.com/gleam-community/maths/issues">
-///         <small>Spot a typo? Open an issue!</small>
-///     </a>
-/// </div>
-///
-/// <details>
-///     <summary>Example:</summary>
-///
-///     import gleeunit/should
-///     import gleam_community/maths/float_list
-///
-///     pub fn example () {
-///
-///     }
-/// </details>
-///
-/// <div style="text-align: right;">
-///     <a href="#">
-///         <small>Back to top ↑</small>
-///     </a>
-/// </div>
-///
-pub fn manhatten(xarr: List(Float), yarr: List(Float)) -> Float {
-  todo
-}
-
-/// <div style="text-align: right;">
-///     <a href="https://github.com/gleam-community/maths/issues">
-///         <small>Spot a typo? Open an issue!</small>
-///     </a>
-/// </div>
-///
-/// <details>
-///     <summary>Example:</summary>
-///
-///     import gleeunit/should
-///     import gleam_community/maths/float_list
-///
-///     pub fn example () {
-///
-///     }
-/// </details>
-///
-/// <div style="text-align: right;">
-///     <a href="#">
-///         <small>Back to top ↑</small>
-///     </a>
-/// </div>
-///
-pub fn mean_squared_error(xarr: List(Float), yarr: List(Float)) -> Float {
-  todo
-}
-
-/// <div style="text-align: right;">
-///     <a href="https://github.com/gleam-community/maths/issues">
-///         <small>Spot a typo? Open an issue!</small>
-///     </a>
-/// </div>
-///
-/// <details>
-///     <summary>Example:</summary>
-///
-///     import gleeunit/should
-///     import gleam_community/maths/float_list
-///
-///     pub fn example () {
-///
-///     }
-/// </details>
-///
-/// <div style="text-align: right;">
-///     <a href="#">
-///         <small>Back to top ↑</small>
-///     </a>
-/// </div>
-///
-pub fn root_mean_squared_error(xarr: List(Float), yarr: List(Float)) -> Float {
-  todo
+pub fn manhatten_distance(
+  xarr: List(Float),
+  yarr: List(Float),
+) -> Result(Float, String) {
+  minkowski_distance(xarr, yarr, 1.0)
 }
 
 /// <div style="text-align: right;">
@@ -659,7 +686,7 @@ pub fn arg_maximum(arr: List(Float)) -> Result(List(Int), String) {
       arr
       |> list.index_map(fn(index: Int, a: Float) -> Int {
         case a -. max {
-          0. -> index
+          0.0 -> index
           _ -> -1
         }
       })
@@ -719,7 +746,7 @@ pub fn arg_minimum(arr: List(Float)) -> Result(List(Int), String) {
       arr
       |> list.index_map(fn(index: Int, a: Float) -> Int {
         case a -. min {
-          0. -> index
+          0.0 -> index
           _ -> -1
         }
       })

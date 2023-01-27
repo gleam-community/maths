@@ -1587,14 +1587,14 @@ pub fn nth_root(x: Float, n: Int) -> Result(Float, String) {
       "Invalid input argument: x < 0. Valid input is x > 0"
       |> Error
     False ->
-      case n >= 2 {
+      case n >= 1 {
         True -> {
           assert Ok(result) = power(x, 1.0 /. int.to_float(n))
           result
           |> Ok
         }
         False ->
-          "Invalid input argyment: n < 2. Valid input is n >= 2."
+          "Invalid input argument: n < 1. Valid input is n >= 2."
           |> Error
       }
   }
