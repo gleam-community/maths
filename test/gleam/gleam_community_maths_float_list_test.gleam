@@ -121,10 +121,236 @@ pub fn float_list_minkowski_test() {
   |> floatx.is_close(1.0717734625362931, 0.0, tol)
   |> should.be_true()
 
+  // Euclidean distance (p = 2)
   assert Ok(result) = float_list.minkowski_distance([0.0, 0.0], [1.0, 2.0], 2.0)
   result
   |> floatx.is_close(2.23606797749979, 0.0, tol)
   |> should.be_true()
+
+  // Manhatten distance (p = 1)
+  assert Ok(result) = float_list.minkowski_distance([0.0, 0.0], [1.0, 2.0], 1.0)
+  result
+  |> floatx.is_close(3.0, 0.0, tol)
+  |> should.be_true()
+}
+
+pub fn float_list_euclidean_test() {
+  assert Ok(tol) = floatx.power(-10.0, -6.0)
+
+  // Empty lists returns 0.0
+  float_list.euclidean_distance([], [])
+  |> should.equal(Ok(0.0))
+
+  // Differing lenghths returns error
+  float_list.euclidean_distance([], [1.0])
+  |> should.be_error()
+
+  // Euclidean distance (p = 2)
+  assert Ok(result) = float_list.euclidean_distance([0.0, 0.0], [1.0, 2.0])
+  result
+  |> floatx.is_close(2.23606797749979, 0.0, tol)
+  |> should.be_true()
+}
+
+pub fn float_list_manhatten_test() {
+  assert Ok(tol) = floatx.power(-10.0, -6.0)
+
+  // Empty lists returns 0.0
+  float_list.manhatten_distance([], [])
+  |> should.equal(Ok(0.0))
+
+  // Differing lenghths returns error
+  float_list.manhatten_distance([], [1.0])
+  |> should.be_error()
+
+  // Manhatten distance (p = 1)
+  assert Ok(result) = float_list.manhatten_distance([0.0, 0.0], [1.0, 2.0])
+  result
+  |> floatx.is_close(3.0, 0.0, tol)
+  |> should.be_true()
+}
+
+pub fn float_list_linear_space_test() {
+  assert Ok(tol) = floatx.power(-10.0, -6.0)
+
+  // Check that the function agrees, at some arbitrary input
+  // points, with known function values
+  // ---> With endpoint included
+  assert Ok(linspace) = float_list.linear_space(10.0, 50.0, 5, True)
+  assert Ok(result) =
+    float_list.all_close(linspace, [10.0, 20.0, 30.0, 40.0, 50.0], 0.0, tol)
+  result
+  |> list.all(fn(x) { x == True })
+  |> should.be_true()
+
+  assert Ok(linspace) = float_list.linear_space(10.0, 20.0, 5, True)
+  assert Ok(result) =
+    float_list.all_close(linspace, [10.0, 12.5, 15.0, 17.5, 20.0], 0.0, tol)
+
+  result
+  |> list.all(fn(x) { x == True })
+  |> should.be_true()
+
+  // Try with negative stop
+  // ----> Without endpoint included
+  assert Ok(linspace) = float_list.linear_space(10.0, 50.0, 5, False)
+  assert Ok(result) =
+    float_list.all_close(linspace, [10.0, 18.0, 26.0, 34.0, 42.0], 0.0, tol)
+
+  result
+  |> list.all(fn(x) { x == True })
+  |> should.be_true()
+
+  assert Ok(linspace) = float_list.linear_space(10.0, 20.0, 5, False)
+  assert Ok(result) =
+    float_list.all_close(linspace, [10.0, 12.0, 14.0, 16.0, 18.0], 0.0, tol)
+
+  result
+  |> list.all(fn(x) { x == True })
+  |> should.be_true()
+
+  // Try with negative stop
+  assert Ok(linspace) = float_list.linear_space(10.0, -50.0, 5, False)
+  assert Ok(result) =
+    float_list.all_close(linspace, [10.0, -2.0, -14.0, -26.0, -38.0], 0.0, tol)
+
+  result
+  |> list.all(fn(x) { x == True })
+  |> should.be_true()
+
+  assert Ok(linspace) = float_list.linear_space(10.0, -20.0, 5, True)
+  assert Ok(result) =
+    float_list.all_close(linspace, [10.0, 2.5, -5.0, -12.5, -20.0], 0.0, tol)
+
+  result
+  |> list.all(fn(x) { x == True })
+  |> should.be_true()
+
+  // Try with negative start
+  assert Ok(linspace) = float_list.linear_space(-10.0, 50.0, 5, False)
+  assert Ok(result) =
+    float_list.all_close(linspace, [-10.0, 2.0, 14.0, 26.0, 38.0], 0.0, tol)
+
+  result
+  |> list.all(fn(x) { x == True })
+  |> should.be_true()
+
+  assert Ok(linspace) = float_list.linear_space(-10.0, 20.0, 5, True)
+  assert Ok(result) =
+    float_list.all_close(linspace, [-10.0, -2.5, 5.0, 12.5, 20.0], 0.0, tol)
+
+  // A negative number of points does not work (-5)
+  float_list.linear_space(10.0, 50.0, -5, True)
+  |> should.be_error()
+}
+
+pub fn float_list_logarithmic_space_test() {
+  assert Ok(tol) = floatx.power(-10.0, -6.0)
+  // Check that the function agrees, at some arbitrary input
+  // points, with known function values
+  // ---> With endpoint included
+  // - Positive start, stop, base
+  assert Ok(logspace) = float_list.logarithmic_space(1.0, 3.0, 3, True, 10.0)
+  assert Ok(result) =
+    float_list.all_close(logspace, [10.0, 100.0, 1000.0], 0.0, tol)
+  result
+  |> list.all(fn(x) { x == True })
+  |> should.be_true()
+
+  // - Positive start, stop, negative base
+  assert Ok(logspace) = float_list.logarithmic_space(1.0, 3.0, 3, True, -10.0)
+  assert Ok(result) =
+    float_list.all_close(logspace, [-10.0, 100.0, -1000.0], 0.0, tol)
+  result
+  |> list.all(fn(x) { x == True })
+  |> should.be_true()
+
+  // - Positive start, negative stop, base 
+  assert Ok(logspace) = float_list.logarithmic_space(1.0, -3.0, 3, True, -10.0)
+  assert Ok(result) =
+    float_list.all_close(logspace, [-10.0, -0.1, -0.001], 0.0, tol)
+  result
+  |> list.all(fn(x) { x == True })
+  |> should.be_true()
+
+  // - Positive start, base, negative stop  
+  assert Ok(logspace) = float_list.logarithmic_space(1.0, -3.0, 3, True, 10.0)
+  assert Ok(result) =
+    float_list.all_close(logspace, [10.0, 0.1, 0.001], 0.0, tol)
+  result
+  |> list.all(fn(x) { x == True })
+  |> should.be_true()
+
+  // - Positive stop, base, negative start
+  assert Ok(logspace) = float_list.logarithmic_space(-1.0, 3.0, 3, True, 10.0)
+  assert Ok(result) =
+    float_list.all_close(logspace, [0.1, 10.0, 1000.0], 0.0, tol)
+  result
+  |> list.all(fn(x) { x == True })
+  |> should.be_true()
+
+  // ----> Without endpoint included
+  // - Positive start, stop, base
+  assert Ok(logspace) = float_list.logarithmic_space(1.0, 3.0, 3, False, 10.0)
+  assert Ok(result) =
+    float_list.all_close(logspace, [10.0, 46.41588834, 215.443469], 0.0, tol)
+  result
+  |> list.all(fn(x) { x == True })
+  |> should.be_true()
+
+  // A negative number of points does not work (-3)
+  float_list.logarithmic_space(1.0, 3.0, -3, True, 10.0)
+  |> should.be_error()
+}
+
+pub fn float_list_geometric_space_test() {
+  assert Ok(tol) = floatx.power(-10.0, -6.0)
+  // Check that the function agrees, at some arbitrary input
+  // points, with known function values
+  // ---> With endpoint included
+  // - Positive start, stop
+  assert Ok(logspace) = float_list.geometric_space(10.0, 1000.0, 3, True)
+  assert Ok(result) =
+    float_list.all_close(logspace, [10.0, 100.0, 1000.0], 0.0, tol)
+  result
+  |> list.all(fn(x) { x == True })
+  |> should.be_true()
+
+  // - Positive start, negative stop  
+  assert Ok(logspace) = float_list.geometric_space(10.0, 0.001, 3, True)
+  assert Ok(result) =
+    float_list.all_close(logspace, [10.0, 0.1, 0.001], 0.0, tol)
+  result
+  |> list.all(fn(x) { x == True })
+  |> should.be_true()
+
+  // - Positive stop, negative start
+  assert Ok(logspace) = float_list.geometric_space(0.1, 1000.0, 3, True)
+  assert Ok(result) =
+    float_list.all_close(logspace, [0.1, 10.0, 1000.0], 0.0, tol)
+  result
+  |> list.all(fn(x) { x == True })
+  |> should.be_true()
+
+  // ----> Without endpoint included
+  // - Positive start, stop
+  assert Ok(logspace) = float_list.geometric_space(10.0, 1000.0, 3, False)
+  assert Ok(result) =
+    float_list.all_close(logspace, [10.0, 46.41588834, 215.443469], 0.0, tol)
+  result
+  |> list.all(fn(x) { x == True })
+  |> should.be_true()
+
+  // Test invalid input (start and stop can't be equal to 0.0)
+  float_list.geometric_space(0.0, 1000.0, 3, False)
+  |> should.be_error()
+
+  float_list.geometric_space(-1000.0, 0.0, 3, False)
+  |> should.be_error()
+
+  // A negative number of points does not work
+  float_list.geometric_space(-1000.0, 0.0, -3, False)
+  |> should.be_error()
 }
 
 pub fn float_list_maximum_test() {
@@ -185,4 +411,28 @@ pub fn float_list_extrema_test() {
   [4.0, 4.0, 3.0, 2.0, 1.0]
   |> float_list.extrema()
   |> should.equal(Ok(#(1.0, 4.0)))
+}
+
+pub fn float_list_cumulative_sum_test() {
+  // An empty lists returns an empty list
+  []
+  |> float_list.cumulative_sum()
+  |> should.equal([])
+
+  // Valid input returns a result
+  [1.0, 2.0, 3.0]
+  |> float_list.cumulative_sum()
+  |> should.equal([1.0, 3.0, 6.0])
+}
+
+pub fn float_list_cumulative_product_test() {
+  // An empty lists returns an empty list
+  []
+  |> float_list.cumumlative_product()
+  |> should.equal([])
+
+  // Valid input returns a result
+  [1.0, 2.0, 3.0]
+  |> float_list.cumumlative_product()
+  |> should.equal([1.0, 2.0, 6.0])
 }

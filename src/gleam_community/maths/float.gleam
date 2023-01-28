@@ -1108,6 +1108,7 @@ if javascript {
     "../../maths.mjs" "exponential"
 }
 
+// TODO: Update description here below
 /// <div style="text-align: right;">
 ///     <a href="https://github.com/gleam-community/maths/issues">
 ///         <small>Spot a typo? Open an issue!</small>

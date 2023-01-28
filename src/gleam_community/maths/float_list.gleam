@@ -33,8 +33,9 @@
 ////   * [`cumulative_sum`](#cumulative_sum)
 ////   * [`cumulative_product`](#cumulative_product)
 //// * **Ranges and intervals**
+////   * [`arrange`](#arrange)
 ////   * [`linear_space`](#linear_space)
-////   * [`logarithm_space`](#logarithm_space)
+////   * [`logarithmic_space`](#logarithmic_space)
 ////   * [`geometric_space`](#geometric_space)
 //// * **Misc. mathematical functions**
 ////   * [`maximum`](#maximum)
@@ -127,7 +128,7 @@ pub fn norm(arr: List(Float), p: Float) -> Float {
 /// \left( \sum_{i=1}^n \left|x_i - x_j \right|^{p} \right)^{\frac{1}{p}}
 /// \\]
 ///
-/// In the formula, $$n$$ is the length of the two lists and $$x_i, y_i$$ are the values in the respective input lists indexed by $$i, j$$.
+/// In the formula, $$p >= 1$$ is the order, $$n$$ is the length of the two lists and $$x_i, y_i$$ are the values in the respective input lists indexed by $$i, j$$.
 ///
 /// The Minkowski distance is a generalization of both the Euclidean distance ($$p=2$$) and the Manhattan distance ($$p = 1$$).
 ///
@@ -135,10 +136,28 @@ pub fn norm(arr: List(Float), p: Float) -> Float {
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
+///     import gleam_community/maths/float as floatx
 ///     import gleam_community/maths/float_list
 ///
 ///     pub fn example () {
-///
+///       assert Ok(tol) = floatx.power(-10.0, -6.0)
+///     
+///       // Empty lists returns 0.0
+///       float_list.minkowski_distance([], [], 1.0)
+///       |> should.equal(Ok(0.0))
+///     
+///       // Differing lengths returns error
+///       float_list.minkowski_distance([], [1.0], 1.0)
+///       |> should.be_error()
+///     
+///       // Test order < 1
+///       float_list.minkowski_distance([0.0, 0.0], [0.0, 0.0], -1.0)
+///       |> should.be_error()
+///     
+///       assert Ok(result) = float_list.minkowski_distance([0.0, 0.0], [1.0, 2.0], 1.0)
+///       result
+///       |> floatx.is_close(3.0, 0.0, tol)
+///       |> should.be_true()  
 ///     }
 /// </details>
 ///
@@ -184,7 +203,7 @@ pub fn minkowski_distance(
 /// Calculcate the Euclidean distance between two lists (representing vectors):
 ///
 /// \\[
-/// \left( \sum_{i=1}^n \left|x_i - x_j \right|^{p} \right)^{\frac{1}{p}}
+/// \left( \sum_{i=1}^n \left|x_i - x_j \right|^{2} \right)^{\frac{1}{2}}
 /// \\]
 ///
 /// In the formula, $$n$$ is the length of the two lists and $$x_i, y_i$$ are the values in the respective input lists indexed by $$i, j$$.
@@ -193,10 +212,24 @@ pub fn minkowski_distance(
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
+///     import gleam_community/maths/float as floatx
 ///     import gleam_community/maths/float_list
 ///
 ///     pub fn example () {
-///
+///       assert Ok(tol) = floatx.power(-10.0, -6.0)
+///     
+///       // Empty lists returns 0.0
+///       float_list.euclidean_distance([], [], 1.0)
+///       |> should.equal(Ok(0.0))
+///     
+///       // Differing lengths returns error
+///       float_list.euclidean_distance([], [1.0], 1.0)
+///       |> should.be_error()
+///     
+///       assert Ok(result) = float_list.euclidean_distance([0.0, 0.0], [1.0, 2.0])
+///       result
+///       |> floatx.is_close(2.23606797749979, 0.0, tol)
+///       |> should.be_true()
 ///     }
 /// </details>
 ///
@@ -219,14 +252,36 @@ pub fn euclidean_distance(
 ///     </a>
 /// </div>
 ///
+/// Calculcate the Euclidean distance between two lists (representing vectors):
+///
+/// \\[
+/// \sum_{i=1}^n \left|x_i - x_j \right|
+/// \\]
+///
+/// In the formula, $$n$$ is the length of the two lists and $$x_i, y_i$$ are the values in the respective input lists indexed by $$i, j$$.
+///
 /// <details>
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
+///     import gleam_community/maths/float as floatx
 ///     import gleam_community/maths/float_list
 ///
 ///     pub fn example () {
-///
+///       assert Ok(tol) = floatx.power(-10.0, -6.0)
+///     
+///       // Empty lists returns 0.0
+///       float_list.manhatten_distance([], [], 1.0)
+///       |> should.equal(Ok(0.0))
+///     
+///       // Differing lengths returns error
+///       float_list.manhatten_distance([], [1.0], 1.0)
+///       |> should.be_error()
+///     
+///       assert Ok(result) = float_list.manhatten_distance([0.0, 0.0], [1.0, 2.0])
+///       result
+///       |> floatx.is_close(3.0, 0.0, tol)
+///       |> should.be_true()
 ///     }
 /// </details>
 ///
@@ -249,18 +304,27 @@ pub fn manhatten_distance(
 ///     </a>
 /// </div>
 ///
-/// Return evenly spaced numbers over a specified interval.
-/// Returns num evenly spaced samples, calculated over the interval [start, stop].
-/// The endpoint of the interval can optionally be excluded.
+/// Generate a linearly spaced list of points over a specified interval. The endpoint of the interval can optionally be included/excluded.
 ///
 /// <details>
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
+///     import gleam_community/maths/float as floatx
 ///     import gleam_community/maths/float_list
 ///
 ///     pub fn example () {
+///       assert Ok(tol) = floatx.power(-10.0, -6.0)
+///       assert Ok(linspace) = float_list.linear_space(10.0, 50.0, 5, True)
+///       assert Ok(result) =
+///         float_list.all_close(linspace, [10.0, 20.0, 30.0, 40.0, 50.0], 0.0, tol)
+///       result
+///       |> list.all(fn(x) { x == True })
+///       |> should.be_true()
 ///
+///       // A negative number of points (-5) does not work
+///       float_list.linear_space(10.0, 50.0, -5, True)
+///       |> should.be_error()
 ///     }
 /// </details>
 ///
@@ -274,9 +338,39 @@ pub fn linear_space(
   start: Float,
   stop: Float,
   num: Int,
-  endpoint: option.Option(Bool),
-) -> List(Float) {
-  todo
+  endpoint: Bool,
+) -> Result(List(Float), String) {
+  let direction: Float = case start <=. stop {
+    True -> 1.0
+    False -> -1.0
+  }
+  case num > 0 {
+    True ->
+      case endpoint {
+        True -> {
+          let increment: Float =
+            float.absolute_value(start -. stop) /. intx.to_float(num - 1)
+          list.range(0, num - 1)
+          |> list.map(fn(i: Int) -> Float {
+            start +. intx.to_float(i) *. increment *. direction
+          })
+          |> Ok
+        }
+        False -> {
+          let increment: Float =
+            float.absolute_value(start -. stop) /. intx.to_float(num)
+          list.range(0, num - 1)
+          |> list.map(fn(i: Int) -> Float {
+            start +. intx.to_float(i) *. increment *. direction
+          })
+          |> Ok
+        }
+      }
+
+    False ->
+      "Invalid input: num < 0. Valid input is num > 0."
+      |> Error
+  }
 }
 
 /// <div style="text-align: right;">
@@ -285,17 +379,27 @@ pub fn linear_space(
 ///     </a>
 /// </div>
 ///
-/// Return numbers spaced evenly on a logarrithmic scale.
-/// In linear space, the sequence starts at base ** start (base to the power of start) and ends with base ** stop.
+/// Generate a logarithmically spaced list of points over a specified interval. The endpoint of the interval can optionally be included/excluded.
 ///
 /// <details>
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
+///     import gleam_community/maths/float as floatx
 ///     import gleam_community/maths/float_list
 ///
 ///     pub fn example () {
+///       assert Ok(tol) = floatx.power(-10.0, -6.0)
+///       assert Ok(logspace) = float_list.logarithmic_space(1.0, 3.0, 3, True)
+///       assert Ok(result) =
+///         float_list.all_close(logspace, [10.0, 100.0, 1000.0], 0.0, tol)
+///       result
+///       |> list.all(fn(x) { x == True })
+///       |> should.be_true()
 ///
+///       // A negative number of points (-3) does not work
+///       float_list.logarithmic_space(1.0, 3.0, -3, False)
+///       |> should.be_error()
 ///     }
 /// </details>
 ///
@@ -305,14 +409,27 @@ pub fn linear_space(
 ///     </a>
 /// </div>
 ///
-pub fn logarithm_space(
+pub fn logarithmic_space(
   start: Float,
   stop: Float,
   num: Int,
-  endpoint: option.Option(Bool),
-  base: Int,
-) -> List(Float) {
-  todo
+  endpoint: Bool,
+  base: Float,
+) -> Result(List(Float), String) {
+  case num > 0 {
+    True -> {
+      assert Ok(linspace) = linear_space(start, stop, num, endpoint)
+      linspace
+      |> list.map(fn(i: Float) -> Float {
+        assert Ok(result) = floatx.power(base, i)
+        result
+      })
+      |> Ok
+    }
+    False ->
+      "Invalid input: num < 0. Valid input is num > 0."
+      |> Error
+  }
 }
 
 /// <div style="text-align: right;">
@@ -321,8 +438,75 @@ pub fn logarithm_space(
 ///     </a>
 /// </div>
 ///
-/// Return numbers spaced evenly on a log scale (a geometric progression).
-/// This is similar to logspace, but with endpoints specified directly. Each output sample is a constant multiple of the previous.
+/// The function returns a list of numbers spaced evenly on a log scale (a geometric progression). Each output point in the list is a constant multiple of the previous.
+/// The function is similar to the [`logarithmic_space`](#logarithmic_space) function, but with endpoints specified directly.
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths/float as floatx
+///     import gleam_community/maths/float_list
+///
+///     pub fn example () {
+///       assert Ok(tol) = floatx.power(-10.0, -6.0)
+///       assert Ok(logspace) = float_list.geometric_space(10.0, 1000.0, 3, True)
+///       assert Ok(result) =
+///         float_list.all_close(logspace, [10.0, 100.0, 1000.0], 0.0, tol)
+///       result
+///       |> list.all(fn(x) { x == True })
+///       |> should.be_true()
+///
+///       // Input (start and stop can't be equal to 0.0)
+///       float_list.geometric_space(0.0, 1000.0, 3, False)
+///       |> should.be_error()
+///     
+///       float_list.geometric_space(-1000.0, 0.0, 3, False)
+///       |> should.be_error()
+///
+///       // A negative number of points (-3) does not work
+///       float_list.geometric_space(10.0, 1000.0, -3, False)
+///       |> should.be_error()
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn geometric_space(
+  start: Float,
+  stop: Float,
+  num: Int,
+  endpoint: Bool,
+) -> Result(List(Float), String) {
+  case start == 0.0 || stop == 0.0 {
+    True ->
+      ""
+      |> Error
+    False ->
+      case num > 0 {
+        True -> {
+          assert Ok(log_start) = floatx.logarithm_10(start)
+          assert Ok(log_stop) = floatx.logarithm_10(stop)
+          logarithmic_space(log_start, log_stop, num, endpoint, 10.0)
+        }
+        False ->
+          "Invalid input: num < 0. Valid input is num > 0."
+          |> Error
+      }
+  }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// The function returns a list with evenly spaced values within a given interval based on a start, stop value and a given increment (step-length) between consecutive values. 
 /// 
 /// <details>
 ///     <summary>Example:</summary>
@@ -341,12 +525,11 @@ pub fn logarithm_space(
 ///     </a>
 /// </div>
 ///
-pub fn geometric_space(
+pub fn arrange(
   start: Float,
   stop: Float,
-  num: Int,
-  endpoint: option.Option(Bool),
-) -> List(Float) {
+  step: Float,
+) -> Result(List(Float), String) {
   todo
 }
 
@@ -455,10 +638,11 @@ pub fn product(arr: List(Float)) -> Float {
 /// Calculcate the cumulative sum of the elements in a list:
 ///
 /// \\[
-/// \sum_{i=1}^n x_i
+/// v_j = \sum_{i=1}^j x_i, \forall j \leq n
 /// \\]
 ///
 /// In the formula, $$n$$ is the length of the list and $$x_i$$ is the value in the input list indexed by $$i$$.
+/// Furthermore, $$v_j$$ is the $$j$$th element in the cumulative sum.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -485,7 +669,12 @@ pub fn product(arr: List(Float)) -> Float {
 /// </div>
 ///
 pub fn cumulative_sum(arr: List(Float)) -> List(Float) {
-  todo
+  case arr {
+    [] -> []
+    _ ->
+      arr
+      |> list.scan(0.0, fn(acc: Float, a: Float) -> Float { a +. acc })
+  }
 }
 
 /// <div style="text-align: right;">
@@ -497,10 +686,11 @@ pub fn cumulative_sum(arr: List(Float)) -> List(Float) {
 /// Calculcate the cumulative product of the elements in a list:
 ///
 /// \\[
-/// \prod_{i=1}^n x_i
+/// v_j = \prod_{i=1}^j x_i, \forall j \leq n
 /// \\]
 ///
 /// In the formula, $$n$$ is the length of the list and $$x_i$$ is the value in the input list indexed by $$i$$.
+/// Furthermore, $$v_j$$ is the $$j$$th element in the cumulative product.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -511,8 +701,8 @@ pub fn cumulative_sum(arr: List(Float)) -> List(Float) {
 ///     pub fn example () {
 ///       // An empty list returns an error
 ///       []
-///       |> float_list.sum()
-///       |> should.equal(0.)
+///       |> float_list.cumulative_product()
+///       |> should.equal([])
 ///
 ///       // Valid input returns a result
 ///       [1.0, 2.0, 3.0]
@@ -528,7 +718,12 @@ pub fn cumulative_sum(arr: List(Float)) -> List(Float) {
 /// </div>
 ///
 pub fn cumumlative_product(arr: List(Float)) -> List(Float) {
-  todo
+  case arr {
+    [] -> []
+    _ ->
+      arr
+      |> list.scan(1.0, fn(acc: Float, a: Float) -> Float { a *. acc })
+  }
 }
 
 /// <div style="text-align: right;">
