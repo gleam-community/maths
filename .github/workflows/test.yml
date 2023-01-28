@@ -13,17 +13,15 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
-
       - uses: erlef/setup-beam@v1
         with:
           otp-version: "25.0"
-          gleam-version: "0.25.3"
-
-      - run: gleam format --check
-
-      - run: gleam test --target=erlang
-
-      - run: gleam test --target=javascript
+          gleam-version: "0.26.1"
+      - uses: actions/setup-node@v3.5.1
+        with:
+          node-version: "16.18.1"
+      - run: gleam test --target erlang
+      - run: gleam test --target javascript
+      - run: gleam format --check src test
