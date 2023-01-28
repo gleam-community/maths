@@ -353,6 +353,38 @@ pub fn float_list_geometric_space_test() {
   |> should.be_error()
 }
 
+pub fn float_list_arrange_test() {
+  // Positive start, stop, step
+  float_list.arrange(1.0, 5.0, 1.0)
+  |> should.equal([1.0, 2.0, 3.0, 4.0])
+
+  float_list.arrange(1.0, 5.0, 0.5)
+  |> should.equal([1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5])
+
+  float_list.arrange(1.0, 2.0, 0.25)
+  |> should.equal([1.0, 1.25, 1.5, 1.75])
+
+  // Reverse (switch start/stop largest/smallest value)
+  float_list.arrange(5.0, 1.0, 1.0)
+  |> should.equal([])
+
+  // Reverse negative step
+  float_list.arrange(5.0, 1.0, -1.0)
+  |> should.equal([5.0, 4.0, 3.0, 2.0])
+
+  // Positive start, negative stop, step
+  float_list.arrange(5.0, -1.0, -1.0)
+  |> should.equal([5.0, 4.0, 3.0, 2.0, 1.0, 0.0])
+
+  // Negative start, stop, step
+  float_list.arrange(-5.0, -1.0, -1.0)
+  |> should.equal([])
+
+  // Negative start, stop, positive step
+  float_list.arrange(-5.0, -1.0, 1.0)
+  |> should.equal([-5.0, -4.0, -3.0, -2.0])
+}
+
 pub fn float_list_maximum_test() {
   // An empty lists returns an error
   []

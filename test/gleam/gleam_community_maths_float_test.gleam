@@ -1044,7 +1044,6 @@ pub fn float_absolute_difference_test() {
 
 pub fn float_constants_test() {
   floatx.e()
-  |> io.debug()
   |> floatx.is_close(2.71828, 0.0, 0.00001)
   |> should.be_true()
 

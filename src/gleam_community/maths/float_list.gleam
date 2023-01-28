@@ -507,7 +507,8 @@ pub fn geometric_space(
 /// </div>
 ///
 /// The function returns a list with evenly spaced values within a given interval based on a start, stop value and a given increment (step-length) between consecutive values. 
-/// 
+/// The list returned includes the given start value but excludes the stop value.
+///
 /// <details>
 ///     <summary>Example:</summary>
 ///
@@ -515,7 +516,18 @@ pub fn geometric_space(
 ///     import gleam_community/maths/float_list
 ///
 ///     pub fn example () {
-///
+///       float_list.arrange(1.0, 5.0, 1.0)
+///       |> should.equal([1.0, 2.0, 3.0, 4.0])
+///       
+///       // No points returned since
+///       // start smaller than stop and positive step
+///       float_list.arrange(5.0, 1.0, 1.0)
+///       |> should.equal([])
+///       
+///       // Points returned since
+///       // start smaller than stop but negative step
+///       float_list.arrange(5.0, 1.0, -1.0)
+///       |> should.equal([5.0, 4.0, 3.0, 2.0])
 ///     }
 /// </details>
 ///
@@ -525,13 +537,28 @@ pub fn geometric_space(
 ///     </a>
 /// </div>
 ///
-pub fn arrange(
-  start: Float,
-  stop: Float,
-  step: Float,
-) -> Result(List(Float), String) {
-  todo
+pub fn arrange(start: Float, stop: Float, step: Float) -> List(Float) {
+  case start >=. stop && step >. 0.0 || start <=. stop && step <. 0.0 {
+    True -> []
+    False -> {
+      let direction: Float = case start <=. stop {
+        True -> 1.0
+        False -> -1.0
+      }
+      let step_abs: Float = float.absolute_value(step)
+      let num: Float = float.absolute_value(start -. stop) /. step_abs
+
+      list.range(0, floatx.to_int(num) - 1)
+      |> list.map(fn(i: Int) -> Float {
+        start +. intx.to_float(i) *. step_abs *. direction
+      })
+    }
+  }
 }
+
+// fn do_arrange(start: Float, step: Float, direction: Float) -> Float {
+//   case 
+// }
 
 /// <div style="text-align: right;">
 ///     <a href="https://github.com/gleam-community/maths/issues">
@@ -557,12 +584,12 @@ pub fn arrange(
 ///       // An empty list returns an error
 ///       []
 ///       |> float_list.sum()
-///       |> should.equal(0.)
+///       |> should.equal(0.0)
 ///
 ///       // Valid input returns a result
-///       [1., 2., 3.]
+///       [1.0, 2.0, 3.0]
 ///       |> float_list.sum()
-///       |> should.equal(6.)
+///       |> should.equal(6.0)
 ///     }
 /// </details>
 ///
