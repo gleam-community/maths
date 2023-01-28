@@ -68,3 +68,27 @@ pub fn int_list_extrema_test() {
   |> int_list.extrema()
   |> should.equal(Ok(#(1, 4)))
 }
+
+pub fn int_list_cumulative_sum_test() {
+  // An empty lists returns an empty list
+  []
+  |> int_list.cumulative_sum()
+  |> should.equal([])
+
+  // Valid input returns a result
+  [1, 2, 3]
+  |> int_list.cumulative_sum()
+  |> should.equal([1, 3, 6])
+}
+
+pub fn int_list_cumulative_product_test() {
+  // An empty lists returns an empty list
+  []
+  |> int_list.cumumlative_product()
+  |> should.equal([])
+
+  // Valid input returns a result
+  [1, 2, 3]
+  |> int_list.cumumlative_product()
+  |> should.equal([1, 2, 6])
+}

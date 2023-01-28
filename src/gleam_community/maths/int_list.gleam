@@ -48,6 +48,103 @@ import gleam_community/maths/int as intx
 ///     </a>
 /// </div>
 ///
+/// Calculcate the cumulative sum of the elements in a list:
+///
+/// \\[
+/// v_j = \sum_{i=1}^j x_i, \forall j \leq n
+/// \\]
+///
+/// In the formula, $$n$$ is the length of the list and $$x_i$$ is the value in the input list indexed by $$i$$.
+/// Furthermore, $$v_j$$ is the $$j$$th element in the cumulative sum.
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths/int_list
+///
+///     pub fn example () {
+///       []
+///       |> int_list.cumulative_sum()
+///       |> should.equal([])
+///
+///       // Valid input returns a result
+///       [1, 2, 3]
+///       |> int_list.cumulative_sum()
+///       |> should.equal([1, 3, 6])
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn cumulative_sum(arr: List(Int)) -> List(Int) {
+  case arr {
+    [] -> []
+    _ ->
+      arr
+      |> list.scan(0, fn(acc: Int, a: Int) -> Int { a + acc })
+  }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// Calculcate the cumulative product of the elements in a list:
+///
+/// \\[
+/// v_j = \prod_{i=1}^j x_i, \forall j \leq n
+/// \\]
+///
+/// In the formula, $$n$$ is the length of the list and $$x_i$$ is the value in the input list indexed by $$i$$.
+/// Furthermore, $$v_j$$ is the $$j$$th element in the cumulative product.
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths/int_list
+///
+///     pub fn example () {
+///       // An empty list returns an error
+///       []
+///       |> int_list.cumulative_product()
+///       |> should.equal([])
+///
+///       // Valid input returns a result
+///       [1, 2, 3]
+///       |> int_list.cumulative_product()
+///       |> should.equal([1, 2, 6])
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn cumumlative_product(arr: List(Int)) -> List(Int) {
+  case arr {
+    [] -> []
+    _ ->
+      arr
+      |> list.scan(1, fn(acc: Int, a: Int) -> Int { a * acc })
+  }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
 /// Returns the indices of the minimum values in a list. 
 ///
 /// <details>
