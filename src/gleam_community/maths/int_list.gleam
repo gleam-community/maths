@@ -51,7 +51,7 @@ import gleam_community/maths/int as intx
 /// Calculcate the Manhatten distance between two lists (representing vectors):
 ///
 /// \\[
-/// \sum_{i=1}^n \left|x_i - x_j \right|
+/// \sum_{i=1}^n \left|x_i - y_i \right|
 /// \\]
 ///
 /// In the formula, $$n$$ is the length of the two lists and $$x_i, y_i$$ are the values in the respective input lists indexed by $$i, j$$.
@@ -60,16 +60,15 @@ import gleam_community/maths/int as intx
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/float as floatx
-///     import gleam_community/maths/float_list
+///     import gleam_community/maths/int_list
 ///
 ///     pub fn example () {
 ///       // Empty lists returns 0
-///       float_list.manhatten_distance([], [])
-///       |> should.equal(Ok(0.0))
+///       int_list.manhatten_distance([], [])
+///       |> should.equal(Ok(0))
 ///     
 ///       // Differing lengths returns error
-///       float_list.manhatten_distance([], [1])
+///       int_list.manhatten_distance([], [1])
 ///       |> should.be_error()
 ///     
 ///       assert Ok(result) = int_list.manhatten_distance([0, 0], [1, 2])
@@ -122,17 +121,17 @@ pub fn manhatten_distance(
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/float_list
+///     import gleam_community/maths/int_list
 ///
 ///     pub fn example () {
 ///       // An empty list returns 0
 ///       []
-///       |> float_list.sum()
+///       |> int_list.sum()
 ///       |> should.equal(0)
 ///
 ///       // Valid input returns a result
 ///       [1, 2, 3]
-///       |> float_list.sum()
+///       |> int_list.sum()
 ///       |> should.equal(6)
 ///     }
 /// </details>
@@ -170,18 +169,18 @@ pub fn sum(arr: List(Int)) -> Int {
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/float_list
+///     import gleam_community/maths/int_list
 ///
 ///     pub fn example () {
-///       // An empty list returns an error
+///       // An empty list returns 0
 ///       []
-///       |> float_list.sum()
-///       |> should.equal(0.)
+///       |> int_list.product()
+///       |> should.equal(0)
 ///
 ///       // Valid input returns a result
-///       [1., 2., 3.]
-///       |> float_list.product()
-///       |> should.equal(6.)
+///       [1, 2, 3]
+///       |> int_list.product()
+///       |> should.equal(6)
 ///     }
 /// </details>
 ///
@@ -209,11 +208,12 @@ pub fn product(arr: List(Int)) -> Int {
 /// Calculcate the cumulative sum of the elements in a list:
 ///
 /// \\[
-/// v_j = \sum_{i=1}^j x_i, \forall j \leq n
+/// v_j = \sum_{i=1}^j x_i \\;\\; \forall j = 1,\dots, n
 /// \\]
 ///
-/// In the formula, $$n$$ is the length of the list and $$x_i$$ is the value in the input list indexed by $$i$$.
-/// Furthermore, $$v_j$$ is the $$j$$th element in the cumulative sum.
+/// In the formula, $$v_j$$ is the $$j$$'th element in the cumulative sum of $$n$$ elements.
+/// That is, $$n$$ is the length of the list and $$x_i$$ is the value in the input list indexed by $$i$$. 
+/// The value $$v_j$$ is thus the sum of the $$1$$ to $$j$$ first elements in the given list.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -257,11 +257,12 @@ pub fn cumulative_sum(arr: List(Int)) -> List(Int) {
 /// Calculcate the cumulative product of the elements in a list:
 ///
 /// \\[
-/// v_j = \prod_{i=1}^j x_i, \forall j \leq n
+/// v_j = \prod_{i=1}^j x_i \\;\\; \forall j = 1,\dots, n
 /// \\]
 ///
-/// In the formula, $$n$$ is the length of the list and $$x_i$$ is the value in the input list indexed by $$i$$.
-/// Furthermore, $$v_j$$ is the $$j$$th element in the cumulative product.
+/// In the formula, $$v_j$$ is the $$j$$'th element in the cumulative product of $$n$$ elements.
+/// That is, $$n$$ is the length of the list and $$x_i$$ is the value in the input list indexed by $$i$$. 
+/// The value $$v_j$$ is thus the product of the $$1$$ to $$j$$ first elements in the given list.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -288,7 +289,7 @@ pub fn cumulative_sum(arr: List(Int)) -> List(Int) {
 ///     </a>
 /// </div>
 ///
-pub fn cumumlative_product(arr: List(Int)) -> List(Int) {
+pub fn cumulative_product(arr: List(Int)) -> List(Int) {
   case arr {
     [] -> []
     _ ->
@@ -319,7 +320,7 @@ pub fn cumumlative_product(arr: List(Int)) -> List(Int) {
 ///     
 ///       // Valid input returns a result
 ///       [4, 4, 3, 2, 1]
-///       |> stats.arg_minimum()
+///       |> int_list.arg_minimum()
 ///       |> should.equal(Ok([4]))
 ///     }
 /// </details>
@@ -533,6 +534,7 @@ pub fn minimum(arr: List(Int)) -> Result(Int, String) {
 ///     </a>
 /// </div>
 ///
+/// Returns a tuple consisting of the minimum and maximum value of a list. 
 ///
 /// <details>
 ///     <summary>Example:</summary>

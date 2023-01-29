@@ -469,11 +469,11 @@ pub fn permutation(n: Int, k: Int) -> Result(Int, String) {
 ///     import gleam_community/maths/int as intx
 ///
 ///     pub fn example() {
-///       intx.absolute_difference(-10.0, 10.0)
-///       |> should.equal(20.0)
+///       intx.absolute_difference(-10, 10)
+///       |> should.equal(20)
 ///
-///       intx.absolute_difference(0.0, -2.0)
-///       |> should.equal(2.0)
+///       intx.absolute_difference(0, -2)
+///       |> should.equal(2)
 ///     }
 /// </details>
 ///
@@ -601,7 +601,6 @@ fn do_sum(arr: List(Int)) -> Int {
 ///
 ///       intx.proper_divisors(13)
 ///       |> should.equal([1])
-///
 ///     }
 /// </details>
 ///
@@ -831,7 +830,7 @@ pub fn is_even(x: Int) -> Bool {
 ///     </a>
 /// </div>
 ///
-/// A function that produces a number of type `Float` and from an `Int`.
+/// A function that produces a number of type `Float` from an `Int`.
 /// 
 /// Note: The function is equivalent to the similar function in the Gleam stdlib.
 /// 
@@ -845,7 +844,7 @@ pub fn is_even(x: Int) -> Bool {
 ///       intx.to_float(-1)
 ///       |> should.equal(-1.0)
 ///     
-///       intx.is_even(1)
+///       intx.to_float(1)
 ///       |> should.equal(1.0)
 ///     }
 /// </details>

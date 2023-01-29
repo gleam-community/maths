@@ -120,16 +120,16 @@ pub fn int_list_product_test() {
 pub fn int_list_cumulative_product_test() {
   // An empty lists returns an empty list
   []
-  |> int_list.cumumlative_product()
+  |> int_list.cumulative_product()
   |> should.equal([])
 
   // Valid input returns a result
   [1, 2, 3]
-  |> int_list.cumumlative_product()
+  |> int_list.cumulative_product()
   |> should.equal([1, 2, 6])
 
   [-2, 4, 6]
-  |> int_list.cumumlative_product()
+  |> int_list.cumulative_product()
   |> should.equal([-2, -8, -48])
 }
 

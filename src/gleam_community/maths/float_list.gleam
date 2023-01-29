@@ -125,7 +125,7 @@ pub fn norm(arr: List(Float), p: Float) -> Float {
 /// Calculcate the Minkowski distance between two lists (representing vectors):
 ///
 /// \\[
-/// \left( \sum_{i=1}^n \left|x_i - x_j \right|^{p} \right)^{\frac{1}{p}}
+/// \left( \sum_{i=1}^n \left|x_i - y_i \right|^{p} \right)^{\frac{1}{p}}
 /// \\]
 ///
 /// In the formula, $$p >= 1$$ is the order, $$n$$ is the length of the two lists and $$x_i, y_i$$ are the values in the respective input lists indexed by $$i, j$$.
@@ -203,7 +203,7 @@ pub fn minkowski_distance(
 /// Calculcate the Euclidean distance between two lists (representing vectors):
 ///
 /// \\[
-/// \left( \sum_{i=1}^n \left|x_i - x_j \right|^{2} \right)^{\frac{1}{2}}
+/// \left( \sum_{i=1}^n \left|x_i - y_i \right|^{2} \right)^{\frac{1}{2}}
 /// \\]
 ///
 /// In the formula, $$n$$ is the length of the two lists and $$x_i, y_i$$ are the values in the respective input lists indexed by $$i, j$$.
@@ -219,11 +219,11 @@ pub fn minkowski_distance(
 ///       assert Ok(tol) = floatx.power(-10.0, -6.0)
 ///     
 ///       // Empty lists returns 0.0
-///       float_list.euclidean_distance([], [], 1.0)
+///       float_list.euclidean_distance([], [])
 ///       |> should.equal(Ok(0.0))
 ///     
 ///       // Differing lengths returns error
-///       float_list.euclidean_distance([], [1.0], 1.0)
+///       float_list.euclidean_distance([], [1.0])
 ///       |> should.be_error()
 ///     
 ///       assert Ok(result) = float_list.euclidean_distance([0.0, 0.0], [1.0, 2.0])
@@ -255,7 +255,7 @@ pub fn euclidean_distance(
 /// Calculcate the Manhatten distance between two lists (representing vectors):
 ///
 /// \\[
-/// \sum_{i=1}^n \left|x_i - x_j \right|
+/// \sum_{i=1}^n \left|x_i - y_i \right|
 /// \\]
 ///
 /// In the formula, $$n$$ is the length of the two lists and $$x_i, y_i$$ are the values in the respective input lists indexed by $$i, j$$.
@@ -390,7 +390,7 @@ pub fn linear_space(
 ///
 ///     pub fn example () {
 ///       assert Ok(tol) = floatx.power(-10.0, -6.0)
-///       assert Ok(logspace) = float_list.logarithmic_space(1.0, 3.0, 3, True)
+///       assert Ok(logspace) = float_list.logarithmic_space(1.0, 3.0, 3, True, 10.0)
 ///       assert Ok(result) =
 ///         float_list.all_close(logspace, [10.0, 100.0, 1000.0], 0.0, tol)
 ///       result
@@ -398,7 +398,7 @@ pub fn linear_space(
 ///       |> should.be_true()
 ///
 ///       // A negative number of points (-3) does not work
-///       float_list.logarithmic_space(1.0, 3.0, -3, False)
+///       float_list.logarithmic_space(1.0, 3.0, -3, False, 10.0)
 ///       |> should.be_error()
 ///     }
 /// </details>
@@ -438,7 +438,7 @@ pub fn logarithmic_space(
 ///     </a>
 /// </div>
 ///
-/// The function returns a list of numbers spaced evenly on a log scale (a geometric progression). Each output point in the list is a constant multiple of the previous.
+/// The function returns a list of numbers spaced evenly on a log scale (a geometric progression). Each point in the list is a constant multiple of the previous.
 /// The function is similar to the [`logarithmic_space`](#logarithmic_space) function, but with endpoints specified directly.
 ///
 /// <details>
@@ -661,11 +661,12 @@ pub fn product(arr: List(Float)) -> Float {
 /// Calculcate the cumulative sum of the elements in a list:
 ///
 /// \\[
-/// v_j = \sum_{i=1}^j x_i, \forall j \leq n
+/// v_j = \sum_{i=1}^j x_i \\;\\; \forall j = 1,\dots, n
 /// \\]
 ///
-/// In the formula, $$n$$ is the length of the list and $$x_i$$ is the value in the input list indexed by $$i$$.
-/// Furthermore, $$v_j$$ is the $$j$$th element in the cumulative sum.
+/// In the formula, $$v_j$$ is the $$j$$'th element in the cumulative sum of $$n$$ elements.
+/// That is, $$n$$ is the length of the list and $$x_i$$ is the value in the input list indexed by $$i$$. 
+/// The value $$v_j$$ is thus the sum of the $$1$$ to $$j$$ first elements in the given list.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -709,11 +710,12 @@ pub fn cumulative_sum(arr: List(Float)) -> List(Float) {
 /// Calculcate the cumulative product of the elements in a list:
 ///
 /// \\[
-/// v_j = \prod_{i=1}^j x_i, \forall j \leq n
+/// v_j = \prod_{i=1}^j x_i \\;\\; \forall j = 1,\dots, n
 /// \\]
 ///
-/// In the formula, $$n$$ is the length of the list and $$x_i$$ is the value in the input list indexed by $$i$$.
-/// Furthermore, $$v_j$$ is the $$j$$th element in the cumulative product.
+/// In the formula, $$v_j$$ is the $$j$$'th element in the cumulative product of $$n$$ elements.
+/// That is, $$n$$ is the length of the list and $$x_i$$ is the value in the input list indexed by $$i$$. 
+/// The value $$v_j$$ is thus the sum of the $$1$$ to $$j$$ first elements in the given list.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -985,7 +987,7 @@ pub fn arg_minimum(arr: List(Float)) -> Result(List(Int), String) {
 ///     </a>
 /// </div>
 ///
-/// Returns the minimum value of a list. 
+/// Returns a tuple consisting of the minimum and maximum value of a list. 
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -1045,8 +1047,7 @@ pub fn extrema(arr: List(Float)) -> Result(#(Float, Float), String) {
 ///     </a>
 /// </div>
 ///
-/// Determine if a list of values are close to or equivalent to a 
-/// another list of reference values.
+/// Determine if a list of values are close to or equivalent to a another list of reference values.
 ///
 /// <details>
 ///     <summary>Example:</summary>

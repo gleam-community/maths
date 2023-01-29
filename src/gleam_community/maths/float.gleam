@@ -146,7 +146,7 @@ pub fn ceiling(x: Float, digits: option.Option(Int)) -> Result(Float, String) {
 ///     </a>
 /// </div>
 ///
-/// The floor function rounds input $$x \in \mathbb{R}$$ to the nearest integer value (at the specified digit) that is less than or equal to the input $$x$$
+/// The floor function rounds input $$x \in \mathbb{R}$$ to the nearest integer value (at the specified digit) that is less than or equal to the input $$x$$.
 ///
 /// Note: The floor function is used as an alias for the rounding function [`round`](#round) with rounding mode `RoundDown`.
 ///
@@ -361,7 +361,7 @@ pub fn truncate(x: Float, digits: option.Option(Int)) -> Result(Float, String) {
 ///       |> should.equal(Ok(12.07))
 ///
 ///       floatx.round(12.0654, option.Some(2), option.Some(floatx.RoundTiesUp))
-///       |> should.equal(Ok(12.07)
+///       |> should.equal(Ok(12.07))
 ///
 ///       floatx.round(12.0654, option.Some(2), option.Some(floatx.RoundToZero))
 ///       |> should.equal(Ok(12.06))
@@ -714,7 +714,7 @@ if javascript {
 ///
 ///     pub fn example() {
 ///       floatx.asin(0.0)
-///       |> should.equal(0.0)
+///       |> should.equal(Ok(0.0))
 ///
 ///       floatx.asin(1.1)
 ///       |> should.be_error()
@@ -1108,20 +1108,19 @@ if javascript {
     "../../maths.mjs" "exponential"
 }
 
-// TODO: Update description here below
 /// <div style="text-align: right;">
 ///     <a href="https://github.com/gleam-community/maths/issues">
 ///         <small>Spot a typo? Open an issue!</small>
 ///     </a>
 /// </div>
 ///
-/// The natural logarithm function:
+/// The base $$b$$ logarithm function (computed through the "change of base" formula):
 ///
 /// \\[
-/// \forall x \in \(0, \infty\),   \\; \log_{e}{(x)} = y \in \(-\infty, +\infty\)
+/// \forall x \in \(0, \infty\) \textnormal{ and } b > 1,  \\; \log_{b}{(x)} = y \in \(-\infty, +\infty\)
 /// \\]
 ///
-/// The function takes a number $$x$$ in its domain $$\(0, \infty\)$$ as input and returns
+/// The function takes a number $$x$$ in its domain $$\(0, \infty\)$$ and a base $$b > 1$$ as input and returns
 /// a numeric value $$y$$ that lies in the range $$\(-\infty, \infty\)$$.
 /// If the input value is outside the domain of the function an error is returned.
 ///
@@ -1137,7 +1136,7 @@ if javascript {
 ///       |> should.equal(Ok(0.0))
 ///
 ///       floatx.logarithm(floatx.e(), option.Some(floatx.e()))
-///       |> should.equal(1.0)
+///       |> should.equal(Ok(1.0))
 ///
 ///       floatx.logarithm(-1.0, option.Some(2.0))
 ///       |> should.be_error()
@@ -1205,7 +1204,7 @@ pub fn logarithm(x: Float, base: option.Option(Float)) -> Result(Float, String) 
 ///       |> should.equal(Ok(0.0))
 ///
 ///       floatx.natural_logarithm(floatx.e())
-///       |> should.equal(1.0)
+///       |> should.equal(Ok(1.0))
 ///
 ///       floatx.natural_logarithm(-1.0)
 ///       |> should.be_error()
@@ -1546,7 +1545,7 @@ pub fn cube_root(x: Float) -> Result(Float, String) {
 ///     </a>
 /// </div>
 ///
-/// The nth root function: $$y = \sqrt[3]{x} = x^{\frac{1}{n}}$$.
+/// The $$n$$'th root function: $$y = \sqrt[n]{x} = x^{\frac{1}{n}}$$.
 ///
 /// Note that the function is not defined if:
 /// 1. The input is negative ($$x < 0$$). An error will be returned
@@ -1607,7 +1606,7 @@ pub fn nth_root(x: Float, n: Int) -> Result(Float, String) {
 ///     </a>
 /// </div>
 ///
-/// A function to compute the hypotenuse of a right-angled triangle: $$\sqrt[2](x^2 + y^2)$$.
+/// A function to compute the hypotenuse of a right-angled triangle: $$\sqrt[2]{x^2 + y^2}$$.
 /// The function can also be used to calculate the Euclidean distance in 2 dimensions. 
 ///
 /// <details>
@@ -1617,7 +1616,14 @@ pub fn nth_root(x: Float, n: Int) -> Result(Float, String) {
 ///     import gleam_community/maths/float as floatx
 ///
 ///     pub fn example() {
-///
+///       floatx.hypotenuse(0.0, 0.0)
+///       |> should.equal(0.0)
+///     
+///       floatx.hypotenuse(1.0, 0.0)
+///       |> should.equal(1.0)
+///     
+///       floatx.hypotenuse(0.0, 1.0)
+///       |> should.equal(1.0)
 ///     }
 /// </details>
 ///
@@ -1853,7 +1859,7 @@ if javascript {
 ///       floatx.to_degree(0.0)
 ///       |> should.equal(0.0)
 ///
-///       floatx.to_degree(2. *. pi())
+///       floatx.to_degree(2. *. floatx.pi())
 ///       |> should.equal(360.)
 ///     }
 /// </details>
@@ -1885,7 +1891,7 @@ pub fn to_degree(x: Float) -> Float {
 ///
 ///     pub fn example() {
 ///       floatx.to_radian(360.)
-///       |> should.equal(2. *. pi())
+///       |> should.equal(2. *. floatx.pi())
 ///     }
 /// </details>
 ///
