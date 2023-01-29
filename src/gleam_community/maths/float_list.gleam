@@ -26,14 +26,14 @@
 //// * **Distances, sums, and products**
 ////   * [`sum`](#sum)
 ////   * [`product`](#product)
+////   * [`cumulative_sum`](#cumulative_sum)
+////   * [`cumulative_product`](#cumulative_product)
 ////   * [`norm`](#norm)
 ////   * [`minkowski_distance`](#minkowski_distance)
 ////   * [`euclidean_distance`](#euclidean_distance)
 ////   * [`manhatten_distance`](#manhatten_distance)
-////   * [`cumulative_sum`](#cumulative_sum)
-////   * [`cumulative_product`](#cumulative_product)
 //// * **Ranges and intervals**
-////   * [`arrange`](#arrange)
+////   * [`arange`](#arange)
 ////   * [`linear_space`](#linear_space)
 ////   * [`logarithmic_space`](#logarithmic_space)
 ////   * [`geometric_space`](#geometric_space)
@@ -252,7 +252,7 @@ pub fn euclidean_distance(
 ///     </a>
 /// </div>
 ///
-/// Calculcate the Euclidean distance between two lists (representing vectors):
+/// Calculcate the Manhatten distance between two lists (representing vectors):
 ///
 /// \\[
 /// \sum_{i=1}^n \left|x_i - x_j \right|
@@ -271,11 +271,11 @@ pub fn euclidean_distance(
 ///       assert Ok(tol) = floatx.power(-10.0, -6.0)
 ///     
 ///       // Empty lists returns 0.0
-///       float_list.manhatten_distance([], [], 1.0)
+///       float_list.manhatten_distance([], [])
 ///       |> should.equal(Ok(0.0))
 ///     
 ///       // Differing lengths returns error
-///       float_list.manhatten_distance([], [1.0], 1.0)
+///       float_list.manhatten_distance([], [1.0])
 ///       |> should.be_error()
 ///     
 ///       assert Ok(result) = float_list.manhatten_distance([0.0, 0.0], [1.0, 2.0])
@@ -516,17 +516,17 @@ pub fn geometric_space(
 ///     import gleam_community/maths/float_list
 ///
 ///     pub fn example () {
-///       float_list.arrange(1.0, 5.0, 1.0)
+///       float_list.arange(1.0, 5.0, 1.0)
 ///       |> should.equal([1.0, 2.0, 3.0, 4.0])
 ///       
 ///       // No points returned since
 ///       // start smaller than stop and positive step
-///       float_list.arrange(5.0, 1.0, 1.0)
+///       float_list.arange(5.0, 1.0, 1.0)
 ///       |> should.equal([])
 ///       
 ///       // Points returned since
 ///       // start smaller than stop but negative step
-///       float_list.arrange(5.0, 1.0, -1.0)
+///       float_list.arange(5.0, 1.0, -1.0)
 ///       |> should.equal([5.0, 4.0, 3.0, 2.0])
 ///     }
 /// </details>
@@ -537,7 +537,7 @@ pub fn geometric_space(
 ///     </a>
 /// </div>
 ///
-pub fn arrange(start: Float, stop: Float, step: Float) -> List(Float) {
+pub fn arange(start: Float, stop: Float, step: Float) -> List(Float) {
   case start >=. stop && step >. 0.0 || start <=. stop && step <. 0.0 {
     True -> []
     False -> {
@@ -555,10 +555,6 @@ pub fn arrange(start: Float, stop: Float, step: Float) -> List(Float) {
     }
   }
 }
-
-// fn do_arrange(start: Float, step: Float, direction: Float) -> Float {
-//   case 
-// }
 
 /// <div style="text-align: right;">
 ///     <a href="https://github.com/gleam-community/maths/issues">
@@ -629,15 +625,15 @@ pub fn sum(arr: List(Float)) -> Float {
 ///     import gleam_community/maths/float_list
 ///
 ///     pub fn example () {
-///       // An empty list returns an error
+///       // An empty list returns 0.0
 ///       []
 ///       |> float_list.sum()
-///       |> should.equal(0.)
+///       |> should.equal(0.0)
 ///
 ///       // Valid input returns a result
-///       [1., 2., 3.]
+///       [1.0, 2.0, 3.0]
 ///       |> float_list.product()
-///       |> should.equal(6.)
+///       |> should.equal(6.0)
 ///     }
 /// </details>
 ///
@@ -652,7 +648,7 @@ pub fn product(arr: List(Float)) -> Float {
     [] -> 0.0
     _ ->
       arr
-      |> list.fold(0.0, fn(acc: Float, a: Float) -> Float { a *. acc })
+      |> list.fold(1.0, fn(acc: Float, a: Float) -> Float { a *. acc })
   }
 }
 

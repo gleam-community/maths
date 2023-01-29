@@ -26,9 +26,9 @@
 //// * **Distances, sums and products**
 ////   * [`sum`](#sum)
 ////   * [`product`](#product)
-////   * [`norm`](#norm)
 ////   * [`cumulative_sum`](#cumulative_sum)
 ////   * [`cumulative_product`](#cumulative_product)
+////   * [`manhatten_distance`](#manhatten_distance)
 //// * **Misc. mathematical functions**
 ////   * [`maximum`](#maximum)
 ////   * [`minimum`](#minimum)
@@ -41,6 +41,164 @@ import gleam/int
 import gleam/float
 import gleam/pair
 import gleam_community/maths/int as intx
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// Calculcate the Manhatten distance between two lists (representing vectors):
+///
+/// \\[
+/// \sum_{i=1}^n \left|x_i - x_j \right|
+/// \\]
+///
+/// In the formula, $$n$$ is the length of the two lists and $$x_i, y_i$$ are the values in the respective input lists indexed by $$i, j$$.
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths/float as floatx
+///     import gleam_community/maths/float_list
+///
+///     pub fn example () {
+///       // Empty lists returns 0
+///       float_list.manhatten_distance([], [])
+///       |> should.equal(Ok(0.0))
+///     
+///       // Differing lengths returns error
+///       float_list.manhatten_distance([], [1])
+///       |> should.be_error()
+///     
+///       assert Ok(result) = int_list.manhatten_distance([0, 0], [1, 2])
+///       result
+///       |> should.equal(3)
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn manhatten_distance(
+  xarr: List(Int),
+  yarr: List(Int),
+) -> Result(Int, String) {
+  let xlen: Int = list.length(xarr)
+  let ylen: Int = list.length(yarr)
+  case xlen == ylen {
+    False ->
+      "Invalid input argument: length(xarr) != length(yarr). Valid input is when length(xarr) == length(yarr)."
+      |> Error
+    True ->
+      list.zip(xarr, yarr)
+      |> list.map(fn(tuple: #(Int, Int)) -> Int {
+        int.absolute_value(pair.first(tuple) - pair.second(tuple))
+      })
+      |> sum()
+      |> Ok
+  }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// Calculcate the sum of the elements in a list:
+///
+/// \\[
+/// \sum_{i=1}^n x_i
+/// \\]
+///
+/// In the formula, $$n$$ is the length of the list and $$x_i$$ is the value in the input list indexed by $$i$$.
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths/float_list
+///
+///     pub fn example () {
+///       // An empty list returns 0
+///       []
+///       |> float_list.sum()
+///       |> should.equal(0)
+///
+///       // Valid input returns a result
+///       [1, 2, 3]
+///       |> float_list.sum()
+///       |> should.equal(6)
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn sum(arr: List(Int)) -> Int {
+  case arr {
+    [] -> 0
+    _ ->
+      arr
+      |> list.fold(0, fn(acc: Int, a: Int) -> Int { a + acc })
+  }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// Calculcate the product of the elements in a list:
+///
+/// \\[
+/// \prod_{i=1}^n x_i
+/// \\]
+///
+/// In the formula, $$n$$ is the length of the list and $$x_i$$ is the value in the input list indexed by $$i$$.
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths/float_list
+///
+///     pub fn example () {
+///       // An empty list returns an error
+///       []
+///       |> float_list.sum()
+///       |> should.equal(0.)
+///
+///       // Valid input returns a result
+///       [1., 2., 3.]
+///       |> float_list.product()
+///       |> should.equal(6.)
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn product(arr: List(Int)) -> Int {
+  case arr {
+    [] -> 0
+    _ ->
+      arr
+      |> list.fold(1, fn(acc: Int, a: Int) -> Int { a * acc })
+  }
+}
 
 /// <div style="text-align: right;">
 ///     <a href="https://github.com/gleam-community/maths/issues">

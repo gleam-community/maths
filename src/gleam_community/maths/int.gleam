@@ -30,12 +30,13 @@
 ////   * [`flip_sign`](#flipsign)
 //// * **Misc. mathematical functions**
 ////   * [`minimum`](#min)
-////   * [`maxximum`](#max)
+////   * [`maximum`](#max)
 ////   * [`minmax`](#minmax)
 //// * **Division functions**
 ////   * [`gcd`](#gcd)
 ////   * [`lcm`](#lcm)
 ////   * [`divisors`](#divisors)
+////   * [`proper_divisors`](#proper_divisors)
 //// * **Combinatorial functions**
 ////   * [`combination`](#combination)
 ////   * [`factorial`](#factorial)
@@ -532,7 +533,7 @@ pub fn is_power(x: Int, y: Int) -> Bool {
 ///     </a>
 /// </div>
 ///
-/// A function that tests whether a given integer value $$x \in \mathbb{Z}$$ is a perfect number. A number is perfect if it is equal to the sum of its proper positive divisors.
+/// A function that tests whether a given integer value $$n \in \mathbb{Z}$$ is a perfect number. A number is perfect if it is equal to the sum of its proper positive divisors.
 /// 
 /// <details>
 ///     <summary>Details</summary>
@@ -564,8 +565,17 @@ pub fn is_power(x: Int, y: Int) -> Bool {
 ///     </a>
 /// </div>
 ///
-pub fn is_perfect(x: Int, y: Int) -> Bool {
-  todo
+pub fn is_perfect(n: Int) -> Bool {
+  do_sum(proper_divisors(n)) == n
+}
+
+fn do_sum(arr: List(Int)) -> Int {
+  case arr {
+    [] -> 0
+    _ ->
+      arr
+      |> list.fold(0, fn(acc: Int, a: Int) -> Int { a + acc })
+  }
 }
 
 /// <div style="text-align: right;">
@@ -574,7 +584,46 @@ pub fn is_perfect(x: Int, y: Int) -> Bool {
 ///     </a>
 /// </div>
 ///
-/// The function returns all the positive divisors of an integer.
+/// The function returns all the positive divisors of an integer, excluding the number iteself.
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths/int as intx
+///
+///     pub fn example() {
+///       intx.proper_divisors(4)
+///       |> should.equal([1, 2])
+///
+///       intx.proper_divisors(6)
+///       |> should.equal([1, 2, 3])
+///
+///       intx.proper_divisors(13)
+///       |> should.equal([1])
+///
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn proper_divisors(n: Int) -> List(Int) {
+  let divisors: List(Int) = find_divisors(n)
+  divisors
+  |> list.take(list.length(divisors) - 1)
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// The function returns all the positive divisors of an integer, including the number iteself.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -588,6 +637,9 @@ pub fn is_perfect(x: Int, y: Int) -> Bool {
 ///
 ///       intx.divisors(6)
 ///       |> should.equal([1, 2, 3, 6])
+///
+///       intx.proper_divisors(13)
+///       |> should.equal([1, 13])
 ///     }
 /// </details>
 ///
@@ -597,8 +649,26 @@ pub fn is_perfect(x: Int, y: Int) -> Bool {
 ///     </a>
 /// </div>
 ///
-pub fn divisors(x: Int) -> List(Int) {
-  todo
+pub fn divisors(n: Int) -> List(Int) {
+  find_divisors(n)
+}
+
+pub fn find_divisors(n: Int) -> List(Int) {
+  let nabs: Float = float.absolute_value(to_float(n))
+  assert Ok(sqrt_result) = floatx.square_root(nabs)
+  let max: Int = floatx.to_int(sqrt_result) + 1
+  list.range(2, max)
+  |> list.fold(
+    [1, n],
+    fn(acc: List(Int), i: Int) -> List(Int) {
+      case n % i == 0 {
+        True -> [i, n / i, ..acc]
+        False -> acc
+      }
+    },
+  )
+  |> list.unique()
+  |> list.sort(int.compare)
 }
 
 /// <div style="text-align: right;">

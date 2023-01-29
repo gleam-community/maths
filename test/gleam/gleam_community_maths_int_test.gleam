@@ -277,3 +277,51 @@ pub fn int_to_float_test() {
   intx.to_float(1)
   |> should.equal(1.0)
 }
+
+pub fn int_proper_divisors_test() {
+  intx.proper_divisors(2)
+  |> should.equal([1])
+
+  intx.proper_divisors(6)
+  |> io.debug()
+  |> should.equal([1, 2, 3])
+  intx.proper_divisors(13)
+  |> should.equal([1])
+
+  intx.proper_divisors(18)
+  |> should.equal([1, 2, 3, 6, 9])
+}
+
+pub fn int_divisors_test() {
+  intx.divisors(2)
+  |> should.equal([1, 2])
+
+  intx.divisors(6)
+  |> should.equal([1, 2, 3, 6])
+
+  intx.divisors(13)
+  |> should.equal([1, 13])
+
+  intx.divisors(18)
+  |> should.equal([1, 2, 3, 6, 9, 18])
+}
+
+pub fn int_is_perfect_test() {
+  intx.is_perfect(6)
+  |> should.equal(True)
+
+  intx.is_perfect(28)
+  |> should.equal(True)
+
+  intx.is_perfect(496)
+  |> should.equal(True)
+
+  intx.is_perfect(1)
+  |> should.equal(False)
+
+  intx.is_perfect(3)
+  |> should.equal(False)
+
+  intx.is_perfect(13)
+  |> should.equal(False)
+}

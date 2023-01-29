@@ -88,7 +88,7 @@ pub fn float_list_minkowski_test() {
   float_list.minkowski_distance([], [], 1.0)
   |> should.equal(Ok(0.0))
 
-  // Differing lenghths returns error
+  // Differing lengths returns error
   float_list.minkowski_distance([], [1.0], 1.0)
   |> should.be_error()
 
@@ -141,7 +141,7 @@ pub fn float_list_euclidean_test() {
   float_list.euclidean_distance([], [])
   |> should.equal(Ok(0.0))
 
-  // Differing lenghths returns error
+  // Differing lengths returns error
   float_list.euclidean_distance([], [1.0])
   |> should.be_error()
 
@@ -159,7 +159,7 @@ pub fn float_list_manhatten_test() {
   float_list.manhatten_distance([], [])
   |> should.equal(Ok(0.0))
 
-  // Differing lenghths returns error
+  // Differing lengths returns error
   float_list.manhatten_distance([], [1.0])
   |> should.be_error()
 
@@ -353,35 +353,35 @@ pub fn float_list_geometric_space_test() {
   |> should.be_error()
 }
 
-pub fn float_list_arrange_test() {
+pub fn float_list_arange_test() {
   // Positive start, stop, step
-  float_list.arrange(1.0, 5.0, 1.0)
+  float_list.arange(1.0, 5.0, 1.0)
   |> should.equal([1.0, 2.0, 3.0, 4.0])
 
-  float_list.arrange(1.0, 5.0, 0.5)
+  float_list.arange(1.0, 5.0, 0.5)
   |> should.equal([1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5])
 
-  float_list.arrange(1.0, 2.0, 0.25)
+  float_list.arange(1.0, 2.0, 0.25)
   |> should.equal([1.0, 1.25, 1.5, 1.75])
 
   // Reverse (switch start/stop largest/smallest value)
-  float_list.arrange(5.0, 1.0, 1.0)
+  float_list.arange(5.0, 1.0, 1.0)
   |> should.equal([])
 
   // Reverse negative step
-  float_list.arrange(5.0, 1.0, -1.0)
+  float_list.arange(5.0, 1.0, -1.0)
   |> should.equal([5.0, 4.0, 3.0, 2.0])
 
   // Positive start, negative stop, step
-  float_list.arrange(5.0, -1.0, -1.0)
+  float_list.arange(5.0, -1.0, -1.0)
   |> should.equal([5.0, 4.0, 3.0, 2.0, 1.0, 0.0])
 
   // Negative start, stop, step
-  float_list.arrange(-5.0, -1.0, -1.0)
+  float_list.arange(-5.0, -1.0, -1.0)
   |> should.equal([])
 
   // Negative start, stop, positive step
-  float_list.arrange(-5.0, -1.0, 1.0)
+  float_list.arange(-5.0, -1.0, 1.0)
   |> should.equal([-5.0, -4.0, -3.0, -2.0])
 }
 
@@ -445,6 +445,22 @@ pub fn float_list_extrema_test() {
   |> should.equal(Ok(#(1.0, 4.0)))
 }
 
+pub fn float_list_sum_test() {
+  // An empty list returns 0
+  []
+  |> float_list.sum()
+  |> should.equal(0.0)
+
+  // Valid input returns a result
+  [1.0, 2.0, 3.0]
+  |> float_list.sum()
+  |> should.equal(6.0)
+
+  [-2.0, 4.0, 6.0]
+  |> float_list.sum()
+  |> should.equal(8.0)
+}
+
 pub fn float_list_cumulative_sum_test() {
   // An empty lists returns an empty list
   []
@@ -455,6 +471,26 @@ pub fn float_list_cumulative_sum_test() {
   [1.0, 2.0, 3.0]
   |> float_list.cumulative_sum()
   |> should.equal([1.0, 3.0, 6.0])
+
+  [-2.0, 4.0, 6.0]
+  |> float_list.cumulative_sum()
+  |> should.equal([-2.0, 2.0, 8.0])
+}
+
+pub fn float_list_product_test() {
+  // An empty list returns 0
+  []
+  |> float_list.product()
+  |> should.equal(0.0)
+
+  // Valid input returns a result
+  [1.0, 2.0, 3.0]
+  |> float_list.product()
+  |> should.equal(6.0)
+
+  [-2.0, 4.0, 6.0]
+  |> float_list.product()
+  |> should.equal(-48.0)
 }
 
 pub fn float_list_cumulative_product_test() {
@@ -467,4 +503,8 @@ pub fn float_list_cumulative_product_test() {
   [1.0, 2.0, 3.0]
   |> float_list.cumumlative_product()
   |> should.equal([1.0, 2.0, 6.0])
+
+  [-2.0, 4.0, 6.0]
+  |> float_list.cumumlative_product()
+  |> should.equal([-2.0, -8.0, -48.0])
 }

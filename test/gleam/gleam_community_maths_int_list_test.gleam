@@ -69,6 +69,22 @@ pub fn int_list_extrema_test() {
   |> should.equal(Ok(#(1, 4)))
 }
 
+pub fn int_list_sum_test() {
+  // An empty list returns 0
+  []
+  |> int_list.sum()
+  |> should.equal(0)
+
+  // Valid input returns a result
+  [1, 2, 3]
+  |> int_list.sum()
+  |> should.equal(6)
+
+  [-2, 4, 6]
+  |> int_list.sum()
+  |> should.equal(8)
+}
+
 pub fn int_list_cumulative_sum_test() {
   // An empty lists returns an empty list
   []
@@ -79,6 +95,26 @@ pub fn int_list_cumulative_sum_test() {
   [1, 2, 3]
   |> int_list.cumulative_sum()
   |> should.equal([1, 3, 6])
+
+  [-2, 4, 6]
+  |> int_list.cumulative_sum()
+  |> should.equal([-2, 2, 8])
+}
+
+pub fn int_list_product_test() {
+  // An empty list returns 0
+  []
+  |> int_list.product()
+  |> should.equal(0)
+
+  // Valid input returns a result
+  [1, 2, 3]
+  |> int_list.product()
+  |> should.equal(6)
+
+  [-2, 4, 6]
+  |> int_list.product()
+  |> should.equal(-48)
 }
 
 pub fn int_list_cumulative_product_test() {
@@ -91,4 +127,22 @@ pub fn int_list_cumulative_product_test() {
   [1, 2, 3]
   |> int_list.cumumlative_product()
   |> should.equal([1, 2, 6])
+
+  [-2, 4, 6]
+  |> int_list.cumumlative_product()
+  |> should.equal([-2, -8, -48])
+}
+
+pub fn int_list_manhatten_test() {
+  // Empty lists returns 0
+  int_list.manhatten_distance([], [])
+  |> should.equal(Ok(0))
+
+  // Differing lengths returns error
+  int_list.manhatten_distance([], [1])
+  |> should.be_error()
+
+  assert Ok(result) = int_list.manhatten_distance([0, 0], [1, 2])
+  result
+  |> should.equal(3)
 }
