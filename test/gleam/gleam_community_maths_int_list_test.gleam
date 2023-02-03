@@ -105,7 +105,7 @@ pub fn int_list_product_test() {
   // An empty list returns 0
   []
   |> int_list.product()
-  |> should.equal(0)
+  |> should.equal(1)
 
   // Valid input returns a result
   [1, 2, 3]

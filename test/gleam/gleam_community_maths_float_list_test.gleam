@@ -481,7 +481,7 @@ pub fn float_list_product_test() {
   // An empty list returns 0
   []
   |> float_list.product()
-  |> should.equal(0.0)
+  |> should.equal(1.0)
 
   // Valid input returns a result
   [1.0, 2.0, 3.0]

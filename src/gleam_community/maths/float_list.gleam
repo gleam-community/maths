@@ -54,6 +54,7 @@ import gleam/option
 import gleam_community/maths/float as floatx
 import gleam_community/maths/int as intx
 import gleam/io
+import gleam/iterator
 
 /// <div style="text-align: right;">
 ///     <a href="https://github.com/gleam-community/maths/issues">
@@ -645,7 +646,7 @@ pub fn sum(arr: List(Float)) -> Float {
 ///
 pub fn product(arr: List(Float)) -> Float {
   case arr {
-    [] -> 0.0
+    [] -> 1.0
     _ ->
       arr
       |> list.fold(1.0, fn(acc: Float, a: Float) -> Float { a *. acc })

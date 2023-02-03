@@ -192,7 +192,7 @@ pub fn sum(arr: List(Int)) -> Int {
 ///
 pub fn product(arr: List(Int)) -> Int {
   case arr {
-    [] -> 0
+    [] -> 1
     _ ->
       arr
       |> list.fold(1, fn(acc: Int, a: Int) -> Int { a * acc })
