@@ -53,9 +53,9 @@ import gleam/io
 ///       |> should.be_error()
 ///     
 ///       // Trim the list to only the middle part of list
-///       [1., 2., 3., 4., 5., 6.]
+///       [1.0, 2.0, 3.0, 4.0, 5.0, 6.0]
 ///       |> listx.trim(1, 4)
-///       |> should.equal(Ok([2., 3., 4., 5.]))
+///       |> should.equal(Ok([2.0, 3.0, 4.0, 5.0]))
 ///     }
 /// </details>
 ///
@@ -97,7 +97,7 @@ pub fn trim(arr: List(a), min: Int, max: Int) -> Result(List(a), String) {
 ///
 ///     import gleeunit/should
 ///     import gleam/list
-///     import gleam_community/maths/float_list
+///     import gleam_community/maths/list as listx
 ///
 ///     pub fn example () {
 ///     }
@@ -126,7 +126,7 @@ pub fn combination(arr: List(a), k: Int) -> List(a) {
 ///
 ///     import gleeunit/should
 ///     import gleam/list
-///     import gleam_community/maths/float_list
+///     import gleam_community/maths/list as listx
 ///
 ///     pub fn example () {
 ///     }
@@ -155,9 +155,16 @@ pub fn permutation(arr: List(a)) -> List(a) {
 ///
 ///     import gleeunit/should
 ///     import gleam/list
-///     import gleam_community/maths/float_list
+///     import gleam_community/maths/list as listx
 ///
 ///     pub fn example () {
+///       []
+///       |> listx.cartesian_product([])
+///       |> should.equal([])
+///     
+///       [1.0, 10.0]
+///       |> listx.cartesian_product([1.0, 2.0])
+///       |> should.equal([#(1.0, 1.0), #(1.0, 2.0), #(10.0, 1.0), #(10.0, 2.0)])
 ///     }
 /// </details>
 ///
