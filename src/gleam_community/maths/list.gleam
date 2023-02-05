@@ -189,7 +189,6 @@ pub fn cartesian_product(xarr: List(a), yarr: List(a)) -> List(#(a, a)) {
         yset,
         accumulator0,
         fn(accumulator1: set.Set(#(a, a)), member1: a) -> set.Set(#(a, a)) {
-          io.debug(#(member0, member1))
           set.insert(accumulator1, #(member0, member1))
         },
       )
