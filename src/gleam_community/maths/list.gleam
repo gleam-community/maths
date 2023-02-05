@@ -29,6 +29,8 @@
 import gleam/list
 import gleam/int
 import gleam/float
+import gleam/set
+import gleam/io
 
 /// <div style="text-align: right;">
 ///     <a href="https://github.com/gleam-community/maths/issues">
@@ -146,7 +148,7 @@ pub fn permutation(arr: List(a)) -> List(a) {
 ///     </a>
 /// </div>
 ///
-/// Generate a list containing all combinations of one element from each of two given lists.
+/// Generate a list containing all combinations of pairs of elements coming from two given lists.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -165,6 +167,26 @@ pub fn permutation(arr: List(a)) -> List(a) {
 ///     </a>
 /// </div>
 ///
-pub fn cartesian_product(xarr: List(a), yarr: List(a)) -> List(a) {
-  todo
+pub fn cartesian_product(xarr: List(a), yarr: List(a)) -> List(#(a, a)) {
+  let xset: set.Set(a) =
+    xarr
+    |> set.from_list()
+  let yset: set.Set(a) =
+    yarr
+    |> set.from_list()
+  xset
+  |> set.fold(
+    set.new(),
+    fn(accumulator0: set.Set(#(a, a)), member0: a) -> set.Set(#(a, a)) {
+      set.fold(
+        yset,
+        accumulator0,
+        fn(accumulator1: set.Set(#(a, a)), member1: a) -> set.Set(#(a, a)) {
+          io.debug(#(member0, member1))
+          set.insert(accumulator1, #(member0, member1))
+        },
+      )
+    },
+  )
+  |> set.to_list()
 }

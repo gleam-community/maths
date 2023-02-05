@@ -20,3 +20,29 @@ pub fn list_trim_test() {
   |> listx.trim(1, 4)
   |> should.equal(Ok([2.0, 3.0, 4.0, 5.0]))
 }
+
+pub fn list_cartesian_product_test() {
+  // An empty lists returns an empty list
+  []
+  |> listx.cartesian_product([])
+  |> should.equal([])
+
+  // Test with some arbitrary inputs
+  [1, 2, 3]
+  |> listx.cartesian_product([1, 2, 3])
+  |> should.equal([
+    #(1, 1),
+    #(1, 2),
+    #(1, 3),
+    #(2, 1),
+    #(2, 2),
+    #(2, 3),
+    #(3, 1),
+    #(3, 2),
+    #(3, 3),
+  ])
+
+  [1.0, 10.0]
+  |> listx.cartesian_product([1.0, 2.0])
+  |> should.equal([#(1.0, 1.0), #(1.0, 2.0), #(10.0, 1.0), #(10.0, 2.0)])
+}
