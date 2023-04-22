@@ -387,7 +387,7 @@ pub fn round(
 ) -> Result(Float, String) {
   case digits {
     option.Some(a) -> {
-      assert Ok(p) = power(10.0, int.to_float(a))
+      let assert Ok(p) = power(10.0, int.to_float(a))
       // Round the given input x using at the specified digit
       do_round(p, x, mode)
     }
@@ -444,7 +444,7 @@ fn round_to_nearest(p: Float, x: Float) -> Float {
   case remainder {
     _ if remainder >. 0.5 -> sign(x) *. truncate_float(xabs +. 1.0) /. p
     _ if remainder == 0.5 -> {
-      assert Ok(is_even) = int.modulo(to_int(xabs), 2)
+      let assert Ok(is_even) = int.modulo(to_int(xabs), 2)
       case is_even == 0 {
         True -> sign(x) *. xabs_truncated /. p
         False -> sign(x) *. truncate_float(xabs +. 1.0) /. p
@@ -1158,8 +1158,8 @@ pub fn logarithm(x: Float, base: option.Option(Float)) -> Result(Float, String) 
           case a >. 0.0 && a != 1.0 {
             True -> {
               // Apply the "change of base formula"
-              assert Ok(numerator) = logarithm_10(x)
-              assert Ok(denominator) = logarithm_10(a)
+              let assert Ok(numerator) = logarithm_10(x)
+              let assert Ok(denominator) = logarithm_10(a)
               numerator /. denominator
               |> Ok
             }
@@ -1480,7 +1480,7 @@ pub fn square_root(x: Float) -> Result(Float, String) {
       "Invalid input argument: x < 0."
       |> Error
     False -> {
-      assert Ok(result) = power(x, 1.0 /. 2.0)
+      let assert Ok(result) = power(x, 1.0 /. 2.0)
       result
       |> Ok
     }
@@ -1532,7 +1532,7 @@ pub fn cube_root(x: Float) -> Result(Float, String) {
       "Invalid input argument: x < 0."
       |> Error
     False -> {
-      assert Ok(result) = power(x, 1.0 /. 3.0)
+      let assert Ok(result) = power(x, 1.0 /. 3.0)
       result
       |> Ok
     }
@@ -1589,7 +1589,7 @@ pub fn nth_root(x: Float, n: Int) -> Result(Float, String) {
     False ->
       case n >= 1 {
         True -> {
-          assert Ok(result) = power(x, 1.0 /. int.to_float(n))
+          let assert Ok(result) = power(x, 1.0 /. int.to_float(n))
           result
           |> Ok
         }
@@ -1634,9 +1634,9 @@ pub fn nth_root(x: Float, n: Int) -> Result(Float, String) {
 /// </div>
 ///
 pub fn hypotenuse(x: Float, y: Float) -> Float {
-  assert Ok(term1) = power(x, 2.0)
-  assert Ok(term2) = power(y, 2.0)
-  assert Ok(h) = square_root(term1 +. term2)
+  let assert Ok(term1) = power(x, 2.0)
+  let assert Ok(term2) = power(y, 2.0)
+  let assert Ok(h) = square_root(term1 +. term2)
   h
 }
 
@@ -2192,8 +2192,8 @@ fn gamma_lanczos(x: Float) -> Float {
           },
         )
       let t: Float = z +. lanczos_g +. 0.5
-      assert Ok(v1) = power(2.0 *. pi(), 0.5)
-      assert Ok(v2) = power(t, z +. 0.5)
+      let assert Ok(v1) = power(2.0 *. pi(), 0.5)
+      let assert Ok(v2) = power(t, z +. 0.5)
       v1 *. v2 *. exponential(-1.0 *. t) *. x
     }
   }
@@ -2219,7 +2219,7 @@ fn gamma_lanczos(x: Float) -> Float {
 pub fn incomplete_gamma(a: Float, x: Float) -> Result(Float, String) {
   case a >. 0.0 && x >=. 0.0 {
     True -> {
-      assert Ok(v) = power(x, a)
+      let assert Ok(v) = power(x, a)
       v *. exponential(-1.0 *. x) *. incomplete_gamma_sum(
         a,
         x,

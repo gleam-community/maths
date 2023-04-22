@@ -10,15 +10,15 @@ pub fn main() {
 }
 
 pub fn float_acos_test() {
-  assert Ok(tol) = floatx.power(-10.0, -6.0)
+  let assert Ok(tol) = floatx.power(-10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
-  assert Ok(result) = floatx.acos(1.0)
+  let assert Ok(result) = floatx.acos(1.0)
   result
   |> floatx.is_close(0.0, 0.0, tol)
   |> should.be_true()
 
-  assert Ok(result) = floatx.acos(0.5)
+  let assert Ok(result) = floatx.acos(0.5)
   result
   |> floatx.is_close(1.047197, 0.0, tol)
   |> should.be_true()
@@ -33,10 +33,10 @@ pub fn float_acos_test() {
 }
 
 pub fn float_acosh_test() {
-  assert Ok(tol) = floatx.power(-10.0, -6.0)
+  let assert Ok(tol) = floatx.power(-10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
-  assert Ok(result) = floatx.acosh(1.0)
+  let assert Ok(result) = floatx.acosh(1.0)
   result
   |> floatx.is_close(0.0, 0.0, tol)
   |> should.be_true()
@@ -53,8 +53,8 @@ pub fn float_asin_test() {
   floatx.asin(0.0)
   |> should.equal(Ok(0.0))
 
-  assert Ok(tol) = floatx.power(-10.0, -6.0)
-  assert Ok(result) = floatx.asin(0.5)
+  let assert Ok(tol) = floatx.power(-10.0, -6.0)
+  let assert Ok(result) = floatx.asin(0.5)
   result
   |> floatx.is_close(0.523598, 0.0, tol)
   |> should.be_true()
@@ -69,7 +69,7 @@ pub fn float_asin_test() {
 }
 
 pub fn float_asinh_test() {
-  assert Ok(tol) = floatx.power(-10.0, -6.0)
+  let assert Ok(tol) = floatx.power(-10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   floatx.asinh(0.0)
@@ -82,7 +82,7 @@ pub fn float_asinh_test() {
 }
 
 pub fn float_atan_test() {
-  assert Ok(tol) = floatx.power(-10.0, -6.0)
+  let assert Ok(tol) = floatx.power(-10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   floatx.atan(0.0)
@@ -95,7 +95,7 @@ pub fn float_atan_test() {
 }
 
 pub fn math_atan2_test() {
-  assert Ok(tol) = floatx.power(-10.0, -6.0)
+  let assert Ok(tol) = floatx.power(-10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   floatx.atan2(0.0, 0.0)
@@ -143,15 +143,15 @@ pub fn math_atan2_test() {
 }
 
 pub fn float_atanh_test() {
-  assert Ok(tol) = floatx.power(-10.0, -6.0)
+  let assert Ok(tol) = floatx.power(-10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
-  assert Ok(result) = floatx.atanh(0.0)
+  let assert Ok(result) = floatx.atanh(0.0)
   result
   |> floatx.is_close(0.0, 0.0, tol)
   |> should.be_true()
 
-  assert Ok(result) = floatx.atanh(0.5)
+  let assert Ok(result) = floatx.atanh(0.5)
   result
   |> floatx.is_close(0.549306, 0.0, tol)
   |> should.be_true()
@@ -172,7 +172,7 @@ pub fn float_atanh_test() {
 }
 
 pub fn float_cos_test() {
-  assert Ok(tol) = floatx.power(-10.0, -6.0)
+  let assert Ok(tol) = floatx.power(-10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   floatx.cos(0.0)
@@ -189,7 +189,7 @@ pub fn float_cos_test() {
 }
 
 pub fn float_cosh_test() {
-  assert Ok(tol) = floatx.power(-10.0, -6.0)
+  let assert Ok(tol) = floatx.power(-10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   floatx.cosh(0.0)
@@ -206,7 +206,7 @@ pub fn float_cosh_test() {
 }
 
 pub fn float_exponential_test() {
-  assert Ok(tol) = floatx.power(-10.0, -6.0)
+  let assert Ok(tol) = floatx.power(-10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   floatx.exponential(0.0)
@@ -223,13 +223,13 @@ pub fn float_exponential_test() {
 }
 
 pub fn float_natural_logarithm_test() {
-  assert Ok(tol) = floatx.power(-10.0, -6.0)
+  let assert Ok(tol) = floatx.power(-10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   floatx.natural_logarithm(1.0)
   |> should.equal(Ok(0.0))
 
-  assert Ok(result) = floatx.natural_logarithm(0.5)
+  let assert Ok(result) = floatx.natural_logarithm(0.5)
   result
   |> floatx.is_close(-0.693147, 0.0, tol)
   |> should.be_true()
@@ -241,22 +241,22 @@ pub fn float_natural_logarithm_test() {
 }
 
 pub fn float_logarithm_10_test() {
-  assert Ok(tol) = floatx.power(-10.0, -6.0)
+  let assert Ok(tol) = floatx.power(-10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
-  assert Ok(result) = floatx.logarithm_10(1.0)
+  let assert Ok(result) = floatx.logarithm_10(1.0)
   result
   |> floatx.is_close(0.0, 0.0, tol)
   |> should.be_true()
 
-  assert Ok(result) = floatx.logarithm_10(10.0)
+  let assert Ok(result) = floatx.logarithm_10(10.0)
   result
   |> floatx.is_close(1.0, 0.0, tol)
   |> should.be_true()
 
-  assert Ok(result) = floatx.logarithm_10(50.0)
+  let assert Ok(result) = floatx.logarithm_10(50.0)
   result
-  |> floatx.is_close(1.698970, 0.0, tol)
+  |> floatx.is_close(1.69897, 0.0, tol)
   |> should.be_true()
 
   // Check that we get an error when the function is evaluated
@@ -266,7 +266,7 @@ pub fn float_logarithm_10_test() {
 }
 
 pub fn float_logarithm_2_test() {
-  assert Ok(tol) = floatx.power(-10.0, -6.0)
+  let assert Ok(tol) = floatx.power(-10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   floatx.logarithm_2(1.0)
@@ -275,7 +275,7 @@ pub fn float_logarithm_2_test() {
   floatx.logarithm_2(2.0)
   |> should.equal(Ok(1.0))
 
-  assert Ok(result) = floatx.logarithm_2(5.0)
+  let assert Ok(result) = floatx.logarithm_2(5.0)
   result
   |> floatx.is_close(2.321928, 0.0, tol)
   |> should.be_true()
@@ -405,7 +405,7 @@ pub fn float_nth_root_test() {
 }
 
 pub fn float_hypotenuse_test() {
-  assert Ok(tol) = floatx.power(-10.0, -6.0)
+  let assert Ok(tol) = floatx.power(-10.0, -6.0)
 
   floatx.hypotenuse(0.0, 0.0)
   |> should.equal(0.0)
@@ -423,7 +423,7 @@ pub fn float_hypotenuse_test() {
 }
 
 pub fn float_sin_test() {
-  assert Ok(tol) = floatx.power(-10.0, -6.0)
+  let assert Ok(tol) = floatx.power(-10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   floatx.sin(0.0)
@@ -440,7 +440,7 @@ pub fn float_sin_test() {
 }
 
 pub fn float_sinh_test() {
-  assert Ok(tol) = floatx.power(-10.0, -6.0)
+  let assert Ok(tol) = floatx.power(-10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   floatx.sinh(0.0)
@@ -457,7 +457,7 @@ pub fn float_sinh_test() {
 }
 
 pub fn math_tan_test() {
-  assert Ok(tol) = floatx.power(-10.0, -6.0)
+  let assert Ok(tol) = floatx.power(-10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   floatx.tan(0.0)
@@ -470,7 +470,7 @@ pub fn math_tan_test() {
 }
 
 pub fn math_tanh_test() {
-  assert Ok(tol) = floatx.power(-10.0, -6.0)
+  let assert Ok(tol) = floatx.power(-10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   floatx.tanh(0.0)
@@ -491,7 +491,7 @@ pub fn math_tanh_test() {
 }
 
 pub fn float_to_degree_test() {
-  assert Ok(tol) = floatx.power(-10.0, -6.0)
+  let assert Ok(tol) = floatx.power(-10.0, -6.0)
   floatx.to_degree(0.0)
   |> floatx.is_close(0.0, 0.0, tol)
   |> should.be_true()
@@ -502,7 +502,7 @@ pub fn float_to_degree_test() {
 }
 
 pub fn float_to_radian_test() {
-  assert Ok(tol) = floatx.power(-10.0, -6.0)
+  let assert Ok(tol) = floatx.power(-10.0, -6.0)
   floatx.to_radian(0.0)
   |> floatx.is_close(0.0, 0.0, tol)
   |> should.be_true()
@@ -694,26 +694,26 @@ pub fn float_gamma_function_test() {
 
 pub fn math_round_to_nearest_test() {
   // Try with positive values
-  floatx.round(1.50, option.Some(0), option.Some(floatx.RoundNearest))
+  floatx.round(1.5, option.Some(0), option.Some(floatx.RoundNearest))
   |> should.equal(Ok(2.0))
 
   floatx.round(1.75, option.Some(0), option.Some(floatx.RoundNearest))
   |> should.equal(Ok(2.0))
 
-  floatx.round(2.00, option.Some(0), option.Some(floatx.RoundNearest))
+  floatx.round(2.0, option.Some(0), option.Some(floatx.RoundNearest))
   |> should.equal(Ok(2.0))
 
-  floatx.round(3.50, option.Some(0), option.Some(floatx.RoundNearest))
+  floatx.round(3.5, option.Some(0), option.Some(floatx.RoundNearest))
   |> should.equal(Ok(4.0))
 
-  floatx.round(4.50, option.Some(0), option.Some(floatx.RoundNearest))
+  floatx.round(4.5, option.Some(0), option.Some(floatx.RoundNearest))
   |> should.equal(Ok(4.0))
 
   // Try with negative values
-  floatx.round(-3.50, option.Some(0), option.Some(floatx.RoundNearest))
+  floatx.round(-3.5, option.Some(0), option.Some(floatx.RoundNearest))
   |> should.equal(Ok(-4.0))
 
-  floatx.round(-4.50, option.Some(0), option.Some(floatx.RoundNearest))
+  floatx.round(-4.5, option.Some(0), option.Some(floatx.RoundNearest))
   |> should.equal(Ok(-4.0))
 
   // Round 3. digit AFTER decimal point 
@@ -751,13 +751,13 @@ pub fn math_round_up_test() {
   floatx.round(0.45, option.Some(0), option.Some(floatx.RoundUp))
   |> should.equal(Ok(1.0))
 
-  floatx.round(0.50, option.Some(0), option.Some(floatx.RoundUp))
+  floatx.round(0.5, option.Some(0), option.Some(floatx.RoundUp))
   |> should.equal(Ok(1.0))
 
   floatx.round(0.45, option.Some(1), option.Some(floatx.RoundUp))
   |> should.equal(Ok(0.5))
 
-  floatx.round(0.50, option.Some(1), option.Some(floatx.RoundUp))
+  floatx.round(0.5, option.Some(1), option.Some(floatx.RoundUp))
   |> should.equal(Ok(0.5))
 
   floatx.round(0.455, option.Some(2), option.Some(floatx.RoundUp))
@@ -770,19 +770,19 @@ pub fn math_round_up_test() {
   floatx.round(-0.45, option.Some(0), option.Some(floatx.RoundUp))
   |> should.equal(Ok(-0.0))
 
-  floatx.round(-0.50, option.Some(0), option.Some(floatx.RoundUp))
+  floatx.round(-0.5, option.Some(0), option.Some(floatx.RoundUp))
   |> should.equal(Ok(-0.0))
 
   floatx.round(-0.45, option.Some(1), option.Some(floatx.RoundUp))
   |> should.equal(Ok(-0.4))
 
-  floatx.round(-0.50, option.Some(1), option.Some(floatx.RoundUp))
+  floatx.round(-0.5, option.Some(1), option.Some(floatx.RoundUp))
   |> should.equal(Ok(-0.5))
 
-  floatx.round(-0.4550, option.Some(2), option.Some(floatx.RoundUp))
+  floatx.round(-0.455, option.Some(2), option.Some(floatx.RoundUp))
   |> should.equal(Ok(-0.45))
 
-  floatx.round(-0.5050, option.Some(2), option.Some(floatx.RoundUp))
+  floatx.round(-0.505, option.Some(2), option.Some(floatx.RoundUp))
   |> should.equal(Ok(-0.5))
 }
 
@@ -792,45 +792,45 @@ pub fn math_round_down_test() {
   floatx.round(0.45, option.Some(0), option.Some(floatx.RoundDown))
   |> should.equal(Ok(0.0))
 
-  floatx.round(0.50, option.Some(0), option.Some(floatx.RoundDown))
+  floatx.round(0.5, option.Some(0), option.Some(floatx.RoundDown))
   |> should.equal(Ok(0.0))
 
   floatx.round(0.45, option.Some(1), option.Some(floatx.RoundDown))
   |> should.equal(Ok(0.4))
 
-  floatx.round(0.50, option.Some(1), option.Some(floatx.RoundDown))
-  |> should.equal(Ok(0.50))
+  floatx.round(0.5, option.Some(1), option.Some(floatx.RoundDown))
+  |> should.equal(Ok(0.5))
 
-  floatx.round(0.4550, option.Some(2), option.Some(floatx.RoundDown))
+  floatx.round(0.455, option.Some(2), option.Some(floatx.RoundDown))
   |> should.equal(Ok(0.45))
 
-  floatx.round(0.5050, option.Some(2), option.Some(floatx.RoundDown))
-  |> should.equal(Ok(0.50))
+  floatx.round(0.505, option.Some(2), option.Some(floatx.RoundDown))
+  |> should.equal(Ok(0.5))
 
   // Try with negative values
   floatx.round(-0.45, option.Some(0), option.Some(floatx.RoundDown))
   |> should.equal(Ok(-1.0))
 
-  floatx.round(-0.50, option.Some(0), option.Some(floatx.RoundDown))
+  floatx.round(-0.5, option.Some(0), option.Some(floatx.RoundDown))
   |> should.equal(Ok(-1.0))
 
   floatx.round(-0.45, option.Some(1), option.Some(floatx.RoundDown))
   |> should.equal(Ok(-0.5))
 
-  floatx.round(-0.50, option.Some(1), option.Some(floatx.RoundDown))
-  |> should.equal(Ok(-0.50))
+  floatx.round(-0.5, option.Some(1), option.Some(floatx.RoundDown))
+  |> should.equal(Ok(-0.5))
 
-  floatx.round(-0.4550, option.Some(2), option.Some(floatx.RoundDown))
+  floatx.round(-0.455, option.Some(2), option.Some(floatx.RoundDown))
   |> should.equal(Ok(-0.46))
 
-  floatx.round(-0.5050, option.Some(2), option.Some(floatx.RoundDown))
+  floatx.round(-0.505, option.Some(2), option.Some(floatx.RoundDown))
   |> should.equal(Ok(-0.51))
 }
 
 pub fn math_round_to_zero_test() {
   // Note: Rounding mode "RoundToZero" is an alias for the truncate function
   // Try with positive values
-  floatx.round(0.50, option.Some(0), option.Some(floatx.RoundToZero))
+  floatx.round(0.5, option.Some(0), option.Some(floatx.RoundToZero))
   |> should.equal(Ok(0.0))
 
   floatx.round(0.75, option.Some(0), option.Some(floatx.RoundToZero))
@@ -840,16 +840,16 @@ pub fn math_round_to_zero_test() {
   |> should.equal(Ok(0.4))
 
   floatx.round(0.57, option.Some(1), option.Some(floatx.RoundToZero))
-  |> should.equal(Ok(0.50))
+  |> should.equal(Ok(0.5))
 
   floatx.round(0.4575, option.Some(2), option.Some(floatx.RoundToZero))
   |> should.equal(Ok(0.45))
 
   floatx.round(0.5075, option.Some(2), option.Some(floatx.RoundToZero))
-  |> should.equal(Ok(0.50))
+  |> should.equal(Ok(0.5))
 
   // Try with negative values
-  floatx.round(-0.50, option.Some(0), option.Some(floatx.RoundToZero))
+  floatx.round(-0.5, option.Some(0), option.Some(floatx.RoundToZero))
   |> should.equal(Ok(0.0))
 
   floatx.round(-0.75, option.Some(0), option.Some(floatx.RoundToZero))
@@ -859,37 +859,37 @@ pub fn math_round_to_zero_test() {
   |> should.equal(Ok(-0.4))
 
   floatx.round(-0.57, option.Some(1), option.Some(floatx.RoundToZero))
-  |> should.equal(Ok(-0.50))
+  |> should.equal(Ok(-0.5))
 
   floatx.round(-0.4575, option.Some(2), option.Some(floatx.RoundToZero))
   |> should.equal(Ok(-0.45))
 
   floatx.round(-0.5075, option.Some(2), option.Some(floatx.RoundToZero))
-  |> should.equal(Ok(-0.50))
+  |> should.equal(Ok(-0.5))
 }
 
 pub fn math_round_ties_away_test() {
   // Try with positive values
-  floatx.round(1.40, option.Some(0), option.Some(floatx.RoundTiesAway))
+  floatx.round(1.4, option.Some(0), option.Some(floatx.RoundTiesAway))
   |> should.equal(Ok(1.0))
 
-  floatx.round(1.50, option.Some(0), option.Some(floatx.RoundTiesAway))
+  floatx.round(1.5, option.Some(0), option.Some(floatx.RoundTiesAway))
   |> should.equal(Ok(2.0))
 
-  floatx.round(2.50, option.Some(0), option.Some(floatx.RoundTiesAway))
+  floatx.round(2.5, option.Some(0), option.Some(floatx.RoundTiesAway))
   |> should.equal(Ok(3.0))
 
   // Try with negative values
-  floatx.round(-1.40, option.Some(0), option.Some(floatx.RoundTiesAway))
+  floatx.round(-1.4, option.Some(0), option.Some(floatx.RoundTiesAway))
   |> should.equal(Ok(-1.0))
 
-  floatx.round(-1.50, option.Some(0), option.Some(floatx.RoundTiesAway))
+  floatx.round(-1.5, option.Some(0), option.Some(floatx.RoundTiesAway))
   |> should.equal(Ok(-2.0))
 
-  floatx.round(-2.00, option.Some(0), option.Some(floatx.RoundTiesAway))
+  floatx.round(-2.0, option.Some(0), option.Some(floatx.RoundTiesAway))
   |> should.equal(Ok(-2.0))
 
-  floatx.round(-2.50, option.Some(0), option.Some(floatx.RoundTiesAway))
+  floatx.round(-2.5, option.Some(0), option.Some(floatx.RoundTiesAway))
   |> should.equal(Ok(-3.0))
 
   // Round 3. digit AFTER decimal point 
@@ -923,26 +923,26 @@ pub fn math_round_ties_away_test() {
 
 pub fn math_round_ties_up_test() {
   // Try with positive values
-  floatx.round(1.40, option.Some(0), option.Some(floatx.RoundTiesUp))
+  floatx.round(1.4, option.Some(0), option.Some(floatx.RoundTiesUp))
   |> should.equal(Ok(1.0))
 
-  floatx.round(1.50, option.Some(0), option.Some(floatx.RoundTiesUp))
+  floatx.round(1.5, option.Some(0), option.Some(floatx.RoundTiesUp))
   |> should.equal(Ok(2.0))
 
-  floatx.round(2.50, option.Some(0), option.Some(floatx.RoundTiesUp))
+  floatx.round(2.5, option.Some(0), option.Some(floatx.RoundTiesUp))
   |> should.equal(Ok(3.0))
 
   // Try with negative values
-  floatx.round(-1.40, option.Some(0), option.Some(floatx.RoundTiesUp))
+  floatx.round(-1.4, option.Some(0), option.Some(floatx.RoundTiesUp))
   |> should.equal(Ok(-1.0))
 
-  floatx.round(-1.50, option.Some(0), option.Some(floatx.RoundTiesUp))
+  floatx.round(-1.5, option.Some(0), option.Some(floatx.RoundTiesUp))
   |> should.equal(Ok(-1.0))
 
-  floatx.round(-2.00, option.Some(0), option.Some(floatx.RoundTiesUp))
+  floatx.round(-2.0, option.Some(0), option.Some(floatx.RoundTiesUp))
   |> should.equal(Ok(-2.0))
 
-  floatx.round(-2.50, option.Some(0), option.Some(floatx.RoundTiesUp))
+  floatx.round(-2.5, option.Some(0), option.Some(floatx.RoundTiesUp))
   |> should.equal(Ok(-2.0))
 
   // Round 3. digit AFTER decimal point 
@@ -1058,7 +1058,7 @@ pub fn float_is_close_test() {
   // We set 'atol' and 'rtol' such that the values are equivalent
   // if 'val' is within 1 percent of 'ref_val' +/- 0.1
   let rtol: Float = 0.01
-  let atol: Float = 0.10
+  let atol: Float = 0.1
   floatx.is_close(val, ref_val, rtol, atol)
   |> should.be_true()
 }

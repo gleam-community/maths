@@ -19,10 +19,14 @@
 ////    .katex { font-size: 1.1em; }
 ////</style>
 ////
-//// A module containing general utility functions applying to lists.
+//// A module containing general functions applying to lists.
 ////
 //// ---
 ////
+//// * **Combinatorial functions**
+////   * [`combination`](#combination)
+////   * [`permutation`](#permutation)
+////   * [`cartesian_product`](#cartesian_product)
 //// * **Miscellaneous functions**
 ////   * [`trim`](#trim)
 
@@ -31,6 +35,7 @@ import gleam/int
 import gleam/float
 import gleam/set
 import gleam/io
+import gleam/iterator
 
 /// <div style="text-align: right;">
 ///     <a href="https://github.com/gleam-community/maths/issues">
@@ -138,7 +143,24 @@ pub fn combination(arr: List(a), k: Int) -> List(a) {
 ///     </a>
 /// </div>
 ///
-pub fn permutation(arr: List(a)) -> List(a) {
+pub fn permutation(arr: List(a)) -> List(List(a)) {
+  do_permutation(arr, [], [])
+}
+
+fn do_permutation(
+  arr: List(a),
+  pick_acc: List(a),
+  acc: List(a),
+) -> List(List(a)) {
+  // arr
+  // |> iterator.unfold(fn(xarr: List(a)) -> iterator.Step(List(a), List(a)) {
+  //   case xarr {
+  //     [head, ..tail] ->
+  //       iterator.Next(element: [head, ..tail], accumulator: [head, ..tail])
+  //     _ -> iterator.Done
+  //   }
+  // })
+  // |> iterator.to_list()
   todo
 }
 

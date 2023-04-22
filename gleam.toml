@@ -6,7 +6,7 @@ description = "A basic maths library"
 repository = { type = "github", user = "gleam-community", repo = "maths" }
 
 [dependencies]
-gleam_stdlib = "~> 0.25"
+gleam_stdlib = "~> 0.28"
 
 [dev-dependencies]
 gleeunit = "~> 0.7"

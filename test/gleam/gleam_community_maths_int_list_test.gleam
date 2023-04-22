@@ -142,7 +142,7 @@ pub fn int_list_manhatten_test() {
   int_list.manhatten_distance([], [1])
   |> should.be_error()
 
-  assert Ok(result) = int_list.manhatten_distance([0, 0], [1, 2])
+  let assert Ok(result) = int_list.manhatten_distance([0, 0], [1, 2])
   result
   |> should.equal(3)
 }

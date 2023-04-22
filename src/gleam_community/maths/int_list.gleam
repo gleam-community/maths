@@ -71,7 +71,7 @@ import gleam_community/maths/int as intx
 ///       int_list.manhatten_distance([], [1])
 ///       |> should.be_error()
 ///     
-///       assert Ok(result) = int_list.manhatten_distance([0, 0], [1, 2])
+///       let assert Ok(result) = int_list.manhatten_distance([0, 0], [1, 2])
 ///       result
 ///       |> should.equal(3)
 ///     }
@@ -337,7 +337,7 @@ pub fn arg_minimum(arr: List(Int)) -> Result(List(Int), String) {
       "Invalid input argument: The list is empty."
       |> Error
     _ -> {
-      assert Ok(min) =
+      let assert Ok(min) =
         arr
         |> minimum()
       arr
@@ -397,7 +397,7 @@ pub fn arg_maximum(arr: List(Int)) -> Result(List(Int), String) {
       "Invalid input argument: The list is empty."
       |> Error
     _ -> {
-      assert Ok(max) =
+      let assert Ok(max) =
         arr
         |> maximum()
       arr
@@ -457,7 +457,7 @@ pub fn maximum(arr: List(Int)) -> Result(Int, String) {
       "Invalid input argument: The list is empty."
       |> Error
     _ -> {
-      assert Ok(val0) = list.at(arr, 0)
+      let assert Ok(val0) = list.at(arr, 0)
       arr
       |> list.fold(
         val0,
@@ -512,7 +512,7 @@ pub fn minimum(arr: List(Int)) -> Result(Int, String) {
       "Invalid input argument: The list is empty."
       |> Error
     _ -> {
-      assert Ok(val0) = list.at(arr, 0)
+      let assert Ok(val0) = list.at(arr, 0)
       arr
       |> list.fold(
         val0,
@@ -567,8 +567,8 @@ pub fn extrema(arr: List(Int)) -> Result(#(Int, Int), String) {
       "Invalid input argument: The list is empty."
       |> Error
     _ -> {
-      assert Ok(val_max) = list.at(arr, 0)
-      assert Ok(val_min) = list.at(arr, 0)
+      let assert Ok(val_max) = list.at(arr, 0)
+      let assert Ok(val_min) = list.at(arr, 0)
       arr
       |> list.fold(
         #(val_min, val_max),

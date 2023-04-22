@@ -438,8 +438,8 @@ pub fn permutation(n: Int, k: Int) -> Result(Int, String) {
               1
               |> Ok
             False -> {
-              assert Ok(v1) = factorial(n)
-              assert Ok(v2) = factorial(n - k)
+              let assert Ok(v1) = factorial(n)
+              let assert Ok(v2) = factorial(n - k)
               v1 / v2
               |> Ok
             }
@@ -520,9 +520,9 @@ pub fn absolute_difference(a: Int, b: Int) -> Int {
 /// </div>
 ///
 pub fn is_power(x: Int, y: Int) -> Bool {
-  assert Ok(value) =
+  let assert Ok(value) =
     floatx.logarithm(int.to_float(x), option.Some(int.to_float(y)))
-  assert Ok(truncated) = floatx.truncate(value, option.Some(0))
+  let assert Ok(truncated) = floatx.truncate(value, option.Some(0))
   let rem = value -. truncated
   rem == 0.0
 }
@@ -654,7 +654,7 @@ pub fn divisors(n: Int) -> List(Int) {
 
 pub fn find_divisors(n: Int) -> List(Int) {
   let nabs: Float = float.absolute_value(to_float(n))
-  assert Ok(sqrt_result) = floatx.square_root(nabs)
+  let assert Ok(sqrt_result) = floatx.square_root(nabs)
   let max: Int = floatx.to_int(sqrt_result) + 1
   list.range(2, max)
   |> list.fold(
@@ -713,7 +713,7 @@ pub fn do_gcd(x: Int, y: Int) -> Int {
   case x == 0 {
     True -> y
     False -> {
-      assert Ok(z) = int.modulo(y, x)
+      let assert Ok(z) = int.modulo(y, x)
       do_gcd(z, x)
     }
   }

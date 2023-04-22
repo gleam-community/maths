@@ -78,7 +78,7 @@ import gleam/iterator
 ///     import gleam_community/maths/float_list
 ///
 ///     pub fn example () {
-///       assert Ok(tol) = floatx.power(-10.0, -6.0)
+///       let assert Ok(tol) = floatx.power(-10.0, -6.0)
 ///
 ///       [1.0, 1.0, 1.0]
 ///       |> float_list.norm(1.0)
@@ -107,11 +107,11 @@ pub fn norm(arr: List(Float), p: Float) -> Float {
         |> list.fold(
           0.0,
           fn(acc: Float, a: Float) -> Float {
-            assert Ok(result) = floatx.power(float.absolute_value(a), p)
+            let assert Ok(result) = floatx.power(float.absolute_value(a), p)
             result +. acc
           },
         )
-      assert Ok(result) = floatx.power(agg, 1.0 /. p)
+      let assert Ok(result) = floatx.power(agg, 1.0 /. p)
       result
     }
   }
@@ -141,7 +141,7 @@ pub fn norm(arr: List(Float), p: Float) -> Float {
 ///     import gleam_community/maths/float_list
 ///
 ///     pub fn example () {
-///       assert Ok(tol) = floatx.power(-10.0, -6.0)
+///       let assert Ok(tol) = floatx.power(-10.0, -6.0)
 ///     
 ///       // Empty lists returns 0.0
 ///       float_list.minkowski_distance([], [], 1.0)
@@ -155,7 +155,7 @@ pub fn norm(arr: List(Float), p: Float) -> Float {
 ///       float_list.minkowski_distance([0.0, 0.0], [0.0, 0.0], -1.0)
 ///       |> should.be_error()
 ///     
-///       assert Ok(result) = float_list.minkowski_distance([0.0, 0.0], [1.0, 2.0], 1.0)
+///       let assert Ok(result) = float_list.minkowski_distance([0.0, 0.0], [1.0, 2.0], 1.0)
 ///       result
 ///       |> floatx.is_close(3.0, 0.0, tol)
 ///       |> should.be_true()  
@@ -217,7 +217,7 @@ pub fn minkowski_distance(
 ///     import gleam_community/maths/float_list
 ///
 ///     pub fn example () {
-///       assert Ok(tol) = floatx.power(-10.0, -6.0)
+///       let assert Ok(tol) = floatx.power(-10.0, -6.0)
 ///     
 ///       // Empty lists returns 0.0
 ///       float_list.euclidean_distance([], [])
@@ -227,7 +227,7 @@ pub fn minkowski_distance(
 ///       float_list.euclidean_distance([], [1.0])
 ///       |> should.be_error()
 ///     
-///       assert Ok(result) = float_list.euclidean_distance([0.0, 0.0], [1.0, 2.0])
+///       let assert Ok(result) = float_list.euclidean_distance([0.0, 0.0], [1.0, 2.0])
 ///       result
 ///       |> floatx.is_close(2.23606797749979, 0.0, tol)
 ///       |> should.be_true()
@@ -269,7 +269,7 @@ pub fn euclidean_distance(
 ///     import gleam_community/maths/float_list
 ///
 ///     pub fn example () {
-///       assert Ok(tol) = floatx.power(-10.0, -6.0)
+///       let assert Ok(tol) = floatx.power(-10.0, -6.0)
 ///     
 ///       // Empty lists returns 0.0
 ///       float_list.manhatten_distance([], [])
@@ -279,7 +279,7 @@ pub fn euclidean_distance(
 ///       float_list.manhatten_distance([], [1.0])
 ///       |> should.be_error()
 ///     
-///       assert Ok(result) = float_list.manhatten_distance([0.0, 0.0], [1.0, 2.0])
+///       let assert Ok(result) = float_list.manhatten_distance([0.0, 0.0], [1.0, 2.0])
 ///       result
 ///       |> floatx.is_close(3.0, 0.0, tol)
 ///       |> should.be_true()
@@ -315,9 +315,9 @@ pub fn manhatten_distance(
 ///     import gleam_community/maths/float_list
 ///
 ///     pub fn example () {
-///       assert Ok(tol) = floatx.power(-10.0, -6.0)
-///       assert Ok(linspace) = float_list.linear_space(10.0, 50.0, 5, True)
-///       assert Ok(result) =
+///       let assert Ok(tol) = floatx.power(-10.0, -6.0)
+///       let assert Ok(linspace) = float_list.linear_space(10.0, 50.0, 5, True)
+///       let assert Ok(result) =
 ///         float_list.all_close(linspace, [10.0, 20.0, 30.0, 40.0, 50.0], 0.0, tol)
 ///       result
 ///       |> list.all(fn(x) { x == True })
@@ -390,9 +390,9 @@ pub fn linear_space(
 ///     import gleam_community/maths/float_list
 ///
 ///     pub fn example () {
-///       assert Ok(tol) = floatx.power(-10.0, -6.0)
-///       assert Ok(logspace) = float_list.logarithmic_space(1.0, 3.0, 3, True, 10.0)
-///       assert Ok(result) =
+///       let assert Ok(tol) = floatx.power(-10.0, -6.0)
+///       let assert Ok(logspace) = float_list.logarithmic_space(1.0, 3.0, 3, True, 10.0)
+///       let assert Ok(result) =
 ///         float_list.all_close(logspace, [10.0, 100.0, 1000.0], 0.0, tol)
 ///       result
 ///       |> list.all(fn(x) { x == True })
@@ -419,10 +419,10 @@ pub fn logarithmic_space(
 ) -> Result(List(Float), String) {
   case num > 0 {
     True -> {
-      assert Ok(linspace) = linear_space(start, stop, num, endpoint)
+      let assert Ok(linspace) = linear_space(start, stop, num, endpoint)
       linspace
       |> list.map(fn(i: Float) -> Float {
-        assert Ok(result) = floatx.power(base, i)
+        let assert Ok(result) = floatx.power(base, i)
         result
       })
       |> Ok
@@ -450,9 +450,9 @@ pub fn logarithmic_space(
 ///     import gleam_community/maths/float_list
 ///
 ///     pub fn example () {
-///       assert Ok(tol) = floatx.power(-10.0, -6.0)
-///       assert Ok(logspace) = float_list.geometric_space(10.0, 1000.0, 3, True)
-///       assert Ok(result) =
+///       let assert Ok(tol) = floatx.power(-10.0, -6.0)
+///       let assert Ok(logspace) = float_list.geometric_space(10.0, 1000.0, 3, True)
+///       let assert Ok(result) =
 ///         float_list.all_close(logspace, [10.0, 100.0, 1000.0], 0.0, tol)
 ///       result
 ///       |> list.all(fn(x) { x == True })
@@ -490,8 +490,8 @@ pub fn geometric_space(
     False ->
       case num > 0 {
         True -> {
-          assert Ok(log_start) = floatx.logarithm_10(start)
-          assert Ok(log_stop) = floatx.logarithm_10(stop)
+          let assert Ok(log_start) = floatx.logarithm_10(start)
+          let assert Ok(log_stop) = floatx.logarithm_10(stop)
           logarithmic_space(log_start, log_stop, num, endpoint, 10.0)
         }
         False ->
@@ -791,7 +791,7 @@ pub fn maximum(arr: List(Float)) -> Result(Float, String) {
       "Invalid input argument: The list is empty."
       |> Error
     _ -> {
-      assert Ok(val0) = list.at(arr, 0)
+      let assert Ok(val0) = list.at(arr, 0)
       arr
       |> list.fold(
         val0,
@@ -846,7 +846,7 @@ pub fn minimum(arr: List(Float)) -> Result(Float, String) {
       "Invalid input argument: The list is empty."
       |> Error
     _ -> {
-      assert Ok(val0) = list.at(arr, 0)
+      let assert Ok(val0) = list.at(arr, 0)
       arr
       |> list.fold(
         val0,
@@ -901,7 +901,7 @@ pub fn arg_maximum(arr: List(Float)) -> Result(List(Int), String) {
       "Invalid input argument: The list is empty."
       |> Error
     _ -> {
-      assert Ok(max) =
+      let assert Ok(max) =
         arr
         |> maximum()
       arr
@@ -961,7 +961,7 @@ pub fn arg_minimum(arr: List(Float)) -> Result(List(Int), String) {
       "Invalid input argument: The list is empty."
       |> Error
     _ -> {
-      assert Ok(min) =
+      let assert Ok(min) =
         arr
         |> minimum()
       arr
@@ -1021,8 +1021,8 @@ pub fn extrema(arr: List(Float)) -> Result(#(Float, Float), String) {
       "Invalid input argument: The list is empty."
       |> Error
     _ -> {
-      assert Ok(val_max) = list.at(arr, 0)
-      assert Ok(val_min) = list.at(arr, 0)
+      let assert Ok(val_max) = list.at(arr, 0)
+      let assert Ok(val_min) = list.at(arr, 0)
       arr
       |> list.fold(
         #(val_min, val_max),
