@@ -14,14 +14,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: erlef/setup-beam@v1
+      - uses: actions/checkout@v3.1.0
+      - uses: erlef/setup-beam@v1.16.0
         with:
-          otp-version: "25.0"
-          gleam-version: "0.28.3"
+          otp-version: "26.0.2"
+          gleam-version: "0.30.5"
       - uses: actions/setup-node@v3.5.1
         with:
           node-version: "16.18.1"
+      - run: gleam format --check src test
       - run: gleam test --target erlang
       - run: gleam test --target javascript
-      - run: gleam format --check src test

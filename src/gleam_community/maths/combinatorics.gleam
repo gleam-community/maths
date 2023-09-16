@@ -1,0 +1,411 @@
+////<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" integrity="sha384-GvrOXuhMATgEsSwCs4smul74iXGOixntILdUW9XmUC6+HX0sLNAK3q71HotJqlAn" crossorigin="anonymous">
+////<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" integrity="sha384-cpW21h6RZv/phavutF+AuVYrr+dA8xD9zs6FwLpaCct6O9ctzYFfFr4dgmgccOTx" crossorigin="anonymous"></script>
+////<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+////<script>
+////    document.addEventListener("DOMContentLoaded", function() {
+////        renderMathInElement(document.body, {
+////          // customised options
+////          // • auto-render specific keys, e.g.:
+////          delimiters: [
+////              {left: '$$', right: '$$', display: true},
+////              {left: '$', right: '$', display: false},
+////              {left: '\\(', right: '\\)', display: false},
+////              {left: '\\[', right: '\\]', display: true}
+////          ],
+////          // • rendering keys, e.g.:
+////          throwOnError : false
+////        });
+////    });
+////</script>
+////<style>
+////    .katex { font-size: 1.1em; }
+////</style>
+//// 
+//// ---
+//// 
+//// Combinatorics: A module that offers mathematical functions related to counting, arrangements, and combinations. 
+//// 
+//// * **Combinatorial functions**
+////   * [`combination`](#combination)
+////   * [`factorial`](#factorial)
+////   * [`permutation`](#permutation)
+////   * [`list_combination`](#list_combination)
+////   * [`list_permutation`](#list_permutation)
+////   * [`cartesian_product`](#cartesian_product)
+//// 
+
+import gleam/list
+import gleam/set
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// A combinatorial function for computing the number of a $$k$$-combinations of $$n$$ elements:
+///
+/// \\[
+/// C(n, k) = \binom{n}{k} = \frac{n!}{k! (n-k)!}
+/// \\]
+/// Also known as "$$n$$ choose $$k$$" or the binomial coefficient.
+///
+/// The implementation uses the effecient iterative multiplicative formula for the computation.
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths/int as intx
+///
+///     pub fn example() {
+///       // Invalid input gives an error
+///       // Error on: n = -1 < 0
+///       intx.combination(-1, 1)
+///       |> should.be_error()
+///
+///       // Valid input returns a result
+///       intx.combination(4, 0)
+///       |> should.equal(Ok(1))
+///
+///       intx.combination(4, 4)
+///       |> should.equal(Ok(1))
+///
+///       intx.combination(4, 2)
+///       |> should.equal(Ok(6))
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn combination(n: Int, k: Int) -> Result(Int, String) {
+  case n < 0 {
+    True ->
+      "Invalid input argument: n < 0. Valid input is n > 0."
+      |> Error
+    False ->
+      case k < 0 || k > n {
+        True ->
+          0
+          |> Ok
+        False ->
+          case k == 0 || k == n {
+            True ->
+              1
+              |> Ok
+            False -> {
+              let min = case k < n - k {
+                True -> k
+                False -> n - k
+              }
+              list.range(1, min)
+              |> list.fold(
+                1,
+                fn(acc: Int, x: Int) -> Int { acc * { n + 1 - x } / x },
+              )
+              |> Ok
+            }
+          }
+      }
+  }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// A combinatorial function for computing the total number of combinations of $$n$$
+/// elements, that is $$n!$$.
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths/int as intx
+///
+///     pub fn example() {
+///       // Invalid input gives an error
+///       intx.factorial(-1)
+///       |> should.be_error()
+///
+///       // Valid input returns a result
+///       intx.factorial(0)
+///       |> should.equal(Ok(1))
+///       intx.factorial(1)
+///       |> should.equal(Ok(1))
+///       intx.factorial(2)
+///       |> should.equal(Ok(2))
+///       intx.factorial(3)
+///       |> should.equal(Ok(6))
+///       intx.factorial(4)
+///       |> should.equal(Ok(24))
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn factorial(n) -> Result(Int, String) {
+  case n < 0 {
+    True ->
+      "Invalid input argument: n < 0. Valid input is n > 0."
+      |> Error
+    False ->
+      case n {
+        0 ->
+          1
+          |> Ok
+        1 ->
+          1
+          |> Ok
+        _ ->
+          list.range(1, n)
+          |> list.fold(1, fn(acc: Int, x: Int) { acc * x })
+          |> Ok
+      }
+  }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// A combinatorial function for computing the number of $$k$$-permuations (without repetitions)
+/// of $$n$$ elements:
+///
+/// \\[
+/// P(n, k) = \frac{n!}{(n - k)!}
+/// \\]
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths/int as intx
+///
+///     pub fn example() {
+///       // Invalid input gives an error
+///       // Error on: n = -1 < 0
+///       intx.permutation(-1, 1)
+///       |> should.be_error()
+///
+///       // Valid input returns a result
+///       intx.permutation(4, 0)
+///       |> should.equal(Ok(1))
+///
+///       intx.permutation(4, 4)
+///       |> should.equal(Ok(1))
+///
+///       intx.permutation(4, 2)
+///       |> should.equal(Ok(12))
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn permutation(n: Int, k: Int) -> Result(Int, String) {
+  case n < 0 {
+    True ->
+      "Invalid input argument: n < 0. Valid input is n > 0."
+      |> Error
+    False ->
+      case k < 0 || k > n {
+        True ->
+          0
+          |> Ok
+        False ->
+          case k == n {
+            True ->
+              1
+              |> Ok
+            False -> {
+              let assert Ok(v1) = factorial(n)
+              let assert Ok(v2) = factorial(n - k)
+              v1 / v2
+              |> Ok
+            }
+          }
+      }
+  }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// Generate all $$k$$-combinations based on a given list.
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam/list
+///     import gleam_community/maths/list as listx
+///
+///     pub fn example () {
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn list_combination(arr: List(a), k: Int) -> Result(List(List(a)), String) {
+  case k < 0 {
+    True ->
+      "Invalid input argument: k < 0. Valid input is k > 0."
+      |> Error
+    False -> {
+      case k > list.length(arr) {
+        True ->
+          "Invalid input argument: k > length(arr). Valid input is 0 < k <= length(arr)."
+          |> Error
+        False -> {
+          do_list_combination(arr, k, [])
+          |> Ok
+        }
+      }
+    }
+  }
+}
+
+fn do_list_combination(arr: List(a), k: Int, prefix: List(a)) -> List(List(a)) {
+  case k {
+    0 -> [list.reverse(prefix)]
+    _ ->
+      case arr {
+        [] -> []
+        [x, ..xs] -> {
+          let with_x = do_list_combination(xs, k - 1, [x, ..prefix])
+          let without_x = do_list_combination(xs, k, prefix)
+          list.append(with_x, without_x)
+        }
+      }
+  }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// Generate all permutations based on a given list.
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam/list
+///     import gleam_community/maths/list as listx
+///
+///     pub fn example () {
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn list_permutation(arr: List(a)) -> List(List(a)) {
+  case arr {
+    [] -> [[]]
+    _ ->
+      flat_map(
+        arr,
+        fn(x) {
+          let remaining = list.filter(arr, fn(y) { x != y })
+          list.map(list_permutation(remaining), fn(perm) { [x, ..perm] })
+        },
+      )
+  }
+}
+
+/// Flat map function
+fn flat_map(list: List(a), f: fn(a) -> List(b)) -> List(b) {
+  list
+  |> list.map(f)
+  |> concat()
+}
+
+/// Concatenate a list of lists
+fn concat(lists: List(List(a))) -> List(a) {
+  lists
+  |> list.fold([], list.append)
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// Generate a list containing all combinations of pairs of elements coming from two given lists.
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam/list
+///     import gleam_community/maths/list as listx
+///
+///     pub fn example () {
+///       []
+///       |> listx.cartesian_product([])
+///       |> should.equal([])
+///     
+///       [1.0, 10.0]
+///       |> listx.cartesian_product([1.0, 2.0])
+///       |> should.equal([#(1.0, 1.0), #(1.0, 2.0), #(10.0, 1.0), #(10.0, 2.0)])
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn cartesian_product(xarr: List(a), yarr: List(a)) -> List(#(a, a)) {
+  let xset: set.Set(a) =
+    xarr
+    |> set.from_list()
+  let yset: set.Set(a) =
+    yarr
+    |> set.from_list()
+  xset
+  |> set.fold(
+    set.new(),
+    fn(accumulator0: set.Set(#(a, a)), member0: a) -> set.Set(#(a, a)) {
+      set.fold(
+        yset,
+        accumulator0,
+        fn(accumulator1: set.Set(#(a, a)), member1: a) -> set.Set(#(a, a)) {
+          set.insert(accumulator1, #(member0, member1))
+        },
+      )
+    },
+  )
+  |> set.to_list()
+}
