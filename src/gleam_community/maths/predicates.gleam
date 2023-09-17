@@ -7,9 +7,9 @@
 ////          // customised options
 ////          // • auto-render specific keys, e.g.:
 ////          delimiters: [
-////              {left: '$$', right: '$$', display: true},
-////              {left: '$', right: '$', display: false},
-////              {left: '\\(', right: '\\)', display: false},
+////              {left: '$$', right: '$$', display: false},
+////            //   {left: '$', right: '$', display: false},
+////            //   {left: '\\(', right: '\\)', display: false},
 ////              {left: '\\[', right: '\\]', display: true}
 ////          ],
 ////          // • rendering keys, e.g.:
@@ -23,7 +23,7 @@
 //// 
 //// ---
 //// 
-//// Tests: A module containing functions for testing various mathematical properties of numbers.
+//// Predicates: A module containing functions for testing various mathematical properties of numbers.
 //// 
 //// * **Tests**
 ////   * [`is_close`](#is_close)

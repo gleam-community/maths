@@ -1,5 +1,5 @@
 import gleam_community/maths/elementary
-import gleam_community/maths/tests
+import gleam_community/maths/predicates
 import gleeunit
 import gleeunit/should
 import gleam/option
@@ -14,12 +14,12 @@ pub fn float_acos_test() {
   // points, with known function values
   let assert Ok(result) = elementary.acos(1.0)
   result
-  |> tests.is_close(0.0, 0.0, tol)
+  |> predicates.is_close(0.0, 0.0, tol)
   |> should.be_true()
 
   let assert Ok(result) = elementary.acos(0.5)
   result
-  |> tests.is_close(1.047197, 0.0, tol)
+  |> predicates.is_close(1.047197, 0.0, tol)
   |> should.be_true()
 
   // Check that we get an error when the function is evaluated
@@ -37,7 +37,7 @@ pub fn float_acosh_test() {
   // points, with known function values
   let assert Ok(result) = elementary.acosh(1.0)
   result
-  |> tests.is_close(0.0, 0.0, tol)
+  |> predicates.is_close(0.0, 0.0, tol)
   |> should.be_true()
 
   // Check that we get an error when the function is evaluated
@@ -55,7 +55,7 @@ pub fn float_asin_test() {
   let assert Ok(tol) = elementary.power(-10.0, -6.0)
   let assert Ok(result) = elementary.asin(0.5)
   result
-  |> tests.is_close(0.523598, 0.0, tol)
+  |> predicates.is_close(0.523598, 0.0, tol)
   |> should.be_true()
 
   // Check that we get an error when the function is evaluated
@@ -72,11 +72,11 @@ pub fn float_asinh_test() {
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   elementary.asinh(0.0)
-  |> tests.is_close(0.0, 0.0, tol)
+  |> predicates.is_close(0.0, 0.0, tol)
   |> should.be_true()
 
   elementary.asinh(0.5)
-  |> tests.is_close(0.481211, 0.0, tol)
+  |> predicates.is_close(0.481211, 0.0, tol)
   |> should.be_true()
 }
 
@@ -85,11 +85,11 @@ pub fn float_atan_test() {
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   elementary.atan(0.0)
-  |> tests.is_close(0.0, 0.0, tol)
+  |> predicates.is_close(0.0, 0.0, tol)
   |> should.be_true()
 
   elementary.atan(0.5)
-  |> tests.is_close(0.463647, 0.0, tol)
+  |> predicates.is_close(0.463647, 0.0, tol)
   |> should.be_true()
 }
 
@@ -98,46 +98,46 @@ pub fn math_atan2_test() {
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   elementary.atan2(0.0, 0.0)
-  |> tests.is_close(0.0, 0.0, tol)
+  |> predicates.is_close(0.0, 0.0, tol)
   |> should.be_true()
 
   elementary.atan2(0.0, 1.0)
-  |> tests.is_close(0.0, 0.0, tol)
+  |> predicates.is_close(0.0, 0.0, tol)
   |> should.be_true()
 
   // Check atan2(y=1.0, x=0.5)
   // Should be equal to atan(y / x) for any x > 0 and any y
   let result = elementary.atan(1.0 /. 0.5)
   elementary.atan2(1.0, 0.5)
-  |> tests.is_close(result, 0.0, tol)
+  |> predicates.is_close(result, 0.0, tol)
   |> should.be_true()
 
   // Check atan2(y=2.0, x=-1.5)
   // Should be equal to pi + atan(y / x) for any x < 0 and y >= 0
   let result = elementary.pi() +. elementary.atan(2.0 /. -1.5)
   elementary.atan2(2.0, -1.5)
-  |> tests.is_close(result, 0.0, tol)
+  |> predicates.is_close(result, 0.0, tol)
   |> should.be_true()
 
   // Check atan2(y=-2.0, x=-1.5)
   // Should be equal to atan(y / x) - pi for any x < 0 and y < 0
   let result = elementary.atan(-2.0 /. -1.5) -. elementary.pi()
   elementary.atan2(-2.0, -1.5)
-  |> tests.is_close(result, 0.0, tol)
+  |> predicates.is_close(result, 0.0, tol)
   |> should.be_true()
 
   // Check atan2(y=1.5, x=0.0)
   // Should be equal to pi/2 for x = 0 and any y > 0
   let result = elementary.pi() /. 2.0
   elementary.atan2(1.5, 0.0)
-  |> tests.is_close(result, 0.0, tol)
+  |> predicates.is_close(result, 0.0, tol)
   |> should.be_true()
 
   // Check atan2(y=-1.5, x=0.0)
   // Should be equal to -pi/2 for x = 0 and any y < 0
   let result = -1.0 *. elementary.pi() /. 2.0
   elementary.atan2(-1.5, 0.0)
-  |> tests.is_close(result, 0.0, tol)
+  |> predicates.is_close(result, 0.0, tol)
   |> should.be_true()
 }
 
@@ -147,12 +147,12 @@ pub fn float_atanh_test() {
   // points, with known function values
   let assert Ok(result) = elementary.atanh(0.0)
   result
-  |> tests.is_close(0.0, 0.0, tol)
+  |> predicates.is_close(0.0, 0.0, tol)
   |> should.be_true()
 
   let assert Ok(result) = elementary.atanh(0.5)
   result
-  |> tests.is_close(0.549306, 0.0, tol)
+  |> predicates.is_close(0.549306, 0.0, tol)
   |> should.be_true()
 
   // Check that we get an error when the function is evaluated
@@ -175,15 +175,15 @@ pub fn float_cos_test() {
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   elementary.cos(0.0)
-  |> tests.is_close(1.0, 0.0, tol)
+  |> predicates.is_close(1.0, 0.0, tol)
   |> should.be_true()
 
   elementary.cos(elementary.pi())
-  |> tests.is_close(-1.0, 0.0, tol)
+  |> predicates.is_close(-1.0, 0.0, tol)
   |> should.be_true()
 
   elementary.cos(0.5)
-  |> tests.is_close(0.877582, 0.0, tol)
+  |> predicates.is_close(0.877582, 0.0, tol)
   |> should.be_true()
 }
 
@@ -192,11 +192,11 @@ pub fn float_cosh_test() {
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   elementary.cosh(0.0)
-  |> tests.is_close(1.0, 0.0, tol)
+  |> predicates.is_close(1.0, 0.0, tol)
   |> should.be_true()
 
   elementary.cosh(0.5)
-  |> tests.is_close(1.127625, 0.0, tol)
+  |> predicates.is_close(1.127625, 0.0, tol)
   |> should.be_true()
   // An (overflow) error might occur when given an input
   // value that will result in a too large output value
@@ -209,15 +209,15 @@ pub fn float_sin_test() {
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   elementary.sin(0.0)
-  |> tests.is_close(0.0, 0.0, tol)
+  |> predicates.is_close(0.0, 0.0, tol)
   |> should.be_true()
 
   elementary.sin(0.5 *. elementary.pi())
-  |> tests.is_close(1.0, 0.0, tol)
+  |> predicates.is_close(1.0, 0.0, tol)
   |> should.be_true()
 
   elementary.sin(0.5)
-  |> tests.is_close(0.479425, 0.0, tol)
+  |> predicates.is_close(0.479425, 0.0, tol)
   |> should.be_true()
 }
 
@@ -226,11 +226,11 @@ pub fn float_sinh_test() {
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   elementary.sinh(0.0)
-  |> tests.is_close(0.0, 0.0, tol)
+  |> predicates.is_close(0.0, 0.0, tol)
   |> should.be_true()
 
   elementary.sinh(0.5)
-  |> tests.is_close(0.521095, 0.0, tol)
+  |> predicates.is_close(0.521095, 0.0, tol)
   |> should.be_true()
   // An (overflow) error might occur when given an input
   // value that will result in a too large output value
@@ -243,11 +243,11 @@ pub fn math_tan_test() {
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   elementary.tan(0.0)
-  |> tests.is_close(0.0, 0.0, tol)
+  |> predicates.is_close(0.0, 0.0, tol)
   |> should.be_true()
 
   elementary.tan(0.5)
-  |> tests.is_close(0.546302, 0.0, tol)
+  |> predicates.is_close(0.546302, 0.0, tol)
   |> should.be_true()
 }
 
@@ -256,19 +256,19 @@ pub fn math_tanh_test() {
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   elementary.tanh(0.0)
-  |> tests.is_close(0.0, 0.0, tol)
+  |> predicates.is_close(0.0, 0.0, tol)
   |> should.be_true()
 
   elementary.tanh(25.0)
-  |> tests.is_close(1.0, 0.0, tol)
+  |> predicates.is_close(1.0, 0.0, tol)
   |> should.be_true()
 
   elementary.tanh(-25.0)
-  |> tests.is_close(-1.0, 0.0, tol)
+  |> predicates.is_close(-1.0, 0.0, tol)
   |> should.be_true()
 
   elementary.tanh(0.5)
-  |> tests.is_close(0.462117, 0.0, tol)
+  |> predicates.is_close(0.462117, 0.0, tol)
   |> should.be_true()
 }
 
@@ -277,11 +277,11 @@ pub fn float_exponential_test() {
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   elementary.exponential(0.0)
-  |> tests.is_close(1.0, 0.0, tol)
+  |> predicates.is_close(1.0, 0.0, tol)
   |> should.be_true()
 
   elementary.exponential(0.5)
-  |> tests.is_close(1.648721, 0.0, tol)
+  |> predicates.is_close(1.648721, 0.0, tol)
   |> should.be_true()
   // An (overflow) error might occur when given an input
   // value that will result in a too large output value
@@ -298,7 +298,7 @@ pub fn float_natural_logarithm_test() {
 
   let assert Ok(result) = elementary.natural_logarithm(0.5)
   result
-  |> tests.is_close(-0.693147, 0.0, tol)
+  |> predicates.is_close(-0.693147, 0.0, tol)
   |> should.be_true()
 
   // Check that we get an error when the function is evaluated
@@ -352,7 +352,7 @@ pub fn float_logarithm_2_test() {
 
   let assert Ok(result) = elementary.logarithm_2(5.0)
   result
-  |> tests.is_close(2.321928, 0.0, tol)
+  |> predicates.is_close(2.321928, 0.0, tol)
   |> should.be_true()
 
   // Check that we get an error when the function is evaluated
@@ -367,17 +367,17 @@ pub fn float_logarithm_10_test() {
   // points, with known function values
   let assert Ok(result) = elementary.logarithm_10(1.0)
   result
-  |> tests.is_close(0.0, 0.0, tol)
+  |> predicates.is_close(0.0, 0.0, tol)
   |> should.be_true()
 
   let assert Ok(result) = elementary.logarithm_10(10.0)
   result
-  |> tests.is_close(1.0, 0.0, tol)
+  |> predicates.is_close(1.0, 0.0, tol)
   |> should.be_true()
 
   let assert Ok(result) = elementary.logarithm_10(50.0)
   result
-  |> tests.is_close(1.69897, 0.0, tol)
+  |> predicates.is_close(1.69897, 0.0, tol)
   |> should.be_true()
 
   // Check that we get an error when the function is evaluated
@@ -473,10 +473,10 @@ pub fn float_nth_root_test() {
 
 pub fn float_constants_test() {
   elementary.e()
-  |> tests.is_close(2.71828, 0.0, 0.00001)
+  |> predicates.is_close(2.71828, 0.0, 0.00001)
   |> should.be_true()
 
   elementary.pi()
-  |> tests.is_close(3.14159, 0.0, 0.00001)
+  |> predicates.is_close(3.14159, 0.0, 0.00001)
   |> should.be_true()
 }

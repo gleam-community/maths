@@ -7,9 +7,9 @@
 ////          // customised options
 ////          // • auto-render specific keys, e.g.:
 ////          delimiters: [
-////              {left: '$$', right: '$$', display: true},
-////              {left: '$', right: '$', display: false},
-////              {left: '\\(', right: '\\)', display: false},
+////              {left: '$$', right: '$$', display: false},
+////            //   {left: '$', right: '$', display: false},
+////            //   {left: '\\(', right: '\\)', display: false},
 ////              {left: '\\[', right: '\\]', display: true}
 ////          ],
 ////          // • rendering keys, e.g.:
@@ -40,7 +40,7 @@
 import gleam_community/maths/elementary
 import gleam_community/maths/piecewise
 import gleam_community/maths/arithmetics
-import gleam_community/maths/tests
+import gleam_community/maths/predicates
 import gleam_community/maths/conversion
 import gleam/list
 import gleam/pair
@@ -66,19 +66,19 @@ import gleam/float
 ///     import gleeunit/should
 ///     import gleam_community/maths/elementary
 ///     import gleam_community/maths/metrics
-///     import gleam_community/maths/tests
+///     import gleam_community/maths/predicates
 ///
 ///     pub fn example () {
 ///       let assert Ok(tol) = elementary.power(-10.0, -6.0)
 ///
 ///       [1.0, 1.0, 1.0]
 ///       |> metrics.norm(1.0)
-///       |> tests.is_close(3.0, 0.0, tol)
+///       |> predicates.is_close(3.0, 0.0, tol)
 ///       |> should.be_true()
 ///
 ///       [1.0, 1.0, 1.0]
 ///       |> metrics.norm(-1.0)
-///       |> tests.is_close(0.3333333333333333, 0.0, tol)
+///       |> predicates.is_close(0.3333333333333333, 0.0, tol)
 ///       |> should.be_true()
 ///     }
 /// </details>
@@ -129,7 +129,7 @@ pub fn norm(arr: List(Float), p: Float) -> Float {
 ///     import gleeunit/should
 ///     import gleam_community/maths/elementary
 ///     import gleam_community/maths/metrics
-///     import gleam_community/maths/tests
+///     import gleam_community/maths/predicates
 ///
 ///     pub fn example () {
 ///       let assert Ok(tol) = elementary.power(-10.0, -6.0)
@@ -144,7 +144,7 @@ pub fn norm(arr: List(Float), p: Float) -> Float {
 ///     
 ///       let assert Ok(result) = metrics.manhatten_distance([0.0, 0.0], [1.0, 2.0])
 ///       result
-///       |> tests.is_close(3.0, 0.0, tol)
+///       |> predicates.is_close(3.0, 0.0, tol)
 ///       |> should.be_true()
 ///     }
 /// </details>
@@ -184,7 +184,7 @@ pub fn manhatten_distance(
 ///     import gleeunit/should
 ///     import gleam_community/maths/elementary
 ///     import gleam_community/maths/metrics
-///     import gleam_community/maths/tests
+///     import gleam_community/maths/predicates
 ///
 ///     pub fn example () {
 ///       let assert Ok(tol) = elementary.power(-10.0, -6.0)
@@ -203,7 +203,7 @@ pub fn manhatten_distance(
 ///     
 ///       let assert Ok(result) = metrics.minkowski_distance([0.0, 0.0], [1.0, 2.0], 1.0)
 ///       result
-///       |> tests.is_close(3.0, 0.0, tol)
+///       |> predicates.is_close(3.0, 0.0, tol)
 ///       |> should.be_true()  
 ///     }
 /// </details>
@@ -261,7 +261,7 @@ pub fn minkowski_distance(
 ///     import gleeunit/should
 ///     import gleam_community/maths/elementary
 ///     import gleam_community/maths/metrics
-///     import gleam_community/maths/tests
+///     import gleam_community/maths/predicates
 ///
 ///     pub fn example () {
 ///       let assert Ok(tol) = elementary.power(-10.0, -6.0)
@@ -276,7 +276,7 @@ pub fn minkowski_distance(
 ///     
 ///       let assert Ok(result) = metrics.euclidean_distance([0.0, 0.0], [1.0, 2.0])
 ///       result
-///       |> tests.is_close(2.23606797749979, 0.0, tol)
+///       |> predicates.is_close(2.23606797749979, 0.0, tol)
 ///       |> should.be_true()
 ///     }
 /// </details>
@@ -395,7 +395,7 @@ pub fn median(arr: List(Float)) -> Result(Float, String) {
       let count: Int = list.length(arr)
       let mid: Int = list.length(arr) / 2
       let sorted: List(Float) = list.sort(arr, float.compare)
-      case tests.is_odd(count) {
+      case predicates.is_odd(count) {
         // If there is an odd number of elements in the list, then the median
         // is just the middle value
         True -> {

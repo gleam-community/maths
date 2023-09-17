@@ -7,9 +7,9 @@
 ////          // customised options
 ////          // • auto-render specific keys, e.g.:
 ////          delimiters: [
-////              {left: '$$', right: '$$', display: true},
-////              {left: '$', right: '$', display: false},
-////              {left: '\\(', right: '\\)', display: false},
+////              {left: '$$', right: '$$', display: false},
+////            //   {left: '$', right: '$', display: false},
+////            //   {left: '\\(', right: '\\)', display: false},
 ////              {left: '\\[', right: '\\]', display: true}
 ////          ],
 ////          // • rendering keys, e.g.:
@@ -106,13 +106,13 @@ pub fn arange(start: Float, stop: Float, step: Float) -> List(Float) {
 ///     import gleeunit/should
 ///     import gleam_community/maths/elementary
 ///     import gleam_community/maths/sequences
-///     import gleam_community/maths/tests
+///     import gleam_community/maths/predicates
 ///
 ///     pub fn example () {
 ///       let assert Ok(tol) = elementary.power(-10.0, -6.0)
 ///       let assert Ok(linspace) = sequences.linear_space(10.0, 50.0, 5, True)
 ///       let assert Ok(result) =
-///         tests.all_close(linspace, [10.0, 20.0, 30.0, 40.0, 50.0], 0.0, tol)
+///         predicates.all_close(linspace, [10.0, 20.0, 30.0, 40.0, 50.0], 0.0, tol)
 ///       result
 ///       |> list.all(fn(x) { x == True })
 ///       |> should.be_true()
@@ -186,13 +186,13 @@ pub fn linear_space(
 ///     import gleeunit/should
 ///     import gleam_community/maths/elementary
 ///     import gleam_community/maths/sequences
-///     import gleam_community/maths/tests
+///     import gleam_community/maths/predicates
 ///
 ///     pub fn example () {
 ///       let assert Ok(tol) = elementary.power(-10.0, -6.0)
 ///       let assert Ok(logspace) = sequences.logarithmic_space(1.0, 3.0, 3, True, 10.0)
 ///       let assert Ok(result) =
-///         tests.all_close(logspace, [10.0, 100.0, 1000.0], 0.0, tol)
+///         predicates.all_close(logspace, [10.0, 100.0, 1000.0], 0.0, tol)
 ///       result
 ///       |> list.all(fn(x) { x == True })
 ///       |> should.be_true()
@@ -247,13 +247,13 @@ pub fn logarithmic_space(
 ///     import gleeunit/should
 ///     import gleam_community/maths/elementary
 ///     import gleam_community/maths/sequences
-///     import gleam_community/maths/tests
+///     import gleam_community/maths/predicates
 ///
 ///     pub fn example () {
 ///       let assert Ok(tol) = elementary.power(-10.0, -6.0)
 ///       let assert Ok(logspace) = sequences.geometric_space(10.0, 1000.0, 3, True)
 ///       let assert Ok(result) =
-///         tests.all_close(logspace, [10.0, 100.0, 1000.0], 0.0, tol)
+///         predicates.all_close(logspace, [10.0, 100.0, 1000.0], 0.0, tol)
 ///       result
 ///       |> list.all(fn(x) { x == True })
 ///       |> should.be_true()
