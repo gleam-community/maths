@@ -14,7 +14,7 @@ import gleam_community/maths/arithmetics
 import gleam_community/maths/combinatorics
 import gleam_community/maths/elementary
 import gleam_community/maths/piecewise
-import gleam_community/maths/tests
+import gleam_community/maths/predicates
 import gleam/float
 
 pub fn main() {
@@ -35,11 +35,11 @@ pub fn main() {
   // Returns List: Ok([1, 4])
 
   // Determine if a number is fractional
-  tests.is_fractional(0.3333)
+  predicates.is_fractional(0.3333)
   // Returns Bool: True
 
   // Determine if 28 is a power of 3
-  tests.is_power(28, 3)
+  predicates.is_power(28, 3)
   // Returns Bool: False
 
   // Generate all k = 1 combinations of [1, 2]
