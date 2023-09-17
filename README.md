@@ -23,7 +23,7 @@ pub fn main() {
 
   // Find the greatest common divisor
   arithmetics.gcd(54, 24)
-  // Returns   Int: 6
+  // Returns Int: 6
 
   // Find the minimum and maximum of a list
   piecewise.extrema([10.0, 3.0, 50.0, 20.0, 3.0], float.compare)
@@ -31,11 +31,11 @@ pub fn main() {
 
   // Find the list indices of the smallest value 
   piecewise.arg_minimum([10, 3, 50, 20, 3], float.compare)
-  // Returns  List: Ok([1, 4])
+  // Returns List: Ok([1, 4])
 
   // Determine if a number is fractional
   tests.is_fractional(0.3333)
-  // Returns  Bool: True
+  // Returns Bool: True
 
   // Determine if 28 is a power of 3
   tests.is_power(28, 3)
@@ -43,7 +43,7 @@ pub fn main() {
 
   // Generate all k = 1 combinations of [1, 2]
   combinatorics.list_combination([1, 2], 1)
-  // Returns: List: Ok([[1], [2]])
+  // Returns List: Ok([[1], [2]])
 }
 
 ```
