@@ -33,7 +33,7 @@ pub fn main() {
   piecewise.arg_minimum([10, 3, 50, 20, 3], float.compare)
   // Returns  List: Ok([1, 4])
 
-  // Determine if a number if fractional:
+  // Determine if a number is fractional
   tests.is_fractional(0.3333)
   // Returns  Bool: True
 
@@ -44,7 +44,6 @@ pub fn main() {
   // Generate all k = 1 combinations of [1, 2]
   [1, 2]
   |> combinatorics.list_combination(1)
-  |> should.equal(Ok([[1, 2]]))
   // Returns: List: Ok([[1], [2]])
 }
 
