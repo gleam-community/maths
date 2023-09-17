@@ -18,7 +18,7 @@ import gleam/float
 
 pub fn main() {
   // Evaluate the sine function
-  elementary.sin(floatx.pi())
+  elementary.sin(elementary.pi())
   // Returns Float: 0.0
 
   // Find the greatest common divisor
