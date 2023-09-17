@@ -42,8 +42,7 @@ pub fn main() {
   // Returns Bool: False
 
   // Generate all k = 1 combinations of [1, 2]
-  [1, 2]
-  |> combinatorics.list_combination(1)
+  combinatorics.list_combination([1, 2], 1)
   // Returns: List: Ok([[1], [2]])
 }
 
