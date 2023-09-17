@@ -86,7 +86,7 @@ pub fn gcd(x: Int, y: Int) -> Int {
   do_gcd(absx, absy)
 }
 
-pub fn do_gcd(x: Int, y: Int) -> Int {
+fn do_gcd(x: Int, y: Int) -> Int {
   case x == 0 {
     True -> y
     False -> {
@@ -171,7 +171,7 @@ pub fn divisors(n: Int) -> List(Int) {
   find_divisors(n)
 }
 
-pub fn find_divisors(n: Int) -> List(Int) {
+fn find_divisors(n: Int) -> List(Int) {
   let nabs: Float = piecewise.float_absolute_value(conversion.int_to_float(n))
   let assert Ok(sqrt_result) = elementary.square_root(nabs)
   let max: Int = conversion.float_to_int(sqrt_result) + 1

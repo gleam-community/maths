@@ -500,7 +500,7 @@ pub fn variance(arr: List(Float), ddof: Int) -> Result(Float, String) {
 ///
 /// Calculcate the sample standard deviation of the elements in a list:
 /// \\[
-/// s = \left(\frac{1}{n - d} \sum_{i=1}^{n}(x_i - \bar{x}))\right)^{\frac{1}{2}}
+/// s = \left(\frac{1}{n - d} \sum_{i=1}^{n}(x_i - \bar{x})\right)^{\frac{1}{2}}
 /// \\]
 ///
 /// In the formula, $$n$$ is the sample size (the length of the list) and 
