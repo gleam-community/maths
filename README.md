@@ -10,27 +10,40 @@ The library supports both targets: Erlang and JavaScript.
 ## Quickstart
 
 ```gleam
-import gleam_community/maths/float as floatx
-import gleam_community/maths/int as intx
-import gleam_community/maths/float_list
-import gleam_community/maths/int_list
+import gleam_community/maths/elementary
+import gleam_community/maths/arithmetics
+import gleam_community/maths/piecewise
+import gleam_community/maths/tests
+import gleam/float
 
 pub fn main() {
   // Evaluate the sine function
-  floatx.sin(floatx.pi())
+  elementary.sin(floatx.pi())
   // Returns Float: 0.0
 
   // Find the greatest common divisor
-  intx.gcd(54, 24)
-  // Returns   Int: 6
+  arithmetics.gcd(54, 24)
+  // Returns Int: 6
 
   // Find the minimum and maximum of a list
-  float_list.extrema([10.0, 3.0, 50.0, 20.0, 3.0])
+  piecewise.extrema([10.0, 3.0, 50.0, 20.0, 3.0], float.compare)
   // Returns Tuple: Ok(#(3.0, 50.0))
 
   // Find the list indices of the smallest value 
-  int_list.arg_minimum([10, 3, 50, 20, 3])
-  // Returns  List: Ok([1, 4])  
+  piecewise.arg_minimum([10, 3, 50, 20, 3], float.compare)
+  // Returns List: Ok([1, 4])
+
+  // Determine if a number is fractional
+  tests.is_fractional(0.3333)
+  // Returns Bool: True
+
+  // Determine if 28 is a power of 3
+  tests.is_power(28, 3)
+  // Returns Bool: False
+
+  // Generate all k = 1 combinations of [1, 2]
+  combinatorics.list_combination([1, 2], 1)
+  // Returns List: Ok([[1], [2]])
 }
 
 ```
