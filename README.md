@@ -10,8 +10,9 @@ The library supports both targets: Erlang and JavaScript.
 ## Quickstart
 
 ```gleam
-import gleam_community/maths/elementary
 import gleam_community/maths/arithmetics
+import gleam_community/maths/combinatorics
+import gleam_community/maths/elementary
 import gleam_community/maths/piecewise
 import gleam_community/maths/tests
 import gleam/float
