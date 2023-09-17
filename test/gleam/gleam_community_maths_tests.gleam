@@ -1,4 +1,4 @@
-import gleam_community/maths/tests
+import gleam_community/maths/predicates
 import gleam/list
 import gleeunit/should
 import gleeunit
@@ -14,7 +14,7 @@ pub fn float_is_close_test() {
   // if 'val' is within 1 percent of 'ref_val' +/- 0.1
   let rtol: Float = 0.01
   let atol: Float = 0.1
-  tests.is_close(val, ref_val, rtol, atol)
+  predicates.is_close(val, ref_val, rtol, atol)
   |> should.be_true()
 }
 
@@ -27,7 +27,7 @@ pub fn float_list_all_close_test() {
   // if 'val' is within 1 percent of 'ref_val' +/- 0.1
   let rtol: Float = 0.01
   let atol: Float = 0.1
-  tests.all_close(xarr, yarr, rtol, atol)
+  predicates.all_close(xarr, yarr, rtol, atol)
   |> fn(zarr: Result(List(Bool), String)) -> Result(Bool, Nil) {
     case zarr {
       Ok(arr) ->
@@ -43,101 +43,101 @@ pub fn float_list_all_close_test() {
 }
 
 pub fn float_is_fractional_test() {
-  tests.is_fractional(1.5)
+  predicates.is_fractional(1.5)
   |> should.equal(True)
 
-  tests.is_fractional(0.5)
+  predicates.is_fractional(0.5)
   |> should.equal(True)
 
-  tests.is_fractional(0.3333)
+  predicates.is_fractional(0.3333)
   |> should.equal(True)
 
-  tests.is_fractional(0.9999)
+  predicates.is_fractional(0.9999)
   |> should.equal(True)
 
-  tests.is_fractional(1.0)
+  predicates.is_fractional(1.0)
   |> should.equal(False)
 
-  tests.is_fractional(999.0)
+  predicates.is_fractional(999.0)
   |> should.equal(False)
 }
 
 pub fn int_is_power_test() {
-  tests.is_power(10, 10)
+  predicates.is_power(10, 10)
   |> should.equal(True)
 
-  tests.is_power(11, 10)
+  predicates.is_power(11, 10)
   |> should.equal(False)
 
-  tests.is_power(4, 2)
+  predicates.is_power(4, 2)
   |> should.equal(True)
 
-  tests.is_power(5, 2)
+  predicates.is_power(5, 2)
   |> should.equal(False)
 
-  tests.is_power(27, 3)
+  predicates.is_power(27, 3)
   |> should.equal(True)
 
-  tests.is_power(28, 3)
+  predicates.is_power(28, 3)
   |> should.equal(False)
 }
 
 pub fn int_is_even_test() {
-  tests.is_even(0)
+  predicates.is_even(0)
   |> should.equal(True)
 
-  tests.is_even(2)
+  predicates.is_even(2)
   |> should.equal(True)
 
-  tests.is_even(12)
+  predicates.is_even(12)
   |> should.equal(True)
 
-  tests.is_even(5)
+  predicates.is_even(5)
   |> should.equal(False)
 
-  tests.is_even(-3)
+  predicates.is_even(-3)
   |> should.equal(False)
 
-  tests.is_even(-4)
+  predicates.is_even(-4)
   |> should.equal(True)
 }
 
 pub fn int_is_odd_test() {
-  tests.is_odd(0)
+  predicates.is_odd(0)
   |> should.equal(False)
 
-  tests.is_odd(3)
+  predicates.is_odd(3)
   |> should.equal(True)
 
-  tests.is_odd(13)
+  predicates.is_odd(13)
   |> should.equal(True)
 
-  tests.is_odd(4)
+  predicates.is_odd(4)
   |> should.equal(False)
 
-  tests.is_odd(-3)
+  predicates.is_odd(-3)
   |> should.equal(True)
 
-  tests.is_odd(-4)
+  predicates.is_odd(-4)
   |> should.equal(False)
 }
 
 pub fn int_is_perfect_test() {
-  tests.is_perfect(6)
+  predicates.is_perfect(6)
   |> should.equal(True)
 
-  tests.is_perfect(28)
+  predicates.is_perfect(28)
   |> should.equal(True)
 
-  tests.is_perfect(496)
+  predicates.is_perfect(496)
   |> should.equal(True)
 
-  tests.is_perfect(1)
+  predicates.is_perfect(1)
   |> should.equal(False)
 
-  tests.is_perfect(3)
+  predicates.is_perfect(3)
   |> should.equal(False)
 
-  tests.is_perfect(13)
+  predicates.is_perfect(13)
   |> should.equal(False)
 }

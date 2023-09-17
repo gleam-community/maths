@@ -23,7 +23,7 @@
 //// 
 //// ---
 //// 
-//// Tests: A module containing functions for testing various mathematical properties of numbers.
+//// Predicates: A module containing functions for testing various mathematical properties of numbers.
 //// 
 //// * **Tests**
 ////   * [`is_close`](#is_close)
