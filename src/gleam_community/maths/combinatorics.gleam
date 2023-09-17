@@ -56,22 +56,22 @@ import gleam/set
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/int as intx
+///     import gleam_community/maths/combinatorics
 ///
 ///     pub fn example() {
 ///       // Invalid input gives an error
 ///       // Error on: n = -1 < 0
-///       intx.combination(-1, 1)
+///       combinatorics.combination(-1, 1)
 ///       |> should.be_error()
 ///
 ///       // Valid input returns a result
-///       intx.combination(4, 0)
+///       combinatorics.combination(4, 0)
 ///       |> should.equal(Ok(1))
 ///
-///       intx.combination(4, 4)
+///       combinatorics.combination(4, 4)
 ///       |> should.equal(Ok(1))
 ///
-///       intx.combination(4, 2)
+///       combinatorics.combination(4, 2)
 ///       |> should.equal(Ok(6))
 ///     }
 /// </details>
@@ -127,23 +127,27 @@ pub fn combination(n: Int, k: Int) -> Result(Int, String) {
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/int as intx
+///     import gleam_community/maths/combinatorics
 ///
 ///     pub fn example() {
 ///       // Invalid input gives an error
-///       intx.factorial(-1)
+///       combinatorics.factorial(-1)
 ///       |> should.be_error()
 ///
 ///       // Valid input returns a result
-///       intx.factorial(0)
+///       combinatorics.factorial(0)
 ///       |> should.equal(Ok(1))
-///       intx.factorial(1)
+/// 
+///       combinatorics.factorial(1)
 ///       |> should.equal(Ok(1))
-///       intx.factorial(2)
+/// 
+///       combinatorics.factorial(2)
 ///       |> should.equal(Ok(2))
-///       intx.factorial(3)
+/// 
+///       combinatorics.factorial(3)
 ///       |> should.equal(Ok(6))
-///       intx.factorial(4)
+/// 
+///       combinatorics.factorial(4)
 ///       |> should.equal(Ok(24))
 ///     }
 /// </details>
@@ -192,22 +196,22 @@ pub fn factorial(n) -> Result(Int, String) {
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/int as intx
+///     import gleam_community/maths/combinatorics
 ///
 ///     pub fn example() {
 ///       // Invalid input gives an error
 ///       // Error on: n = -1 < 0
-///       intx.permutation(-1, 1)
+///       combinatorics.permutation(-1, 1)
 ///       |> should.be_error()
 ///
 ///       // Valid input returns a result
-///       intx.permutation(4, 0)
+///       combinatorics.permutation(4, 0)
 ///       |> should.equal(Ok(1))
 ///
-///       intx.permutation(4, 4)
+///       combinatorics.permutation(4, 4)
 ///       |> should.equal(Ok(1))
 ///
-///       intx.permutation(4, 2)
+///       combinatorics.permutation(4, 2)
 ///       |> should.equal(Ok(12))
 ///     }
 /// </details>
@@ -256,10 +260,14 @@ pub fn permutation(n: Int, k: Int) -> Result(Int, String) {
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam/list
-///     import gleam_community/maths/list as listx
+///     import gleam/set
+///     import gleam_community/maths/combinatorics
 ///
 ///     pub fn example () {
+///       let assert Ok(result) = combinatorics.list_combination([1, 2, 3, 4], 3)
+///       result
+///       |> set.from_list()
+///       |> should.equal(set.from_list([[1, 2, 3], [1, 2, 4], [1, 3, 4], [2, 3, 4]]))
 ///     }
 /// </details>
 ///
@@ -309,16 +317,27 @@ fn do_list_combination(arr: List(a), k: Int, prefix: List(a)) -> List(List(a)) {
 ///     </a>
 /// </div>
 ///
-/// Generate all permutations based on a given list.
+/// Generate all permutations of a given list.
 ///
 /// <details>
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam/list
-///     import gleam_community/maths/list as listx
+///     import gleam/set
+///     import gleam_community/maths/combinatorics
 ///
 ///     pub fn example () {
+///       [1, 2, 3]
+///       |> combinatorics.list_permutation()
+///       |> set.from_list()
+///       |> should.equal(set.from_list([
+///         [1, 2, 3],
+///         [2, 1, 3],
+///         [3, 1, 2],
+///         [1, 3, 2],
+///         [2, 3, 1],
+///         [3, 2, 1],
+///       ]))
 ///     }
 /// </details>
 ///
@@ -368,15 +387,15 @@ fn concat(lists: List(List(a))) -> List(a) {
 ///
 ///     import gleeunit/should
 ///     import gleam/list
-///     import gleam_community/maths/list as listx
+///     import gleam_community/maths/combinatorics
 ///
 ///     pub fn example () {
 ///       []
-///       |> listx.cartesian_product([])
+///       |> combinatorics.cartesian_product([])
 ///       |> should.equal([])
 ///     
 ///       [1.0, 10.0]
-///       |> listx.cartesian_product([1.0, 2.0])
+///       |> combinatorics.cartesian_product([1.0, 2.0])
 ///       |> should.equal([#(1.0, 1.0), #(1.0, 2.0), #(10.0, 1.0), #(10.0, 2.0)])
 ///     }
 /// </details>

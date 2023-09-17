@@ -61,7 +61,7 @@ import gleam_community/maths/arithmetics
 ///     <summary>Example</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/float as floatx
+///     import gleam_community/maths/tests
 ///
 ///     pub fn example () {
 ///       let val: Float = 99.
@@ -115,7 +115,7 @@ fn float_absolute_difference(a: Float, b: Float) -> Float {
 ///
 ///     import gleeunit/should
 ///     import gleam/list
-///     import gleam_community/maths/float_list
+///     import gleam_community/maths/tests
 ///
 ///     pub fn example () {
 ///       let val: Float = 99.
@@ -126,7 +126,7 @@ fn float_absolute_difference(a: Float, b: Float) -> Float {
 ///       // if 'val' is within 1 percent of 'ref_val' +/- 0.1
 ///       let rtol: Float = 0.01
 ///       let atol: Float = 0.10
-///       float_list.all_close(xarr, yarr, rtol, atol)
+///       tests.all_close(xarr, yarr, rtol, atol)
 ///       |> fn(zarr: Result(List(Bool), String)) -> Result(Bool, Nil) {
 ///         case zarr {
 ///           Ok(arr) ->
@@ -173,7 +173,7 @@ pub fn all_close(
 ///     </a>
 /// </div>
 ///
-/// Determine if a given value $$a$$ is fractional.
+/// Determine if a given value is fractional.
 /// 
 /// `True` is returned if the given value is fractional, otherwise `False` is returned. 
 /// 
@@ -181,9 +181,14 @@ pub fn all_close(
 ///     <summary>Example</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/float as floatx
+///     import gleam_community/maths/tests
 ///
 ///     pub fn example () {
+///       tests.is_fractional(0.3333)
+///       |> should.equal(True)
+///       
+///       tests.is_fractional(1.0)
+///       |> should.equal(False)
 ///     }
 /// </details>
 ///
@@ -213,15 +218,15 @@ fn do_ceiling(a: Float) -> Float
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/int as intx
+///     import gleam_community/maths/tests
 ///
 ///     pub fn example() {
 ///       // Check if 4 is a power of 2 (it is)
-///       intx.is_power(4, 2)
+///       tests.is_power(4, 2)
 ///       |> should.equal(True)
 ///
 ///       // Check if 5 is a power of 2 (it is not)
-///       intx.is_power(5, 2)
+///       tests.is_power(5, 2)
 ///       |> should.equal(False)
 ///     }
 /// </details>
@@ -261,13 +266,13 @@ pub fn is_power(x: Int, y: Int) -> Bool {
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/int as intx
+///     import gleam_community/maths/tests
 ///
 ///     pub fn example() {
-///       intx.is_perfect(6)
+///       tests.is_perfect(6)
 ///       |> should.equal(True)
 ///
-///       intx.is_perfect(28)
+///       tests.is_perfect(28)
 ///       |> should.equal(True)
 ///     }
 /// </details>
@@ -303,13 +308,13 @@ fn do_sum(arr: List(Int)) -> Int {
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/int as intx
+///     import gleam_community/maths/tests
 ///
 ///     pub fn example() {
-///       intx.is_even(-3)
+///       tests.is_even(-3)
 ///       |> should.equal(False)
 ///     
-///       intx.is_even(-4)
+///       tests.is_even(-4)
 ///       |> should.equal(True)
 ///     }
 /// </details>
@@ -336,13 +341,13 @@ pub fn is_even(x: Int) -> Bool {
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/int as intx
+///     import gleam_community/maths/tests
 ///
 ///     pub fn example() {
-///       intx.is_odd(-3)
+///       tests.is_odd(-3)
 ///       |> should.equal(True)
 ///     
-///       intx.is_odd(-4)
+///       tests.is_odd(-4)
 ///       |> should.equal(False)
 ///     }
 /// </details>

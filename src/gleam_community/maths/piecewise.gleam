@@ -93,16 +93,16 @@ import gleam_community/maths/elementary
 ///
 ///     import gleeunit/should
 ///     import gleam/option
-///     import gleam_community/maths/float as floatx
+///     import gleam_community/maths/piecewise
 ///
 ///     pub fn example() {
-///       floatx.ceiling(12.0654, option.Some(1))
+///       piecewise.ceiling(12.0654, option.Some(1))
 ///       |> should.equal(Ok(12.1))
 ///
-///       floatx.ceiling(12.0654, option.Some(2))
+///       piecewise.ceiling(12.0654, option.Some(2))
 ///       |> should.equal(Ok(12.07))
 ///
-///       floatx.ceiling(12.0654, option.Some(3))
+///       piecewise.ceiling(12.0654, option.Some(3))
 ///       |> should.equal(Ok(12.066))
 ///     }
 /// </details>
@@ -148,16 +148,16 @@ pub fn ceiling(x: Float, digits: option.Option(Int)) -> Result(Float, String) {
 ///
 ///     import gleeunit/should
 ///     import gleam/option
-///     import gleam_community/maths/float as floatx
+///     import gleam_community/maths/piecewise
 ///
 ///     pub fn example() {
-///       floatx.floor(12.0654, option.Some(1))
+///       piecewise.floor(12.0654, option.Some(1))
 ///       |> should.equal(Ok(12.0))
 ///
-///       floatx.floor(12.0654, option.Some(2))
+///       piecewise.floor(12.0654, option.Some(2))
 ///       |> should.equal(Ok(12.06))
 ///
-///       floatx.floor(12.0654, option.Some(3))
+///       piecewise.floor(12.0654, option.Some(3))
 ///       |> should.equal(Ok(12.065))
 ///     }
 /// </details>
@@ -203,16 +203,16 @@ pub fn floor(x: Float, digits: option.Option(Int)) -> Result(Float, String) {
 ///
 ///     import gleeunit/should
 ///     import gleam/option
-///     import gleam_community/maths/float as floatx
+///     import gleam_community/maths/piecewise
 ///
 ///     pub fn example() {
-///       floatx.truncate(12.0654, option.Some(1))
+///       piecewise.truncate(12.0654, option.Some(1))
 ///       |> should.equal(Ok(12.0))
 ///
-///       floatx.truncate(12.0654, option.Some(2))
+///       piecewise.truncate(12.0654, option.Some(2))
 ///       |> should.equal(Ok(12.0))
 ///
-///       floatx.truncate(12.0654, option.Some(3))
+///       piecewise.truncate(12.0654, option.Some(3))
 ///       |> should.equal(Ok(12.0))
 ///     }
 /// </details>
@@ -319,34 +319,34 @@ pub fn truncate(x: Float, digits: option.Option(Int)) -> Result(Float, String) {
 ///
 ///     import gleeunit/should
 ///     import gleam/option
-///     import gleam_community/maths/float as floatx
+///     import gleam_community/maths/piecewise
 ///
 ///     pub fn example() {
 ///       // The default number of digits is 0 if None is provided
-///       floatx.round(12.0654, option.None, option.Some(floatx.RoundNearest))
+///       piecewise.round(12.0654, option.None, option.Some(piecewise.RoundNearest))
 ///       |> should.equal(Ok(12.0))
 ///
 ///       // The default rounding mode is "RoundNearest" if None is provided 
-///       floatx.round(12.0654, option.None, option.None)
+///       piecewise.round(12.0654, option.None, option.None)
 ///       |> should.equal(Ok(12.0))
 ///
 ///       // Try different rounding modes
-///       floatx.round(12.0654, option.Some(2), option.Some(floatx.RoundNearest))
+///       piecewise.round(12.0654, option.Some(2), option.Some(piecewise.RoundNearest))
 ///       |> should.equal(Ok(12.07))
 ///
-///       floatx.round(12.0654, option.Some(2), option.Some(floatx.RoundTiesAway))
+///       piecewise.round(12.0654, option.Some(2), option.Some(piecewise.RoundTiesAway))
 ///       |> should.equal(Ok(12.07))
 ///
-///       floatx.round(12.0654, option.Some(2), option.Some(floatx.RoundTiesUp))
+///       piecewise.round(12.0654, option.Some(2), option.Some(piecewise.RoundTiesUp))
 ///       |> should.equal(Ok(12.07))
 ///
-///       floatx.round(12.0654, option.Some(2), option.Some(floatx.RoundToZero))
+///       piecewise.round(12.0654, option.Some(2), option.Some(piecewise.RoundToZero))
 ///       |> should.equal(Ok(12.06))
 ///
-///       floatx.round(12.0654, option.Some(2), option.Some(floatx.RoundDown))
+///       piecewise.round(12.0654, option.Some(2), option.Some(piecewise.RoundDown))
 ///       |> should.equal(Ok(12.06))
 ///
-///       floatx.round(12.0654, option.Some(2), option.Some(floatx.RoundUp))
+///       piecewise.round(12.0654, option.Some(2), option.Some(piecewise.RoundUp))
 ///       |> should.equal(Ok(12.07))
 ///     }
 /// </details>
@@ -482,6 +482,28 @@ fn round_up(p: Float, x: Float) -> Float {
 @external(javascript, "../../maths.mjs", "ceiling")
 fn do_ceiling(a: Float) -> Float
 
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// The absolute value:
+///
+/// \\[
+///  \forall x, y \in \mathbb{R}, \\; |x|  \in \mathbb{R}_{+}. 
+/// \\]
+///
+/// The function takes an input $$x$$ and returns a positive float value.
+///
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
 pub fn float_absolute_value(x: Float) -> Float {
   case x >. 0.0 {
     True -> x
@@ -489,6 +511,28 @@ pub fn float_absolute_value(x: Float) -> Float {
   }
 }
 
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// The absolute value:
+///
+/// \\[
+///  \forall x, y \in \mathbb{Z}, \\; |x|  \in \mathbb{Z}_{+}. 
+/// \\]
+///
+/// The function takes an input $$x$$ and returns a positive integer value.
+///
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
 pub fn int_absolute_value(x: Int) -> Int {
   case x > 0 {
     True -> x
@@ -515,13 +559,13 @@ pub fn int_absolute_value(x: Int) -> Int {
 ///     <summary>Example</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/float as floatx
+///     import gleam_community/maths/piecewise
 ///
 ///     pub fn example() {
-///       floatx.absolute_difference(-10.0, 10.0)
+///       piecewise.float_absolute_difference(-10.0, 10.0)
 ///       |> should.equal(20.0)
 ///
-///       floatx.absolute_difference(0.0, -2.0)
+///       piecewise.float_absolute_difference(0.0, -2.0)
 ///       |> should.equal(2.0)
 ///     }
 /// </details>
@@ -555,13 +599,13 @@ pub fn float_absolute_difference(a: Float, b: Float) -> Float {
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/int as intx
+///     import gleam_community/maths/piecewise
 ///
 ///     pub fn example() {
-///       intx.absolute_difference(-10, 10)
+///       piecewise.absolute_difference(-10, 10)
 ///       |> should.equal(20)
 ///
-///       intx.absolute_difference(0, -2)
+///       piecewise.absolute_difference(0, -2)
 ///       |> should.equal(2)
 ///     }
 /// </details>
@@ -583,7 +627,9 @@ pub fn int_absolute_difference(a: Int, b: Int) -> Int {
 ///     </a>
 /// </div>
 ///
-/// The sign function that returns the sign of the input, indicating whether it is positive (+1), negative (-1), or zero (0).
+/// The function takes an input $$x \in \mathbb{R}$$ and returns the sign of
+/// the input, indicating whether it is positive (+1.0), negative (-1.0), or 
+/// zero (0.0).
 ///
 /// <div style="text-align: right;">
 ///     <a href="#">
@@ -617,8 +663,9 @@ fn do_float_sign(a: Float) -> Float
 ///     </a>
 /// </div>
 ///
-/// The sign function which returns the sign of the input, indicating
-/// whether it is positive (+1), negative (-1), or zero (0).
+/// The function takes an input $$x \in \mathbb{Z}$$ and returns the sign of
+/// the input, indicating whether it is positive (+1), negative (-1), or zero
+/// (0).
 ///
 /// <div style="text-align: right;">
 ///     <a href="#">
@@ -738,19 +785,22 @@ pub fn int_flip_sign(x: Int) -> Int {
 ///     </a>
 /// </div>
 ///
-/// The minimum function that takes two arguments $$x, y \in \mathbb{R}$$ and returns the smallest of the two.
+/// The minimum function takes two arguments $$x, y$$ along with a function
+/// for comparing $$x, y$$. The function returns the smallest of the two given
+/// values.
 ///
 /// <details>
 ///     <summary>Example</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/float as floatx
+///     import gleam/float
+///     import gleam_community/maths/piecewise
 ///
 ///     pub fn example() {
-///       floatx.minimum(2.0, 1.5)
+///       piecewise.minimum(2.0, 1.5, float.compare)
 ///       |> should.equal(1.5)
 ///
-///       floatx.minimum(1.5, 2.0)
+///       piecewise.minimum(1.5, 2.0, float.compare)
 ///       |> should.equal(1.5)
 ///     }
 /// </details>
@@ -781,19 +831,22 @@ pub fn minimum(x: a, y: a, compare: fn(a, a) -> order.Order) -> a {
 ///     </a>
 /// </div>
 ///
-/// The maximum function that takes two arguments $$x, y \in \mathbb{R}$$ and returns the largest of the two.
+/// The maximum function takes two arguments $$x, y$$ along with a function
+/// for comparing $$x, y$$. The function returns the largest of the two given
+/// values.
 ///
 /// <details>
 ///     <summary>Example</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/float as floatx
+///     import gleam/float
+///     import gleam_community/maths/piecewise
 ///
 ///     pub fn example() {
-///       floatx.maximum(2.0, 1.5)
+///       piecewise.maximum(2.0, 1.5, float.compare)
 ///       |> should.equal(1.5)
 ///
-///       floatx.maximum(1.5, 2.0)
+///       piecewise.maximum(1.5, 2.0, float.compare)
 ///       |> should.equal(1.5)
 ///     }
 /// </details>
@@ -818,19 +871,22 @@ pub fn maximum(x: a, y: a, compare: fn(a, a) -> order.Order) -> a {
 ///     </a>
 /// </div>
 ///
-/// The minmax function that takes two arguments $$x, y \in \mathbb{R}$$ and returns a tuple with the smallest value first and largest second.
+/// The minmax function takes two arguments $$x, y$$ along with a function
+/// for comparing $$x, y$$. The function returns a tuple with the smallest 
+/// value first and largest second.
 ///
 /// <details>
 ///     <summary>Example</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/float as floatx
+///     import gleam/float
+///     import gleam_community/maths/piecewise
 ///
 ///     pub fn example() {
-///       floatx.minmax(2.0, 1.5)
+///       piecewise.minmax(2.0, 1.5, float.compare)
 ///       |> should.equal(#(1.5, 2.0))
 ///
-///       floatx.minmax(1.5, 2.0)
+///       piecewise.minmax(1.5, 2.0, float.compare)
 ///       |> should.equal(#(1.5, 2.0))
 ///     }
 /// </details>
@@ -851,23 +907,24 @@ pub fn minmax(x: a, y: a, compare: fn(a, a) -> order.Order) -> #(a, a) {
 ///     </a>
 /// </div>
 ///
-/// Returns the minimum value of a list. 
+/// Returns the minimum value of a given list. 
 ///
 /// <details>
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/int_list
+///     import gleam/int
+///     import gleam_community/maths/piecewise
 ///
 ///     pub fn example () {
 ///       // An empty lists returns an error
 ///       []
-///       |> int_list.minimum()
+///       |> piecewise.list_minimum(int.compare)
 ///       |> should.be_error()
 ///     
 ///       // Valid input returns a result
 ///       [4, 4, 3, 2, 1]
-///       |> int_list.minimum()
+///       |> piecewise.list_minimum(int.compare)
 ///       |> should.equal(Ok(1))
 ///     }
 /// </details>
@@ -908,23 +965,24 @@ pub fn list_minimum(
 ///     </a>
 /// </div>
 ///
-/// Returns the maximum value of a list. 
+/// Returns the maximum value of a given list. 
 ///
 /// <details>
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/float_list
+///     import gleam/float
+///     import gleam_community/maths/piecewise
 ///
 ///     pub fn example () {
 ///       // An empty lists returns an error
 ///       []
-///       |> float_list.maximum()
+///       |> piecewise.list_maximum(float.compare)
 ///       |> should.be_error()
 ///
 ///       // Valid input returns a result
 ///       [4.0, 4.0, 3.0, 2.0, 1.0]
-///       |> float_list.maximum()
+///       |> piecewise.list_maximum(float.compare)
 ///       |> should.equal(Ok(4.0))
 ///     }
 /// </details>
@@ -972,23 +1030,24 @@ pub fn list_maximum(
 ///     </a>
 /// </div>
 ///
-/// Returns the indices of the minimum values in a list. 
+/// Returns the indices of the minimum values in a given list. 
 ///
 /// <details>
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/float_list
+///     import gleam/float
+///     import gleam_community/maths/piecewise
 ///
 ///     pub fn example () {
 ///       // An empty lists returns an error
 ///       []
-///       |> float_list.arg_minimum()
+///       |> piecewise.arg_minimum(float.compare)
 ///       |> should.be_error()
 ///     
 ///       // Valid input returns a result
 ///       [4.0, 4.0, 3.0, 2.0, 1.0]
-///       |> float_list.arg_minimum()
+///       |> piecewise.arg_minimum(float.compare)
 ///       |> should.equal(Ok([4]))
 ///     }
 /// </details>
@@ -1041,23 +1100,24 @@ pub fn arg_minimum(
 ///     </a>
 /// </div>
 ///
-/// Returns the indices of the maximum values in a list.
+/// Returns the indices of the maximum values in a given list.
 ///
 /// <details>
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/float_list
+///     import gleam/float
+///     import gleam_community/maths/piecewise
 ///
 ///     pub fn example () {
 ///       // An empty lists returns an error
 ///       []
-///       |> float_list.arg_maximum()
+///       |> piecewise.arg_maximum(float.compare)
 ///       |> should.be_error()
 ///     
 ///       // Valid input returns a result
 ///       [4.0, 4.0, 3.0, 2.0, 1.0]
-///       |> float_list.arg_maximum()
+///       |> piecewise.arg_maximum(float.compare)
 ///       |> should.equal(Ok([0, 1]))
 ///     }
 /// </details>
@@ -1110,23 +1170,24 @@ pub fn arg_maximum(
 ///     </a>
 /// </div>
 ///
-/// Returns a tuple consisting of the minimum and maximum value of a list. 
+/// Returns a tuple consisting of the minimum and maximum values of a given list. 
 ///
 /// <details>
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/float_list
+///     import gleam/float
+///     import gleam_community/maths/piecewise
 ///
 ///     pub fn example () {
 ///       // An empty lists returns an error
 ///       []
-///       |> float_list.extrema()
+///       |> piecewise.extrema(float.compare)
 ///       |> should.be_error()
 ///     
 ///       // Valid input returns a result
 ///       [4.0, 4.0, 3.0, 2.0, 1.0]
-///       |> float_list.extrema()
+///       |> piecewise.extrema(float.compare)
 ///       |> should.equal(Ok(#(1.0, 4.0)))
 ///     }
 /// </details>

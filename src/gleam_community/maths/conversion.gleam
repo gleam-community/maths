@@ -23,7 +23,7 @@
 //// 
 //// ---
 //// 
-//// Conversion: A module containing various functions for converting between types and different quantities.
+//// Conversion: A module containing various functions for converting between types and quantities.
 //// 
 //// * **Misc. functions**
 ////   * [`float_to_int`](#float_to_int)
@@ -47,13 +47,13 @@ import gleam/int
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/int as intx
+///     import gleam_community/maths/conversion
 ///
 ///     pub fn example() {
-///       intx.to_float(-1)
+///       conversion.int_to_float(-1)
 ///       |> should.equal(-1.0)
 ///     
-///       intx.to_float(1)
+///       conversion.int_to_float(1)
 ///       |> should.equal(1.0)
 ///     }
 /// </details>
@@ -82,16 +82,17 @@ pub fn int_to_float(x: Int) -> Float {
 ///
 ///     import gleeunit/should
 ///     import gleam/option
-///     import gleam_community/maths/float as floatx
+///     import gleam_community/maths/conversion
+///     import gleam_community/maths/piecewise
 ///
 ///     pub fn example() {
-///       floatx.to_int(12.0654)
+///       conversion.float_to_int(12.0654)
 ///       |> should.equal(12)
 ///       
 ///       // Note: Making the following function call is equivalent
 ///       // but instead of returning a value of type 'Int' a value
 ///       // of type 'Float' is returned.
-///       floatx.round(12.0654, option.Some(0), option.Some(floatx.RoundToZero))
+///       piecewise.round(12.0654, option.Some(0), option.Some(piecewise.RoundToZero))
 ///       |> should.equal(Ok(12.0))
 ///     }
 /// </details>
@@ -123,11 +124,12 @@ fn do_to_int(a: Float) -> Int
 ///     <summary>Example</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/float as floatx
+///     import gleam_community/maths/conversion
+///     import gleam_community/maths/elementary
 ///
 ///     pub fn example() {
-///       floatx.to_radian(360.)
-///       |> should.equal(2. *. floatx.pi())
+///       conversion.degrees_to_radians(360.)
+///       |> should.equal(2. *. elementary.pi())
 ///     }
 /// </details>
 ///
@@ -154,13 +156,14 @@ pub fn degrees_to_radians(x: Float) -> Float {
 ///     <summary>Example</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/float as floatx
+///     import gleam_community/maths/conversion
+///     import gleam_community/maths/elementary
 ///
 ///     pub fn example() {
-///       floatx.to_degree(0.0)
+///       conversion.radians_to_degrees(0.0)
 ///       |> should.equal(0.0)
 ///
-///       floatx.to_degree(2. *. floatx.pi())
+///       conversion.radians_to_degrees(2. *. elementary.pi())
 ///       |> should.equal(360.)
 ///     }
 /// </details>

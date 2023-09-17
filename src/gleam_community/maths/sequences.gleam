@@ -49,20 +49,20 @@ import gleam/list
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/float_list
+///     import gleam_community/maths/sequences
 ///
 ///     pub fn example () {
-///       float_list.arange(1.0, 5.0, 1.0)
+///       sequences.arange(1.0, 5.0, 1.0)
 ///       |> should.equal([1.0, 2.0, 3.0, 4.0])
 ///       
 ///       // No points returned since
 ///       // start smaller than stop and positive step
-///       float_list.arange(5.0, 1.0, 1.0)
+///       sequences.arange(5.0, 1.0, 1.0)
 ///       |> should.equal([])
 ///       
 ///       // Points returned since
 ///       // start smaller than stop but negative step
-///       float_list.arange(5.0, 1.0, -1.0)
+///       sequences.arange(5.0, 1.0, -1.0)
 ///       |> should.equal([5.0, 4.0, 3.0, 2.0])
 ///     }
 /// </details>
@@ -104,20 +104,21 @@ pub fn arange(start: Float, stop: Float, step: Float) -> List(Float) {
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/float as floatx
-///     import gleam_community/maths/float_list
+///     import gleam_community/maths/elementary
+///     import gleam_community/maths/sequences
+///     import gleam_community/maths/tests
 ///
 ///     pub fn example () {
-///       let assert Ok(tol) = floatx.power(-10.0, -6.0)
-///       let assert Ok(linspace) = float_list.linear_space(10.0, 50.0, 5, True)
+///       let assert Ok(tol) = elementary.power(-10.0, -6.0)
+///       let assert Ok(linspace) = sequences.linear_space(10.0, 50.0, 5, True)
 ///       let assert Ok(result) =
-///         float_list.all_close(linspace, [10.0, 20.0, 30.0, 40.0, 50.0], 0.0, tol)
+///         tests.all_close(linspace, [10.0, 20.0, 30.0, 40.0, 50.0], 0.0, tol)
 ///       result
 ///       |> list.all(fn(x) { x == True })
 ///       |> should.be_true()
 ///
 ///       // A negative number of points (-5) does not work
-///       float_list.linear_space(10.0, 50.0, -5, True)
+///       sequences.linear_space(10.0, 50.0, -5, True)
 ///       |> should.be_error()
 ///     }
 /// </details>
@@ -183,20 +184,21 @@ pub fn linear_space(
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/float as floatx
-///     import gleam_community/maths/float_list
+///     import gleam_community/maths/elementary
+///     import gleam_community/maths/sequences
+///     import gleam_community/maths/tests
 ///
 ///     pub fn example () {
-///       let assert Ok(tol) = floatx.power(-10.0, -6.0)
-///       let assert Ok(logspace) = float_list.logarithmic_space(1.0, 3.0, 3, True, 10.0)
+///       let assert Ok(tol) = elementary.power(-10.0, -6.0)
+///       let assert Ok(logspace) = sequences.logarithmic_space(1.0, 3.0, 3, True, 10.0)
 ///       let assert Ok(result) =
-///         float_list.all_close(logspace, [10.0, 100.0, 1000.0], 0.0, tol)
+///         tests.all_close(logspace, [10.0, 100.0, 1000.0], 0.0, tol)
 ///       result
 ///       |> list.all(fn(x) { x == True })
 ///       |> should.be_true()
 ///
 ///       // A negative number of points (-3) does not work
-///       float_list.logarithmic_space(1.0, 3.0, -3, False, 10.0)
+///       sequences.logarithmic_space(1.0, 3.0, -3, False, 10.0)
 ///       |> should.be_error()
 ///     }
 /// </details>
@@ -243,27 +245,28 @@ pub fn logarithmic_space(
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/float as floatx
-///     import gleam_community/maths/float_list
+///     import gleam_community/maths/elementary
+///     import gleam_community/maths/sequences
+///     import gleam_community/maths/tests
 ///
 ///     pub fn example () {
-///       let assert Ok(tol) = floatx.power(-10.0, -6.0)
-///       let assert Ok(logspace) = float_list.geometric_space(10.0, 1000.0, 3, True)
+///       let assert Ok(tol) = elementary.power(-10.0, -6.0)
+///       let assert Ok(logspace) = sequences.geometric_space(10.0, 1000.0, 3, True)
 ///       let assert Ok(result) =
-///         float_list.all_close(logspace, [10.0, 100.0, 1000.0], 0.0, tol)
+///         tests.all_close(logspace, [10.0, 100.0, 1000.0], 0.0, tol)
 ///       result
 ///       |> list.all(fn(x) { x == True })
 ///       |> should.be_true()
 ///
 ///       // Input (start and stop can't be equal to 0.0)
-///       float_list.geometric_space(0.0, 1000.0, 3, False)
+///       sequences.geometric_space(0.0, 1000.0, 3, False)
 ///       |> should.be_error()
 ///     
-///       float_list.geometric_space(-1000.0, 0.0, 3, False)
+///       sequences.geometric_space(-1000.0, 0.0, 3, False)
 ///       |> should.be_error()
 ///
 ///       // A negative number of points (-3) does not work
-///       float_list.geometric_space(10.0, 1000.0, -3, False)
+///       sequences.geometric_space(10.0, 1000.0, -3, False)
 ///       |> should.be_error()
 ///     }
 /// </details>

@@ -136,10 +136,10 @@ fn do_acos(a: Float) -> Float
 ///     import gleam_community/maths/elementary
 ///
 ///     pub fn example() {
-///       floatx.acosh(1.0)
+///       elementary.acosh(1.0)
 ///       |> should.equal(Ok(0.0))
 ///
-///       floatx.acosh(0.0)
+///       elementary.acosh(0.0)
 ///       |> should.be_error()
 ///     }
 /// </details>
@@ -188,13 +188,13 @@ fn do_acosh(a: Float) -> Float
 ///     import gleam_community/maths/elementary
 ///
 ///     pub fn example() {
-///       floatx.asin(0.0)
+///       elementary.asin(0.0)
 ///       |> should.equal(Ok(0.0))
 ///
-///       floatx.asin(1.1)
+///       elementary.asin(1.1)
 ///       |> should.be_error()
 ///
-///       floatx.asin(-1.1)
+///       elementary.asin(-1.1)
 ///       |> should.be_error()
 ///     }
 /// </details>
@@ -242,7 +242,7 @@ fn do_asin(a: Float) -> Float
 ///     import gleam_community/maths/elementary
 ///
 ///     pub fn example() {
-///       floatx.asinh(0.0)
+///       elementary.asinh(0.0)
 ///       |> should.equal(0.0)
 ///     }
 /// </details>
@@ -283,7 +283,7 @@ fn do_asinh(a: Float) -> Float
 ///     import gleam_community/maths/elementary
 ///
 ///     pub fn example() {
-///       floatx.atan(0.0)
+///       elementary.atan(0.0)
 ///       |> should.equal(0.0)
 ///     }
 /// </details>
@@ -333,7 +333,7 @@ fn do_atan(a: Float) -> Float
 ///     import gleam_community/maths/elementary
 ///
 ///     pub fn example() {
-///       floatx.atan2(0.0, 0.0)
+///       elementary.atan2(0.0, 0.0)
 ///       |> should.equal(0.0)
 ///     }
 /// </details>
@@ -375,13 +375,13 @@ fn do_atan2(a: Float, b: Float) -> Float
 ///     import gleam_community/maths/elementary
 ///
 ///     pub fn example() {
-///       floatx.atanh(0.0)
+///       elementary.atanh(0.0)
 ///       |> should.equal(Ok(0.0))
 ///
-///       floatx.atanh(1.0)
+///       elementary.atanh(1.0)
 ///       |> should.be_error()
 ///
-///       floatx.atanh(-1.0)
+///       elementary.atanh(-1.0)
 ///       |> should.be_error()
 ///     }
 /// </details>
@@ -429,10 +429,10 @@ fn do_atanh(a: Float) -> Float
 ///     import gleam_community/maths/elementary
 ///
 ///     pub fn example() {
-///       floatx.cos(0.0)
+///       elementary.cos(0.0)
 ///       |> should.equal(1.0)
 ///
-///       floatx.cos(floatx.pi())
+///       elementary.cos(elementary.pi())
 ///       |> should.equal(-1.0)
 ///     }
 /// </details>
@@ -474,7 +474,7 @@ fn do_cos(a: Float) -> Float
 ///     import gleam_community/maths/elementary
 ///
 ///     pub fn example() {
-///       floatx.cosh(0.0)
+///       elementary.cosh(0.0)
 ///       |> should.equal(0.0)
 ///     }
 /// </details>
@@ -515,10 +515,10 @@ fn do_cosh(a: Float) -> Float
 ///     import gleam_community/maths/elementary
 ///
 ///     pub fn example() {
-///       floatx.sin(0.0)
+///       elementary.sin(0.0)
 ///       |> should.equal(0.0)
 ///
-///       floatx.sin(0.5 *. floatx.pi())
+///       elementary.sin(0.5 *. elementary.pi())
 ///       |> should.equal(1.0)
 ///     }
 /// </details>
@@ -561,7 +561,7 @@ fn do_sin(a: Float) -> Float
 ///     import gleam_community/maths/elementary
 ///
 ///     pub fn example() {
-///       floatx.sinh(0.0)
+///       elementary.sinh(0.0)
 ///       |> should.equal(0.0)
 ///     }
 /// </details>
@@ -603,7 +603,7 @@ fn do_sinh(a: Float) -> Float
 ///     import gleam_community/maths/elementary
 ///
 ///     pub fn example() {
-///       floatx.tan(0.0)
+///       elementary.tan(0.0)
 ///       |> should.equal(0.0)
 ///     }
 /// </details>
@@ -644,13 +644,13 @@ fn do_tan(a: Float) -> Float
 ///     import gleam_community/maths/elementary
 ///
 ///     pub fn example () {
-///       floatx.tanh(0.0)
+///       elementary.tanh(0.0)
 ///       |> should.equal(0.0)
 ///
-///       floatx.tanh(25.0)
+///       elementary.tanh(25.0)
 ///       |> should.equal(1.0)
 ///
-///       floatx.tanh(-25.0)
+///       elementary.tanh(-25.0)
 ///       |> should.equal(-1.0)
 ///     }
 /// </details>
@@ -692,7 +692,7 @@ fn do_tanh(a: Float) -> Float
 ///     import gleam_community/maths/elementary
 ///
 ///     pub fn example() {
-///       floatx.exponential(0.0)
+///       elementary.exponential(0.0)
 ///       |> should.equal(1.0)
 ///     }
 /// </details>
@@ -734,13 +734,13 @@ fn do_exponential(a: Float) -> Float
 ///     import gleam_community/maths/elementary
 ///
 ///     pub fn example () {
-///       floatx.natural_logarithm(1.0)
+///       elementary.natural_logarithm(1.0)
 ///       |> should.equal(Ok(0.0))
 ///
-///       floatx.natural_logarithm(floatx.e())
+///       elementary.natural_logarithm(elementary.e())
 ///       |> should.equal(Ok(1.0))
 ///
-///       floatx.natural_logarithm(-1.0)
+///       elementary.natural_logarithm(-1.0)
 ///       |> should.be_error()
 ///     }
 /// </details>
@@ -791,13 +791,13 @@ fn do_natural_logarithm(a: Float) -> Float
 ///     import gleam_community/maths/elementary
 ///
 ///     pub fn example () {
-///       floatx.logarithm(1.0, option.Some(10.0))
+///       elementary.logarithm(1.0, option.Some(10.0))
 ///       |> should.equal(Ok(0.0))
 ///
-///       floatx.logarithm(floatx.e(), option.Some(floatx.e()))
+///       elementary.logarithm(elementary.e(), option.Some(elementary.e()))
 ///       |> should.equal(Ok(1.0))
 ///
-///       floatx.logarithm(-1.0, option.Some(2.0))
+///       elementary.logarithm(-1.0, option.Some(2.0))
 ///       |> should.be_error()
 ///     }
 /// </details>
@@ -859,13 +859,13 @@ pub fn logarithm(x: Float, base: option.Option(Float)) -> Result(Float, String) 
 ///     import gleam_community/maths/elementary
 ///
 ///     pub fn example () {
-///       floatx.logarithm_2(1.0)
+///       elementary.logarithm_2(1.0)
 ///       |> should.equal(Ok(0.0))
 ///
-///       floatx.logarithm_2(2.0)
+///       elementary.logarithm_2(2.0)
 ///       |> should.equal(Ok(1.0))
 ///
-///       floatx.logarithm_2(-1.0)
+///       elementary.logarithm_2(-1.0)
 ///       |> should.be_error()
 ///     }
 /// </details>
@@ -914,13 +914,13 @@ fn do_logarithm_2(a: Float) -> Float
 ///     import gleam_community/maths/elementary
 ///
 ///     pub fn example () {
-///       floatx.logarithm_10(1.0)
+///       elementary.logarithm_10(1.0)
 ///       |> should.equal(Ok(0.0))
 ///
-///       floatx.logarithm_10(10.0)
+///       elementary.logarithm_10(10.0)
 ///       |> should.equal(Ok(1.0))
 ///
-///       floatx.logarithm_10(-1.0)
+///       elementary.logarithm_10(-1.0)
 ///       |> should.be_error()
 ///     }
 /// </details>
@@ -975,13 +975,13 @@ fn do_logarithm_10(a: Float) -> Float
 ///     import gleam_community/maths/elementary
 ///
 ///     pub fn example() {
-///       floatx.power(2., -1.)
+///       elementary.power(2., -1.)
 ///       |> should.equal(Ok(0.5))
 ///
-///       floatx.power(2., 2.)
+///       elementary.power(2., 2.)
 ///       |> should.equal(Ok(4.0))
 ///
-///       floatx.power(-1., 0.5)
+///       elementary.power(-1., 0.5)
 ///       |> should.be_error()
 ///     }
 /// </details>
@@ -1037,13 +1037,13 @@ fn do_ceiling(a: Float) -> Float
 ///     import gleam_community/maths/elementary
 ///
 ///     pub fn example() {
-///       floatx.square_root(1.0)
+///       elementary.square_root(1.0)
 ///       |> should.equal(Ok(1.0))
 ///
-///       floatx.square_root(4.0)
+///       elementary.square_root(4.0)
 ///       |> should.equal(Ok(2.0))
 ///
-///       floatx.square_root(-1.0)
+///       elementary.square_root(-1.0)
 ///       |> should.be_error()
 ///     }
 /// </details>
@@ -1089,13 +1089,13 @@ pub fn square_root(x: Float) -> Result(Float, String) {
 ///     import gleam_community/maths/elementary
 ///
 ///     pub fn example() {
-///       floatx.cube_root(1.0)
+///       elementary.cube_root(1.0)
 ///       |> should.equal(Ok(1.0))
 ///
-///       floatx.cube_root(27.0)
+///       elementary.cube_root(27.0)
 ///       |> should.equal(Ok(3.0))
 ///
-///       floatx.cube_root(-1.0)
+///       elementary.cube_root(-1.0)
 ///       |> should.be_error()
 ///     }
 /// </details>
@@ -1141,16 +1141,16 @@ pub fn cube_root(x: Float) -> Result(Float, String) {
 ///     import gleam_community/maths/elementary
 ///
 ///     pub fn example() {
-///       floatx.nth_root(1.0, 2)
+///       elementary.nth_root(1.0, 2)
 ///       |> should.equal(Ok(1.0))
 ///
-///       floatx.nth_root(27.0, 3)
+///       elementary.nth_root(27.0, 3)
 ///       |> should.equal(Ok(3.0))
 ///
-///       floatx.nth_root(256.0, 4)
+///       elementary.nth_root(256.0, 4)
 ///       |> should.equal(Ok(4.0))
 ///
-///       floatx.nth_root(-1.0, 2)
+///       elementary.nth_root(-1.0, 2)
 ///       |> should.be_error()
 ///     }
 /// </details>
@@ -1235,12 +1235,12 @@ pub fn tau() -> Float {
 ///     <summary>Example</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/float as floatx
+///     import gleam_community/maths/elementary
 ///
 ///     pub fn example() {
 ///       // Test that the constant is approximately equal to 2.7128...
-///       floatx.e()
-///       |> floatx.is_close(2.7128, 0.0, 0.000001)
+///       elementary.e()
+///       |> elementary.is_close(2.7128, 0.0, 0.000001)
 ///       |> should.be_true()
 ///     }
 /// </details>

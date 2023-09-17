@@ -60,16 +60,16 @@ import gleam_community/maths/piecewise
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/int as intx
+///     import gleam_community/maths/arithmetics
 ///
 ///     pub fn example() {
-///       intx.lcm(1, 1)
+///       arithmetics.lcm(1, 1)
 ///       |> should.equal(1)
 ///   
-///       intx.lcm(100, 10)
+///       arithmetics.lcm(100, 10)
 ///       |> should.equal(10)
 ///
-///       intx.gcd(-36, -17)
+///       arithmetics.gcd(-36, -17)
 ///       |> should.equal(1)
 ///     }
 /// </details>
@@ -109,16 +109,16 @@ pub fn do_gcd(x: Int, y: Int) -> Int {
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/int as intx
+///     import gleam_community/maths/arithmetics
 ///
 ///     pub fn example() {
-///       intx.lcm(1, 1)
+///       arithmetics.lcm(1, 1)
 ///       |> should.equal(1)
 ///   
-///       intx.lcm(100, 10)
+///       arithmetics.lcm(100, 10)
 ///       |> should.equal(100)
 ///
-///       intx.lcm(-36, -17)
+///       arithmetics.lcm(-36, -17)
 ///       |> should.equal(612)
 ///     }
 /// </details>
@@ -147,16 +147,16 @@ pub fn lcm(x: Int, y: Int) -> Int {
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/int as intx
+///     import gleam_community/maths/arithmetics
 ///
 ///     pub fn example() {
-///       intx.divisors(4)
+///       arithmetics.divisors(4)
 ///       |> should.equal([1, 2, 4])
 ///
-///       intx.divisors(6)
+///       arithmetics.divisors(6)
 ///       |> should.equal([1, 2, 3, 6])
 ///
-///       intx.proper_divisors(13)
+///       arithmetics.proper_divisors(13)
 ///       |> should.equal([1, 13])
 ///     }
 /// </details>
@@ -201,16 +201,16 @@ pub fn find_divisors(n: Int) -> List(Int) {
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/int as intx
+///     import gleam_community/maths/arithmetics
 ///
 ///     pub fn example() {
-///       intx.proper_divisors(4)
+///       arithmetics.proper_divisors(4)
 ///       |> should.equal([1, 2])
 ///
-///       intx.proper_divisors(6)
+///       arithmetics.proper_divisors(6)
 ///       |> should.equal([1, 2, 3])
 ///
-///       intx.proper_divisors(13)
+///       arithmetics.proper_divisors(13)
 ///       |> should.equal([1])
 ///     }
 /// </details>
@@ -239,23 +239,23 @@ pub fn proper_divisors(n: Int) -> List(Int) {
 /// \sum_{i=1}^n x_i
 /// \\]
 ///
-/// In the formula, $$n$$ is the length of the list and $$x_i$$ is the value in the input list indexed by $$i$$.
+/// In the formula, $$n$$ is the length of the list and $$x_i \in \mathbb{R}$$ is the value in the input list indexed by $$i$$.
 ///
 /// <details>
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/float_list
+///     import gleam_community/maths/arithmetics
 ///
 ///     pub fn example () {
 ///       // An empty list returns an error
 ///       []
-///       |> float_list.sum()
+///       |> arithmetics.float_sum()
 ///       |> should.equal(0.0)
 ///
 ///       // Valid input returns a result
 ///       [1.0, 2.0, 3.0]
-///       |> float_list.sum()
+///       |> arithmetics.float_sum()
 ///       |> should.equal(6.0)
 ///     }
 /// </details>
@@ -287,23 +287,23 @@ pub fn float_sum(arr: List(Float)) -> Float {
 /// \sum_{i=1}^n x_i
 /// \\]
 ///
-/// In the formula, $$n$$ is the length of the list and $$x_i$$ is the value in the input list indexed by $$i$$.
+/// In the formula, $$n$$ is the length of the list and $$x_i \in \mathbb{Z}$$ is the value in the input list indexed by $$i$$.
 ///
 /// <details>
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/int_list
+///     import gleam_community/maths/arithmetics
 ///
 ///     pub fn example () {
 ///       // An empty list returns 0
 ///       []
-///       |> int_list.sum()
+///       |> arithmetics.int_sum()
 ///       |> should.equal(0)
 ///
 ///       // Valid input returns a result
 ///       [1, 2, 3]
-///       |> int_list.sum()
+///       |> arithmetics.int_sum()
 ///       |> should.equal(6)
 ///     }
 /// </details>
@@ -335,23 +335,23 @@ pub fn int_sum(arr: List(Int)) -> Int {
 /// \prod_{i=1}^n x_i
 /// \\]
 ///
-/// In the formula, $$n$$ is the length of the list and $$x_i$$ is the value in the input list indexed by $$i$$.
+/// In the formula, $$n$$ is the length of the list and $$x_i \in \mathbb{R}$$ is the value in the input list indexed by $$i$$.
 ///
 /// <details>
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/float_list
+///     import gleam_community/maths/arithmetics
 ///
 ///     pub fn example () {
 ///       // An empty list returns 0.0
 ///       []
-///       |> float_list.sum()
+///       |> arithmetics.float_product()
 ///       |> should.equal(0.0)
 ///
 ///       // Valid input returns a result
 ///       [1.0, 2.0, 3.0]
-///       |> float_list.product()
+///       |> arithmetics.float_product()
 ///       |> should.equal(6.0)
 ///     }
 /// </details>
@@ -383,23 +383,23 @@ pub fn float_product(arr: List(Float)) -> Float {
 /// \prod_{i=1}^n x_i
 /// \\]
 ///
-/// In the formula, $$n$$ is the length of the list and $$x_i$$ is the value in the input list indexed by $$i$$.
+/// In the formula, $$n$$ is the length of the list and $$x_i \in \mathbb{Z}$$ is the value in the input list indexed by $$i$$.
 ///
 /// <details>
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/int_list
+///     import gleam_community/maths/arithmetics
 ///
 ///     pub fn example () {
 ///       // An empty list returns 0
 ///       []
-///       |> int_list.product()
+///       |> arithmetics.int_product()
 ///       |> should.equal(0)
 ///
 ///       // Valid input returns a result
 ///       [1, 2, 3]
-///       |> int_list.product()
+///       |> arithmetics.int_product()
 ///       |> should.equal(6)
 ///     }
 /// </details>
@@ -432,23 +432,23 @@ pub fn int_product(arr: List(Int)) -> Int {
 /// \\]
 ///
 /// In the formula, $$v_j$$ is the $$j$$'th element in the cumulative sum of $$n$$ elements.
-/// That is, $$n$$ is the length of the list and $$x_i$$ is the value in the input list indexed by $$i$$. 
+/// That is, $$n$$ is the length of the list and $$x_i \in \mathbb{R}$$ is the value in the input list indexed by $$i$$. 
 /// The value $$v_j$$ is thus the sum of the $$1$$ to $$j$$ first elements in the given list.
 ///
 /// <details>
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/float_list
+///     import gleam_community/maths/arithmetics
 ///
 ///     pub fn example () {
 ///       []
-///       |> float_list.cumulative_sum()
+///       |> arithmetics.float_cumulative_sum()
 ///       |> should.equal([])
 ///
 ///       // Valid input returns a result
 ///       [1.0, 2.0, 3.0]
-///       |> float_list.cumulative_sum()
+///       |> arithmetics.float_cumulative_sum()
 ///       |> should.equal([1.0, 3.0, 6.0])
 ///     }
 /// </details>
@@ -481,23 +481,23 @@ pub fn float_cumulative_sum(arr: List(Float)) -> List(Float) {
 /// \\]
 ///
 /// In the formula, $$v_j$$ is the $$j$$'th element in the cumulative sum of $$n$$ elements.
-/// That is, $$n$$ is the length of the list and $$x_i$$ is the value in the input list indexed by $$i$$. 
+/// That is, $$n$$ is the length of the list and $$x_i \in \mathbb{Z}$$ is the value in the input list indexed by $$i$$. 
 /// The value $$v_j$$ is thus the sum of the $$1$$ to $$j$$ first elements in the given list.
 ///
 /// <details>
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/int_list
+///     import gleam_community/maths/arithmetics
 ///
 ///     pub fn example () {
 ///       []
-///       |> int_list.cumulative_sum()
+///       |> arithmetics.int_cumulative_sum()
 ///       |> should.equal([])
 ///
 ///       // Valid input returns a result
 ///       [1, 2, 3]
-///       |> int_list.cumulative_sum()
+///       |> arithmetics.int_cumulative_sum()
 ///       |> should.equal([1, 3, 6])
 ///     }
 /// </details>
@@ -530,24 +530,24 @@ pub fn int_cumulative_sum(arr: List(Int)) -> List(Int) {
 /// \\]
 ///
 /// In the formula, $$v_j$$ is the $$j$$'th element in the cumulative product of $$n$$ elements.
-/// That is, $$n$$ is the length of the list and $$x_i$$ is the value in the input list indexed by $$i$$. 
+/// That is, $$n$$ is the length of the list and $$x_i \in \mathbb{R}$$ is the value in the input list indexed by $$i$$. 
 /// The value $$v_j$$ is thus the sum of the $$1$$ to $$j$$ first elements in the given list.
 ///
 /// <details>
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/float_list
+///     import gleam_community/maths/arithmetics
 ///
 ///     pub fn example () {
 ///       // An empty list returns an error
 ///       []
-///       |> float_list.cumulative_product()
+///       |> arithmetics.float_cumulative_product()
 ///       |> should.equal([])
 ///
 ///       // Valid input returns a result
 ///       [1.0, 2.0, 3.0]
-///       |> float_list.cumulative_product()
+///       |> arithmetics.float_cumulative_product()
 ///       |> should.equal([1.0, 2.0, 6.0])
 ///     }
 /// </details>
@@ -580,24 +580,24 @@ pub fn float_cumumlative_product(arr: List(Float)) -> List(Float) {
 /// \\]
 ///
 /// In the formula, $$v_j$$ is the $$j$$'th element in the cumulative product of $$n$$ elements.
-/// That is, $$n$$ is the length of the list and $$x_i$$ is the value in the input list indexed by $$i$$. 
+/// That is, $$n$$ is the length of the list and $$x_i \in \mathbb{Z}$$ is the value in the input list indexed by $$i$$. 
 /// The value $$v_j$$ is thus the product of the $$1$$ to $$j$$ first elements in the given list.
 ///
 /// <details>
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/int_list
+///     import gleam_community/maths/arithmetics
 ///
 ///     pub fn example () {
 ///       // An empty list returns an error
 ///       []
-///       |> int_list.cumulative_product()
+///       |> arithmetics.int_cumulative_product()
 ///       |> should.equal([])
 ///
 ///       // Valid input returns a result
 ///       [1, 2, 3]
-///       |> int_list.cumulative_product()
+///       |> arithmetics.int_cumulative_product()
 ///       |> should.equal([1, 2, 6])
 ///     }
 /// </details>

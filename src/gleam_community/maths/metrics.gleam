@@ -23,12 +23,11 @@
 //// 
 //// ---
 //// 
-//// Metrics: A module offering functions for calculating distances and types of metrics.
+//// Metrics: A module offering functions for calculating distances and other types of metrics.
 //// 
 //// * **Distances**
 ////   * [`norm`](#norm)
-////   * [`float_manhatten_distance`](#float_manhatten_distance)
-////   * [`int_manhatten_distance`](#int_manhatten_distance)
+////   * [`manhatten_distance`](#float_manhatten_distance)
 ////   * [`minkowski_distance`](#minkowski_distance)
 ////   * [`euclidean_distance`](#euclidean_distance)
 //// * **Basic statistical measures**
@@ -65,20 +64,21 @@ import gleam/float
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/float as floatx
-///     import gleam_community/maths/float_list
+///     import gleam_community/maths/elementary
+///     import gleam_community/maths/metrics
+///     import gleam_community/maths/tests
 ///
 ///     pub fn example () {
-///       let assert Ok(tol) = floatx.power(-10.0, -6.0)
+///       let assert Ok(tol) = elementary.power(-10.0, -6.0)
 ///
 ///       [1.0, 1.0, 1.0]
-///       |> float_list.norm(1.0)
-///       |> floatx.is_close(3.0, 0.0, tol)
+///       |> metrics.norm(1.0)
+///       |> tests.is_close(3.0, 0.0, tol)
 ///       |> should.be_true()
 ///
 ///       [1.0, 1.0, 1.0]
-///       |> float_list.norm(-1.0)
-///       |> floatx.is_close(0.3333333333333333, 0.0, tol)
+///       |> metrics.norm(-1.0)
+///       |> tests.is_close(0.3333333333333333, 0.0, tol)
 ///       |> should.be_true()
 ///     }
 /// </details>
@@ -127,23 +127,24 @@ pub fn norm(arr: List(Float), p: Float) -> Float {
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/float as floatx
-///     import gleam_community/maths/float_list
+///     import gleam_community/maths/elementary
+///     import gleam_community/maths/metrics
+///     import gleam_community/maths/tests
 ///
 ///     pub fn example () {
-///       let assert Ok(tol) = floatx.power(-10.0, -6.0)
+///       let assert Ok(tol) = elementary.power(-10.0, -6.0)
 ///     
 ///       // Empty lists returns 0.0
-///       float_list.manhatten_distance([], [])
+///       metrics.float_manhatten_distance([], [])
 ///       |> should.equal(Ok(0.0))
 ///     
 ///       // Differing lengths returns error
-///       float_list.manhatten_distance([], [1.0])
+///       metrics.manhatten_distance([], [1.0])
 ///       |> should.be_error()
 ///     
-///       let assert Ok(result) = float_list.manhatten_distance([0.0, 0.0], [1.0, 2.0])
+///       let assert Ok(result) = metrics.manhatten_distance([0.0, 0.0], [1.0, 2.0])
 ///       result
-///       |> floatx.is_close(3.0, 0.0, tol)
+///       |> tests.is_close(3.0, 0.0, tol)
 ///       |> should.be_true()
 ///     }
 /// </details>
@@ -154,72 +155,11 @@ pub fn norm(arr: List(Float), p: Float) -> Float {
 ///     </a>
 /// </div>
 ///
-pub fn float_manhatten_distance(
+pub fn manhatten_distance(
   xarr: List(Float),
   yarr: List(Float),
 ) -> Result(Float, String) {
   minkowski_distance(xarr, yarr, 1.0)
-}
-
-/// <div style="text-align: right;">
-///     <a href="https://github.com/gleam-community/maths/issues">
-///         <small>Spot a typo? Open an issue!</small>
-///     </a>
-/// </div>
-///
-/// Calculcate the Manhatten distance between two lists (representing vectors):
-///
-/// \\[
-/// \sum_{i=1}^n \left|x_i - y_i \right|
-/// \\]
-///
-/// In the formula, $$n$$ is the length of the two lists and $$x_i, y_i$$ are the values in the respective input lists indexed by $$i, j$$.
-///
-/// <details>
-///     <summary>Example:</summary>
-///
-///     import gleeunit/should
-///     import gleam_community/maths/int_list
-///
-///     pub fn example () {
-///       // Empty lists returns 0
-///       int_list.manhatten_distance([], [])
-///       |> should.equal(Ok(0))
-///     
-///       // Differing lengths returns error
-///       int_list.manhatten_distance([], [1])
-///       |> should.be_error()
-///     
-///       let assert Ok(result) = int_list.manhatten_distance([0, 0], [1, 2])
-///       result
-///       |> should.equal(3)
-///     }
-/// </details>
-///
-/// <div style="text-align: right;">
-///     <a href="#">
-///         <small>Back to top ↑</small>
-///     </a>
-/// </div>
-///
-pub fn int_manhatten_distance(
-  xarr: List(Int),
-  yarr: List(Int),
-) -> Result(Int, String) {
-  let xlen: Int = list.length(xarr)
-  let ylen: Int = list.length(yarr)
-  case xlen == ylen {
-    False ->
-      "Invalid input argument: length(xarr) != length(yarr). Valid input is when length(xarr) == length(yarr)."
-      |> Error
-    True ->
-      list.zip(xarr, yarr)
-      |> list.map(fn(tuple: #(Int, Int)) -> Int {
-        piecewise.int_absolute_value(pair.first(tuple) - pair.second(tuple))
-      })
-      |> arithmetics.int_sum()
-      |> Ok
-  }
 }
 
 /// <div style="text-align: right;">
@@ -242,27 +182,28 @@ pub fn int_manhatten_distance(
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/float as floatx
-///     import gleam_community/maths/float_list
+///     import gleam_community/maths/elementary
+///     import gleam_community/maths/metrics
+///     import gleam_community/maths/tests
 ///
 ///     pub fn example () {
-///       let assert Ok(tol) = floatx.power(-10.0, -6.0)
+///       let assert Ok(tol) = elementary.power(-10.0, -6.0)
 ///     
 ///       // Empty lists returns 0.0
-///       float_list.minkowski_distance([], [], 1.0)
+///       metrics.minkowski_distance([], [], 1.0)
 ///       |> should.equal(Ok(0.0))
 ///     
 ///       // Differing lengths returns error
-///       float_list.minkowski_distance([], [1.0], 1.0)
+///       metrics.minkowski_distance([], [1.0], 1.0)
 ///       |> should.be_error()
 ///     
 ///       // Test order < 1
-///       float_list.minkowski_distance([0.0, 0.0], [0.0, 0.0], -1.0)
+///       metrics.minkowski_distance([0.0, 0.0], [0.0, 0.0], -1.0)
 ///       |> should.be_error()
 ///     
-///       let assert Ok(result) = float_list.minkowski_distance([0.0, 0.0], [1.0, 2.0], 1.0)
+///       let assert Ok(result) = metrics.minkowski_distance([0.0, 0.0], [1.0, 2.0], 1.0)
 ///       result
-///       |> floatx.is_close(3.0, 0.0, tol)
+///       |> tests.is_close(3.0, 0.0, tol)
 ///       |> should.be_true()  
 ///     }
 /// </details>
@@ -318,23 +259,24 @@ pub fn minkowski_distance(
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/float as floatx
-///     import gleam_community/maths/float_list
+///     import gleam_community/maths/elementary
+///     import gleam_community/maths/metrics
+///     import gleam_community/maths/tests
 ///
 ///     pub fn example () {
-///       let assert Ok(tol) = floatx.power(-10.0, -6.0)
+///       let assert Ok(tol) = elementary.power(-10.0, -6.0)
 ///     
 ///       // Empty lists returns 0.0
-///       float_list.euclidean_distance([], [])
+///       metrics.euclidean_distance([], [])
 ///       |> should.equal(Ok(0.0))
 ///     
 ///       // Differing lengths returns error
-///       float_list.euclidean_distance([], [1.0])
+///       metrics.euclidean_distance([], [1.0])
 ///       |> should.be_error()
 ///     
-///       let assert Ok(result) = float_list.euclidean_distance([0.0, 0.0], [1.0, 2.0])
+///       let assert Ok(result) = metrics.euclidean_distance([0.0, 0.0], [1.0, 2.0])
 ///       result
-///       |> floatx.is_close(2.23606797749979, 0.0, tol)
+///       |> tests.is_close(2.23606797749979, 0.0, tol)
 ///       |> should.be_true()
 ///     }
 /// </details>
@@ -371,17 +313,17 @@ pub fn euclidean_distance(
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_stats/stats
+///     import gleam_community/maths/metrics
 ///
 ///     pub fn example () {
 ///       // An empty list returns an error
 ///       []
-///       |> stats.mean()
+///       |> metrics.mean()
 ///       |> should.be_error()
 ///
 ///       // Valid input returns a result
 ///       [1., 2., 3.]
-///       |> stats.mean()
+///       |> metrics.mean()
 ///       |> should.equal(Ok(2.))
 ///     }
 /// </details>
@@ -419,21 +361,21 @@ pub fn mean(arr: List(Float)) -> Result(Float, String) {
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_stats/stats
+///     import gleam_community/maths/metrics
 ///
 ///     pub fn example () {
 ///       // An empty list returns an error
 ///       []
-///       |> stats.median()
+///       |> metrics.median()
 ///       |> should.be_error()
 ///
 ///       // Valid input returns a result
 ///       [1., 2., 3.]
-///       |> stats.median()
+///       |> metrics.median()
 ///       |> should.equal(Ok(2.))
 ///     
 ///       [1., 2., 3., 4.]
-///       |> stats.median()
+///       |> metrics.median()
 ///       |> should.equal(Ok(2.5))
 ///     }
 /// </details>
@@ -495,7 +437,7 @@ pub fn median(arr: List(Float)) -> Result(Float, String) {
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_stats/stats
+///     import gleam_community/maths/metrics
 ///
 ///     pub fn example () {
 ///       // Degrees of freedom
@@ -503,12 +445,12 @@ pub fn median(arr: List(Float)) -> Result(Float, String) {
 ///     
 ///       // An empty list returns an error
 ///       []
-///       |> stats.var(ddof)
+///       |> metrics.variance(ddof)
 ///       |> should.be_error()
 ///     
 ///       // Valid input returns a result
 ///       [1., 2., 3.]
-///       |> stats.var(ddof)
+///       |> metrics.variance(ddof)
 ///       |> should.equal(Ok(1.))
 ///     }
 /// </details>
@@ -571,7 +513,7 @@ pub fn variance(arr: List(Float), ddof: Int) -> Result(Float, String) {
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_stats/stats
+///     import gleam_community/maths/metrics
 ///
 ///     pub fn example () {
 ///       // Degrees of freedom
@@ -579,12 +521,12 @@ pub fn variance(arr: List(Float), ddof: Int) -> Result(Float, String) {
 ///     
 ///       // An empty list returns an error
 ///       []
-///       |> stats.std(ddof)
+///       |> metrics.standard_deviationddof)
 ///       |> should.be_error()
 ///     
 ///       // Valid input returns a result
 ///       [1., 2., 3.]
-///       |> stats.std(ddof)
+///       |> metrics.standard_deviation(ddof)
 ///       |> should.equal(Ok(1.))
 ///     }
 /// </details>

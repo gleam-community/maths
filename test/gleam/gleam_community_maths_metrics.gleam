@@ -58,34 +58,33 @@ pub fn float_list_manhatten_test() {
   let assert Ok(tol) = elementary.power(-10.0, -6.0)
 
   // Empty lists returns 0.0
-  metrics.float_manhatten_distance([], [])
+  metrics.manhatten_distance([], [])
   |> should.equal(Ok(0.0))
 
   // Differing lengths returns error
-  metrics.float_manhatten_distance([], [1.0])
+  metrics.manhatten_distance([], [1.0])
   |> should.be_error()
 
   // Manhatten distance (p = 1)
-  let assert Ok(result) =
-    metrics.float_manhatten_distance([0.0, 0.0], [1.0, 2.0])
+  let assert Ok(result) = metrics.manhatten_distance([0.0, 0.0], [1.0, 2.0])
   result
   |> tests.is_close(3.0, 0.0, tol)
   |> should.be_true()
 }
 
-pub fn int_list_manhatten_test() {
-  // Empty lists returns 0
-  metrics.int_manhatten_distance([], [])
-  |> should.equal(Ok(0))
+// pub fn int_list_manhatten_test() {
+//   // Empty lists returns 0
+//   metrics.int_manhatten_distance([], [])
+//   |> should.equal(Ok(0))
 
-  // Differing lengths returns error
-  metrics.int_manhatten_distance([], [1])
-  |> should.be_error()
+//   // Differing lengths returns error
+//   metrics.int_manhatten_distance([], [1])
+//   |> should.be_error()
 
-  let assert Ok(result) = metrics.int_manhatten_distance([0, 0], [1, 2])
-  result
-  |> should.equal(3)
-}
+//   let assert Ok(result) = metrics.int_manhatten_distance([0, 0], [1, 2])
+//   result
+//   |> should.equal(3)
+// }
 
 pub fn float_list_minkowski_test() {
   let assert Ok(tol) = elementary.power(-10.0, -6.0)
