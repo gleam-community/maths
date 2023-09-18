@@ -32,7 +32,7 @@
 ////   * [`is_power`](#is_power)
 ////   * [`is_perfect`](#is_perfect)
 ////   * [`is_even`](#is_even)
-////   * [`is_odd`](#isodd)
+////   * [`is_odd`](#is_odd)
 
 import gleam/pair
 import gleam/int

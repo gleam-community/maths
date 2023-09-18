@@ -47,7 +47,6 @@
 ////   * [`minmax`](#minmax)
 ////   * [`list_minimum`](#list_minimum)
 ////   * [`list_maximum`](#list_maximum)
-////   * [`list_minmax`](#list_minmax)
 ////   * [`extrema`](#extrema)
 ////   * [`arg_minimum`](#arg_minimum)
 ////   * [`arg_maximum`](#arg_maximum)
