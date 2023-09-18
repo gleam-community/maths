@@ -35,8 +35,8 @@
 ////   * [`int_sum`](#int_sum)
 ////   * [`float_product`](#float_product)
 ////   * [`int_product`](#int_product)
-////   * [`float_cumulative_sum`](#cumulative_sum)
-////   * [`int_cumulative_sum`](#cumulative_sum)
+////   * [`float_cumulative_sum`](#float_cumulative_sum)
+////   * [`int_cumulative_sum`](#int_cumulative_sum)
 ////   * [`float_cumulative_product`](#float_cumulative_product)
 ////   * [`int_cumulative_product`](#int_cumulative_product)
 //// 
