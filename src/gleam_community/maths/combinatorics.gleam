@@ -350,28 +350,12 @@ fn do_list_combination(arr: List(a), k: Int, prefix: List(a)) -> List(List(a)) {
 pub fn list_permutation(arr: List(a)) -> List(List(a)) {
   case arr {
     [] -> [[]]
-    _ ->
-      flat_map(
-        arr,
-        fn(x) {
-          let remaining = list.filter(arr, fn(y) { x != y })
-          list.map(list_permutation(remaining), fn(perm) { [x, ..perm] })
-        },
-      )
+    _ -> {
+      use x <- list.flat_map(arr)
+      let assert Ok(#(_, remaining)) = list.pop(arr, fn(y) { x == y })
+      list.map(list_permutation(remaining), fn(perm) { [x, ..perm] })
+    }
   }
-}
-
-/// Flat map function
-fn flat_map(list: List(a), f: fn(a) -> List(b)) -> List(b) {
-  list
-  |> list.map(f)
-  |> concat()
-}
-
-/// Concatenate a list of lists
-fn concat(lists: List(List(a))) -> List(a) {
-  lists
-  |> list.fold([], list.append)
 }
 
 /// <div style="text-align: right;">
