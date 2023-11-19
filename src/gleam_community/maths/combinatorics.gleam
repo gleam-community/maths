@@ -368,6 +368,8 @@ pub fn list_permutation(arr: List(a)) -> List(List(a)) {
     [] -> [[]]
     _ -> {
       use x <- list.flat_map(arr)
+      // `x` is drawn from the list `arr` above,
+      // so Ok(...) can be safely asserted as the result of `list.pop` below
       let assert Ok(#(_, remaining)) = list.pop(arr, fn(y) { x == y })
       list.map(list_permutation(remaining), fn(perm) { [x, ..perm] })
     }
