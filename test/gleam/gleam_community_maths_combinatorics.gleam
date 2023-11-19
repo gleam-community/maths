@@ -1,5 +1,6 @@
 import gleam_community/maths/combinatorics
 import gleam/set
+import gleam/list
 import gleeunit
 import gleeunit/should
 
@@ -103,15 +104,22 @@ pub fn list_cartesian_product_test() {
 }
 
 pub fn list_permutation_test() {
-  // An empty lists returns an empty list
+  // An empty lists returns one (empty) permutation
   []
   |> combinatorics.list_permutation()
   |> should.equal([[]])
 
+  // Singleton returns one (singleton) permutation
+  // Also works regardless of type of list elements
+  ["a"]
+  |> combinatorics.list_permutation()
+  |> should.equal([["a"]])
+
   // Test with some arbitrary inputs
   [1, 2]
   |> combinatorics.list_permutation()
-  |> should.equal([[1, 2], [2, 1]])
+  |> set.from_list()
+  |> should.equal(set.from_list([[1, 2], [2, 1]]))
 
   // Test with some arbitrary inputs
   [1, 2, 3]
@@ -125,6 +133,20 @@ pub fn list_permutation_test() {
     [2, 3, 1],
     [3, 2, 1],
   ]))
+
+  // Repeated elements are treated as distinct for the
+  // purpose of permutations, so two identical elements
+  // will appear "both ways round"
+  [1.0, 1.0]
+  |> combinatorics.list_permutation()
+  |> should.equal([[1.0, 1.0], [1.0, 1.0]])
+
+  // This means lists with repeated elements return the
+  // same number of permutations as ones without
+  ["l", "e", "t", "t", "e", "r", "s"]
+  |> combinatorics.list_permutation()
+  |> list.length()
+  |> should.equal(5040)
 }
 
 pub fn list_combination_test() {
