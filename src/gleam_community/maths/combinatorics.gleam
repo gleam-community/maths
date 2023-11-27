@@ -319,6 +319,18 @@ fn do_list_combination(arr: List(a), k: Int, prefix: List(a)) -> List(List(a)) {
 ///
 /// Generate all permutations of a given list.
 ///
+/// Repeated elements are treated as distinct for the
+/// purpose of permutations, so two identical elements
+/// for example will appear "both ways round". This
+/// means lists with repeated elements return the same
+/// number of permutations as ones without.
+///
+/// N.B. The output of this function is a list of size
+/// factorial in the size of the input list. Caution is
+/// advised on input lists longer than ~11 elements, which
+/// may cause the VM to use unholy amounts of memory for
+/// the output.
+///
 /// <details>
 ///     <summary>Example:</summary>
 ///
@@ -338,6 +350,10 @@ fn do_list_combination(arr: List(a), k: Int, prefix: List(a)) -> List(List(a)) {
 ///         [2, 3, 1],
 ///         [3, 2, 1],
 ///       ]))
+///
+///       [1.0, 1.0]
+///       |> combinatorics.list_permutation()
+///       |> should.equal([[1.0, 1.0], [1.0, 1.0]])
 ///     }
 /// </details>
 ///
@@ -350,28 +366,14 @@ fn do_list_combination(arr: List(a), k: Int, prefix: List(a)) -> List(List(a)) {
 pub fn list_permutation(arr: List(a)) -> List(List(a)) {
   case arr {
     [] -> [[]]
-    _ ->
-      flat_map(
-        arr,
-        fn(x) {
-          let remaining = list.filter(arr, fn(y) { x != y })
-          list.map(list_permutation(remaining), fn(perm) { [x, ..perm] })
-        },
-      )
+    _ -> {
+      use x <- list.flat_map(arr)
+      // `x` is drawn from the list `arr` above,
+      // so Ok(...) can be safely asserted as the result of `list.pop` below
+      let assert Ok(#(_, remaining)) = list.pop(arr, fn(y) { x == y })
+      list.map(list_permutation(remaining), fn(perm) { [x, ..perm] })
+    }
   }
-}
-
-/// Flat map function
-fn flat_map(list: List(a), f: fn(a) -> List(b)) -> List(b) {
-  list
-  |> list.map(f)
-  |> concat()
-}
-
-/// Concatenate a list of lists
-fn concat(lists: List(List(a))) -> List(a) {
-  lists
-  |> list.fold([], list.append)
 }
 
 /// <div style="text-align: right;">
