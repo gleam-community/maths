@@ -76,7 +76,7 @@ pub fn beta(x: Float, y: Float) -> Float {
 /// </div>
 ///
 pub fn erf(x: Float) -> Float {
-  let [a1, a2, a3, a4, a5]: List(Float) = [
+  let assert [a1, a2, a3, a4, a5]: List(Float) = [
     0.254829592, -0.284496736, 1.421413741, -1.453152027, 1.061405429,
   ]
   let p: Float = 0.3275911
