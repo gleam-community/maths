@@ -16,6 +16,10 @@ jobs:
           otp-version: "26.1"
           gleam-version: "0.32.4"
 
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "20.x"
+
       - run: |
           version="v$(cat gleam.toml | grep -m 1 "version" | sed -r "s/version *= *\"([[:digit:].]+)\"/\1/")"
           if [ "$version" != "${{ github.ref_name }}" ]; then
