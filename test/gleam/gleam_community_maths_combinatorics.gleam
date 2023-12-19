@@ -80,27 +80,26 @@ pub fn list_cartesian_product_test() {
   [1, 2, 3]
   |> combinatorics.cartesian_product([1, 2, 3])
   |> set.from_list()
-  |> should.equal(set.from_list([
-    #(1, 1),
-    #(1, 2),
-    #(1, 3),
-    #(2, 1),
-    #(2, 2),
-    #(2, 3),
-    #(3, 1),
-    #(3, 2),
-    #(3, 3),
-  ]))
+  |> should.equal(
+    set.from_list([
+      #(1, 1),
+      #(1, 2),
+      #(1, 3),
+      #(2, 1),
+      #(2, 2),
+      #(2, 3),
+      #(3, 1),
+      #(3, 2),
+      #(3, 3),
+    ]),
+  )
 
   [1.0, 10.0]
   |> combinatorics.cartesian_product([1.0, 2.0])
   |> set.from_list()
-  |> should.equal(set.from_list([
-    #(1.0, 1.0),
-    #(1.0, 2.0),
-    #(10.0, 1.0),
-    #(10.0, 2.0),
-  ]))
+  |> should.equal(
+    set.from_list([#(1.0, 1.0), #(1.0, 2.0), #(10.0, 1.0), #(10.0, 2.0)]),
+  )
 }
 
 pub fn list_permutation_test() {
@@ -125,14 +124,16 @@ pub fn list_permutation_test() {
   [1, 2, 3]
   |> combinatorics.list_permutation()
   |> set.from_list()
-  |> should.equal(set.from_list([
-    [1, 2, 3],
-    [2, 1, 3],
-    [3, 1, 2],
-    [1, 3, 2],
-    [2, 3, 1],
-    [3, 2, 1],
-  ]))
+  |> should.equal(
+    set.from_list([
+      [1, 2, 3],
+      [2, 1, 3],
+      [3, 1, 2],
+      [1, 3, 2],
+      [2, 3, 1],
+      [3, 2, 1],
+    ]),
+  )
 
   // Repeated elements are treated as distinct for the
   // purpose of permutations, so two identical elements
@@ -178,8 +179,9 @@ pub fn list_combination_test() {
   let assert Ok(result) = combinatorics.list_combination([1, 2, 3, 4], 2)
   result
   |> set.from_list()
-  |> should.equal(set.from_list([[1,
-      2], [1, 3], [1, 4], [2, 3], [2, 4], [3, 4]]))
+  |> should.equal(
+    set.from_list([[1, 2], [1, 3], [1, 4], [2, 3], [2, 4], [3, 4]]),
+  )
 
   // Test with some arbitrary inputs
   let assert Ok(result) = combinatorics.list_combination([1, 2, 3, 4], 3)

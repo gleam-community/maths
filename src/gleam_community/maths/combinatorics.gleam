@@ -103,10 +103,9 @@ pub fn combination(n: Int, k: Int) -> Result(Int, String) {
                 False -> n - k
               }
               list.range(1, min)
-              |> list.fold(
-                1,
-                fn(acc: Int, x: Int) -> Int { acc * { n + 1 - x } / x },
-              )
+              |> list.fold(1, fn(acc: Int, x: Int) -> Int {
+                acc * { n + 1 - x } / x
+              })
               |> Ok
             }
           }
@@ -240,7 +239,8 @@ pub fn permutation(n: Int, k: Int) -> Result(Int, String) {
             False -> {
               let assert Ok(v1) = factorial(n)
               let assert Ok(v2) = factorial(n - k)
-              v1 / v2
+              v1
+              / v2
               |> Ok
             }
           }
@@ -416,17 +416,14 @@ pub fn cartesian_product(xarr: List(a), yarr: List(a)) -> List(#(a, a)) {
     yarr
     |> set.from_list()
   xset
-  |> set.fold(
-    set.new(),
-    fn(accumulator0: set.Set(#(a, a)), member0: a) -> set.Set(#(a, a)) {
-      set.fold(
-        yset,
-        accumulator0,
-        fn(accumulator1: set.Set(#(a, a)), member1: a) -> set.Set(#(a, a)) {
-          set.insert(accumulator1, #(member0, member1))
-        },
-      )
-    },
-  )
+  |> set.fold(set.new(), fn(accumulator0: set.Set(#(a, a)), member0: a) -> set.Set(
+    #(a, a),
+  ) {
+    set.fold(yset, accumulator0, fn(accumulator1: set.Set(#(a, a)), member1: a) -> set.Set(
+      #(a, a),
+    ) {
+      set.insert(accumulator1, #(member0, member1))
+    })
+  })
   |> set.to_list()
 }

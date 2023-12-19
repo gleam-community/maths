@@ -445,7 +445,8 @@ fn round_ties_up(p: Float, x: Float) -> Float {
   let remainder: Float = xabs -. xabs_truncated
   case remainder {
     _ if remainder >=. 0.5 && x >=. 0.0 ->
-      float_sign(x) *. truncate_float(xabs +. 1.0) /. p
+      float_sign(x) *. truncate_float(xabs +. 1.0)
+      /. p
     _ -> float_sign(x) *. xabs_truncated /. p
   }
 }
@@ -576,7 +577,8 @@ pub fn int_absolute_value(x: Int) -> Int {
 /// </div>
 ///
 pub fn float_absolute_difference(a: Float, b: Float) -> Float {
-  a -. b
+  a
+  -. b
   |> float_absolute_value()
 }
 
@@ -616,7 +618,8 @@ pub fn float_absolute_difference(a: Float, b: Float) -> Float {
 /// </div>
 ///
 pub fn int_absolute_difference(a: Int, b: Int) -> Int {
-  a - b
+  a
+  - b
   |> int_absolute_value()
 }
 
@@ -944,15 +947,12 @@ pub fn list_minimum(
     _ -> {
       let assert Ok(val0) = list.at(arr, 0)
       arr
-      |> list.fold(
-        val0,
-        fn(acc: a, element: a) {
-          case compare(element, acc) {
-            order.Lt -> element
-            _ -> acc
-          }
-        },
-      )
+      |> list.fold(val0, fn(acc: a, element: a) {
+        case compare(element, acc) {
+          order.Lt -> element
+          _ -> acc
+        }
+      })
       |> Ok
     }
   }
@@ -1003,15 +1003,12 @@ pub fn list_maximum(
     _ -> {
       let assert Ok(val0) = list.at(arr, 0)
       arr
-      |> list.fold(
-        val0,
-        fn(acc: a, element: a) {
-          case compare(acc, element) {
-            order.Lt -> element
-            _ -> acc
-          }
-        },
-      )
+      |> list.fold(val0, fn(acc: a, element: a) {
+        case compare(acc, element) {
+          order.Lt -> element
+          _ -> acc
+        }
+      })
       |> Ok
     }
   }
@@ -1209,19 +1206,16 @@ pub fn extrema(
       let assert Ok(val_max) = list.at(arr, 0)
       let assert Ok(val_min) = list.at(arr, 0)
       arr
-      |> list.fold(
-        #(val_min, val_max),
-        fn(acc: #(a, a), element: a) {
-          let first: a = pair.first(acc)
-          let second: a = pair.second(acc)
-          case compare(element, first), compare(second, element) {
-            order.Lt, order.Lt -> #(element, element)
-            order.Lt, _ -> #(element, second)
-            _, order.Lt -> #(first, element)
-            _, _ -> #(first, second)
-          }
-        },
-      )
+      |> list.fold(#(val_min, val_max), fn(acc: #(a, a), element: a) {
+        let first: a = pair.first(acc)
+        let second: a = pair.second(acc)
+        case compare(element, first), compare(second, element) {
+          order.Lt, order.Lt -> #(element, element)
+          order.Lt, _ -> #(element, second)
+          _, order.Lt -> #(first, element)
+          _, _ -> #(first, second)
+        }
+      })
       |> Ok
     }
   }

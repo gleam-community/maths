@@ -95,14 +95,11 @@ pub fn norm(arr: List(Float), p: Float) -> Float {
     _ -> {
       let agg: Float =
         arr
-        |> list.fold(
-          0.0,
-          fn(acc: Float, a: Float) -> Float {
-            let assert Ok(result) =
-              elementary.power(piecewise.float_absolute_value(a), p)
-            result +. acc
-          },
-        )
+        |> list.fold(0.0, fn(acc: Float, a: Float) -> Float {
+          let assert Ok(result) =
+            elementary.power(piecewise.float_absolute_value(a), p)
+          result +. acc
+        })
       let assert Ok(result) = elementary.power(agg, 1.0 /. p)
       result
     }
@@ -480,10 +477,10 @@ pub fn variance(arr: List(Float), ddof: Int) -> Result(Float, String) {
           })
           |> arithmetics.float_sum()
           |> fn(a: Float) -> Float {
-            a /. {
-              conversion.int_to_float(list.length(arr)) -. conversion.int_to_float(
-                ddof,
-              )
+            a
+            /. {
+              conversion.int_to_float(list.length(arr))
+              -. conversion.int_to_float(ddof)
             }
           }
           |> Ok

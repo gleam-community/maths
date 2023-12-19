@@ -819,7 +819,8 @@ pub fn logarithm(x: Float, base: option.Option(Float)) -> Result(Float, String) 
               // Apply the "change of base formula"
               let assert Ok(numerator) = logarithm_10(x)
               let assert Ok(denominator) = logarithm_10(a)
-              numerator /. denominator
+              numerator
+              /. denominator
               |> Ok
             }
             False ->

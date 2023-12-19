@@ -87,9 +87,10 @@ pub fn erf(x: Float) -> Float {
   // Formula 7.1.26 given in Abramowitz and Stegun.
   let t: Float = 1.0 /. { 1.0 +. p *. x }
   let y: Float =
-    1.0 -. { { { { a5 *. t +. a4 } *. t +. a3 } *. t +. a2 } *. t +. a1 } *. t *. elementary.exponential(
-      -1.0 *. x *. x,
-    )
+    1.0
+    -. { { { { a5 *. t +. a4 } *. t +. a3 } *. t +. a2 } *. t +. a1 }
+    *. t
+    *. elementary.exponential(-1.0 *. x *. x)
   sign *. y
 }
 
@@ -126,22 +127,17 @@ const lanczos_p: List(Float) = [
 fn gamma_lanczos(x: Float) -> Float {
   case x <. 0.5 {
     True ->
-      elementary.pi() /. {
-        elementary.sin(elementary.pi() *. x) *. gamma_lanczos(1.0 -. x)
-      }
+      elementary.pi()
+      /. { elementary.sin(elementary.pi() *. x) *. gamma_lanczos(1.0 -. x) }
     False -> {
       let z = x -. 1.0
       let x: Float =
-        list.index_fold(
-          lanczos_p,
-          0.0,
-          fn(acc: Float, v: Float, index: Int) {
-            case index > 0 {
-              True -> acc +. v /. { z +. conversion.int_to_float(index) }
-              False -> v
-            }
-          },
-        )
+        list.index_fold(lanczos_p, 0.0, fn(acc: Float, v: Float, index: Int) {
+          case index > 0 {
+            True -> acc +. v /. { z +. conversion.int_to_float(index) }
+            False -> v
+          }
+        })
       let t: Float = z +. lanczos_g +. 0.5
       let assert Ok(v1) = elementary.power(2.0 *. elementary.pi(), 0.5)
       let assert Ok(v2) = elementary.power(t, z +. 0.5)
@@ -171,13 +167,9 @@ pub fn incomplete_gamma(a: Float, x: Float) -> Result(Float, String) {
   case a >. 0.0 && x >=. 0.0 {
     True -> {
       let assert Ok(v) = elementary.power(x, a)
-      v *. elementary.exponential(-1.0 *. x) *. incomplete_gamma_sum(
-        a,
-        x,
-        1.0 /. a,
-        0.0,
-        1.0,
-      )
+      v
+      *. elementary.exponential(-1.0 *. x)
+      *. incomplete_gamma_sum(a, x, 1.0 /. a, 0.0, 1.0)
       |> Ok
     }
 

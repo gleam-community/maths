@@ -144,9 +144,8 @@ pub fn linear_space(
       case endpoint {
         True -> {
           let increment: Float =
-            piecewise.float_absolute_value(start -. stop) /. conversion.int_to_float(
-              num - 1,
-            )
+            piecewise.float_absolute_value(start -. stop)
+            /. conversion.int_to_float(num - 1)
           list.range(0, num - 1)
           |> list.map(fn(i: Int) -> Float {
             start +. conversion.int_to_float(i) *. increment *. direction
@@ -155,9 +154,8 @@ pub fn linear_space(
         }
         False -> {
           let increment: Float =
-            piecewise.float_absolute_value(start -. stop) /. conversion.int_to_float(
-              num,
-            )
+            piecewise.float_absolute_value(start -. stop)
+            /. conversion.int_to_float(num)
           list.range(0, num - 1)
           |> list.map(fn(i: Int) -> Float {
             start +. conversion.int_to_float(i) *. increment *. direction

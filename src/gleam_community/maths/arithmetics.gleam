@@ -176,15 +176,12 @@ fn find_divisors(n: Int) -> List(Int) {
   let assert Ok(sqrt_result) = elementary.square_root(nabs)
   let max: Int = conversion.float_to_int(sqrt_result) + 1
   list.range(2, max)
-  |> list.fold(
-    [1, n],
-    fn(acc: List(Int), i: Int) -> List(Int) {
-      case n % i == 0 {
-        True -> [i, n / i, ..acc]
-        False -> acc
-      }
-    },
-  )
+  |> list.fold([1, n], fn(acc: List(Int), i: Int) -> List(Int) {
+    case n % i == 0 {
+      True -> [i, n / i, ..acc]
+      False -> acc
+    }
+  })
   |> list.unique()
   |> list.sort(int.compare)
 }
