@@ -1067,7 +1067,7 @@ pub fn arg_minimum(
         arr
         |> list_minimum(compare)
       arr
-      |> list.index_map(fn(index: Int, element: a) -> Int {
+      |> list.index_map(fn(element: a, index: Int) -> Int {
         case compare(element, min) {
           order.Eq -> index
           _ -> -1
@@ -1137,7 +1137,7 @@ pub fn arg_maximum(
         arr
         |> list_maximum(compare)
       arr
-      |> list.index_map(fn(index: Int, element: a) -> Int {
+      |> list.index_map(fn(element: a, index: Int) -> Int {
         case compare(element, max) {
           order.Eq -> index
           _ -> -1
