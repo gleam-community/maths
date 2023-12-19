@@ -1,12 +1,7 @@
 import gleam_community/maths/combinatorics
 import gleam/set
 import gleam/list
-import gleeunit
 import gleeunit/should
-
-pub fn main() {
-  gleeunit.main()
-}
 
 pub fn int_factorial_test() {
   // Invalid input gives an error

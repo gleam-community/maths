@@ -1,10 +1,5 @@
 import gleam_community/maths/arithmetics
-import gleeunit
 import gleeunit/should
-
-pub fn main() {
-  gleeunit.main()
-}
 
 pub fn int_gcd_test() {
   arithmetics.gcd(1, 1)

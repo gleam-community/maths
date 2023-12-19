@@ -2,12 +2,7 @@ import gleam_community/maths/elementary
 import gleam_community/maths/sequences
 import gleam_community/maths/predicates
 import gleam/list
-import gleeunit
 import gleeunit/should
-
-pub fn main() {
-  gleeunit.main()
-}
 
 pub fn float_list_linear_space_test() {
   let assert Ok(tol) = elementary.power(-10.0, -6.0)

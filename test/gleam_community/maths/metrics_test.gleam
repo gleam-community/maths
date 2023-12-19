@@ -1,12 +1,7 @@
 import gleam_community/maths/elementary
 import gleam_community/maths/metrics
 import gleam_community/maths/predicates
-import gleeunit
 import gleeunit/should
-
-pub fn main() {
-  gleeunit.main()
-}
 
 pub fn float_list_norm_test() {
   let assert Ok(tol) = elementary.power(-10.0, -6.0)

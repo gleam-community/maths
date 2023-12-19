@@ -1,12 +1,7 @@
 import gleam_community/maths/elementary
 import gleam_community/maths/predicates
-import gleeunit
 import gleeunit/should
 import gleam/option
-
-pub fn main() {
-  gleeunit.main()
-}
 
 pub fn float_acos_test() {
   let assert Ok(tol) = elementary.power(-10.0, -6.0)

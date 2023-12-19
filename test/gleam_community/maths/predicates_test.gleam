@@ -1,11 +1,6 @@
 import gleam_community/maths/predicates
 import gleam/list
 import gleeunit/should
-import gleeunit
-
-pub fn main() {
-  gleeunit.main()
-}
 
 pub fn float_is_close_test() {
   let val: Float = 99.0
