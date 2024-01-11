@@ -102,6 +102,56 @@ fn do_gcd(x: Int, y: Int) -> Int {
 ///     </a>
 /// </div>
 ///
+/// The function calculates the Euclidian modulo of two numbers
+/// The Euclidian_modulo is the modulo that most often is used in maths
+/// rather than the normal truncating modulo operation that is used most 
+/// often in programming through the % operator
+/// In contrast to the % operator this function will always return a positive
+/// result
+///
+/// Like the gleam division operator / this will return 0 if one of the
+/// parameters are 0 as this is not defined in mathematics
+///
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths/arithmetics
+///
+///     pub fn example() {
+///       arithmetics.euclidian_modulo(15, 4)
+///       |> should.equal(3)
+///   
+///       arithmetics.euclidian_modulo(-3, -2)
+///       |> should.equal(1)
+///
+///       arithmetics.euclidian_modulo(5, 0)
+///       |> should.equal(0)
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn euclidian_modulo(x: Int, y: Int) -> Int {
+  case x % y, x, y {
+    _, 0, _ -> 0
+    _, _, 0 -> 0
+    md, _, _ if md < 0 -> md + int.absolute_value(y)
+    md, _, _ -> md
+  }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
 /// The function calculates the least common multiple of two integers $$x, y \in \mathbb{Z}$$.
 /// The least common multiple is the smallest positive integer that has both $$x$$ and $$y$$ as factors.
 ///

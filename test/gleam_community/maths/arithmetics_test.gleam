@@ -21,6 +21,17 @@ pub fn int_gcd_test() {
   |> should.equal(6)
 }
 
+pub fn euclidian_modulo_test() {
+  arithmetics.euclidian_modulo(15, 4)
+  |> should.equal(3)
+
+  arithmetics.euclidian_modulo(-3, -2)
+  |> should.equal(1)
+
+  arithmetics.euclidian_modulo(5, 0)
+  |> should.equal(0)
+}
+
 pub fn int_lcm_test() {
   arithmetics.lcm(1, 1)
   |> should.equal(1)
