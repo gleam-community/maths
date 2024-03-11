@@ -21,14 +21,31 @@ pub fn int_gcd_test() {
   |> should.equal(6)
 }
 
-pub fn euclidian_modulo_test() {
-  arithmetics.euclidian_modulo(15, 4)
+pub fn int_euclidean_modulo_test() {
+  // Base Case: Positive x, Positive y
+  // Note that the truncated, floored, and euclidean 
+  // definitions should agree for this base case
+  arithmetics.int_euclidean_modulo(15, 4)
   |> should.equal(3)
 
-  arithmetics.euclidian_modulo(-3, -2)
+  // Case: Positive x, Negative y
+  arithmetics.int_euclidean_modulo(15, -4)
+  |> should.equal(3)
+
+  // Case: Negative x, Positive y
+  arithmetics.int_euclidean_modulo(-15, 4)
   |> should.equal(1)
 
-  arithmetics.euclidian_modulo(5, 0)
+  // Case: Negative x, Negative y
+  arithmetics.int_euclidean_modulo(-15, -4)
+  |> should.equal(1)
+
+  // Case: Positive x, Zero y
+  arithmetics.int_euclidean_modulo(5, 0)
+  |> should.equal(0)
+
+  // Case: Zero x, Negative y
+  arithmetics.int_euclidean_modulo(0, 5)
   |> should.equal(0)
 }
 

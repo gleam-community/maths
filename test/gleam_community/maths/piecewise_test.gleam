@@ -311,17 +311,26 @@ pub fn math_round_ties_away_test() {
   |> should.equal(Ok(12.0))
 
   // Round 1. digit BEFORE decimal point 
-  piecewise.round(12.0654, option.Some(-1), option.Some(piecewise.RoundTiesAway),
+  piecewise.round(
+    12.0654,
+    option.Some(-1),
+    option.Some(piecewise.RoundTiesAway),
   )
   |> should.equal(Ok(10.0))
 
   // Round 2. digit BEFORE decimal point 
-  piecewise.round(12.0654, option.Some(-2), option.Some(piecewise.RoundTiesAway),
+  piecewise.round(
+    12.0654,
+    option.Some(-2),
+    option.Some(piecewise.RoundTiesAway),
   )
   |> should.equal(Ok(0.0))
 
   // Round 2. digit BEFORE decimal point 
-  piecewise.round(12.0654, option.Some(-3), option.Some(piecewise.RoundTiesAway),
+  piecewise.round(
+    12.0654,
+    option.Some(-3),
+    option.Some(piecewise.RoundTiesAway),
   )
   |> should.equal(Ok(0.0))
 }

@@ -445,8 +445,7 @@ fn round_ties_up(p: Float, x: Float) -> Float {
   let remainder: Float = xabs -. xabs_truncated
   case remainder {
     _ if remainder >=. 0.5 && x >=. 0.0 ->
-      float_sign(x) *. truncate_float(xabs +. 1.0)
-      /. p
+      float_sign(x) *. truncate_float(xabs +. 1.0) /. p
     _ -> float_sign(x) *. xabs_truncated /. p
   }
 }
@@ -577,8 +576,7 @@ pub fn int_absolute_value(x: Int) -> Int {
 /// </div>
 ///
 pub fn float_absolute_difference(a: Float, b: Float) -> Float {
-  a
-  -. b
+  a -. b
   |> float_absolute_value()
 }
 
@@ -618,8 +616,7 @@ pub fn float_absolute_difference(a: Float, b: Float) -> Float {
 /// </div>
 ///
 pub fn int_absolute_difference(a: Int, b: Int) -> Int {
-  a
-  - b
+  a - b
   |> int_absolute_value()
 }
 
