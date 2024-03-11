@@ -16,6 +16,7 @@ import gleam_community/maths/elementary
 import gleam_community/maths/piecewise
 import gleam_community/maths/predicates
 import gleam/float
+import gleam/int
 
 pub fn main() {
   // Evaluate the sine function
@@ -31,7 +32,7 @@ pub fn main() {
   // Returns Tuple: Ok(#(3.0, 50.0))
 
   // Find the list indices of the smallest value 
-  piecewise.arg_minimum([10, 3, 50, 20, 3], float.compare)
+  piecewise.arg_minimum([10, 3, 50, 20, 3], int.compare)
   // Returns List: Ok([1, 4])
 
   // Determine if a number is fractional
@@ -46,7 +47,6 @@ pub fn main() {
   combinatorics.list_combination([1, 2], 1)
   // Returns List: Ok([[1], [2]])
 }
-
 ```
 
 ## Installation

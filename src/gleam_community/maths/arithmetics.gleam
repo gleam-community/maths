@@ -30,6 +30,7 @@
 ////   * [`lcm`](#lcm)
 ////   * [`divisors`](#divisors)
 ////   * [`proper_divisors`](#proper_divisors)
+////   * [`int_euclidean_modulo`](#int_euclidean_modulo)
 //// * **Sums and products**
 ////   * [`float_sum`](#float_sum)
 ////   * [`int_sum`](#int_sum)
@@ -102,15 +103,23 @@ fn do_gcd(x: Int, y: Int) -> Int {
 ///     </a>
 /// </div>
 ///
-/// The function calculates the Euclidian modulo of two numbers
-/// The Euclidian_modulo is the modulo that most often is used in maths
-/// rather than the normal truncating modulo operation that is used most 
-/// often in programming through the % operator
-/// In contrast to the % operator this function will always return a positive
-/// result
+/// 
+/// Given two integers, $$x$$ (dividend) and $$y$$ (divisor), the Euclidean modulo of $$x$$ by $$y$$,
+/// denoted as $$x \mod y$$, is the remainder $$r$$ of the division of $$x$$ by $$y$$, such that:
+/// 
+/// \\[
+/// x = q \cdot y + r \quad \text{and} \quad 0 \leq r < |y|,
+/// \\]
+/// 
+/// where $$q$$ is an integer that represents the quotient of the division.
 ///
-/// Like the gleam division operator / this will return 0 if one of the
-/// parameters are 0 as this is not defined in mathematics
+/// The Euclidean modulo function of two numbers, is the remainder operation most commonly utilized in 
+/// mathematics. This differs from the standard truncating modulo operation frequently employed in 
+/// programming via the `%` operator. Unlike the `%` operator, which may return negative results 
+/// depending on the divisor's sign, the Euclidean modulo function is designed to
+/// always yield a positive outcome, ensuring consistency with mathematical conventions.
+/// 
+/// Note that like the Gleam division operator `/` this will return `0` if one of the arguments is `0`.
 ///
 ///
 /// <details>
@@ -120,13 +129,13 @@ fn do_gcd(x: Int, y: Int) -> Int {
 ///     import gleam_community/maths/arithmetics
 ///
 ///     pub fn example() {
-///       arithmetics.euclidian_modulo(15, 4)
+///       arithmetics.euclidean_modulo(15, 4)
 ///       |> should.equal(3)
 ///   
-///       arithmetics.euclidian_modulo(-3, -2)
+///       arithmetics.euclidean_modulo(-3, -2)
 ///       |> should.equal(1)
 ///
-///       arithmetics.euclidian_modulo(5, 0)
+///       arithmetics.euclidean_modulo(5, 0)
 ///       |> should.equal(0)
 ///     }
 /// </details>
@@ -137,7 +146,7 @@ fn do_gcd(x: Int, y: Int) -> Int {
 ///     </a>
 /// </div>
 ///
-pub fn euclidian_modulo(x: Int, y: Int) -> Int {
+pub fn int_euclidean_modulo(x: Int, y: Int) -> Int {
   case x % y, x, y {
     _, 0, _ -> 0
     _, _, 0 -> 0

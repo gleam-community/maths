@@ -98,8 +98,7 @@ fn float_absolute_value(x: Float) -> Float {
 }
 
 fn float_absolute_difference(a: Float, b: Float) -> Float {
-  a
-  -. b
+  a -. b
   |> float_absolute_value()
 }
 
