@@ -174,7 +174,7 @@ pub fn incomplete_gamma(a: Float, x: Float) -> Result(Float, String) {
     }
 
     False ->
-      "Invlaid input argument: a <= 0 or x < 0. Valid input is a > 0 and x >= 0."
+      "Invalid input argument: a <= 0 or x < 0. Valid input is a > 0 and x >= 0."
       |> Error
   }
 }
