@@ -49,6 +49,7 @@ import gleam/list
 import gleam/pair
 import gleam/set
 import gleam/float
+import gleam/int
 
 /// <div style="text-align: right;">
 ///     <a href="https://github.com/gleam-community/maths/issues">
@@ -675,4 +676,38 @@ pub fn tversky_index(
       |> Error
     }
   }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+/// 
+/// 
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths/metrics
+///
+///     pub fn example () {
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn overlap_coefficient(aset: set.Set(a), bset: set.Set(a)) -> Float {
+  let intersection: Float =
+    set.intersection(aset, bset)
+    |> set.size()
+    |> conversion.int_to_float()
+  let minsize: Float =
+    piecewise.minimum(set.size(aset), set.size(bset), int.compare)
+    |> conversion.int_to_float()
+  intersection /. minsize
 }

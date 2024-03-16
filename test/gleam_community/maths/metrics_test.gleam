@@ -234,3 +234,25 @@ pub fn example_jaccard_index_test() {
   metrics.jaccard_index(set_e, set_f)
   |> should.equal(1.0 /. 7.0)
 }
+
+pub fn example_overlap_coefficient_test() {
+  metrics.overlap_coefficient(set.from_list([]), set.from_list([]))
+  |> should.equal(0.0)
+
+  let set_a: set.Set(Int) = set.from_list([0, 1, 2, 5, 6, 8, 9])
+  let set_b: set.Set(Int) = set.from_list([0, 2, 3, 4, 5, 7, 9])
+  metrics.overlap_coefficient(set_a, set_b)
+  |> should.equal(4.0 /. 7.0)
+
+  let set_c: set.Set(Int) = set.from_list([0, 1, 2, 3, 4, 5])
+  let set_d: set.Set(Int) = set.from_list([6, 7, 8, 9, 10])
+  metrics.overlap_coefficient(set_c, set_d)
+  |> should.equal(0.0 /. 5.0)
+
+  let set_e: set.Set(String) =
+    set.from_list(["cat", "dog", "hippo", "monkey", "rhino"])
+  let set_f: set.Set(String) =
+    set.from_list(["monkey", "rhino", "ostrich", "salmon"])
+  metrics.overlap_coefficient(set_e, set_f)
+  |> should.equal(2.0 /. 4.0)
+}
