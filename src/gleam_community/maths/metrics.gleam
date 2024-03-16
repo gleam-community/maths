@@ -30,6 +30,9 @@
 ////   * [`manhatten_distance`](#float_manhatten_distance)
 ////   * [`minkowski_distance`](#minkowski_distance)
 ////   * [`euclidean_distance`](#euclidean_distance)
+////   * [`jaccard_index`](#jaccard_index)
+////   * [`sorensen_dice_coefficient`](#sorensen_dice_coefficient)
+////   * [`tversky_index`](#tversky_index)
 //// * **Basic statistical measures**
 ////   * [`mean`](#mean)
 ////   * [`median`](#median)
@@ -44,6 +47,7 @@ import gleam_community/maths/predicates
 import gleam_community/maths/conversion
 import gleam/list
 import gleam/pair
+import gleam/set
 import gleam/float
 
 /// <div style="text-align: right;">
@@ -292,7 +296,7 @@ pub fn euclidean_distance(
 }
 
 /// <div style="text-align: right;">
-///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
+///     <a href="https://github.com/gleam-community/maths/issues">
 ///         <small>Spot a typo? Open an issue!</small>
 ///     </a>
 /// </div>
@@ -347,7 +351,7 @@ pub fn mean(arr: List(Float)) -> Result(Float, String) {
 }
 
 /// <div style="text-align: right;">
-///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
+///     <a href="https://github.com/gleam-community/maths/issues">
 ///         <small>Spot a typo? Open an issue!</small>
 ///     </a>
 /// </div>
@@ -414,7 +418,7 @@ pub fn median(arr: List(Float)) -> Result(Float, String) {
 }
 
 /// <div style="text-align: right;">
-///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
+///     <a href="https://github.com/gleam-community/maths/issues">
 ///         <small>Spot a typo? Open an issue!</small>
 ///     </a>
 /// </div>
@@ -490,7 +494,7 @@ pub fn variance(arr: List(Float), ddof: Int) -> Result(Float, String) {
 }
 
 /// <div style="text-align: right;">
-///     <a href="https://github.com/nicklasxyz/gleam_stats/issues">
+///     <a href="https://github.com/gleam-community/maths/issues">
 ///         <small>Spot a typo? Open an issue!</small>
 ///     </a>
 /// </div>
@@ -553,5 +557,122 @@ pub fn standard_deviation(arr: List(Float), ddof: Int) -> Result(Float, String) 
           |> Ok
         }
       }
+  }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths/metrics
+///
+///     pub fn example () {
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn jaccard_index(aset: set.Set(a), bset: set.Set(a)) -> Float {
+  let assert Ok(result) = tversky_index(aset, bset, 1.0, 1.0)
+  result
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths/metrics
+///
+///     pub fn example () {
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn sorensen_dice_coefficient(aset: set.Set(a), bset: set.Set(a)) -> Float {
+  let assert Ok(result) = tversky_index(aset, bset, 0.5, 0.5)
+  result
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+/// 
+/// The Tversky index is a generalization of the Sørensen–Dice coefficient and the Jaccard index. 
+/// 
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths/metrics
+///
+///     pub fn example () {
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn tversky_index(
+  aset: set.Set(a),
+  bset: set.Set(a),
+  alpha: Float,
+  beta: Float,
+) -> Result(Float, String) {
+  case alpha >=. 0.0, beta >=. 0.0 {
+    True, True -> {
+      let intersection: Float =
+        set.intersection(aset, bset)
+        |> set.size()
+        |> conversion.int_to_float()
+      let difference1: Float =
+        set.difference(aset, bset)
+        |> set.size()
+        |> conversion.int_to_float()
+      let difference2: Float =
+        set.difference(bset, aset)
+        |> set.size()
+        |> conversion.int_to_float()
+      intersection
+      /. { intersection +. alpha *. difference1 +. beta *. difference2 }
+      |> Ok
+    }
+    False, True -> {
+      "Invalid input argument: alpha < 0. Valid input is alpha >= 0."
+      |> Error
+    }
+    True, False -> {
+      "Invalid input argument: beta < 0. Valid input is beta >= 0."
+      |> Error
+    }
+    _, _ -> {
+      "Invalid input argument: alpha < 0 and beta < 0. Valid input is alpha >= 0 and beta >= 0."
+      |> Error
+    }
   }
 }

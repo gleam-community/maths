@@ -2,6 +2,7 @@ import gleam_community/maths/elementary
 import gleam_community/maths/metrics
 import gleam_community/maths/predicates
 import gleeunit/should
+import gleam/set
 
 pub fn float_list_norm_test() {
   let assert Ok(tol) = elementary.power(-10.0, -6.0)
@@ -211,4 +212,25 @@ pub fn example_standard_deviation_test() {
   [1.0, 2.0, 3.0]
   |> metrics.standard_deviation(ddof)
   |> should.equal(Ok(1.0))
+}
+
+pub fn example_jaccard_index_test() {
+  metrics.jaccard_index(set.from_list([]), set.from_list([]))
+  |> should.equal(0.0)
+
+  let set_a: set.Set(Int) = set.from_list([0, 1, 2, 5, 6, 8, 9])
+  let set_b: set.Set(Int) = set.from_list([0, 2, 3, 4, 5, 7, 9])
+  metrics.jaccard_index(set_a, set_b)
+  |> should.equal(4.0 /. 10.0)
+
+  let set_c: set.Set(Int) = set.from_list([0, 1, 2, 3, 4, 5])
+  let set_d: set.Set(Int) = set.from_list([6, 7, 8, 9, 10])
+  metrics.jaccard_index(set_c, set_d)
+  |> should.equal(0.0 /. 11.0)
+
+  let set_e: set.Set(String) = set.from_list(["cat", "dog", "hippo", "monkey"])
+  let set_f: set.Set(String) =
+    set.from_list(["monkey", "rhino", "ostrich", "salmon"])
+  metrics.jaccard_index(set_e, set_f)
+  |> should.equal(1.0 /. 7.0)
 }
