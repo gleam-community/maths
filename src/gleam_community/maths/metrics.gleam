@@ -137,7 +137,7 @@ pub fn norm(arr: List(Float), p: Float) -> Float {
 ///       let assert Ok(tol) = elementary.power(-10.0, -6.0)
 ///     
 ///       // Empty lists returns 0.0
-///       metrics.float_manhatten_distance([], [])
+///       metrics.manhatten_distance([], [])
 ///       |> should.equal(Ok(0.0))
 ///     
 ///       // Differing lengths returns error
@@ -567,13 +567,36 @@ pub fn standard_deviation(arr: List(Float), ddof: Int) -> Result(Float, String) 
 ///     </a>
 /// </div>
 ///
+/// The Jaccard index measures similarity between two sets of elements. Mathematically, the Jaccard index 
+/// is defined as:
+/// 
+/// \\[
+/// \text{JI}(X, Y) = \frac{|X \cap Y|}{|X \cup Y|} \in \left[0, 1\right]
+/// \\]
+/// 
+/// where:
+///
+/// - $$X$$ and $$Y$$ are two sets being compared,
+/// - $$|X \cap Y|$$ represents the size of the intersection of the two sets
+/// - $$|X \cup Y|$$ denotes the size of the union of the two sets
+/// 
+/// The value of the Jaccard index ranges from 0 to 1, where 0 indicates that the two sets share no elements
+/// and 1 indicates that the sets are identical. The Jaccard index is a special case of the 
+/// [Tversky index](#tversky_index) (with $$\alpha=\beta=1$$).
+/// 
 /// <details>
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
 ///     import gleam_community/maths/metrics
+///     import gleam/set
 ///
 ///     pub fn example () {
+///       let xset: set.Set(String) = set.from_list(["cat", "dog", "hippo", "monkey"])
+///       let yset: set.Set(String) =
+///         set.from_list(["monkey", "rhino", "ostrich", "salmon"])
+///       metrics.jaccard_index(xset, yset)
+///       |> should.equal(1.0 /. 7.0)
 ///     }
 /// </details>
 ///
@@ -583,8 +606,8 @@ pub fn standard_deviation(arr: List(Float), ddof: Int) -> Result(Float, String) 
 ///     </a>
 /// </div>
 ///
-pub fn jaccard_index(aset: set.Set(a), bset: set.Set(a)) -> Float {
-  let assert Ok(result) = tversky_index(aset, bset, 1.0, 1.0)
+pub fn jaccard_index(xset: set.Set(a), yset: set.Set(a)) -> Float {
+  let assert Ok(result) = tversky_index(xset, yset, 1.0, 1.0)
   result
 }
 
@@ -594,13 +617,36 @@ pub fn jaccard_index(aset: set.Set(a), bset: set.Set(a)) -> Float {
 ///     </a>
 /// </div>
 ///
+/// The Sørensen-Dice coefficient measures the similarity between two sets of elements. Mathematically, the 
+/// coefficient is defined as:
+/// 
+/// \\[
+/// \text{DSC}(X, Y) = \frac{2 \times |X \cap Y|}{|X| + |Y|} \in \left[0, 1\right]
+/// \\]
+/// 
+/// where:
+/// - $$X$$ and $$Y$$ are two sets being compared
+/// - $$|X \cap Y|$$ is the size of the intersection of the two sets (i.e., the number of elements common to both sets)
+/// - $$|X|$$ and $$|Y|$$ are the sizes of the sets $$X$$ and $$Y$$, respectively
+/// 
+/// The coefficient ranges from 0 to 1, where 0 indicates no similarity (the sets share no elements) and 1 
+/// indicates perfect similarity (the sets are identical). The higher the coefficient, the greater the similarity 
+/// between the two sets. The Sørensen-Dice coefficient is a special case of the 
+/// [Tversky index](#tversky_index) (with $$\alpha=\beta=0.5$$).
+/// 
 /// <details>
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
 ///     import gleam_community/maths/metrics
+///     import gleam/set
 ///
 ///     pub fn example () {
+///       let xset: set.Set(String) = set.from_list(["cat", "dog", "hippo", "monkey"])
+///       let yset: set.Set(String) =
+///         set.from_list(["monkey", "rhino", "ostrich", "salmon", "spider"])
+///       metrics.sorensen_dice_coefficient(xset, yset)
+///       |> should.equal(2.0 *. 1.0 /. { 4.0 +. 5.0 })
 ///     }
 /// </details>
 ///
@@ -610,8 +656,8 @@ pub fn jaccard_index(aset: set.Set(a), bset: set.Set(a)) -> Float {
 ///     </a>
 /// </div>
 ///
-pub fn sorensen_dice_coefficient(aset: set.Set(a), bset: set.Set(a)) -> Float {
-  let assert Ok(result) = tversky_index(aset, bset, 0.5, 0.5)
+pub fn sorensen_dice_coefficient(xset: set.Set(a), yset: set.Set(a)) -> Float {
+  let assert Ok(result) = tversky_index(xset, yset, 0.5, 0.5)
   result
 }
 
@@ -621,15 +667,39 @@ pub fn sorensen_dice_coefficient(aset: set.Set(a), bset: set.Set(a)) -> Float {
 ///     </a>
 /// </div>
 /// 
-/// The Tversky index is a generalization of the Sørensen–Dice coefficient and the Jaccard index. 
+/// The Tversky index is a generalization of the Jaccard index and Sørensen-Dice coefficient, which adds 
+/// flexibility through two parameters, $$\alpha$$ and $$\beta$$, allowing for asymmetric similarity 
+/// measures between sets. The Tversky index is defined as:
 /// 
+/// \\[
+/// \text{TI}(X, Y) = \frac{|X \cap Y|}{|X \cap Y| + \alpha|X - Y| + \beta|Y - X|}
+/// \\]
+/// 
+/// where:
+/// 
+/// - $$X$$ and $$Y$$ are the sets being compared
+/// - $$|X - Y|$$ and $$|Y - X|$$ are the sizes of the relative complements of $$Y$$ in $$X$$ and $$X$$ in $$Y$$, respectively,
+/// - $$\alpha$$ and $$\beta$$ are parameters that weigh the relative importance of the elements unique to $$X$$ and $$Y$$
+/// 
+/// The Tversky index reduces to the Jaccard index when \(\alpha = \beta = 1\) and to the Sorensen-Dice 
+/// coefficient when \(\alpha = \beta = 0.5\). In general, the Tversky index can take on any non-negative value, including 0.
+/// The index equals 0 when there is no intersection between the two sets, indicating no similarity. However, unlike similarity
+/// measures bounded strictly between 0 and 1, the Tversky index does not have a strict upper limit of 1 when $$\alpha \neq \beta$$.
+///  
 /// <details>
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
 ///     import gleam_community/maths/metrics
+///     import gleam/set
 ///
 ///     pub fn example () {
+///       let yset: set.Set(String) = set.from_list(["cat", "dog", "hippo", "monkey"])
+///       let xset: set.Set(String) =
+///         set.from_list(["monkey", "rhino", "ostrich", "salmon"])
+///       // Test Jaccard index (alpha = beta = 1)
+///       metrics.tversky_index(xset, yset, 1.0, 1.0)
+///       |> should.equal(1.0 /. 7.0)
 ///     }
 /// </details>
 ///
@@ -640,23 +710,23 @@ pub fn sorensen_dice_coefficient(aset: set.Set(a), bset: set.Set(a)) -> Float {
 /// </div>
 ///
 pub fn tversky_index(
-  aset: set.Set(a),
-  bset: set.Set(a),
+  xset: set.Set(a),
+  yset: set.Set(a),
   alpha: Float,
   beta: Float,
 ) -> Result(Float, String) {
   case alpha >=. 0.0, beta >=. 0.0 {
     True, True -> {
       let intersection: Float =
-        set.intersection(aset, bset)
+        set.intersection(xset, yset)
         |> set.size()
         |> conversion.int_to_float()
       let difference1: Float =
-        set.difference(aset, bset)
+        set.difference(xset, yset)
         |> set.size()
         |> conversion.int_to_float()
       let difference2: Float =
-        set.difference(bset, aset)
+        set.difference(yset, xset)
         |> set.size()
         |> conversion.int_to_float()
       intersection
@@ -684,14 +754,39 @@ pub fn tversky_index(
 ///     </a>
 /// </div>
 /// 
-/// 
+/// The Overlap coefficient, also known as the Szymkiewicz–Simpson coefficient, is a measure of 
+/// similarity between two sets that focuses on the size of the intersection relative to the 
+/// smaller of the two sets. It is defined mathematically as:
+///
+/// \\[
+/// \text{OC}(X, Y) = \frac{|X \cap Y|}{\min(|X|, |Y|)} \in \left[0, 1\right]
+/// \\]
+///
+/// where:
+///
+/// - $$X$$ and $$Y$$ are the sets being compared
+/// - $$|X \cap Y|$$ is the size of the intersection of the sets
+/// - $$\min(|X|, |Y|)$$ is the size of the smaller set among $$X$$ and $$Y$$
+///
+/// The coefficient ranges from 0 to 1, where 0 indicates no overlap and 1 indicates that the 
+/// smaller set is a suyset of the larger set. This measure is especially useful in situations
+/// where the similarity in terms of the proportion of overlap is more relevant than the 
+/// difference in sizes between the two sets.
+///
 /// <details>
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
 ///     import gleam_community/maths/metrics
+///     import gleam/set
 ///
 ///     pub fn example () {
+///       let set_a: set.Set(String) =
+///         set.from_list(["horse", "dog", "hippo", "monkey", "bird"])
+///       let set_b: set.Set(String) =
+///         set.from_list(["monkey", "bird", "ostrich", "salmon"])
+///       metrics.overlap_coefficient(set_a, set_b)
+///       |> should.equal(2.0 /. 4.0)
 ///     }
 /// </details>
 ///
@@ -701,13 +796,92 @@ pub fn tversky_index(
 ///     </a>
 /// </div>
 ///
-pub fn overlap_coefficient(aset: set.Set(a), bset: set.Set(a)) -> Float {
+pub fn overlap_coefficient(xset: set.Set(a), yset: set.Set(a)) -> Float {
   let intersection: Float =
-    set.intersection(aset, bset)
+    set.intersection(xset, yset)
     |> set.size()
     |> conversion.int_to_float()
   let minsize: Float =
-    piecewise.minimum(set.size(aset), set.size(bset), int.compare)
+    piecewise.minimum(set.size(xset), set.size(yset), int.compare)
     |> conversion.int_to_float()
   intersection /. minsize
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+/// 
+/// Calculate the cosine similarity between two lists (representing vectors):
+///
+/// \\[
+/// \frac{\sum_{i=1}^n x_i \cdot y_i}{\left(\sum_{i=1}^n x_i^2\right)^{\frac{1}{2}} \cdot \left(\sum_{i=1}^n y_i^2\right)^{\frac{1}{2}}}
+/// \\]
+///
+/// In the formula, $n$ is the length of the two lists and $x_i, y_i$ are the values in the respective input lists indexed by $i$. The numerator
+/// represents the dot product of the two vectors, while the denominator is the product of the magnitudes (Euclidean norms) of the two vectors. 
+/// The cosine similarity provides a value between -1 and 1, where 1 means the vectors are in the same direction, -1 means they are in exactly 
+/// opposite directions, and 0 indicates orthogonality. 
+/// 
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths/metrics
+///
+///     pub fn example () {
+///       // Two orthogonal vectors
+///       metrics.cosine_similarity([-1.0, 1.0, 0.0], [1.0, 1.0, -1.0])
+///       |> should.equal(Ok(0.0))
+///     
+///       // Two identical (parallel) vectors
+///       metrics.cosine_similarity([1.0, 2.0, 3.0], [1.0, 2.0, 3.0])
+///       |> should.equal(Ok(1.0))
+///     
+///       // Two parallel, but oppositely oriented vectors
+///       metrics.cosine_similarity([-1.0, -2.0, -3.0], [1.0, 2.0, 3.0])
+///       |> should.equal(Ok(-1.0))
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn cosine_similarity(
+  xarr: List(Float),
+  yarr: List(Float),
+) -> Result(Float, String) {
+  let xlen: Int = list.length(xarr)
+  let ylen: Int = list.length(yarr)
+  case xarr, yarr {
+    [], _ ->
+      "Invalid input argument: The list xarr is empty."
+      |> Error
+    _, [] ->
+      "Invalid input argument: The list yarr is empty."
+      |> Error
+    _, _ -> {
+      case xlen == ylen {
+        False ->
+          "Invalid input argument: length(xarr) != length(yarr). Valid input is when length(xarr) == length(yarr)."
+          |> Error
+        True -> {
+          list.fold(
+            list.zip(xarr, yarr),
+            0.0,
+            fn(acc: Float, a: #(Float, Float)) -> Float {
+              let result: Float = pair.first(a) *. pair.second(a)
+              result +. acc
+            },
+          )
+          /. { norm(xarr, 2.0) *. norm(yarr, 2.0) }
+          |> Ok
+        }
+      }
+    }
+  }
 }

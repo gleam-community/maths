@@ -235,6 +235,27 @@ pub fn example_jaccard_index_test() {
   |> should.equal(1.0 /. 7.0)
 }
 
+pub fn example_sorensen_dice_coefficient_test() {
+  metrics.sorensen_dice_coefficient(set.from_list([]), set.from_list([]))
+  |> should.equal(0.0)
+
+  let set_a: set.Set(Int) = set.from_list([0, 1, 2, 5, 6, 8, 9])
+  let set_b: set.Set(Int) = set.from_list([0, 2, 3, 4, 5, 7, 9])
+  metrics.sorensen_dice_coefficient(set_a, set_b)
+  |> should.equal(2.0 *. 4.0 /. { 7.0 +. 7.0 })
+
+  let set_c: set.Set(Int) = set.from_list([0, 1, 2, 3, 4, 5])
+  let set_d: set.Set(Int) = set.from_list([6, 7, 8, 9, 10])
+  metrics.sorensen_dice_coefficient(set_c, set_d)
+  |> should.equal(2.0 *. 0.0 /. { 6.0 +. 5.0 })
+
+  let set_e: set.Set(String) = set.from_list(["cat", "dog", "hippo", "monkey"])
+  let set_f: set.Set(String) =
+    set.from_list(["monkey", "rhino", "ostrich", "salmon", "spider"])
+  metrics.sorensen_dice_coefficient(set_e, set_f)
+  |> should.equal(2.0 *. 1.0 /. { 4.0 +. 5.0 })
+}
+
 pub fn example_overlap_coefficient_test() {
   metrics.overlap_coefficient(set.from_list([]), set.from_list([]))
   |> should.equal(0.0)
@@ -250,9 +271,39 @@ pub fn example_overlap_coefficient_test() {
   |> should.equal(0.0 /. 5.0)
 
   let set_e: set.Set(String) =
-    set.from_list(["cat", "dog", "hippo", "monkey", "rhino"])
+    set.from_list(["horse", "dog", "hippo", "monkey", "bird"])
   let set_f: set.Set(String) =
-    set.from_list(["monkey", "rhino", "ostrich", "salmon"])
+    set.from_list(["monkey", "bird", "ostrich", "salmon"])
   metrics.overlap_coefficient(set_e, set_f)
   |> should.equal(2.0 /. 4.0)
+}
+
+pub fn example_cosine_similarity_test() {
+  // Empty lists returns an error
+  metrics.cosine_similarity([], [])
+  |> should.be_error()
+
+  // One empty list returns an error
+  metrics.cosine_similarity([1.0, 2.0, 3.0], [])
+  |> should.be_error()
+
+  // One empty list returns an error
+  metrics.cosine_similarity([], [1.0, 2.0, 3.0])
+  |> should.be_error()
+
+  // Differen sized lists returns an error
+  metrics.cosine_similarity([1.0, 2.0], [1.0, 2.0, 3.0, 4.0])
+  |> should.be_error()
+
+  // Two orthogonal vectors (represented by lists)
+  metrics.cosine_similarity([-1.0, 1.0, 0.0], [1.0, 1.0, -1.0])
+  |> should.equal(Ok(0.0))
+
+  // Two identical (parallel) vectors (represented by lists)
+  metrics.cosine_similarity([1.0, 2.0, 3.0], [1.0, 2.0, 3.0])
+  |> should.equal(Ok(1.0))
+
+  // Two parallel, but oppositely oriented vectors (represented by lists)
+  metrics.cosine_similarity([-1.0, -2.0, -3.0], [1.0, 2.0, 3.0])
+  |> should.equal(Ok(-1.0))
 }
