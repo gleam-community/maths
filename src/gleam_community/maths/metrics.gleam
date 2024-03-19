@@ -25,14 +25,17 @@
 //// 
 //// Metrics: A module offering functions for calculating distances and other types of metrics.
 //// 
-//// * **Distances**
+//// * **Distance measures**
 ////   * [`norm`](#norm)
-////   * [`manhatten_distance`](#float_manhatten_distance)
+////   * [`manhatten_distance`](#manhatten_distance)
 ////   * [`minkowski_distance`](#minkowski_distance)
 ////   * [`euclidean_distance`](#euclidean_distance)
+////   * [`cosine_similarity`](#cosine_similarity)
+//// * **Set & string similarity measures**
 ////   * [`jaccard_index`](#jaccard_index)
 ////   * [`sorensen_dice_coefficient`](#sorensen_dice_coefficient)
 ////   * [`tversky_index`](#tversky_index)
+////   * [`overlap_coefficient`](#overlap_coefficient)
 //// * **Basic statistical measures**
 ////   * [`mean`](#mean)
 ////   * [`median`](#median)
@@ -571,7 +574,7 @@ pub fn standard_deviation(arr: List(Float), ddof: Int) -> Result(Float, String) 
 /// is defined as:
 /// 
 /// \\[
-/// \text{JI}(X, Y) = \frac{|X \cap Y|}{|X \cup Y|} \in \left[0, 1\right]
+/// \frac{|X \cap Y|}{|X \cup Y|} \\; \in \\; \left[0, 1\right]
 /// \\]
 /// 
 /// where:
@@ -621,7 +624,7 @@ pub fn jaccard_index(xset: set.Set(a), yset: set.Set(a)) -> Float {
 /// coefficient is defined as:
 /// 
 /// \\[
-/// \text{DSC}(X, Y) = \frac{2 \times |X \cap Y|}{|X| + |Y|} \in \left[0, 1\right]
+/// \frac{2 |X \cap Y|}{|X| + |Y|} \\; \in \\; \left[0, 1\right]
 /// \\]
 /// 
 /// where:
@@ -672,7 +675,7 @@ pub fn sorensen_dice_coefficient(xset: set.Set(a), yset: set.Set(a)) -> Float {
 /// measures between sets. The Tversky index is defined as:
 /// 
 /// \\[
-/// \text{TI}(X, Y) = \frac{|X \cap Y|}{|X \cap Y| + \alpha|X - Y| + \beta|Y - X|}
+/// \frac{|X \cap Y|}{|X \cap Y| + \alpha|X - Y| + \beta|Y - X|}
 /// \\]
 /// 
 /// where:
@@ -759,7 +762,7 @@ pub fn tversky_index(
 /// smaller of the two sets. It is defined mathematically as:
 ///
 /// \\[
-/// \text{OC}(X, Y) = \frac{|X \cap Y|}{\min(|X|, |Y|)} \in \left[0, 1\right]
+/// \frac{|X \cap Y|}{\min(|X|, |Y|)} \\; \in \\; \left[0, 1\right]
 /// \\]
 ///
 /// where:
@@ -816,13 +819,13 @@ pub fn overlap_coefficient(xset: set.Set(a), yset: set.Set(a)) -> Float {
 /// Calculate the cosine similarity between two lists (representing vectors):
 ///
 /// \\[
-/// \frac{\sum_{i=1}^n x_i \cdot y_i}{\left(\sum_{i=1}^n x_i^2\right)^{\frac{1}{2}} \cdot \left(\sum_{i=1}^n y_i^2\right)^{\frac{1}{2}}}
+/// \frac{\sum_{i=1}^n x_i \cdot y_i}{\left(\sum_{i=1}^n x_i^2\right)^{\frac{1}{2}} \cdot \left(\sum_{i=1}^n y_i^2\right)^{\frac{1}{2}}} \\; \in \\; \left[-1, 1\right]
 /// \\]
 ///
-/// In the formula, $n$ is the length of the two lists and $x_i, y_i$ are the values in the respective input lists indexed by $i$. The numerator
-/// represents the dot product of the two vectors, while the denominator is the product of the magnitudes (Euclidean norms) of the two vectors. 
-/// The cosine similarity provides a value between -1 and 1, where 1 means the vectors are in the same direction, -1 means they are in exactly 
-/// opposite directions, and 0 indicates orthogonality. 
+/// In the formula, $$n$$ is the length of the two lists and $$x_i$$, $$y_i$$ are the values in the respective input lists indexed by $$i$$. 
+/// The numerator represents the dot product of the two vectors, while the denominator is the product of the magnitudes (Euclidean norms) of 
+/// the two vectors. The cosine similarity provides a value between -1 and 1, where 1 means the vectors are in the same direction, -1 means 
+/// they are in exactly opposite directions, and 0 indicates orthogonality. 
 /// 
 /// <details>
 ///     <summary>Example:</summary>
