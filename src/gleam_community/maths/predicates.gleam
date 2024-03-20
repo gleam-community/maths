@@ -33,6 +33,7 @@
 ////   * [`is_perfect`](#is_perfect)
 ////   * [`is_even`](#is_even)
 ////   * [`is_odd`](#is_odd)
+////   * [`is_prime`](#is_prime)
 
 import gleam/pair
 import gleam/int
