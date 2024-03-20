@@ -136,3 +136,37 @@ pub fn int_is_perfect_test() {
   predicates.is_perfect(13)
   |> should.equal(False)
 }
+
+pub fn int_is_prime_test() {
+  predicates.is_prime(1)
+  |> should.equal(False)
+
+  predicates.is_prime(2)
+  |> should.equal(True)
+
+  predicates.is_prime(3)
+  |> should.equal(True)
+
+  predicates.is_prime(5)
+  |> should.equal(True)
+
+  predicates.is_prime(7)
+  |> should.equal(True)
+
+  predicates.is_prime(11)
+  |> should.equal(True)
+
+  predicates.is_prime(42)
+  |> should.equal(False)
+
+  predicates.is_prime(7919)
+  |> should.equal(True)
+
+  // Test 1st Carmichael number
+  predicates.is_prime(561)
+  |> should.equal(False)
+
+  // Test 2nd Carmichael number
+  predicates.is_prime(1105)
+  |> should.equal(False)
+}
