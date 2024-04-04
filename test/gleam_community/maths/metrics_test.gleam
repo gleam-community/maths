@@ -53,9 +53,9 @@ pub fn float_list_norm_test() {
 pub fn float_list_manhatten_test() {
   let assert Ok(tol) = elementary.power(-10.0, -6.0)
 
-  // Empty lists returns 0.0
+  // Empty lists returns an error
   metrics.manhatten_distance([], [])
-  |> should.equal(Ok(0.0))
+  |> should.be_error()
 
   // Differing lengths returns error
   metrics.manhatten_distance([], [1.0])
@@ -85,9 +85,9 @@ pub fn float_list_manhatten_test() {
 pub fn float_list_minkowski_test() {
   let assert Ok(tol) = elementary.power(-10.0, -6.0)
 
-  // Empty lists returns 0.0
+  // Empty lists returns an error
   metrics.minkowski_distance([], [], 1.0)
-  |> should.equal(Ok(0.0))
+  |> should.be_error()
 
   // Differing lengths returns error
   metrics.minkowski_distance([], [1.0], 1.0)
@@ -141,9 +141,9 @@ pub fn float_list_minkowski_test() {
 pub fn float_list_euclidean_test() {
   let assert Ok(tol) = elementary.power(-10.0, -6.0)
 
-  // Empty lists returns 0.0
+  // Empty lists returns an error
   metrics.euclidean_distance([], [])
-  |> should.equal(Ok(0.0))
+  |> should.be_error()
 
   // Differing lengths returns error
   metrics.euclidean_distance([], [1.0])
@@ -291,7 +291,7 @@ pub fn example_cosine_similarity_test() {
   metrics.cosine_similarity([], [1.0, 2.0, 3.0])
   |> should.be_error()
 
-  // Differen sized lists returns an error
+  // Different sized lists returns an error
   metrics.cosine_similarity([1.0, 2.0], [1.0, 2.0, 3.0, 4.0])
   |> should.be_error()
 
@@ -306,4 +306,35 @@ pub fn example_cosine_similarity_test() {
   // Two parallel, but oppositely oriented vectors (represented by lists)
   metrics.cosine_similarity([-1.0, -2.0, -3.0], [1.0, 2.0, 3.0])
   |> should.equal(Ok(-1.0))
+}
+
+pub fn example_chebyshev_distance() {
+  // Empty lists returns an error
+  metrics.chebyshev_distance([], [])
+  |> should.be_error()
+
+  // One empty list returns an error
+  metrics.chebyshev_distance([1.0, 2.0, 3.0], [])
+  |> should.be_error()
+
+  // One empty list returns an error
+  metrics.chebyshev_distance([], [1.0, 2.0, 3.0])
+  |> should.be_error()
+
+  // Different sized lists returns an error
+  metrics.chebyshev_distance([1.0, 2.0], [1.0, 2.0, 3.0, 4.0])
+  |> should.be_error()
+
+  // Try different types of valid input
+  metrics.chebyshev_distance([1.0, 0.0], [0.0, 2.0])
+  |> should.equal(Ok(2.0))
+
+  metrics.chebyshev_distance([1.0, 0.0], [2.0, 0.0])
+  |> should.equal(Ok(3.0))
+
+  metrics.chebyshev_distance([-5.0, -10.0, -3.0], [-1.0, -12.0, -3.0])
+  |> should.equal(Ok(4.0))
+
+  metrics.chebyshev_distance([1.0, 2.0, 3.0], [1.0, 2.0, 3.0])
+  |> should.equal(Ok(0.0))
 }

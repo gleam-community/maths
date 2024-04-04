@@ -138,6 +138,10 @@ pub fn int_is_perfect_test() {
 }
 
 pub fn int_is_prime_test() {
+  // Test a negative integer, i.e., not a natural number
+  predicates.is_prime(-7)
+  |> should.equal(False)
+
   predicates.is_prime(1)
   |> should.equal(False)
 

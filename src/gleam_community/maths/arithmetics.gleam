@@ -289,7 +289,7 @@ pub fn proper_divisors(n: Int) -> List(Int) {
 ///     </a>
 /// </div>
 ///
-/// Calculcate the sum of the elements in a list:
+/// Calculate the sum of the elements in a list:
 ///
 /// \\[
 /// \sum_{i=1}^n x_i
@@ -337,7 +337,7 @@ pub fn float_sum(arr: List(Float)) -> Float {
 ///     </a>
 /// </div>
 ///
-/// Calculcate the sum of the elements in a list:
+/// Calculate the sum of the elements in a list:
 ///
 /// \\[
 /// \sum_{i=1}^n x_i
@@ -385,7 +385,7 @@ pub fn int_sum(arr: List(Int)) -> Int {
 ///     </a>
 /// </div>
 ///
-/// Calculcate the product of the elements in a list:
+/// Calculate the product of the elements in a list:
 ///
 /// \\[
 /// \prod_{i=1}^n x_i
@@ -433,7 +433,7 @@ pub fn float_product(arr: List(Float)) -> Float {
 ///     </a>
 /// </div>
 ///
-/// Calculcate the product of the elements in a list:
+/// Calculate the product of the elements in a list:
 ///
 /// \\[
 /// \prod_{i=1}^n x_i
@@ -481,7 +481,7 @@ pub fn int_product(arr: List(Int)) -> Int {
 ///     </a>
 /// </div>
 ///
-/// Calculcate the cumulative sum of the elements in a list:
+/// Calculate the cumulative sum of the elements in a list:
 ///
 /// \\[
 /// v_j = \sum_{i=1}^j x_i \\;\\; \forall j = 1,\dots, n
@@ -530,7 +530,7 @@ pub fn float_cumulative_sum(arr: List(Float)) -> List(Float) {
 ///     </a>
 /// </div>
 ///
-/// Calculcate the cumulative sum of the elements in a list:
+/// Calculate the cumulative sum of the elements in a list:
 ///
 /// \\[
 /// v_j = \sum_{i=1}^j x_i \\;\\; \forall j = 1,\dots, n
@@ -579,7 +579,7 @@ pub fn int_cumulative_sum(arr: List(Int)) -> List(Int) {
 ///     </a>
 /// </div>
 ///
-/// Calculcate the cumulative product of the elements in a list:
+/// Calculate the cumulative product of the elements in a list:
 ///
 /// \\[
 /// v_j = \prod_{i=1}^j x_i \\;\\; \forall j = 1,\dots, n
@@ -629,7 +629,7 @@ pub fn float_cumumlative_product(arr: List(Float)) -> List(Float) {
 ///     </a>
 /// </div>
 ///
-/// Calculcate the cumulative product of the elements in a list:
+/// Calculate the cumulative product of the elements in a list:
 ///
 /// \\[
 /// v_j = \prod_{i=1}^j x_i \\;\\; \forall j = 1,\dots, n

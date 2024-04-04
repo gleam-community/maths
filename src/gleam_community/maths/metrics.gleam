@@ -28,8 +28,9 @@
 //// * **Distance measures**
 ////   * [`norm`](#norm)
 ////   * [`manhatten_distance`](#manhatten_distance)
-////   * [`minkowski_distance`](#minkowski_distance)
 ////   * [`euclidean_distance`](#euclidean_distance)
+////   * [`chebyshev_distance`](#chebyshev_distance)
+////   * [`minkowski_distance`](#minkowski_distance)
 ////   * [`cosine_similarity`](#cosine_similarity)
 //// * **Set & string similarity measures**
 ////   * [`jaccard_index`](#jaccard_index)
@@ -60,7 +61,7 @@ import gleam/int
 ///     </a>
 /// </div>
 ///
-/// Calculcate the $$p$$-norm of a list (representing a vector):
+/// Calculate the $$p$$-norm of a list (representing a vector):
 ///
 /// \\[
 /// \left( \sum_{i=1}^n \left|x_i\right|^{p} \right)^{\frac{1}{p}}
@@ -120,13 +121,13 @@ pub fn norm(arr: List(Float), p: Float) -> Float {
 ///     </a>
 /// </div>
 ///
-/// Calculcate the Manhatten distance between two lists (representing vectors):
+/// Calculate the Manhatten distance between two lists (representing vectors):
 ///
 /// \\[
 /// \sum_{i=1}^n \left|x_i - y_i \right|
 /// \\]
 ///
-/// In the formula, $$n$$ is the length of the two lists and $$x_i, y_i$$ are the values in the respective input lists indexed by $$i, j$$.
+/// In the formula, $$n$$ is the length of the two lists and $$x_i, y_i$$ are the values in the respective input lists indexed by $$i$$.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -139,9 +140,9 @@ pub fn norm(arr: List(Float), p: Float) -> Float {
 ///     pub fn example () {
 ///       let assert Ok(tol) = elementary.power(-10.0, -6.0)
 ///     
-///       // Empty lists returns 0.0
+///       // Empty lists returns an error
 ///       metrics.manhatten_distance([], [])
-///       |> should.equal(Ok(0.0))
+///       |> should.be_error()
 ///     
 ///       // Differing lengths returns error
 ///       metrics.manhatten_distance([], [1.0])
@@ -173,13 +174,13 @@ pub fn manhatten_distance(
 ///     </a>
 /// </div>
 ///
-/// Calculcate the Minkowski distance between two lists (representing vectors):
+/// Calculate the Minkowski distance between two lists (representing vectors):
 ///
 /// \\[
 /// \left( \sum_{i=1}^n \left|x_i - y_i \right|^{p} \right)^{\frac{1}{p}}
 /// \\]
 ///
-/// In the formula, $$p >= 1$$ is the order, $$n$$ is the length of the two lists and $$x_i, y_i$$ are the values in the respective input lists indexed by $$i, j$$.
+/// In the formula, $$p >= 1$$ is the order, $$n$$ is the length of the two lists and $$x_i, y_i$$ are the values in the respective input lists indexed by $$i$$.
 ///
 /// The Minkowski distance is a generalization of both the Euclidean distance ($$p=2$$) and the Manhattan distance ($$p = 1$$).
 ///
@@ -196,7 +197,7 @@ pub fn manhatten_distance(
 ///     
 ///       // Empty lists returns 0.0
 ///       metrics.minkowski_distance([], [], 1.0)
-///       |> should.equal(Ok(0.0))
+///       |> should.be_error()
 ///     
 ///       // Differing lengths returns error
 ///       metrics.minkowski_distance([], [1.0], 1.0)
@@ -224,25 +225,35 @@ pub fn minkowski_distance(
   yarr: List(Float),
   p: Float,
 ) -> Result(Float, String) {
-  let xlen: Int = list.length(xarr)
-  let ylen: Int = list.length(yarr)
-  case xlen == ylen {
-    False ->
-      "Invalid input argument: length(xarr) != length(yarr). Valid input is when length(xarr) == length(yarr)."
+  case xarr, yarr {
+    [], _ ->
+      "Invalid input argument: The list xarr is empty."
       |> Error
-    True ->
-      case p <. 1.0 {
-        True ->
-          "Invalid input argument: p < 1. Valid input is p >= 1."
-          |> Error
+    _, [] ->
+      "Invalid input argument: The list yarr is empty."
+      |> Error
+    _, _ -> {
+      let xlen: Int = list.length(xarr)
+      let ylen: Int = list.length(yarr)
+      case xlen == ylen {
         False ->
-          list.zip(xarr, yarr)
-          |> list.map(fn(tuple: #(Float, Float)) -> Float {
-            pair.first(tuple) -. pair.second(tuple)
-          })
-          |> norm(p)
-          |> Ok
+          "Invalid input argument: length(xarr) != length(yarr). Valid input is when length(xarr) == length(yarr)."
+          |> Error
+        True ->
+          case p <. 1.0 {
+            True ->
+              "Invalid input argument: p < 1. Valid input is p >= 1."
+              |> Error
+            False ->
+              list.zip(xarr, yarr)
+              |> list.map(fn(tuple: #(Float, Float)) -> Float {
+                pair.first(tuple) -. pair.second(tuple)
+              })
+              |> norm(p)
+              |> Ok
+          }
       }
+    }
   }
 }
 
@@ -252,13 +263,13 @@ pub fn minkowski_distance(
 ///     </a>
 /// </div>
 ///
-/// Calculcate the Euclidean distance between two lists (representing vectors):
+/// Calculate the Euclidean distance between two lists (representing vectors):
 ///
 /// \\[
 /// \left( \sum_{i=1}^n \left|x_i - y_i \right|^{2} \right)^{\frac{1}{2}}
 /// \\]
 ///
-/// In the formula, $$n$$ is the length of the two lists and $$x_i, y_i$$ are the values in the respective input lists indexed by $$i, j$$.
+/// In the formula, $$n$$ is the length of the two lists and $$x_i, y_i$$ are the values in the respective input lists indexed by $$i$$.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -273,7 +284,7 @@ pub fn minkowski_distance(
 ///     
 ///       // Empty lists returns 0.0
 ///       metrics.euclidean_distance([], [])
-///       |> should.equal(Ok(0.0))
+///       |> should.be_error()
 ///     
 ///       // Differing lengths returns error
 ///       metrics.euclidean_distance([], [1.0])
@@ -305,7 +316,82 @@ pub fn euclidean_distance(
 ///     </a>
 /// </div>
 ///
-/// Calculcate the arithmetic mean of the elements in a list:
+/// Calculate the Chebyshev distance between two lists (representing vectors):
+///
+/// \\[
+/// \text{max}_{i=1}^n \left|x_i - y_i \right|
+/// \\]
+///
+/// In the formula, $$n$$ is the length of the two lists and $$x_i, y_i$$ are the values in the respective input lists indexed by $$i$$.
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths/elementary
+///     import gleam_community/maths/metrics
+///     import gleam_community/maths/predicates
+///
+///     pub fn example () {
+///       // Empty lists returns an error
+///       metrics.chebyshev_distance([], [])
+///       |> should.be_error()
+///     
+///       // Differing lengths returns error
+///       metrics.chebyshev_distance([], [1.0])
+///       |> should.be_error()
+///     
+///       metrics.chebyshev_distance([-5.0, -10.0, -3.0], [-1.0, -12.0, -3.0])
+///       |> should.equal(Ok(4.0))
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn chebyshev_distance(
+  xarr: List(Float),
+  yarr: List(Float),
+) -> Result(Float, String) {
+  case xarr, yarr {
+    [], _ ->
+      "Invalid input argument: The list xarr is empty."
+      |> Error
+    _, [] ->
+      "Invalid input argument: The list yarr is empty."
+      |> Error
+    _, _ -> {
+      let xlen: Int = list.length(xarr)
+      let ylen: Int = list.length(yarr)
+      case xlen == ylen {
+        False ->
+          "Invalid input argument: length(xarr) != length(yarr). Valid input is when length(xarr) == length(yarr)."
+          |> Error
+        True -> {
+          let differences =
+            list.zip(xarr, yarr)
+            |> list.map(fn(tuple: #(Float, Float)) -> Float {
+              { pair.first(tuple) -. pair.second(tuple) }
+              |> piecewise.float_absolute_value()
+            })
+          differences
+          |> piecewise.list_maximum(float.compare)
+        }
+      }
+    }
+  }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// Calculate the arithmetic mean of the elements in a list:
 ///
 /// \\[
 /// \bar{x} = \frac{1}{n}\sum_{i=1}^n x_i
@@ -360,7 +446,7 @@ pub fn mean(arr: List(Float)) -> Result(Float, String) {
 ///     </a>
 /// </div>
 ///
-/// Calculcate the median of the elements in a list.
+/// Calculate the median of the elements in a list.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -427,7 +513,7 @@ pub fn median(arr: List(Float)) -> Result(Float, String) {
 ///     </a>
 /// </div>
 ///
-/// Calculcate the sample variance of the elements in a list:
+/// Calculate the sample variance of the elements in a list:
 /// \\[
 /// s^{2} = \frac{1}{n - d} \sum_{i=1}^{n}(x_i - \bar{x})
 /// \\]
@@ -503,7 +589,7 @@ pub fn variance(arr: List(Float), ddof: Int) -> Result(Float, String) {
 ///     </a>
 /// </div>
 ///
-/// Calculcate the sample standard deviation of the elements in a list:
+/// Calculate the sample standard deviation of the elements in a list:
 /// \\[
 /// s = \left(\frac{1}{n - d} \sum_{i=1}^{n}(x_i - \bar{x})\right)^{\frac{1}{2}}
 /// \\]
@@ -858,8 +944,6 @@ pub fn cosine_similarity(
   xarr: List(Float),
   yarr: List(Float),
 ) -> Result(Float, String) {
-  let xlen: Int = list.length(xarr)
-  let ylen: Int = list.length(yarr)
   case xarr, yarr {
     [], _ ->
       "Invalid input argument: The list xarr is empty."
@@ -868,6 +952,8 @@ pub fn cosine_similarity(
       "Invalid input argument: The list yarr is empty."
       |> Error
     _, _ -> {
+      let xlen: Int = list.length(xarr)
+      let ylen: Int = list.length(yarr)
       case xlen == ylen {
         False ->
           "Invalid input argument: length(xarr) != length(yarr). Valid input is when length(xarr) == length(yarr)."
