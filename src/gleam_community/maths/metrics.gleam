@@ -23,11 +23,12 @@
 //// 
 //// ---
 //// 
-//// Metrics: A module offering functions for calculating distances and other types of metrics.
+//// Metrics: A module offering functions for calculating distances and other 
+//// types of metrics.
 //// 
 //// * **Distance measures**
 ////   * [`norm`](#norm)
-////   * [`manhatten_distance`](#manhatten_distance)
+////   * [`manhattan_distance`](#manhattan_distance)
 ////   * [`euclidean_distance`](#euclidean_distance)
 ////   * [`chebyshev_distance`](#chebyshev_distance)
 ////   * [`minkowski_distance`](#minkowski_distance)
@@ -54,6 +55,7 @@ import gleam/pair
 import gleam/set
 import gleam/float
 import gleam/int
+import gleam/string
 
 /// <div style="text-align: right;">
 ///     <a href="https://github.com/gleam-community/maths/issues">
@@ -67,7 +69,8 @@ import gleam/int
 /// \left( \sum_{i=1}^n \left|x_i\right|^{p} \right)^{\frac{1}{p}}
 /// \\]
 ///
-/// In the formula, $$n$$ is the length of the list and $$x_i$$ is the value in the input list indexed by $$i$$.
+/// In the formula, $$n$$ is the length of the list and $$x_i$$ is the value in 
+/// the input list indexed by $$i$$.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -121,13 +124,14 @@ pub fn norm(arr: List(Float), p: Float) -> Float {
 ///     </a>
 /// </div>
 ///
-/// Calculate the Manhatten distance between two lists (representing vectors):
+/// Calculate the Manhattan distance between two lists (representing vectors):
 ///
 /// \\[
 /// \sum_{i=1}^n \left|x_i - y_i \right|
 /// \\]
 ///
-/// In the formula, $$n$$ is the length of the two lists and $$x_i, y_i$$ are the values in the respective input lists indexed by $$i$$.
+/// In the formula, $$n$$ is the length of the two lists and $$x_i, y_i$$ are the 
+/// values in the respective input lists indexed by $$i$$.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -141,14 +145,14 @@ pub fn norm(arr: List(Float), p: Float) -> Float {
 ///       let assert Ok(tol) = elementary.power(-10.0, -6.0)
 ///     
 ///       // Empty lists returns an error
-///       metrics.manhatten_distance([], [])
+///       metrics.manhattan_distance([], [])
 ///       |> should.be_error()
 ///     
 ///       // Differing lengths returns error
-///       metrics.manhatten_distance([], [1.0])
+///       metrics.manhattan_distance([], [1.0])
 ///       |> should.be_error()
 ///     
-///       let assert Ok(result) = metrics.manhatten_distance([0.0, 0.0], [1.0, 2.0])
+///       let assert Ok(result) = metrics.manhattan_distance([0.0, 0.0], [1.0, 2.0])
 ///       result
 ///       |> predicates.is_close(3.0, 0.0, tol)
 ///       |> should.be_true()
@@ -161,7 +165,7 @@ pub fn norm(arr: List(Float), p: Float) -> Float {
 ///     </a>
 /// </div>
 ///
-pub fn manhatten_distance(
+pub fn manhattan_distance(
   xarr: List(Float),
   yarr: List(Float),
 ) -> Result(Float, String) {
@@ -180,9 +184,11 @@ pub fn manhatten_distance(
 /// \left( \sum_{i=1}^n \left|x_i - y_i \right|^{p} \right)^{\frac{1}{p}}
 /// \\]
 ///
-/// In the formula, $$p >= 1$$ is the order, $$n$$ is the length of the two lists and $$x_i, y_i$$ are the values in the respective input lists indexed by $$i$$.
+/// In the formula, $$p >= 1$$ is the order, $$n$$ is the length of the two lists 
+/// and $$x_i, y_i$$ are the values in the respective input lists indexed by $$i$$.
 ///
-/// The Minkowski distance is a generalization of both the Euclidean distance ($$p=2$$) and the Manhattan distance ($$p = 1$$).
+/// The Minkowski distance is a generalization of both the Euclidean distance 
+/// ($$p=2$$) and the Manhattan distance ($$p = 1$$).
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -195,7 +201,7 @@ pub fn manhatten_distance(
 ///     pub fn example () {
 ///       let assert Ok(tol) = elementary.power(-10.0, -6.0)
 ///     
-///       // Empty lists returns 0.0
+///       // Empty lists returns an error
 ///       metrics.minkowski_distance([], [], 1.0)
 ///       |> should.be_error()
 ///     
@@ -269,7 +275,8 @@ pub fn minkowski_distance(
 /// \left( \sum_{i=1}^n \left|x_i - y_i \right|^{2} \right)^{\frac{1}{2}}
 /// \\]
 ///
-/// In the formula, $$n$$ is the length of the two lists and $$x_i, y_i$$ are the values in the respective input lists indexed by $$i$$.
+/// In the formula, $$n$$ is the length of the two lists and $$x_i, y_i$$ are the
+/// values in the respective input lists indexed by $$i$$.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -282,11 +289,11 @@ pub fn minkowski_distance(
 ///     pub fn example () {
 ///       let assert Ok(tol) = elementary.power(-10.0, -6.0)
 ///     
-///       // Empty lists returns 0.0
+///       // Empty lists returns an error
 ///       metrics.euclidean_distance([], [])
 ///       |> should.be_error()
 ///     
-///       // Differing lengths returns error
+///       // Differing lengths returns an error
 ///       metrics.euclidean_distance([], [1.0])
 ///       |> should.be_error()
 ///     
@@ -322,7 +329,8 @@ pub fn euclidean_distance(
 /// \text{max}_{i=1}^n \left|x_i - y_i \right|
 /// \\]
 ///
-/// In the formula, $$n$$ is the length of the two lists and $$x_i, y_i$$ are the values in the respective input lists indexed by $$i$$.
+/// In the formula, $$n$$ is the length of the two lists and $$x_i, y_i$$ are the 
+/// values in the respective input lists indexed by $$i$$.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -397,8 +405,8 @@ pub fn chebyshev_distance(
 /// \bar{x} = \frac{1}{n}\sum_{i=1}^n x_i
 /// \\]
 ///
-/// In the formula, $$n$$ is the sample size (the length of the list) and 
-/// $$x_i$$ is the sample point in the input list indexed by $$i$$.
+/// In the formula, $$n$$ is the sample size (the length of the list) and $$x_i$$
+/// is the sample point in the input list indexed by $$i$$.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -514,12 +522,13 @@ pub fn median(arr: List(Float)) -> Result(Float, String) {
 /// </div>
 ///
 /// Calculate the sample variance of the elements in a list:
+/// 
 /// \\[
 /// s^{2} = \frac{1}{n - d} \sum_{i=1}^{n}(x_i - \bar{x})
 /// \\]
 ///
-/// In the formula, $$n$$ is the sample size (the length of the list) and 
-/// $$x_i$$ is the sample point in the input list indexed by $$i$$. 
+/// In the formula, $$n$$ is the sample size (the length of the list) and $$x_i$$ 
+/// is the sample point in the input list indexed by $$i$$. 
 /// Furthermore, $$\bar{x}$$ is the sample mean and $$d$$ is the "Delta 
 /// Degrees of Freedom", and is by default set to $$d = 0$$, which gives a biased
 /// estimate of the sample variance. Setting $$d = 1$$ gives an unbiased estimate.
@@ -594,11 +603,12 @@ pub fn variance(arr: List(Float), ddof: Int) -> Result(Float, String) {
 /// s = \left(\frac{1}{n - d} \sum_{i=1}^{n}(x_i - \bar{x})\right)^{\frac{1}{2}}
 /// \\]
 ///
-/// In the formula, $$n$$ is the sample size (the length of the list) and 
-/// $$x_i$$ is the sample point in the input list indexed by $$i$$. 
+/// In the formula, $$n$$ is the sample size (the length of the list) and $$x_i$$ 
+/// is the sample point in the input list indexed by $$i$$. 
 /// Furthermore, $$\bar{x}$$ is the sample mean and $$d$$ is the "Delta 
 /// Degrees of Freedom", and is by default set to $$d = 0$$, which gives a biased
-/// estimate of the sample standard deviation. Setting $$d = 1$$ gives an unbiased estimate.
+/// estimate of the sample standard deviation. Setting $$d = 1$$ gives an unbiased 
+/// estimate.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -656,8 +666,8 @@ pub fn standard_deviation(arr: List(Float), ddof: Int) -> Result(Float, String) 
 ///     </a>
 /// </div>
 ///
-/// The Jaccard index measures similarity between two sets of elements. Mathematically, the Jaccard index 
-/// is defined as:
+/// The Jaccard index measures similarity between two sets of elements. 
+/// Mathematically, the Jaccard index is defined as:
 /// 
 /// \\[
 /// \frac{|X \cap Y|}{|X \cup Y|} \\; \in \\; \left[0, 1\right]
@@ -669,9 +679,10 @@ pub fn standard_deviation(arr: List(Float), ddof: Int) -> Result(Float, String) 
 /// - $$|X \cap Y|$$ represents the size of the intersection of the two sets
 /// - $$|X \cup Y|$$ denotes the size of the union of the two sets
 /// 
-/// The value of the Jaccard index ranges from 0 to 1, where 0 indicates that the two sets share no elements
-/// and 1 indicates that the sets are identical. The Jaccard index is a special case of the 
-/// [Tversky index](#tversky_index) (with $$\alpha=\beta=1$$).
+/// The value of the Jaccard index ranges from 0 to 1, where 0 indicates that the 
+/// two sets share no elements and 1 indicates that the sets are identical. The 
+/// Jaccard index is a special case of the  [Tversky index](#tversky_index) (with
+/// $$\alpha=\beta=1$$).
 /// 
 /// <details>
 ///     <summary>Example:</summary>
@@ -706,8 +717,8 @@ pub fn jaccard_index(xset: set.Set(a), yset: set.Set(a)) -> Float {
 ///     </a>
 /// </div>
 ///
-/// The Sørensen-Dice coefficient measures the similarity between two sets of elements. Mathematically, the 
-/// coefficient is defined as:
+/// The Sørensen-Dice coefficient measures the similarity between two sets of 
+/// elements. Mathematically, the coefficient is defined as:
 /// 
 /// \\[
 /// \frac{2 |X \cap Y|}{|X| + |Y|} \\; \in \\; \left[0, 1\right]
@@ -715,12 +726,14 @@ pub fn jaccard_index(xset: set.Set(a), yset: set.Set(a)) -> Float {
 /// 
 /// where:
 /// - $$X$$ and $$Y$$ are two sets being compared
-/// - $$|X \cap Y|$$ is the size of the intersection of the two sets (i.e., the number of elements common to both sets)
+/// - $$|X \cap Y|$$ is the size of the intersection of the two sets (i.e., the 
+/// number of elements common to both sets)
 /// - $$|X|$$ and $$|Y|$$ are the sizes of the sets $$X$$ and $$Y$$, respectively
 /// 
-/// The coefficient ranges from 0 to 1, where 0 indicates no similarity (the sets share no elements) and 1 
-/// indicates perfect similarity (the sets are identical). The higher the coefficient, the greater the similarity 
-/// between the two sets. The Sørensen-Dice coefficient is a special case of the 
+/// The coefficient ranges from 0 to 1, where 0 indicates no similarity (the sets
+/// share no elements) and 1 indicates perfect similarity (the sets are identical).
+/// The higher the coefficient, the greater the similarity between the two sets. 
+/// The Sørensen-Dice coefficient is a special case of the 
 /// [Tversky index](#tversky_index) (with $$\alpha=\beta=0.5$$).
 /// 
 /// <details>
@@ -756,9 +769,10 @@ pub fn sorensen_dice_coefficient(xset: set.Set(a), yset: set.Set(a)) -> Float {
 ///     </a>
 /// </div>
 /// 
-/// The Tversky index is a generalization of the Jaccard index and Sørensen-Dice coefficient, which adds 
-/// flexibility through two parameters, $$\alpha$$ and $$\beta$$, allowing for asymmetric similarity 
-/// measures between sets. The Tversky index is defined as:
+/// The Tversky index is a generalization of the Jaccard index and Sørensen-Dice 
+/// coefficient, which adds flexibility through two parameters, $$\alpha$$ and 
+/// $$\beta$$, allowing for asymmetric similarity measures between sets. The 
+/// Tversky index is defined as:
 /// 
 /// \\[
 /// \frac{|X \cap Y|}{|X \cap Y| + \alpha|X - Y| + \beta|Y - X|}
@@ -767,13 +781,17 @@ pub fn sorensen_dice_coefficient(xset: set.Set(a), yset: set.Set(a)) -> Float {
 /// where:
 /// 
 /// - $$X$$ and $$Y$$ are the sets being compared
-/// - $$|X - Y|$$ and $$|Y - X|$$ are the sizes of the relative complements of $$Y$$ in $$X$$ and $$X$$ in $$Y$$, respectively,
-/// - $$\alpha$$ and $$\beta$$ are parameters that weigh the relative importance of the elements unique to $$X$$ and $$Y$$
+/// - $$|X - Y|$$ and $$|Y - X|$$ are the sizes of the relative complements of 
+/// $$Y$$ in $$X$$ and $$X$$ in $$Y$$, respectively,
+/// - $$\alpha$$ and $$\beta$$ are parameters that weigh the relative importance
+/// of the elements unique to $$X$$ and $$Y$$
 /// 
-/// The Tversky index reduces to the Jaccard index when \(\alpha = \beta = 1\) and to the Sorensen-Dice 
-/// coefficient when \(\alpha = \beta = 0.5\). In general, the Tversky index can take on any non-negative value, including 0.
-/// The index equals 0 when there is no intersection between the two sets, indicating no similarity. However, unlike similarity
-/// measures bounded strictly between 0 and 1, the Tversky index does not have a strict upper limit of 1 when $$\alpha \neq \beta$$.
+/// The Tversky index reduces to the Jaccard index when $$\alpha = \beta = 1$$ and
+/// to the Sørensen-Dice coefficient when $$\alpha = \beta = 0.5$$. In general, the
+/// Tversky index can take on any non-negative value, including 0. The index equals
+/// 0 when there is no intersection between the two sets, indicating no similarity. 
+/// However, unlike similarity measures bounded strictly between 0 and 1, the 
+/// Tversky index does not have a strict upper limit of 1 when $$\alpha \neq \beta$$.
 ///  
 /// <details>
 ///     <summary>Example:</summary>
@@ -843,9 +861,10 @@ pub fn tversky_index(
 ///     </a>
 /// </div>
 /// 
-/// The Overlap coefficient, also known as the Szymkiewicz–Simpson coefficient, is a measure of 
-/// similarity between two sets that focuses on the size of the intersection relative to the 
-/// smaller of the two sets. It is defined mathematically as:
+/// The Overlap coefficient, also known as the Szymkiewicz–Simpson coefficient, is
+/// a measure of similarity between two sets that focuses on the size of the 
+/// intersection relative to the smaller of the two sets. It is defined 
+/// mathematically as:
 ///
 /// \\[
 /// \frac{|X \cap Y|}{\min(|X|, |Y|)} \\; \in \\; \left[0, 1\right]
@@ -857,10 +876,11 @@ pub fn tversky_index(
 /// - $$|X \cap Y|$$ is the size of the intersection of the sets
 /// - $$\min(|X|, |Y|)$$ is the size of the smaller set among $$X$$ and $$Y$$
 ///
-/// The coefficient ranges from 0 to 1, where 0 indicates no overlap and 1 indicates that the 
-/// smaller set is a suyset of the larger set. This measure is especially useful in situations
-/// where the similarity in terms of the proportion of overlap is more relevant than the 
-/// difference in sizes between the two sets.
+/// The coefficient ranges from 0 to 1, where 0 indicates no overlap and 1 
+/// indicates that the smaller set is a suyset of the larger set. This 
+/// measure is especially useful in situations where the similarity in terms
+/// of the proportion of overlap is more relevant than the difference in sizes 
+/// between the two sets.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -905,13 +925,18 @@ pub fn overlap_coefficient(xset: set.Set(a), yset: set.Set(a)) -> Float {
 /// Calculate the cosine similarity between two lists (representing vectors):
 ///
 /// \\[
-/// \frac{\sum_{i=1}^n x_i \cdot y_i}{\left(\sum_{i=1}^n x_i^2\right)^{\frac{1}{2}} \cdot \left(\sum_{i=1}^n y_i^2\right)^{\frac{1}{2}}} \\; \in \\; \left[-1, 1\right]
+/// \frac{\sum_{i=1}^n x_i \cdot y_i}{\left(\sum_{i=1}^n x_i^2\right)^{\frac{1}{2}}
+/// \cdot \left(\sum_{i=1}^n y_i^2\right)^{\frac{1}{2}}} 
+/// \\; \in \\; \left[-1, 1\right]
 /// \\]
 ///
-/// In the formula, $$n$$ is the length of the two lists and $$x_i$$, $$y_i$$ are the values in the respective input lists indexed by $$i$$. 
-/// The numerator represents the dot product of the two vectors, while the denominator is the product of the magnitudes (Euclidean norms) of 
-/// the two vectors. The cosine similarity provides a value between -1 and 1, where 1 means the vectors are in the same direction, -1 means 
-/// they are in exactly opposite directions, and 0 indicates orthogonality. 
+/// In the formula, $$n$$ is the length of the two lists and $$x_i$$, $$y_i$$ are
+/// the values in the respective input lists indexed by $$i$$. The numerator 
+/// represents the dot product of the two vectors, while the denominator is the
+/// product of the magnitudes (Euclidean norms) of the two vectors. The cosine
+/// similarity provides a value between -1 and 1, where 1 means the vectors are
+/// in the same direction, -1 means they are in exactly opposite directions, 
+/// and 0 indicates orthogonality. 
 /// 
 /// <details>
 ///     <summary>Example:</summary>
@@ -971,6 +996,125 @@ pub fn cosine_similarity(
           |> Ok
         }
       }
+    }
+  }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+/// 
+/// Calculate the Levenshtein distance between two strings, i.e., measure the 
+/// difference between two strings (essentially sequences). It is defined as 
+/// the minimum number of single-character edits required to change one string
+/// into the other, using operations:
+/// - insertions
+/// - deletions
+/// - substitutions
+/// 
+/// Note: The implementation is primarily based on the elixir implementation 
+/// [https://hex.pm/packages/levenshtein](levenshtein).
+/// 
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths/metrics
+///
+///     pub fn example () {
+///       metrics.levenshtein_distance("hello", "hello")
+///       |> should.equal(0)
+///       
+///       metrics.levenshtein_distance("cat", "cut")
+///       |> should.equal(1)
+///       
+///       metrics.levenshtein_distance("kitten", "sitting")
+///       |> should.equal(3)
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+///
+pub fn levenshtein_distance(xstring: String, ystring: String) -> Int {
+  case xstring, ystring {
+    xstring, ystring if xstring == ystring -> {
+      0
+    }
+    xstring, ystring if xstring == "" -> {
+      string.length(ystring)
+    }
+    xstring, ystring if ystring == "" -> {
+      string.length(xstring)
+    }
+    _, _ -> {
+      let xstring_graphemes = string.to_graphemes(xstring)
+      let ystring_graphemes = string.to_graphemes(ystring)
+      let ystring_length = list.length(ystring_graphemes)
+      let distance_list = list.range(0, ystring_length)
+
+      do_edit_distance(xstring_graphemes, ystring_graphemes, distance_list, 1)
+    }
+  }
+}
+
+fn do_edit_distance(
+  xstring: List(String),
+  ystring: List(String),
+  distance_list: List(Int),
+  step: Int,
+) -> Int {
+  case xstring {
+    // Safe as 'distance_list' is never empty
+    [] -> {
+      let assert Ok(last) = list.last(distance_list)
+      last
+    }
+    [xstring_head, ..xstring_tail] -> {
+      let new_distance_list =
+        distance_list_helper(ystring, distance_list, xstring_head, [step], step)
+      do_edit_distance(xstring_tail, ystring, new_distance_list, step + 1)
+    }
+  }
+}
+
+fn distance_list_helper(
+  ystring: List(String),
+  distance_list: List(Int),
+  grapheme: String,
+  new_distance_list: List(Int),
+  last_distance: Int,
+) -> List(Int) {
+  case ystring {
+    [] -> list.reverse(new_distance_list)
+    [ystring_head, ..ystring_tail] -> {
+      let assert [distance_list_head, ..distance_list_tail] = distance_list
+      let difference = case ystring_head == grapheme {
+        True -> {
+          0
+        }
+        False -> {
+          1
+        }
+      }
+      let assert [first, ..] = distance_list_tail
+      let min =
+        last_distance + 1
+        |> piecewise.minimum(first + 1, int.compare)
+        |> piecewise.minimum(distance_list_head + difference, int.compare)
+      distance_list_helper(
+        ystring_tail,
+        distance_list_tail,
+        grapheme,
+        [min, ..new_distance_list],
+        min,
+      )
     }
   }
 }
