@@ -328,7 +328,7 @@ pub fn chebyshev_distance_test() {
   |> should.equal(Ok(0.0))
 }
 
-pub fn edit_distance_test() {
+pub fn levenshtein_distance_test() {
   // Try different types of valid input...
 
   // Requires 5 insertions to transform the empty string into "hello"
