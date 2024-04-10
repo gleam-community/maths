@@ -38,6 +38,7 @@
 ////   * [`sorensen_dice_coefficient`](#sorensen_dice_coefficient)
 ////   * [`tversky_index`](#tversky_index)
 ////   * [`overlap_coefficient`](#overlap_coefficient)
+////   * [`levenshtein_distance`](#levenshtein_distance)
 //// * **Basic statistical measures**
 ////   * [`mean`](#mean)
 ////   * [`median`](#median)
@@ -1014,8 +1015,8 @@ pub fn cosine_similarity(
 /// - deletions
 /// - substitutions
 /// 
-/// Note: The implementation is primarily based on the elixir implementation 
-/// [https://hex.pm/packages/levenshtein](levenshtein).
+/// Note: The implementation is primarily based on the Elixir implementation 
+/// [levenshtein](https://hex.pm/packages/levenshtein).
 /// 
 /// <details>
 ///     <summary>Example:</summary>
