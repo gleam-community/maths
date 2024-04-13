@@ -44,6 +44,9 @@
 
 import gleam/int
 import gleam/list
+import gleam/option
+import gleam/pair
+import gleam/result
 import gleam_community/maths/conversion
 import gleam_community/maths/elementary
 import gleam_community/maths/piecewise
@@ -289,29 +292,32 @@ pub fn proper_divisors(n: Int) -> List(Int) {
 ///     </a>
 /// </div>
 ///
-/// Calculate the sum of the elements in a list:
+/// Calculate the (weighted) sum of the elements in a list:
 ///
 /// \\[
-/// \sum_{i=1}^n x_i
+/// \sum_{i=1}^n w_i x_i
 /// \\]
 ///
-/// In the formula, $$n$$ is the length of the list and $$x_i \in \mathbb{R}$$ is the value in the input list indexed by $$i$$.
+/// In the formula, $$n$$ is the length of the list and $$x_i \in \mathbb{R}$$ is
+/// the value in the input list indexed by $$i$$, while $$w_i \in \mathbb{R}$$ is
+/// a corresponding weight ($$w_i = 1.0\;\forall i=1...n$$ by default).
 ///
 /// <details>
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
+///     import gleam/option
 ///     import gleam_community/maths/arithmetics
 ///
 ///     pub fn example () {
 ///       // An empty list returns an error
 ///       []
-///       |> arithmetics.float_sum()
+///       |> arithmetics.float_sum(option.None)
 ///       |> should.equal(0.0)
 ///
 ///       // Valid input returns a result
 ///       [1.0, 2.0, 3.0]
-///       |> arithmetics.float_sum()
+///       |> arithmetics.float_sum(option.None)
 ///       |> should.equal(6.0)
 ///     }
 /// </details>
@@ -322,12 +328,18 @@ pub fn proper_divisors(n: Int) -> List(Int) {
 ///     </a>
 /// </div>
 ///
-pub fn float_sum(arr: List(Float)) -> Float {
-  case arr {
-    [] -> 0.0
-    _ ->
+pub fn float_sum(arr: List(Float), weights: option.Option(List(Float))) -> Float {
+  case arr, weights {
+    [], _ -> 0.0
+    _, option.None ->
       arr
       |> list.fold(0.0, fn(acc: Float, a: Float) -> Float { a +. acc })
+    _, option.Some(warr) -> {
+      list.zip(arr, warr)
+      |> list.fold(0.0, fn(acc: Float, a: #(Float, Float)) -> Float {
+        pair.first(a) *. pair.second(a) +. acc
+      })
+    }
   }
 }
 
@@ -385,29 +397,32 @@ pub fn int_sum(arr: List(Int)) -> Int {
 ///     </a>
 /// </div>
 ///
-/// Calculate the product of the elements in a list:
+/// Calculate the (weighted) product of the elements in a list:
 ///
 /// \\[
-/// \prod_{i=1}^n x_i
+/// \prod_{i=1}^n x_i^{w_i}
 /// \\]
 ///
-/// In the formula, $$n$$ is the length of the list and $$x_i \in \mathbb{R}$$ is the value in the input list indexed by $$i$$.
-///
+/// In the formula, $$n$$ is the length of the list and $$x_i \in \mathbb{R}$$ is
+/// the value in the input list indexed by $$i$$, while $$w_i \in \mathbb{R}$$ is
+/// a corresponding weight ($$w_i = 1.0\;\forall i=1...n$$ by default).
+/// 
 /// <details>
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
+///     import gleam/option
 ///     import gleam_community/maths/arithmetics
 ///
 ///     pub fn example () {
 ///       // An empty list returns 0.0
 ///       []
-///       |> arithmetics.float_product()
+///       |> arithmetics.float_product(option.None)
 ///       |> should.equal(0.0)
 ///
 ///       // Valid input returns a result
 ///       [1.0, 2.0, 3.0]
-///       |> arithmetics.float_product()
+///       |> arithmetics.float_product(option.None)
 ///       |> should.equal(6.0)
 ///     }
 /// </details>
@@ -418,12 +433,36 @@ pub fn int_sum(arr: List(Int)) -> Int {
 ///     </a>
 /// </div>
 ///
-pub fn float_product(arr: List(Float)) -> Float {
-  case arr {
-    [] -> 1.0
-    _ ->
+pub fn float_product(
+  arr: List(Float),
+  weights: option.Option(List(Float)),
+) -> Result(Float, String) {
+  case arr, weights {
+    [], _ ->
+      1.0
+      |> Ok
+    _, option.None ->
       arr
       |> list.fold(1.0, fn(acc: Float, a: Float) -> Float { a *. acc })
+      |> Ok
+    _, option.Some(warr) -> {
+      let results =
+        list.zip(arr, warr)
+        |> list.map(fn(a: #(Float, Float)) -> Result(Float, String) {
+          pair.first(a)
+          |> elementary.power(pair.second(a))
+        })
+        |> result.all
+      case results {
+        Ok(prods) ->
+          prods
+          |> list.fold(1.0, fn(acc: Float, a: Float) -> Float { a *. acc })
+          |> Ok
+        Error(msg) ->
+          msg
+          |> Error
+      }
+    }
   }
 }
 

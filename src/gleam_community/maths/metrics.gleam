@@ -33,6 +33,8 @@
 ////   * [`chebyshev_distance`](#chebyshev_distance)
 ////   * [`minkowski_distance`](#minkowski_distance)
 ////   * [`cosine_similarity`](#cosine_similarity)
+////   * [`canberra_distance`](#canberra_distance)
+////   * [`braycurtis_distance`](#braycurtis_distance)
 //// * **Set & string similarity measures**
 ////   * [`jaccard_index`](#jaccard_index)
 ////   * [`sorensen_dice_coefficient`](#sorensen_dice_coefficient)
@@ -57,6 +59,48 @@ import gleam/set
 import gleam/float
 import gleam/int
 import gleam/string
+import gleam/option
+
+/// Utility function that checks all lists have the expected length
+/// Primarily used by all distance measures taking List(Float) as input
+fn check_lists(
+  xarr: List(Float),
+  yarr: List(Float),
+  weights: option.Option(List(Float)),
+) -> Result(Bool, String) {
+  case xarr, yarr {
+    [], _ ->
+      "Invalid input argument: The list xarr is empty."
+      |> Error
+    _, [] ->
+      "Invalid input argument: The list yarr is empty."
+      |> Error
+    _, _ -> {
+      let xlen: Int = list.length(xarr)
+      let ylen: Int = list.length(yarr)
+      case xlen == ylen, weights {
+        False, _ ->
+          "Invalid input argument: length(xarr) != length(yarr). Valid input is when length(xarr) == length(yarr)."
+          |> Error
+        True, option.None -> {
+          True
+          |> Ok
+        }
+        True, option.Some(warr) -> {
+          let wlen: Int = list.length(warr)
+          case xlen == wlen {
+            True ->
+              True
+              |> Ok
+            False ->
+              "Invalid input argument: length(weights) != length(xarr) and length(weights) != length(yarr). Valid input is when length(weights) == length(xarr) == length(yarr)."
+              |> Error
+          }
+        }
+      }
+    }
+  }
+}
 
 /// <div style="text-align: right;">
 ///     <a href="https://github.com/gleam-community/maths/issues">
@@ -169,8 +213,9 @@ pub fn norm(arr: List(Float), p: Float) -> Float {
 pub fn manhattan_distance(
   xarr: List(Float),
   yarr: List(Float),
+  weights: option.Option(List(Float)),
 ) -> Result(Float, String) {
-  minkowski_distance(xarr, yarr, 1.0)
+  minkowski_distance(xarr, yarr, 1.0, weights)
 }
 
 /// <div style="text-align: right;">
@@ -231,34 +276,24 @@ pub fn minkowski_distance(
   xarr: List(Float),
   yarr: List(Float),
   p: Float,
+  weights: option.Option(List(Float)),
 ) -> Result(Float, String) {
-  case xarr, yarr {
-    [], _ ->
-      "Invalid input argument: The list xarr is empty."
+  case check_lists(xarr, yarr, weights) {
+    Error(msg) ->
+      msg
       |> Error
-    _, [] ->
-      "Invalid input argument: The list yarr is empty."
-      |> Error
-    _, _ -> {
-      let xlen: Int = list.length(xarr)
-      let ylen: Int = list.length(yarr)
-      case xlen == ylen {
-        False ->
-          "Invalid input argument: length(xarr) != length(yarr). Valid input is when length(xarr) == length(yarr)."
-          |> Error
+    Ok(_) -> {
+      case p <. 1.0 {
         True ->
-          case p <. 1.0 {
-            True ->
-              "Invalid input argument: p < 1. Valid input is p >= 1."
-              |> Error
-            False ->
-              list.zip(xarr, yarr)
-              |> list.map(fn(tuple: #(Float, Float)) -> Float {
-                pair.first(tuple) -. pair.second(tuple)
-              })
-              |> norm(p)
-              |> Ok
-          }
+          "Invalid input argument: p < 1. Valid input is p >= 1."
+          |> Error
+        False ->
+          list.zip(xarr, yarr)
+          |> list.map(fn(tuple: #(Float, Float)) -> Float {
+            pair.first(tuple) -. pair.second(tuple)
+          })
+          |> norm(p)
+          |> Ok
       }
     }
   }
@@ -314,8 +349,9 @@ pub fn minkowski_distance(
 pub fn euclidean_distance(
   xarr: List(Float),
   yarr: List(Float),
+  weights: option.Option(List(Float)),
 ) -> Result(Float, String) {
-  minkowski_distance(xarr, yarr, 2.0)
+  minkowski_distance(xarr, yarr, 2.0, weights)
 }
 
 /// <div style="text-align: right;">
@@ -364,32 +400,21 @@ pub fn euclidean_distance(
 pub fn chebyshev_distance(
   xarr: List(Float),
   yarr: List(Float),
+  weights: option.Option(List(Float)),
 ) -> Result(Float, String) {
-  case xarr, yarr {
-    [], _ ->
-      "Invalid input argument: The list xarr is empty."
+  case check_lists(xarr, yarr, weights) {
+    Error(msg) ->
+      msg
       |> Error
-    _, [] ->
-      "Invalid input argument: The list yarr is empty."
-      |> Error
-    _, _ -> {
-      let xlen: Int = list.length(xarr)
-      let ylen: Int = list.length(yarr)
-      case xlen == ylen {
-        False ->
-          "Invalid input argument: length(xarr) != length(yarr). Valid input is when length(xarr) == length(yarr)."
-          |> Error
-        True -> {
-          let differences =
-            list.zip(xarr, yarr)
-            |> list.map(fn(tuple: #(Float, Float)) -> Float {
-              { pair.first(tuple) -. pair.second(tuple) }
-              |> piecewise.float_absolute_value()
-            })
-          differences
-          |> piecewise.list_maximum(float.compare)
-        }
-      }
+    Ok(_) -> {
+      let differences =
+        list.zip(xarr, yarr)
+        |> list.map(fn(tuple: #(Float, Float)) -> Float {
+          { pair.first(tuple) -. pair.second(tuple) }
+          |> piecewise.float_absolute_value()
+        })
+      differences
+      |> piecewise.list_maximum(float.compare)
     }
   }
 }
@@ -441,7 +466,7 @@ pub fn mean(arr: List(Float)) -> Result(Float, String) {
       |> Error
     _ ->
       arr
-      |> arithmetics.float_sum()
+      |> arithmetics.float_sum(option.None)
       |> fn(a: Float) -> Float {
         a /. conversion.int_to_float(list.length(arr))
       }
@@ -579,7 +604,7 @@ pub fn variance(arr: List(Float), ddof: Int) -> Result(Float, String) {
             let assert Ok(result) = elementary.power(a -. mean, 2.0)
             result
           })
-          |> arithmetics.float_sum()
+          |> arithmetics.float_sum(option.None)
           |> fn(a: Float) -> Float {
             a
             /. {
@@ -969,34 +994,23 @@ pub fn overlap_coefficient(xset: set.Set(a), yset: set.Set(a)) -> Float {
 pub fn cosine_similarity(
   xarr: List(Float),
   yarr: List(Float),
+  weights: option.Option(List(Float)),
 ) -> Result(Float, String) {
-  case xarr, yarr {
-    [], _ ->
-      "Invalid input argument: The list xarr is empty."
+  case check_lists(xarr, yarr, weights) {
+    Error(msg) ->
+      msg
       |> Error
-    _, [] ->
-      "Invalid input argument: The list yarr is empty."
-      |> Error
-    _, _ -> {
-      let xlen: Int = list.length(xarr)
-      let ylen: Int = list.length(yarr)
-      case xlen == ylen {
-        False ->
-          "Invalid input argument: length(xarr) != length(yarr). Valid input is when length(xarr) == length(yarr)."
-          |> Error
-        True -> {
-          list.fold(
-            list.zip(xarr, yarr),
-            0.0,
-            fn(acc: Float, a: #(Float, Float)) -> Float {
-              let result: Float = pair.first(a) *. pair.second(a)
-              result +. acc
-            },
-          )
-          /. { norm(xarr, 2.0) *. norm(yarr, 2.0) }
-          |> Ok
-        }
-      }
+    Ok(_) -> {
+      list.fold(
+        list.zip(xarr, yarr),
+        0.0,
+        fn(acc: Float, a: #(Float, Float)) -> Float {
+          let result: Float = pair.first(a) *. pair.second(a)
+          result +. acc
+        },
+      )
+      /. { norm(xarr, 2.0) *. norm(yarr, 2.0) }
+      |> Ok
     }
   }
 }
@@ -1116,6 +1130,143 @@ fn distance_list_helper(
         [min, ..new_distance_list],
         min,
       )
+    }
+  }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+/// 
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths/metrics
+///
+///     pub fn example () {
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+///
+pub fn canberra_distance(
+  xarr: List(Float),
+  yarr: List(Float),
+  weights: option.Option(List(Float)),
+) -> Result(Float, String) {
+  case check_lists(xarr, yarr, weights) {
+    Error(msg) ->
+      msg
+      |> Error
+    Ok(_) -> {
+      let arr: List(Float) =
+        list.zip(xarr, yarr)
+        |> list.map(canberra_distance_helper)
+      case weights {
+        option.None -> {
+          arr
+          |> arithmetics.float_sum(option.None)
+          |> Ok
+        }
+        _ -> {
+          arr
+          |> arithmetics.float_sum(weights)
+          |> Ok
+        }
+      }
+    }
+  }
+}
+
+fn canberra_distance_helper(tuple: #(Float, Float)) -> Float {
+  let numerator: Float =
+    piecewise.float_absolute_value({ pair.first(tuple) -. pair.second(tuple) })
+  let denominator: Float = {
+    piecewise.float_absolute_value(pair.first(tuple))
+    +. piecewise.float_absolute_value(pair.second(tuple))
+  }
+  numerator /. denominator
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+/// 
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths/metrics
+///
+///     pub fn example () {
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+///
+pub fn braycurtis_distance(
+  xarr: List(Float),
+  yarr: List(Float),
+  weights: option.Option(List(Float)),
+) -> Result(Float, String) {
+  case check_lists(xarr, yarr, weights) {
+    Error(msg) ->
+      msg
+      |> Error
+    Ok(_) -> {
+      let zipped_arr: List(#(Float, Float)) = list.zip(xarr, yarr)
+      let numerator_elements: List(Float) =
+        zipped_arr
+        |> list.map(fn(tuple: #(Float, Float)) -> Float {
+          piecewise.float_absolute_value({
+            pair.first(tuple) -. pair.second(tuple)
+          })
+        })
+      let denominator_elements: List(Float) =
+        zipped_arr
+        |> list.map(fn(tuple: #(Float, Float)) -> Float {
+          piecewise.float_absolute_value({
+            pair.first(tuple) +. pair.second(tuple)
+          })
+        })
+
+      case weights {
+        option.None -> {
+          let numerator =
+            numerator_elements
+            |> arithmetics.float_sum(option.None)
+          let denominator =
+            denominator_elements
+            |> arithmetics.float_sum(option.None)
+          { numerator /. denominator }
+          |> Ok
+        }
+        _ -> {
+          let numerator =
+            numerator_elements
+            |> arithmetics.float_sum(weights)
+          let denominator =
+            denominator_elements
+            |> arithmetics.float_sum(weights)
+          { numerator /. denominator }
+          |> Ok
+        }
+      }
     }
   }
 }

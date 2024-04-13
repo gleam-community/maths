@@ -3,6 +3,7 @@ import gleam_community/maths/metrics
 import gleam_community/maths/predicates
 import gleeunit/should
 import gleam/set
+import gleam/option
 
 pub fn float_list_norm_test() {
   let assert Ok(tol) = elementary.power(-10.0, -6.0)
@@ -54,15 +55,16 @@ pub fn float_list_manhattan_test() {
   let assert Ok(tol) = elementary.power(-10.0, -6.0)
 
   // Empty lists returns an error
-  metrics.manhattan_distance([], [])
+  metrics.manhattan_distance([], [], option.None)
   |> should.be_error()
 
   // Differing lengths returns error
-  metrics.manhattan_distance([], [1.0])
+  metrics.manhattan_distance([], [1.0], option.None)
   |> should.be_error()
 
   // manhattan distance (p = 1)
-  let assert Ok(result) = metrics.manhattan_distance([0.0, 0.0], [1.0, 2.0])
+  let assert Ok(result) =
+    metrics.manhattan_distance([0.0, 0.0], [1.0, 2.0], option.None)
   result
   |> predicates.is_close(3.0, 0.0, tol)
   |> should.be_true()
@@ -72,53 +74,53 @@ pub fn float_list_minkowski_test() {
   let assert Ok(tol) = elementary.power(-10.0, -6.0)
 
   // Empty lists returns an error
-  metrics.minkowski_distance([], [], 1.0)
+  metrics.minkowski_distance([], [], 1.0, option.None)
   |> should.be_error()
 
   // Differing lengths returns error
-  metrics.minkowski_distance([], [1.0], 1.0)
+  metrics.minkowski_distance([], [1.0], 1.0, option.None)
   |> should.be_error()
 
   // Test order < 1
-  metrics.minkowski_distance([0.0, 0.0], [0.0, 0.0], -1.0)
+  metrics.minkowski_distance([0.0, 0.0], [0.0, 0.0], -1.0, option.None)
   |> should.be_error()
 
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   let assert Ok(result) =
-    metrics.minkowski_distance([1.0, 1.0], [1.0, 1.0], 1.0)
+    metrics.minkowski_distance([1.0, 1.0], [1.0, 1.0], 1.0, option.None)
   result
   |> predicates.is_close(0.0, 0.0, tol)
   |> should.be_true()
 
   let assert Ok(result) =
-    metrics.minkowski_distance([0.0, 0.0], [1.0, 1.0], 10.0)
+    metrics.minkowski_distance([0.0, 0.0], [1.0, 1.0], 10.0, option.None)
   result
   |> predicates.is_close(1.0717734625362931, 0.0, tol)
   |> should.be_true()
 
   let assert Ok(result) =
-    metrics.minkowski_distance([0.0, 0.0], [1.0, 1.0], 100.0)
+    metrics.minkowski_distance([0.0, 0.0], [1.0, 1.0], 100.0, option.None)
   result
   |> predicates.is_close(1.0069555500567189, 0.0, tol)
   |> should.be_true()
 
   let assert Ok(result) =
-    metrics.minkowski_distance([0.0, 0.0], [1.0, 1.0], 10.0)
+    metrics.minkowski_distance([0.0, 0.0], [1.0, 1.0], 10.0, option.None)
   result
   |> predicates.is_close(1.0717734625362931, 0.0, tol)
   |> should.be_true()
 
   // Euclidean distance (p = 2)
   let assert Ok(result) =
-    metrics.minkowski_distance([0.0, 0.0], [1.0, 2.0], 2.0)
+    metrics.minkowski_distance([0.0, 0.0], [1.0, 2.0], 2.0, option.None)
   result
   |> predicates.is_close(2.23606797749979, 0.0, tol)
   |> should.be_true()
 
   // Manhattan distance (p = 1)
   let assert Ok(result) =
-    metrics.minkowski_distance([0.0, 0.0], [1.0, 2.0], 1.0)
+    metrics.minkowski_distance([0.0, 0.0], [1.0, 2.0], 1.0, option.None)
   result
   |> predicates.is_close(3.0, 0.0, tol)
   |> should.be_true()
@@ -128,15 +130,16 @@ pub fn float_list_euclidean_test() {
   let assert Ok(tol) = elementary.power(-10.0, -6.0)
 
   // Empty lists returns an error
-  metrics.euclidean_distance([], [])
+  metrics.euclidean_distance([], [], option.None)
   |> should.be_error()
 
   // Differing lengths returns error
-  metrics.euclidean_distance([], [1.0])
+  metrics.euclidean_distance([], [1.0], option.None)
   |> should.be_error()
 
   // Euclidean distance (p = 2)
-  let assert Ok(result) = metrics.euclidean_distance([0.0, 0.0], [1.0, 2.0])
+  let assert Ok(result) =
+    metrics.euclidean_distance([0.0, 0.0], [1.0, 2.0], option.None)
   result
   |> predicates.is_close(2.23606797749979, 0.0, tol)
   |> should.be_true()
@@ -266,65 +269,69 @@ pub fn overlap_coefficient_test() {
 
 pub fn cosine_similarity_test() {
   // Empty lists returns an error
-  metrics.cosine_similarity([], [])
+  metrics.cosine_similarity([], [], option.None)
   |> should.be_error()
 
   // One empty list returns an error
-  metrics.cosine_similarity([1.0, 2.0, 3.0], [])
+  metrics.cosine_similarity([1.0, 2.0, 3.0], [], option.None)
   |> should.be_error()
 
   // One empty list returns an error
-  metrics.cosine_similarity([], [1.0, 2.0, 3.0])
+  metrics.cosine_similarity([], [1.0, 2.0, 3.0], option.None)
   |> should.be_error()
 
   // Different sized lists returns an error
-  metrics.cosine_similarity([1.0, 2.0], [1.0, 2.0, 3.0, 4.0])
+  metrics.cosine_similarity([1.0, 2.0], [1.0, 2.0, 3.0, 4.0], option.None)
   |> should.be_error()
 
   // Two orthogonal vectors (represented by lists)
-  metrics.cosine_similarity([-1.0, 1.0, 0.0], [1.0, 1.0, -1.0])
+  metrics.cosine_similarity([-1.0, 1.0, 0.0], [1.0, 1.0, -1.0], option.None)
   |> should.equal(Ok(0.0))
 
   // Two identical (parallel) vectors (represented by lists)
-  metrics.cosine_similarity([1.0, 2.0, 3.0], [1.0, 2.0, 3.0])
+  metrics.cosine_similarity([1.0, 2.0, 3.0], [1.0, 2.0, 3.0], option.None)
   |> should.equal(Ok(1.0))
 
   // Two parallel, but oppositely oriented vectors (represented by lists)
-  metrics.cosine_similarity([-1.0, -2.0, -3.0], [1.0, 2.0, 3.0])
+  metrics.cosine_similarity([-1.0, -2.0, -3.0], [1.0, 2.0, 3.0], option.None)
   |> should.equal(Ok(-1.0))
 }
 
 pub fn chebyshev_distance_test() {
   // Empty lists returns an error
-  metrics.chebyshev_distance([], [])
+  metrics.chebyshev_distance([], [], option.None)
   |> should.be_error()
 
   // One empty list returns an error
-  metrics.chebyshev_distance([1.0, 2.0, 3.0], [])
+  metrics.chebyshev_distance([1.0, 2.0, 3.0], [], option.None)
   |> should.be_error()
 
   // One empty list returns an error
-  metrics.chebyshev_distance([], [1.0, 2.0, 3.0])
+  metrics.chebyshev_distance([], [1.0, 2.0, 3.0], option.None)
   |> should.be_error()
 
   // Different sized lists returns an error
-  metrics.chebyshev_distance([1.0, 2.0], [1.0, 2.0, 3.0, 4.0])
+  metrics.chebyshev_distance([1.0, 2.0], [1.0, 2.0, 3.0, 4.0], option.None)
   |> should.be_error()
 
   // Try different types of valid input
-  metrics.chebyshev_distance([1.0, 0.0], [0.0, 2.0])
+  metrics.chebyshev_distance([1.0, 0.0], [0.0, 2.0], option.None)
   |> should.equal(Ok(2.0))
 
-  metrics.chebyshev_distance([1.0, 0.0], [2.0, 0.0])
+  metrics.chebyshev_distance([1.0, 0.0], [2.0, 0.0], option.None)
   |> should.equal(Ok(1.0))
 
-  metrics.chebyshev_distance([1.0, 0.0], [-2.0, 0.0])
+  metrics.chebyshev_distance([1.0, 0.0], [-2.0, 0.0], option.None)
   |> should.equal(Ok(3.0))
 
-  metrics.chebyshev_distance([-5.0, -10.0, -3.0], [-1.0, -12.0, -3.0])
+  metrics.chebyshev_distance(
+    [-5.0, -10.0, -3.0],
+    [-1.0, -12.0, -3.0],
+    option.None,
+  )
   |> should.equal(Ok(4.0))
 
-  metrics.chebyshev_distance([1.0, 2.0, 3.0], [1.0, 2.0, 3.0])
+  metrics.chebyshev_distance([1.0, 2.0, 3.0], [1.0, 2.0, 3.0], option.None)
   |> should.equal(Ok(0.0))
 }
 
@@ -366,4 +373,100 @@ pub fn levenshtein_distance_test() {
     "This is also a much longer string",
   )
   |> should.equal(10)
+}
+
+pub fn canberra_distance_test() {
+  // Empty lists returns an error
+  metrics.canberra_distance([], [], option.None)
+  |> should.be_error()
+
+  // One empty list returns an error
+  metrics.canberra_distance([1.0, 2.0, 3.0], [], option.None)
+  |> should.be_error()
+
+  // One empty list returns an error
+  metrics.canberra_distance([], [1.0, 2.0, 3.0], option.None)
+  |> should.be_error()
+
+  // Different sized lists returns an error
+  metrics.canberra_distance([1.0, 2.0], [1.0, 2.0, 3.0, 4.0], option.None)
+  |> should.be_error()
+
+  // Try different types of valid input
+  metrics.canberra_distance([0.0, 0.0], [0.0, 0.0], option.None)
+  |> should.equal(Ok(0.0))
+
+  metrics.canberra_distance([1.0, 2.0], [-2.0, -1.0], option.None)
+  |> should.equal(Ok(2.0))
+
+  metrics.canberra_distance([1.0, 0.0], [0.0, 2.0], option.None)
+  |> should.equal(Ok(2.0))
+
+  metrics.canberra_distance([1.0, 0.0], [2.0, 0.0], option.None)
+  |> should.equal(Ok(1.0 /. 3.0))
+
+  metrics.canberra_distance([1.0, 0.0], [0.0, 2.0], option.Some([1.0, 1.0]))
+  |> should.equal(Ok(2.0))
+
+  metrics.canberra_distance([1.0, 0.0], [0.0, 2.0], option.Some([1.0, 0.5]))
+  |> should.equal(Ok(1.5))
+
+  metrics.canberra_distance([1.0, 0.0], [0.0, 2.0], option.Some([0.5, 0.5]))
+  |> should.equal(Ok(1.0))
+
+  // Different sized lists (weights) returns an error
+  metrics.canberra_distance(
+    [1.0, 2.0, 3.0],
+    [1.0, 2.0, 3.0],
+    option.Some([1.0]),
+  )
+  |> should.be_error()
+}
+
+pub fn braycurtis_distance_test() {
+  // Empty lists returns an error
+  metrics.braycurtis_distance([], [], option.None)
+  |> should.be_error()
+
+  // One empty list returns an error
+  metrics.braycurtis_distance([1.0, 2.0, 3.0], [], option.None)
+  |> should.be_error()
+
+  // One empty list returns an error
+  metrics.braycurtis_distance([], [1.0, 2.0, 3.0], option.None)
+  |> should.be_error()
+
+  // Different sized lists returns an error
+  metrics.braycurtis_distance([1.0, 2.0], [1.0, 2.0, 3.0, 4.0], option.None)
+  |> should.be_error()
+
+  // Try different types of valid input
+  metrics.braycurtis_distance([0.0, 0.0], [0.0, 0.0], option.None)
+  |> should.equal(Ok(0.0))
+
+  metrics.braycurtis_distance([1.0, 2.0], [-2.0, -1.0], option.None)
+  |> should.equal(Ok(3.0))
+
+  metrics.braycurtis_distance([1.0, 0.0], [0.0, 2.0], option.None)
+  |> should.equal(Ok(1.0))
+
+  metrics.braycurtis_distance([1.0, 2.0], [3.0, 4.0], option.None)
+  |> should.equal(Ok(0.4))
+
+  metrics.braycurtis_distance([1.0, 2.0], [3.0, 4.0], option.Some([1.0, 1.0]))
+  |> should.equal(Ok(0.4))
+
+  metrics.braycurtis_distance([1.0, 2.0], [3.0, 4.0], option.Some([0.5, 1.0]))
+  |> should.equal(Ok(0.375))
+
+  metrics.braycurtis_distance([1.0, 2.0], [3.0, 4.0], option.Some([0.25, 0.25]))
+  |> should.equal(Ok(0.4))
+
+  // Different sized lists (weights) returns an error
+  metrics.braycurtis_distance(
+    [1.0, 2.0, 3.0],
+    [1.0, 2.0, 3.0],
+    option.Some([1.0]),
+  )
+  |> should.be_error()
 }
