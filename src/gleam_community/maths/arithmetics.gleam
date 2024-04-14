@@ -1,6 +1,6 @@
-////<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" integrity="sha384-GvrOXuhMATgEsSwCs4smul74iXGOixntILdUW9XmUC6+HX0sLNAK3q71HotJqlAn" crossorigin="anonymous">
-////<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" integrity="sha384-cpW21h6RZv/phavutF+AuVYrr+dA8xD9zs6FwLpaCct6O9ctzYFfFr4dgmgccOTx" crossorigin="anonymous"></script>
-////<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+////<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" integrity="sha384-wcIxkf4k558AjM3Yz3BBFQUbk/zgIYC2R0QpeeYb+TwlBVMrlgLqwRjRtGZiK7ww" crossorigin="anonymous">
+////<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" integrity="sha384-hIoBPJpTUs74ddyc4bFZSM1TVlQDA60VBbJS0oA934VSz82sBx1X7kSx2ATBDIyd" crossorigin="anonymous"></script>
+////<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"></script>
 ////<script>
 ////    document.addEventListener("DOMContentLoaded", function() {
 ////        renderMathInElement(document.body, {
@@ -44,6 +44,9 @@
 
 import gleam/int
 import gleam/list
+import gleam/option
+import gleam/pair
+import gleam/result
 import gleam_community/maths/conversion
 import gleam_community/maths/elementary
 import gleam_community/maths/piecewise
@@ -54,8 +57,9 @@ import gleam_community/maths/piecewise
 ///     </a>
 /// </div>
 ///
-/// The function calculates the greatest common multiple of two integers $$x, y \in \mathbb{Z}$$.
-/// The greatest common multiple is the largest positive integer that is divisible by both $$x$$ and $$y$$.
+/// The function calculates the greatest common divisor of two integers 
+/// $$x, y \in \mathbb{Z}$$. The greatest common divisor is the largest positive
+/// integer that is divisible by both $$x$$ and $$y$$.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -64,10 +68,10 @@ import gleam_community/maths/piecewise
 ///     import gleam_community/maths/arithmetics
 ///
 ///     pub fn example() {
-///       arithmetics.lcm(1, 1)
+///       arithmetics.gcd(1, 1)
 ///       |> should.equal(1)
 ///   
-///       arithmetics.lcm(100, 10)
+///       arithmetics.gcd(100, 10)
 ///       |> should.equal(10)
 ///
 ///       arithmetics.gcd(-36, -17)
@@ -104,8 +108,9 @@ fn do_gcd(x: Int, y: Int) -> Int {
 /// </div>
 ///
 /// 
-/// Given two integers, $$x$$ (dividend) and $$y$$ (divisor), the Euclidean modulo of $$x$$ by $$y$$,
-/// denoted as $$x \mod y$$, is the remainder $$r$$ of the division of $$x$$ by $$y$$, such that:
+/// Given two integers, $$x$$ (dividend) and $$y$$ (divisor), the Euclidean modulo
+/// of $$x$$ by $$y$$, denoted as $$x \mod y$$, is the remainder $$r$$ of the 
+/// division of $$x$$ by $$y$$, such that:
 /// 
 /// \\[
 /// x = q \cdot y + r \quad \text{and} \quad 0 \leq r < |y|,
@@ -113,13 +118,15 @@ fn do_gcd(x: Int, y: Int) -> Int {
 /// 
 /// where $$q$$ is an integer that represents the quotient of the division.
 ///
-/// The Euclidean modulo function of two numbers, is the remainder operation most commonly utilized in 
-/// mathematics. This differs from the standard truncating modulo operation frequently employed in 
-/// programming via the `%` operator. Unlike the `%` operator, which may return negative results 
-/// depending on the divisor's sign, the Euclidean modulo function is designed to
-/// always yield a positive outcome, ensuring consistency with mathematical conventions.
+/// The Euclidean modulo function of two numbers, is the remainder operation most 
+/// commonly utilized in mathematics. This differs from the standard truncating 
+/// modulo operation frequently employed in programming via the `%` operator. 
+/// Unlike the `%` operator, which may return negative results depending on the 
+/// divisor's sign, the Euclidean modulo function is designed to always yield a 
+/// positive outcome, ensuring consistency with mathematical conventions.
 /// 
-/// Note that like the Gleam division operator `/` this will return `0` if one of the arguments is `0`.
+/// Note that like the Gleam division operator `/` this will return `0` if one of
+/// the arguments is `0`.
 ///
 ///
 /// <details>
@@ -161,8 +168,9 @@ pub fn int_euclidean_modulo(x: Int, y: Int) -> Int {
 ///     </a>
 /// </div>
 ///
-/// The function calculates the least common multiple of two integers $$x, y \in \mathbb{Z}$$.
-/// The least common multiple is the smallest positive integer that has both $$x$$ and $$y$$ as factors.
+/// The function calculates the least common multiple of two integers 
+/// $$x, y \in \mathbb{Z}$$. The least common multiple is the smallest positive
+/// integer that has both $$x$$ and $$y$$ as factors.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -200,7 +208,8 @@ pub fn lcm(x: Int, y: Int) -> Int {
 ///     </a>
 /// </div>
 ///
-/// The function returns all the positive divisors of an integer, including the number iteself.
+/// The function returns all the positive divisors of an integer, including the 
+/// number itself.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -251,7 +260,8 @@ fn find_divisors(n: Int) -> List(Int) {
 ///     </a>
 /// </div>
 ///
-/// The function returns all the positive divisors of an integer, excluding the number iteself.
+/// The function returns all the positive divisors of an integer, excluding the 
+/// number iteself.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -289,29 +299,32 @@ pub fn proper_divisors(n: Int) -> List(Int) {
 ///     </a>
 /// </div>
 ///
-/// Calculate the sum of the elements in a list:
+/// Calculate the (weighted) sum of the elements in a list:
 ///
 /// \\[
-/// \sum_{i=1}^n x_i
+/// \sum_{i=1}^n w_i x_i
 /// \\]
 ///
-/// In the formula, $$n$$ is the length of the list and $$x_i \in \mathbb{R}$$ is the value in the input list indexed by $$i$$.
+/// In the formula, $$n$$ is the length of the list and $$x_i \in \mathbb{R}$$ is
+/// the value in the input list indexed by $$i$$, while the $$w_i \in \mathbb{R}$$
+/// are corresponding weights ($$w_i = 1.0\\;\forall i=1...n$$ by default).
 ///
 /// <details>
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
+///     import gleam/option
 ///     import gleam_community/maths/arithmetics
 ///
 ///     pub fn example () {
 ///       // An empty list returns an error
 ///       []
-///       |> arithmetics.float_sum()
+///       |> arithmetics.float_sum(option.None)
 ///       |> should.equal(0.0)
 ///
 ///       // Valid input returns a result
 ///       [1.0, 2.0, 3.0]
-///       |> arithmetics.float_sum()
+///       |> arithmetics.float_sum(option.None)
 ///       |> should.equal(6.0)
 ///     }
 /// </details>
@@ -322,12 +335,18 @@ pub fn proper_divisors(n: Int) -> List(Int) {
 ///     </a>
 /// </div>
 ///
-pub fn float_sum(arr: List(Float)) -> Float {
-  case arr {
-    [] -> 0.0
-    _ ->
+pub fn float_sum(arr: List(Float), weights: option.Option(List(Float))) -> Float {
+  case arr, weights {
+    [], _ -> 0.0
+    _, option.None ->
       arr
       |> list.fold(0.0, fn(acc: Float, a: Float) -> Float { a +. acc })
+    _, option.Some(warr) -> {
+      list.zip(arr, warr)
+      |> list.fold(0.0, fn(acc: Float, a: #(Float, Float)) -> Float {
+        pair.first(a) *. pair.second(a) +. acc
+      })
+    }
   }
 }
 
@@ -343,7 +362,8 @@ pub fn float_sum(arr: List(Float)) -> Float {
 /// \sum_{i=1}^n x_i
 /// \\]
 ///
-/// In the formula, $$n$$ is the length of the list and $$x_i \in \mathbb{Z}$$ is the value in the input list indexed by $$i$$.
+/// In the formula, $$n$$ is the length of the list and $$x_i \in \mathbb{Z}$$ is 
+/// the value in the input list indexed by $$i$$.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -385,29 +405,32 @@ pub fn int_sum(arr: List(Int)) -> Int {
 ///     </a>
 /// </div>
 ///
-/// Calculate the product of the elements in a list:
+/// Calculate the (weighted) product of the elements in a list:
 ///
 /// \\[
-/// \prod_{i=1}^n x_i
+/// \prod_{i=1}^n x_i^{w_i}
 /// \\]
 ///
-/// In the formula, $$n$$ is the length of the list and $$x_i \in \mathbb{R}$$ is the value in the input list indexed by $$i$$.
-///
+/// In the formula, $$n$$ is the length of the list and $$x_i \in \mathbb{R}$$ is
+/// the value in the input list indexed by $$i$$, while the $$w_i \in \mathbb{R}$$
+/// are corresponding weights ($$w_i = 1.0\\;\forall i=1...n$$ by default).
+/// 
 /// <details>
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
+///     import gleam/option
 ///     import gleam_community/maths/arithmetics
 ///
 ///     pub fn example () {
-///       // An empty list returns 0.0
+///       // An empty list returns 1.0
 ///       []
-///       |> arithmetics.float_product()
-///       |> should.equal(0.0)
+///       |> arithmetics.float_product(option.None)
+///       |> should.equal(1.0)
 ///
 ///       // Valid input returns a result
 ///       [1.0, 2.0, 3.0]
-///       |> arithmetics.float_product()
+///       |> arithmetics.float_product(option.None)
 ///       |> should.equal(6.0)
 ///     }
 /// </details>
@@ -418,12 +441,36 @@ pub fn int_sum(arr: List(Int)) -> Int {
 ///     </a>
 /// </div>
 ///
-pub fn float_product(arr: List(Float)) -> Float {
-  case arr {
-    [] -> 1.0
-    _ ->
+pub fn float_product(
+  arr: List(Float),
+  weights: option.Option(List(Float)),
+) -> Result(Float, String) {
+  case arr, weights {
+    [], _ ->
+      1.0
+      |> Ok
+    _, option.None ->
       arr
       |> list.fold(1.0, fn(acc: Float, a: Float) -> Float { a *. acc })
+      |> Ok
+    _, option.Some(warr) -> {
+      let results =
+        list.zip(arr, warr)
+        |> list.map(fn(a: #(Float, Float)) -> Result(Float, String) {
+          pair.first(a)
+          |> elementary.power(pair.second(a))
+        })
+        |> result.all
+      case results {
+        Ok(prods) ->
+          prods
+          |> list.fold(1.0, fn(acc: Float, a: Float) -> Float { a *. acc })
+          |> Ok
+        Error(msg) ->
+          msg
+          |> Error
+      }
+    }
   }
 }
 
@@ -439,7 +486,8 @@ pub fn float_product(arr: List(Float)) -> Float {
 /// \prod_{i=1}^n x_i
 /// \\]
 ///
-/// In the formula, $$n$$ is the length of the list and $$x_i \in \mathbb{Z}$$ is the value in the input list indexed by $$i$$.
+/// In the formula, $$n$$ is the length of the list and $$x_i \in \mathbb{Z}$$ is 
+/// the value in the input list indexed by $$i$$.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -448,10 +496,10 @@ pub fn float_product(arr: List(Float)) -> Float {
 ///     import gleam_community/maths/arithmetics
 ///
 ///     pub fn example () {
-///       // An empty list returns 0
+///       // An empty list returns 1
 ///       []
 ///       |> arithmetics.int_product()
-///       |> should.equal(0)
+///       |> should.equal(1)
 ///
 ///       // Valid input returns a result
 ///       [1, 2, 3]
@@ -487,9 +535,10 @@ pub fn int_product(arr: List(Int)) -> Int {
 /// v_j = \sum_{i=1}^j x_i \\;\\; \forall j = 1,\dots, n
 /// \\]
 ///
-/// In the formula, $$v_j$$ is the $$j$$'th element in the cumulative sum of $$n$$ elements.
-/// That is, $$n$$ is the length of the list and $$x_i \in \mathbb{R}$$ is the value in the input list indexed by $$i$$. 
-/// The value $$v_j$$ is thus the sum of the $$1$$ to $$j$$ first elements in the given list.
+/// In the formula, $$v_j$$ is the $$j$$'th element in the cumulative sum of $$n$$
+/// elements. That is, $$n$$ is the length of the list and $$x_i \in \mathbb{R}$$ 
+/// is the value in the input list indexed by $$i$$. The value $$v_j$$ is thus the
+/// sum of the $$1$$ to $$j$$ first elements in the given list.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -536,9 +585,10 @@ pub fn float_cumulative_sum(arr: List(Float)) -> List(Float) {
 /// v_j = \sum_{i=1}^j x_i \\;\\; \forall j = 1,\dots, n
 /// \\]
 ///
-/// In the formula, $$v_j$$ is the $$j$$'th element in the cumulative sum of $$n$$ elements.
-/// That is, $$n$$ is the length of the list and $$x_i \in \mathbb{Z}$$ is the value in the input list indexed by $$i$$. 
-/// The value $$v_j$$ is thus the sum of the $$1$$ to $$j$$ first elements in the given list.
+/// In the formula, $$v_j$$ is the $$j$$'th element in the cumulative sum of $$n$$
+/// elements. That is, $$n$$ is the length of the list and $$x_i \in \mathbb{Z}$$ 
+/// is the value in the input list indexed by $$i$$. The value $$v_j$$ is thus the
+/// sum of the $$1$$ to $$j$$ first elements in the given list.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -585,9 +635,11 @@ pub fn int_cumulative_sum(arr: List(Int)) -> List(Int) {
 /// v_j = \prod_{i=1}^j x_i \\;\\; \forall j = 1,\dots, n
 /// \\]
 ///
-/// In the formula, $$v_j$$ is the $$j$$'th element in the cumulative product of $$n$$ elements.
-/// That is, $$n$$ is the length of the list and $$x_i \in \mathbb{R}$$ is the value in the input list indexed by $$i$$. 
-/// The value $$v_j$$ is thus the sum of the $$1$$ to $$j$$ first elements in the given list.
+/// In the formula, $$v_j$$ is the $$j$$'th element in the cumulative product of 
+/// $$n$$ elements. That is, $$n$$ is the length of the list and 
+/// $$x_i \in \mathbb{R}$$ is the value in the input list indexed by $$i$$. The 
+/// value $$v_j$$ is thus the sum of the $$1$$ to $$j$$ first elements in the 
+/// given list.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -614,7 +666,7 @@ pub fn int_cumulative_sum(arr: List(Int)) -> List(Int) {
 ///     </a>
 /// </div>
 ///
-pub fn float_cumumlative_product(arr: List(Float)) -> List(Float) {
+pub fn float_cumulative_product(arr: List(Float)) -> List(Float) {
   case arr {
     [] -> []
     _ ->
@@ -635,9 +687,11 @@ pub fn float_cumumlative_product(arr: List(Float)) -> List(Float) {
 /// v_j = \prod_{i=1}^j x_i \\;\\; \forall j = 1,\dots, n
 /// \\]
 ///
-/// In the formula, $$v_j$$ is the $$j$$'th element in the cumulative product of $$n$$ elements.
-/// That is, $$n$$ is the length of the list and $$x_i \in \mathbb{Z}$$ is the value in the input list indexed by $$i$$. 
-/// The value $$v_j$$ is thus the product of the $$1$$ to $$j$$ first elements in the given list.
+/// In the formula, $$v_j$$ is the $$j$$'th element in the cumulative product of 
+/// $$n$$ elements. That is, $$n$$ is the length of the list and 
+/// $$x_i \in \mathbb{Z}$$ is the value in the input list indexed by $$i$$. The 
+/// value $$v_j$$ is thus the product of the $$1$$ to $$j$$ first elements in the
+/// given list.
 ///
 /// <details>
 ///     <summary>Example:</summary>
