@@ -243,8 +243,8 @@ pub fn norm(
 /// \\]
 ///
 /// In the formula, $$n$$ is the length of the two lists and $$x_i, y_i$$ are the 
-/// values in the respective input lists indexed by $$i$$, while 
-/// $$w_i \in \mathbb{R}_{+}$$ is a corresponding positive weight 
+/// values in the respective input lists indexed by $$i$$, while the
+/// $$w_i \in \mathbb{R}_{+}$$ are corresponding positive weights 
 /// ($$w_i = 1.0\\;\forall i=1...n$$ by default).
 ///
 /// <details>
@@ -304,7 +304,7 @@ pub fn manhattan_distance(
 ///
 /// In the formula, $$p >= 1$$ is the order, $$n$$ is the length of the two lists 
 /// and $$x_i, y_i$$ are the values in the respective input lists indexed by $$i$$.
-/// $$w_i \in \mathbb{R}_{+}$$ is a corresponding positive weight 
+/// The $$w_i \in \mathbb{R}_{+}$$ are corresponding positive weights 
 /// ($$w_i = 1.0\\;\forall i=1...n$$ by default).
 ///
 /// The Minkowski distance is a generalization of both the Euclidean distance 
@@ -393,8 +393,8 @@ pub fn minkowski_distance(
 /// \\]
 ///
 /// In the formula, $$n$$ is the length of the two lists and $$x_i, y_i$$ are the
-/// values in the respective input lists indexed by $$i$$, while
-/// $$w_i \in \mathbb{R}_{+}$$ is a corresponding positive weight 
+/// values in the respective input lists indexed by $$i$$, while the
+/// $$w_i \in \mathbb{R}_{+}$$ are corresponding positive weights 
 /// ($$w_i = 1.0\\;\forall i=1...n$$ by default).
 ///
 /// <details>
@@ -1042,8 +1042,8 @@ pub fn overlap_coefficient(xset: set.Set(a), yset: set.Set(a)) -> Float {
 /// \\]
 ///
 /// In the formula, $$n$$ is the length of the two lists and $$x_i$$, $$y_i$$ are
-/// the values in the respective input lists indexed by $$i$$, while 
-/// $$w_i \in \mathbb{R}_{+}$$ is a corresponding positive weight 
+/// the values in the respective input lists indexed by $$i$$, while the
+/// $$w_i \in \mathbb{R}_{+}$$ are corresponding positive weights 
 /// ($$w_i = 1.0\\;\forall i=1...n$$ by default). 
 /// 
 /// The cosine similarity provides a value between -1 and 1, where 1 means the 
@@ -1253,6 +1253,18 @@ fn distance_list_helper(
 ///     </a>
 /// </div>
 /// 
+/// Calculate the (weighted) Canberra distance between two lists:
+///
+/// \\[
+/// \sum_{i=1}^n w_{i}\frac{\left| x_i - y_i \right|}
+/// {\left| x_i \right| + \left| y_i \right|}
+/// \\]
+///
+/// In the formula, $$n$$ is the length of the two lists, and $$x_i, y_i$$ are the 
+/// values in the respective input lists indexed by $$i$$, while the 
+/// $$w_i \in \mathbb{R}_{+}$$ are corresponding positive weights 
+/// ($$w_i = 1.0\\;\forall i=1...n$$ by default). 
+///
 /// <details>
 ///     <summary>Example:</summary>
 ///
@@ -1330,6 +1342,21 @@ fn canberra_distance_helper(tuple: #(Float, Float)) -> Float {
 ///     </a>
 /// </div>
 /// 
+/// Calculate the (weighted) Bray-Curtis distance between two lists:
+///
+/// \\[
+/// \frac{\sum_{i=1}^n w_{i} \left| x_i - y_i \right|}
+/// {\sum_{i=1}^n w_{i}\left| x_i + y_i \right|}
+/// \\]
+///
+/// In the formula, $$n$$ is the length of the two lists, and $$x_i, y_i$$ are the values 
+/// in the respective input lists indexed by $$i$$, while the 
+/// $$w_i \in \mathbb{R}_{+}$$ are corresponding positive weights 
+/// ($$w_i = 1.0\\;\forall i=1...n$$ by default).
+/// 
+/// The Bray-Curtis distance is in the range $$[0, 1]$$ if all entries $$x_i, y_i$$ are
+/// positive.
+///
 /// <details>
 ///     <summary>Example:</summary>
 ///
