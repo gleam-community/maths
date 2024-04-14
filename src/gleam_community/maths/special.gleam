@@ -100,8 +100,8 @@ pub fn erf(x: Float) -> Float {
 ///     </a>
 /// </div>
 ///
-/// The gamma function over the real numbers. The function is essentially equal to the
-/// factorial for any positive integer argument: $$\Gamma(n) = (n - 1)!$$
+/// The gamma function over the real numbers. The function is essentially equal to 
+/// the factorial for any positive integer argument: $$\Gamma(n) = (n - 1)!$$
 ///
 /// The implemented gamma function is approximated through Lanczos approximation
 /// using the same coefficients used by the GNU Scientific Library.

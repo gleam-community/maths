@@ -197,16 +197,16 @@ pub fn int_list_cumulative_sum_test() {
 pub fn float_list_cumulative_product_test() {
   // An empty lists returns an empty list
   []
-  |> arithmetics.float_cumumlative_product()
+  |> arithmetics.float_cumulative_product()
   |> should.equal([])
 
   // Valid input returns a result
   [1.0, 2.0, 3.0]
-  |> arithmetics.float_cumumlative_product()
+  |> arithmetics.float_cumulative_product()
   |> should.equal([1.0, 2.0, 6.0])
 
   [-2.0, 4.0, 6.0]
-  |> arithmetics.float_cumumlative_product()
+  |> arithmetics.float_cumulative_product()
   |> should.equal([-2.0, -8.0, -48.0])
 }
 

@@ -10,43 +10,57 @@ pub fn float_list_norm_test() {
 
   // An empty lists returns 0.0
   []
-  |> metrics.norm(1.0)
-  |> should.equal(0.0)
+  |> metrics.norm(1.0, option.None)
+  |> should.equal(Ok(0.0))
 
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
-  [1.0, 1.0, 1.0]
-  |> metrics.norm(1.0)
+  let assert Ok(result) =
+    [1.0, 1.0, 1.0]
+    |> metrics.norm(1.0, option.None)
+  result
   |> predicates.is_close(3.0, 0.0, tol)
   |> should.be_true()
 
-  [1.0, 1.0, 1.0]
-  |> metrics.norm(-1.0)
+  let assert Ok(result) =
+    [1.0, 1.0, 1.0]
+    |> metrics.norm(-1.0, option.None)
+  result
   |> predicates.is_close(0.3333333333333333, 0.0, tol)
   |> should.be_true()
 
-  [-1.0, -1.0, -1.0]
-  |> metrics.norm(-1.0)
+  let assert Ok(result) =
+    [-1.0, -1.0, -1.0]
+    |> metrics.norm(-1.0, option.None)
+  result
   |> predicates.is_close(0.3333333333333333, 0.0, tol)
   |> should.be_true()
 
-  [-1.0, -1.0, -1.0]
-  |> metrics.norm(1.0)
+  let assert Ok(result) =
+    [-1.0, -1.0, -1.0]
+    |> metrics.norm(1.0, option.None)
+  result
   |> predicates.is_close(3.0, 0.0, tol)
   |> should.be_true()
 
-  [-1.0, -2.0, -3.0]
-  |> metrics.norm(-10.0)
+  let assert Ok(result) =
+    [-1.0, -2.0, -3.0]
+    |> metrics.norm(-10.0, option.None)
+  result
   |> predicates.is_close(0.9999007044905545, 0.0, tol)
   |> should.be_true()
 
-  [-1.0, -2.0, -3.0]
-  |> metrics.norm(-100.0)
+  let assert Ok(result) =
+    [-1.0, -2.0, -3.0]
+    |> metrics.norm(-100.0, option.None)
+  result
   |> predicates.is_close(1.0, 0.0, tol)
   |> should.be_true()
 
-  [-1.0, -2.0, -3.0]
-  |> metrics.norm(2.0)
+  let assert Ok(result) =
+    [-1.0, -2.0, -3.0]
+    |> metrics.norm(2.0, option.None)
+  result
   |> predicates.is_close(3.7416573867739413, 0.0, tol)
   |> should.be_true()
 }
@@ -62,12 +76,45 @@ pub fn float_list_manhattan_test() {
   metrics.manhattan_distance([], [1.0], option.None)
   |> should.be_error()
 
-  // manhattan distance (p = 1)
+  // Try with valid input (same as Minkowski distance with p = 1)
   let assert Ok(result) =
     metrics.manhattan_distance([0.0, 0.0], [1.0, 2.0], option.None)
   result
   |> predicates.is_close(3.0, 0.0, tol)
   |> should.be_true()
+
+  metrics.manhattan_distance([1.0, 2.0, 3.0], [4.0, 5.0, 6.0], option.None)
+  |> should.equal(Ok(9.0))
+
+  metrics.manhattan_distance(
+    [1.0, 2.0, 3.0],
+    [4.0, 5.0, 6.0],
+    option.Some([1.0, 1.0, 1.0]),
+  )
+  |> should.equal(Ok(9.0))
+
+  metrics.manhattan_distance(
+    [1.0, 2.0, 3.0],
+    [4.0, 5.0, 6.0],
+    option.Some([1.0, 2.0, 3.0]),
+  )
+  |> should.equal(Ok(18.0))
+
+  // Try invalid input with weights (different sized lists returns an error)
+  metrics.manhattan_distance(
+    [1.0, 2.0, 3.0],
+    [4.0, 5.0, 6.0],
+    option.Some([7.0, 8.0]),
+  )
+  |> should.be_error()
+
+  // Try invalid input with weights that are negative
+  metrics.manhattan_distance(
+    [1.0, 2.0, 3.0],
+    [4.0, 5.0, 6.0],
+    option.Some([-7.0, -8.0, -9.0]),
+  )
+  |> should.be_error()
 }
 
 pub fn float_list_minkowski_test() {
@@ -124,6 +171,58 @@ pub fn float_list_minkowski_test() {
   result
   |> predicates.is_close(3.0, 0.0, tol)
   |> should.be_true()
+
+  // Try different valid input
+  let assert Ok(result) =
+    metrics.minkowski_distance(
+      [1.0, 2.0, 3.0],
+      [4.0, 5.0, 6.0],
+      4.0,
+      option.None,
+    )
+  result
+  |> predicates.is_close(3.9482220388574776, 0.0, tol)
+  |> should.be_true()
+
+  let assert Ok(result) =
+    metrics.minkowski_distance(
+      [1.0, 2.0, 3.0],
+      [4.0, 5.0, 6.0],
+      4.0,
+      option.Some([1.0, 1.0, 1.0]),
+    )
+  result
+  |> predicates.is_close(3.9482220388574776, 0.0, tol)
+  |> should.be_true()
+
+  let assert Ok(result) =
+    metrics.minkowski_distance(
+      [1.0, 2.0, 3.0],
+      [4.0, 5.0, 6.0],
+      4.0,
+      option.Some([1.0, 2.0, 3.0]),
+    )
+  result
+  |> predicates.is_close(4.6952537402198615, 0.0, tol)
+  |> should.be_true()
+
+  // Try invalid input with weights (different sized lists returns an error)
+  metrics.minkowski_distance(
+    [1.0, 2.0, 3.0],
+    [4.0, 5.0, 6.0],
+    2.0,
+    option.Some([7.0, 8.0]),
+  )
+  |> should.be_error()
+
+  // Try invalid input with weights that are negative
+  metrics.minkowski_distance(
+    [1.0, 2.0, 3.0],
+    [4.0, 5.0, 6.0],
+    2.0,
+    option.Some([-7.0, -8.0, -9.0]),
+  )
+  |> should.be_error()
 }
 
 pub fn float_list_euclidean_test() {
@@ -137,12 +236,55 @@ pub fn float_list_euclidean_test() {
   metrics.euclidean_distance([], [1.0], option.None)
   |> should.be_error()
 
-  // Euclidean distance (p = 2)
+  // Try with valid input (same as Minkowski distance with p = 2)
   let assert Ok(result) =
     metrics.euclidean_distance([0.0, 0.0], [1.0, 2.0], option.None)
   result
   |> predicates.is_close(2.23606797749979, 0.0, tol)
   |> should.be_true()
+
+  // Try different valid input
+  let assert Ok(result) =
+    metrics.euclidean_distance([1.0, 2.0, 3.0], [4.0, 5.0, 6.0], option.None)
+  result
+  |> predicates.is_close(5.196152422706632, 0.0, tol)
+  |> should.be_true()
+
+  let assert Ok(result) =
+    metrics.euclidean_distance(
+      [1.0, 2.0, 3.0],
+      [4.0, 5.0, 6.0],
+      option.Some([1.0, 1.0, 1.0]),
+    )
+  result
+  |> predicates.is_close(5.196152422706632, 0.0, tol)
+  |> should.be_true()
+
+  let assert Ok(result) =
+    metrics.euclidean_distance(
+      [1.0, 2.0, 3.0],
+      [4.0, 5.0, 6.0],
+      option.Some([1.0, 2.0, 3.0]),
+    )
+  result
+  |> predicates.is_close(7.3484692283495345, 0.0, tol)
+  |> should.be_true()
+
+  // Try invalid input with weights (different sized lists returns an error)
+  metrics.euclidean_distance(
+    [1.0, 2.0, 3.0],
+    [4.0, 5.0, 6.0],
+    option.Some([7.0, 8.0]),
+  )
+  |> should.be_error()
+
+  // Try invalid input with weights that are negative
+  metrics.euclidean_distance(
+    [1.0, 2.0, 3.0],
+    [4.0, 5.0, 6.0],
+    option.Some([-7.0, -8.0, -9.0]),
+  )
+  |> should.be_error()
 }
 
 pub fn mean_test() {
@@ -268,6 +410,8 @@ pub fn overlap_coefficient_test() {
 }
 
 pub fn cosine_similarity_test() {
+  let assert Ok(tol) = elementary.power(-10.0, -6.0)
+
   // Empty lists returns an error
   metrics.cosine_similarity([], [], option.None)
   |> should.be_error()
@@ -295,43 +439,84 @@ pub fn cosine_similarity_test() {
   // Two parallel, but oppositely oriented vectors (represented by lists)
   metrics.cosine_similarity([-1.0, -2.0, -3.0], [1.0, 2.0, 3.0], option.None)
   |> should.equal(Ok(-1.0))
+
+  // Try with arbitrary valid input 
+  let assert Ok(result) =
+    metrics.cosine_similarity([1.0, 2.0, 3.0], [4.0, 5.0, 6.0], option.None)
+  result
+  |> predicates.is_close(0.9746318461970762, 0.0, tol)
+  |> should.be_true()
+
+  // Try valid input with weights
+  let assert Ok(result) =
+    metrics.cosine_similarity(
+      [1.0, 2.0, 3.0],
+      [4.0, 5.0, 6.0],
+      option.Some([1.0, 1.0, 1.0]),
+    )
+  result
+  |> predicates.is_close(0.9746318461970762, 0.0, tol)
+  |> should.be_true()
+
+  // Try with different weights
+  let assert Ok(result) =
+    metrics.cosine_similarity(
+      [1.0, 2.0, 3.0],
+      [4.0, 5.0, 6.0],
+      option.Some([1.0, 2.0, 3.0]),
+    )
+  result
+  |> predicates.is_close(0.9855274566525745, 0.0, tol)
+  |> should.be_true()
+
+  // Try invalid input with weights (different sized lists returns an error)
+  metrics.cosine_similarity(
+    [1.0, 2.0, 3.0],
+    [4.0, 5.0, 6.0],
+    option.Some([7.0, 8.0]),
+  )
+  |> should.be_error()
+
+  // Try invalid input with weights that are negative
+  metrics.cosine_similarity(
+    [1.0, 2.0, 3.0],
+    [4.0, 5.0, 6.0],
+    option.Some([-7.0, -8.0, -9.0]),
+  )
+  |> should.be_error()
 }
 
 pub fn chebyshev_distance_test() {
   // Empty lists returns an error
-  metrics.chebyshev_distance([], [], option.None)
+  metrics.chebyshev_distance([], [])
   |> should.be_error()
 
   // One empty list returns an error
-  metrics.chebyshev_distance([1.0, 2.0, 3.0], [], option.None)
+  metrics.chebyshev_distance([1.0, 2.0, 3.0], [])
   |> should.be_error()
 
   // One empty list returns an error
-  metrics.chebyshev_distance([], [1.0, 2.0, 3.0], option.None)
+  metrics.chebyshev_distance([], [1.0, 2.0, 3.0])
   |> should.be_error()
 
   // Different sized lists returns an error
-  metrics.chebyshev_distance([1.0, 2.0], [1.0, 2.0, 3.0, 4.0], option.None)
+  metrics.chebyshev_distance([1.0, 2.0], [1.0, 2.0, 3.0, 4.0])
   |> should.be_error()
 
   // Try different types of valid input
-  metrics.chebyshev_distance([1.0, 0.0], [0.0, 2.0], option.None)
+  metrics.chebyshev_distance([1.0, 0.0], [0.0, 2.0])
   |> should.equal(Ok(2.0))
 
-  metrics.chebyshev_distance([1.0, 0.0], [2.0, 0.0], option.None)
+  metrics.chebyshev_distance([1.0, 0.0], [2.0, 0.0])
   |> should.equal(Ok(1.0))
 
-  metrics.chebyshev_distance([1.0, 0.0], [-2.0, 0.0], option.None)
+  metrics.chebyshev_distance([1.0, 0.0], [-2.0, 0.0])
   |> should.equal(Ok(3.0))
 
-  metrics.chebyshev_distance(
-    [-5.0, -10.0, -3.0],
-    [-1.0, -12.0, -3.0],
-    option.None,
-  )
+  metrics.chebyshev_distance([-5.0, -10.0, -3.0], [-1.0, -12.0, -3.0])
   |> should.equal(Ok(4.0))
 
-  metrics.chebyshev_distance([1.0, 2.0, 3.0], [1.0, 2.0, 3.0], option.None)
+  metrics.chebyshev_distance([1.0, 2.0, 3.0], [1.0, 2.0, 3.0])
   |> should.equal(Ok(0.0))
 }
 
@@ -421,6 +606,14 @@ pub fn canberra_distance_test() {
     option.Some([1.0]),
   )
   |> should.be_error()
+
+  // Try invalid input with weights that are negative
+  metrics.canberra_distance(
+    [1.0, 2.0, 3.0],
+    [4.0, 5.0, 6.0],
+    option.Some([-7.0, -8.0, -9.0]),
+  )
+  |> should.be_error()
 }
 
 pub fn braycurtis_distance_test() {
@@ -467,6 +660,14 @@ pub fn braycurtis_distance_test() {
     [1.0, 2.0, 3.0],
     [1.0, 2.0, 3.0],
     option.Some([1.0]),
+  )
+  |> should.be_error()
+
+  // Try invalid input with weights that are negative
+  metrics.braycurtis_distance(
+    [1.0, 2.0, 3.0],
+    [4.0, 5.0, 6.0],
+    option.Some([-7.0, -8.0, -9.0]),
   )
   |> should.be_error()
 }

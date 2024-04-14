@@ -1,6 +1,6 @@
-////<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" integrity="sha384-GvrOXuhMATgEsSwCs4smul74iXGOixntILdUW9XmUC6+HX0sLNAK3q71HotJqlAn" crossorigin="anonymous">
-////<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" integrity="sha384-cpW21h6RZv/phavutF+AuVYrr+dA8xD9zs6FwLpaCct6O9ctzYFfFr4dgmgccOTx" crossorigin="anonymous"></script>
-////<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+////<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" integrity="sha384-wcIxkf4k558AjM3Yz3BBFQUbk/zgIYC2R0QpeeYb+TwlBVMrlgLqwRjRtGZiK7ww" crossorigin="anonymous">
+////<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" integrity="sha384-hIoBPJpTUs74ddyc4bFZSM1TVlQDA60VBbJS0oA934VSz82sBx1X7kSx2ATBDIyd" crossorigin="anonymous"></script>
+////<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"></script>
 ////<script>
 ////    document.addEventListener("DOMContentLoaded", function() {
 ////        renderMathInElement(document.body, {
@@ -61,9 +61,10 @@ import gleam/int
 import gleam/string
 import gleam/option
 
-/// Utility function that checks all lists have the expected length
-/// Primarily used by all distance measures taking List(Float) as input
-fn check_lists(
+/// Utility function that checks all lists have the expected length and contents
+/// The function is primarily used by all distance measures taking 'List(Float)'
+/// as input
+fn validate_lists(
   xarr: List(Float),
   yarr: List(Float),
   weights: option.Option(List(Float)),
@@ -76,9 +77,9 @@ fn check_lists(
       "Invalid input argument: The list yarr is empty."
       |> Error
     _, _ -> {
-      let xlen: Int = list.length(xarr)
-      let ylen: Int = list.length(yarr)
-      case xlen == ylen, weights {
+      let xarr_length: Int = list.length(xarr)
+      let yarr_length: Int = list.length(yarr)
+      case xarr_length == yarr_length, weights {
         False, _ ->
           "Invalid input argument: length(xarr) != length(yarr). Valid input is when length(xarr) == length(yarr)."
           |> Error
@@ -87,15 +88,141 @@ fn check_lists(
           |> Ok
         }
         True, option.Some(warr) -> {
-          let wlen: Int = list.length(warr)
-          case xlen == wlen {
-            True ->
-              True
-              |> Ok
+          let warr_length: Int = list.length(warr)
+          case xarr_length == warr_length {
+            True -> {
+              validate_weights(warr)
+            }
             False ->
               "Invalid input argument: length(weights) != length(xarr) and length(weights) != length(yarr). Valid input is when length(weights) == length(xarr) == length(yarr)."
               |> Error
           }
+        }
+      }
+    }
+  }
+}
+
+fn validate_weights(warr: List(Float)) -> Result(Bool, String) {
+  // Check that all the given weights are positive
+  let assert Ok(minimum) = piecewise.list_minimum(warr, float.compare)
+  case minimum >=. 0.0 {
+    False ->
+      "Invalid input argument: One or more weights are negative. Valid input is when all weights are >= 0."
+      |> Error
+    True ->
+      True
+      |> Ok
+  }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// Calculate the (weighted) $$p$$-norm of a list (representing a vector):
+///
+/// \\[
+/// \left( \sum_{i=1}^n w_{i} \left|x_{i}\right|^{p} \right)^{\frac{1}{p}}
+/// \\]
+///
+/// In the formula, $$n$$ is the length of the list and $$x_i$$ is the value in 
+/// the input list indexed by $$i$$, while $$w_i \in \mathbb{R}_{+}$$ is
+/// a corresponding positive weight ($$w_i = 1.0\;\forall i=1...n$$ by default).
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam/option
+///     import gleam_community/maths/elementary
+///     import gleam_community/maths/metrics
+///     import gleam_community/maths/predicates
+///
+///     pub fn example() {
+///       let assert Ok(tol) = elementary.power(-10.0, -6.0)
+///     
+///       let assert Ok(result) =
+///         [1.0, 1.0, 1.0]
+///         |> metrics.norm(1.0, option.None)
+///       result
+///       |> predicates.is_close(3.0, 0.0, tol)
+///       |> should.be_true()
+///     
+///       let assert Ok(result) =
+///         [1.0, 1.0, 1.0]
+///         |> metrics.norm(-1.0, option.None)
+///       result
+///       |> predicates.is_close(0.3333333333333333, 0.0, tol)
+///       |> should.be_true()
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn norm(
+  arr: List(Float),
+  p: Float,
+  weights: option.Option(List(Float)),
+) -> Result(Float, String) {
+  case arr, weights {
+    [], _ ->
+      0.0
+      |> Ok
+    _, option.None -> {
+      let aggregate: Float =
+        arr
+        |> list.fold(0.0, fn(accumulator: Float, element: Float) -> Float {
+          let assert Ok(result) =
+            piecewise.float_absolute_value(element)
+            |> elementary.power(p)
+          result +. accumulator
+        })
+      let assert Ok(result) = elementary.power(aggregate, 1.0 /. p)
+      result
+      |> Ok
+    }
+    _, option.Some(warr) -> {
+      let arr_length: Int = list.length(arr)
+      let warr_length: Int = list.length(warr)
+      case arr_length == warr_length {
+        True -> {
+          case validate_weights(warr) {
+            Ok(_) -> {
+              let tuples: List(#(Float, Float)) = list.zip(arr, warr)
+              let aggregate: Float =
+                tuples
+                |> list.fold(
+                  0.0,
+                  fn(accumulator: Float, tuple: #(Float, Float)) -> Float {
+                    let first_element: Float = pair.first(tuple)
+                    let second_element: Float = pair.second(tuple)
+                    let assert Ok(result) =
+                      elementary.power(
+                        piecewise.float_absolute_value(first_element),
+                        p,
+                      )
+                    second_element *. result +. accumulator
+                  },
+                )
+              let assert Ok(result) = elementary.power(aggregate, 1.0 /. p)
+              result
+              |> Ok
+            }
+            Error(msg) ->
+              msg
+              |> Error
+          }
+        }
+        False -> {
+          "Invalid input argument: length(weights) != length(arr). Valid input is when length(weights) == length(arr)."
+          |> Error
         }
       }
     }
@@ -108,96 +235,40 @@ fn check_lists(
 ///     </a>
 /// </div>
 ///
-/// Calculate the $$p$$-norm of a list (representing a vector):
+/// Calculate the (weighted) Manhattan distance between two lists (representing 
+/// vectors):
 ///
 /// \\[
-/// \left( \sum_{i=1}^n \left|x_i\right|^{p} \right)^{\frac{1}{p}}
-/// \\]
-///
-/// In the formula, $$n$$ is the length of the list and $$x_i$$ is the value in 
-/// the input list indexed by $$i$$.
-///
-/// <details>
-///     <summary>Example:</summary>
-///
-///     import gleeunit/should
-///     import gleam_community/maths/elementary
-///     import gleam_community/maths/metrics
-///     import gleam_community/maths/predicates
-///
-///     pub fn example () {
-///       let assert Ok(tol) = elementary.power(-10.0, -6.0)
-///
-///       [1.0, 1.0, 1.0]
-///       |> metrics.norm(1.0)
-///       |> predicates.is_close(3.0, 0.0, tol)
-///       |> should.be_true()
-///
-///       [1.0, 1.0, 1.0]
-///       |> metrics.norm(-1.0)
-///       |> predicates.is_close(0.3333333333333333, 0.0, tol)
-///       |> should.be_true()
-///     }
-/// </details>
-///
-/// <div style="text-align: right;">
-///     <a href="#">
-///         <small>Back to top ↑</small>
-///     </a>
-/// </div>
-///
-pub fn norm(arr: List(Float), p: Float) -> Float {
-  case arr {
-    [] -> 0.0
-    _ -> {
-      let agg: Float =
-        arr
-        |> list.fold(0.0, fn(acc: Float, a: Float) -> Float {
-          let assert Ok(result) =
-            elementary.power(piecewise.float_absolute_value(a), p)
-          result +. acc
-        })
-      let assert Ok(result) = elementary.power(agg, 1.0 /. p)
-      result
-    }
-  }
-}
-
-/// <div style="text-align: right;">
-///     <a href="https://github.com/gleam-community/maths/issues">
-///         <small>Spot a typo? Open an issue!</small>
-///     </a>
-/// </div>
-///
-/// Calculate the Manhattan distance between two lists (representing vectors):
-///
-/// \\[
-/// \sum_{i=1}^n \left|x_i - y_i \right|
+/// \sum_{i=1}^n w_{i} \left|x_i - y_i \right|
 /// \\]
 ///
 /// In the formula, $$n$$ is the length of the two lists and $$x_i, y_i$$ are the 
-/// values in the respective input lists indexed by $$i$$.
+/// values in the respective input lists indexed by $$i$$, while 
+/// $$w_i \in \mathbb{R}_{+}$$ is a corresponding positive weight 
+/// ($$w_i = 1.0\;\forall i=1...n$$ by default).
 ///
 /// <details>
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
+///     import gleam/option
 ///     import gleam_community/maths/elementary
 ///     import gleam_community/maths/metrics
 ///     import gleam_community/maths/predicates
 ///
-///     pub fn example () {
+///     pub fn example() {
 ///       let assert Ok(tol) = elementary.power(-10.0, -6.0)
 ///     
 ///       // Empty lists returns an error
-///       metrics.manhattan_distance([], [])
+///       metrics.manhattan_distance([], [], option.None)
 ///       |> should.be_error()
 ///     
 ///       // Differing lengths returns error
-///       metrics.manhattan_distance([], [1.0])
+///       metrics.manhattan_distance([], [1.0], option.None)
 ///       |> should.be_error()
 ///     
-///       let assert Ok(result) = metrics.manhattan_distance([0.0, 0.0], [1.0, 2.0])
+///       let assert Ok(result) =
+///         metrics.manhattan_distance([0.0, 0.0], [1.0, 2.0], option.None)
 ///       result
 ///       |> predicates.is_close(3.0, 0.0, tol)
 ///       |> should.be_true()
@@ -224,14 +295,17 @@ pub fn manhattan_distance(
 ///     </a>
 /// </div>
 ///
-/// Calculate the Minkowski distance between two lists (representing vectors):
+/// Calculate the (weighted) Minkowski distance between two lists (representing
+/// vectors):
 ///
 /// \\[
-/// \left( \sum_{i=1}^n \left|x_i - y_i \right|^{p} \right)^{\frac{1}{p}}
+/// \left( \sum_{i=1}^n w_{i} \left|x_i - y_i \right|^{p} \right)^{\frac{1}{p}}
 /// \\]
 ///
 /// In the formula, $$p >= 1$$ is the order, $$n$$ is the length of the two lists 
 /// and $$x_i, y_i$$ are the values in the respective input lists indexed by $$i$$.
+/// $$w_i \in \mathbb{R}_{+}$$ is a corresponding positive weight 
+/// ($$w_i = 1.0\;\forall i=1...n$$ by default).
 ///
 /// The Minkowski distance is a generalization of both the Euclidean distance 
 /// ($$p=2$$) and the Manhattan distance ($$p = 1$$).
@@ -240,29 +314,31 @@ pub fn manhattan_distance(
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
+///     import gleam/option
 ///     import gleam_community/maths/elementary
 ///     import gleam_community/maths/metrics
 ///     import gleam_community/maths/predicates
 ///
-///     pub fn example () {
+///     pub fn example() {
 ///       let assert Ok(tol) = elementary.power(-10.0, -6.0)
 ///     
 ///       // Empty lists returns an error
-///       metrics.minkowski_distance([], [], 1.0)
+///       metrics.minkowski_distance([], [], 1.0, option.None)
 ///       |> should.be_error()
 ///     
 ///       // Differing lengths returns error
-///       metrics.minkowski_distance([], [1.0], 1.0)
+///       metrics.minkowski_distance([], [1.0], 1.0, option.None)
 ///       |> should.be_error()
 ///     
 ///       // Test order < 1
-///       metrics.minkowski_distance([0.0, 0.0], [0.0, 0.0], -1.0)
+///       metrics.minkowski_distance([0.0, 0.0], [0.0, 0.0], -1.0, option.None)
 ///       |> should.be_error()
 ///     
-///       let assert Ok(result) = metrics.minkowski_distance([0.0, 0.0], [1.0, 2.0], 1.0)
+///       let assert Ok(result) =
+///         metrics.minkowski_distance([0.0, 0.0], [1.0, 2.0], 1.0, option.None)
 ///       result
 ///       |> predicates.is_close(3.0, 0.0, tol)
-///       |> should.be_true()  
+///       |> should.be_true()
 ///     }
 /// </details>
 ///
@@ -278,7 +354,7 @@ pub fn minkowski_distance(
   p: Float,
   weights: option.Option(List(Float)),
 ) -> Result(Float, String) {
-  case check_lists(xarr, yarr, weights) {
+  case validate_lists(xarr, yarr, weights) {
     Error(msg) ->
       msg
       |> Error
@@ -287,13 +363,17 @@ pub fn minkowski_distance(
         True ->
           "Invalid input argument: p < 1. Valid input is p >= 1."
           |> Error
-        False ->
-          list.zip(xarr, yarr)
-          |> list.map(fn(tuple: #(Float, Float)) -> Float {
-            pair.first(tuple) -. pair.second(tuple)
-          })
-          |> norm(p)
+        False -> {
+          let differences: List(Float) =
+            list.zip(xarr, yarr)
+            |> list.map(fn(tuple: #(Float, Float)) -> Float {
+              pair.first(tuple) -. pair.second(tuple)
+            })
+
+          let assert Ok(result) = norm(differences, p, weights)
+          result
           |> Ok
+        }
       }
     }
   }
@@ -305,35 +385,40 @@ pub fn minkowski_distance(
 ///     </a>
 /// </div>
 ///
-/// Calculate the Euclidean distance between two lists (representing vectors):
+/// Calculate the (weighted) Euclidean distance between two lists (representing 
+/// vectors):
 ///
 /// \\[
-/// \left( \sum_{i=1}^n \left|x_i - y_i \right|^{2} \right)^{\frac{1}{2}}
+/// \left( \sum_{i=1}^n w_{i} \left|x_i - y_i \right|^{2} \right)^{\frac{1}{2}}
 /// \\]
 ///
 /// In the formula, $$n$$ is the length of the two lists and $$x_i, y_i$$ are the
-/// values in the respective input lists indexed by $$i$$.
+/// values in the respective input lists indexed by $$i$$, while
+/// $$w_i \in \mathbb{R}_{+}$$ is a corresponding positive weight 
+/// ($$w_i = 1.0\;\forall i=1...n$$ by default).
 ///
 /// <details>
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
+///     import gleam/option
 ///     import gleam_community/maths/elementary
 ///     import gleam_community/maths/metrics
 ///     import gleam_community/maths/predicates
 ///
-///     pub fn example () {
+///     pub fn example() {
 ///       let assert Ok(tol) = elementary.power(-10.0, -6.0)
 ///     
 ///       // Empty lists returns an error
-///       metrics.euclidean_distance([], [])
+///       metrics.euclidean_distance([], [], option.None)
 ///       |> should.be_error()
 ///     
 ///       // Differing lengths returns an error
-///       metrics.euclidean_distance([], [1.0])
+///       metrics.euclidean_distance([], [1.0], option.None)
 ///       |> should.be_error()
 ///     
-///       let assert Ok(result) = metrics.euclidean_distance([0.0, 0.0], [1.0, 2.0])
+///       let assert Ok(result) =
+///         metrics.euclidean_distance([0.0, 0.0], [1.0, 2.0], option.None)
 ///       result
 ///       |> predicates.is_close(2.23606797749979, 0.0, tol)
 ///       |> should.be_true()
@@ -377,7 +462,7 @@ pub fn euclidean_distance(
 ///     import gleam_community/maths/metrics
 ///     import gleam_community/maths/predicates
 ///
-///     pub fn example () {
+///     pub fn example() {
 ///       // Empty lists returns an error
 ///       metrics.chebyshev_distance([], [])
 ///       |> should.be_error()
@@ -400,20 +485,17 @@ pub fn euclidean_distance(
 pub fn chebyshev_distance(
   xarr: List(Float),
   yarr: List(Float),
-  weights: option.Option(List(Float)),
 ) -> Result(Float, String) {
-  case check_lists(xarr, yarr, weights) {
+  case validate_lists(xarr, yarr, option.None) {
     Error(msg) ->
       msg
       |> Error
     Ok(_) -> {
-      let differences =
-        list.zip(xarr, yarr)
-        |> list.map(fn(tuple: #(Float, Float)) -> Float {
-          { pair.first(tuple) -. pair.second(tuple) }
-          |> piecewise.float_absolute_value()
-        })
-      differences
+      list.zip(xarr, yarr)
+      |> list.map(fn(tuple: #(Float, Float)) -> Float {
+        { pair.first(tuple) -. pair.second(tuple) }
+        |> piecewise.float_absolute_value()
+      })
       |> piecewise.list_maximum(float.compare)
     }
   }
@@ -948,39 +1030,44 @@ pub fn overlap_coefficient(xset: set.Set(a), yset: set.Set(a)) -> Float {
 ///     </a>
 /// </div>
 /// 
-/// Calculate the cosine similarity between two lists (representing vectors):
+/// Calculate the (weighted) cosine similarity between two lists (representing
+/// vectors):
 ///
 /// \\[
-/// \frac{\sum_{i=1}^n x_i \cdot y_i}{\left(\sum_{i=1}^n x_i^2\right)^{\frac{1}{2}}
-/// \cdot \left(\sum_{i=1}^n y_i^2\right)^{\frac{1}{2}}} 
+/// \frac{\sum_{i=1}^n w_i \cdot x_i \cdot y_i}
+/// {\left(\sum_{i=1}^n x_i^2\right)^{\frac{1}{2}}
+/// \cdot 
+/// \left(\sum_{i=1}^n w_i y_i^2\right)^{\frac{1}{2}}} 
 /// \\; \in \\; \left[-1, 1\right]
 /// \\]
 ///
 /// In the formula, $$n$$ is the length of the two lists and $$x_i$$, $$y_i$$ are
-/// the values in the respective input lists indexed by $$i$$. The numerator 
-/// represents the dot product of the two vectors, while the denominator is the
-/// product of the magnitudes (Euclidean norms) of the two vectors. The cosine
-/// similarity provides a value between -1 and 1, where 1 means the vectors are
-/// in the same direction, -1 means they are in exactly opposite directions, 
-/// and 0 indicates orthogonality. 
+/// the values in the respective input lists indexed by $$i$$, while 
+/// $$w_i \in \mathbb{R}_{+}$$ is a corresponding positive weight 
+/// ($$w_i = 1.0\;\forall i=1...n$$ by default). 
+/// 
+/// The cosine similarity provides a value between -1 and 1, where 1 means the 
+/// vectors are in the same direction, -1 means they are in exactly opposite 
+/// directions, and 0 indicates orthogonality. 
 /// 
 /// <details>
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
+///     import gleam/option
 ///     import gleam_community/maths/metrics
 ///
-///     pub fn example () {
+///     pub fn example() {
 ///       // Two orthogonal vectors
-///       metrics.cosine_similarity([-1.0, 1.0, 0.0], [1.0, 1.0, -1.0])
+///       metrics.cosine_similarity([-1.0, 1.0, 0.0], [1.0, 1.0, -1.0], option.None)
 ///       |> should.equal(Ok(0.0))
 ///     
 ///       // Two identical (parallel) vectors
-///       metrics.cosine_similarity([1.0, 2.0, 3.0], [1.0, 2.0, 3.0])
+///       metrics.cosine_similarity([1.0, 2.0, 3.0], [1.0, 2.0, 3.0], option.None)
 ///       |> should.equal(Ok(1.0))
 ///     
 ///       // Two parallel, but oppositely oriented vectors
-///       metrics.cosine_similarity([-1.0, -2.0, -3.0], [1.0, 2.0, 3.0])
+///       metrics.cosine_similarity([-1.0, -2.0, -3.0], [1.0, 2.0, 3.0], option.None)
 ///       |> should.equal(Ok(-1.0))
 ///     }
 /// </details>
@@ -996,21 +1083,47 @@ pub fn cosine_similarity(
   yarr: List(Float),
   weights: option.Option(List(Float)),
 ) -> Result(Float, String) {
-  case check_lists(xarr, yarr, weights) {
+  case validate_lists(xarr, yarr, weights) {
     Error(msg) ->
       msg
       |> Error
     Ok(_) -> {
-      list.fold(
-        list.zip(xarr, yarr),
-        0.0,
-        fn(acc: Float, a: #(Float, Float)) -> Float {
-          let result: Float = pair.first(a) *. pair.second(a)
-          result +. acc
-        },
-      )
-      /. { norm(xarr, 2.0) *. norm(yarr, 2.0) }
-      |> Ok
+      let zipped_arr: List(#(Float, Float)) = list.zip(xarr, yarr)
+
+      let numerator_elements: List(Float) =
+        zipped_arr
+        |> list.map(fn(tuple: #(Float, Float)) -> Float {
+          pair.first(tuple) *. pair.second(tuple)
+        })
+
+      case weights {
+        option.None -> {
+          let numerator: Float =
+            numerator_elements
+            |> arithmetics.float_sum(option.None)
+
+          let assert Ok(xarr_norm) = norm(xarr, 2.0, option.None)
+          let assert Ok(yarr_norm) = norm(yarr, 2.0, option.None)
+          let denominator: Float = {
+            xarr_norm *. yarr_norm
+          }
+          numerator /. denominator
+          |> Ok
+        }
+        _ -> {
+          let numerator: Float =
+            numerator_elements
+            |> arithmetics.float_sum(weights)
+
+          let assert Ok(xarr_norm) = norm(xarr, 2.0, weights)
+          let assert Ok(yarr_norm) = norm(yarr, 2.0, weights)
+          let denominator: Float = {
+            xarr_norm *. yarr_norm
+          }
+          numerator /. denominator
+          |> Ok
+        }
+      }
     }
   }
 }
@@ -1144,9 +1257,23 @@ fn distance_list_helper(
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
+///     import gleam/option
 ///     import gleam_community/maths/metrics
 ///
-///     pub fn example () {
+///     pub fn example() {
+///       // Empty lists returns an error
+///       metrics.canberra_distance([], [], option.None)
+///       |> should.be_error()
+///     
+///       // Different sized lists returns an error
+///       metrics.canberra_distance([1.0, 2.0], [1.0, 2.0, 3.0, 4.0], option.None)
+///       |> should.be_error()
+///     
+///       // Valid inputs
+///       metrics.canberra_distance([1.0, 2.0], [-2.0, -1.0], option.None)
+///       |> should.equal(Ok(2.0))
+///     
+///       metrics.canberra_distance([1.0, 0.0], [0.0, 2.0], option.Some([1.0, 0.5]))
 ///     }
 /// </details>
 ///
@@ -1162,7 +1289,7 @@ pub fn canberra_distance(
   yarr: List(Float),
   weights: option.Option(List(Float)),
 ) -> Result(Float, String) {
-  case check_lists(xarr, yarr, weights) {
+  case validate_lists(xarr, yarr, weights) {
     Error(msg) ->
       msg
       |> Error
@@ -1170,6 +1297,7 @@ pub fn canberra_distance(
       let arr: List(Float) =
         list.zip(xarr, yarr)
         |> list.map(canberra_distance_helper)
+
       case weights {
         option.None -> {
           arr
@@ -1206,9 +1334,24 @@ fn canberra_distance_helper(tuple: #(Float, Float)) -> Float {
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
+///     import gleam/option
 ///     import gleam_community/maths/metrics
 ///
-///     pub fn example () {
+///     pub fn example() {
+///       // Empty lists returns an error
+///       metrics.braycurtis_distance([], [], option.None)
+///       |> should.be_error()
+///     
+///       // Different sized lists returns an error
+///       metrics.braycurtis_distance([1.0, 2.0], [1.0, 2.0, 3.0, 4.0], option.None)
+///       |> should.be_error()
+///     
+///       // Valid inputs
+///       metrics.braycurtis_distance([1.0, 0.0], [0.0, 2.0], option.None)
+///       |> should.equal(Ok(1.0))
+///     
+///       metrics.braycurtis_distance([1.0, 2.0], [3.0, 4.0], option.Some([0.5, 1.0]))
+///       |> should.equal(Ok(0.375))
 ///     }
 /// </details>
 ///
@@ -1224,7 +1367,7 @@ pub fn braycurtis_distance(
   yarr: List(Float),
   weights: option.Option(List(Float)),
 ) -> Result(Float, String) {
-  case check_lists(xarr, yarr, weights) {
+  case validate_lists(xarr, yarr, weights) {
     Error(msg) ->
       msg
       |> Error

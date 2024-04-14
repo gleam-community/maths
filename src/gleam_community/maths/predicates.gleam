@@ -23,7 +23,8 @@
 //// 
 //// ---
 //// 
-//// Predicates: A module containing functions for testing various mathematical properties of numbers.
+//// Predicates: A module containing functions for testing various mathematical 
+//// properties of numbers.
 //// 
 //// * **Tests**
 ////   * [`is_close`](#is_close)
@@ -50,8 +51,9 @@ import gleam_community/maths/arithmetics
 /// </div>
 ///
 /// Determine if a given value $$a$$ is close to or equivalent to a reference value 
-/// $$b$$ based on supplied relative $$r_{tol}$$ and absolute $$a_{tol}$$ tolerance values.
-/// The equivalance of the two given values are then determined based on the equation:
+/// $$b$$ based on supplied relative $$r_{tol}$$ and absolute $$a_{tol}$$ tolerance
+/// values. The equivalance of the two given values are then determined based on 
+/// the equation:
 ///
 /// \\[
 ///     \|a - b\| \leq (a_{tol} + r_{tol} \cdot \|b\|)
@@ -109,7 +111,8 @@ fn float_absolute_difference(a: Float, b: Float) -> Float {
 ///     </a>
 /// </div>
 ///
-/// Determine if a list of values are close to or equivalent to a another list of reference values.
+/// Determine if a list of values are close to or equivalent to a another list of
+/// reference values.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -176,7 +179,8 @@ pub fn all_close(
 ///
 /// Determine if a given value is fractional.
 /// 
-/// `True` is returned if the given value is fractional, otherwise `False` is returned. 
+/// `True` is returned if the given value is fractional, otherwise `False` is 
+/// returned. 
 /// 
 /// <details>
 ///     <summary>Example</summary>
@@ -213,7 +217,8 @@ fn do_ceiling(a: Float) -> Float
 ///     </a>
 /// </div>
 ///
-/// A function that tests whether a given integer value $$x \in \mathbb{Z}$$ is a power of another integer value $$y \in \mathbb{Z}$$.  
+/// A function that tests whether a given integer value $$x \in \mathbb{Z}$$ is a
+/// power of another integer value $$y \in \mathbb{Z}$$.  
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -252,7 +257,9 @@ pub fn is_power(x: Int, y: Int) -> Bool {
 ///     </a>
 /// </div>
 ///
-/// A function that tests whether a given integer value $$n \in \mathbb{Z}$$ is a perfect number. A number is perfect if it is equal to the sum of its proper positive divisors.
+/// A function that tests whether a given integer value $$n \in \mathbb{Z}$$ is a
+/// perfect number. A number is perfect if it is equal to the sum of its proper 
+/// positive divisors.
 /// 
 /// <details>
 ///     <summary>Details</summary>
@@ -369,13 +376,16 @@ pub fn is_odd(x: Int) -> Bool {
 ///     </a>
 /// </div>
 ///
-/// A function that tests whether a given integer value $$x \in \mathbb{Z}$$ is a prime number. 
-/// A prime number is a natural number greater than 1 that has no positive divisors other than 1 and itself.
+/// A function that tests whether a given integer value $$x \in \mathbb{Z}$$ is a 
+/// prime number. A prime number is a natural number greater than 1 that has no 
+/// positive divisors other than 1 and itself.
 /// 
-/// The function uses the Miller-Rabin primality test to assess if $$x$$ is prime. It is a probabilistic
-/// test, so it can mistakenly identify a composite number as prime. However, the probability of such errors decreases
-/// with more testing iterations (the function uses 64 iterations internally, which is typically more than sufficient). 
-/// The Miller-Rabin test is particularly useful for large numbers.
+/// The function uses the Miller-Rabin primality test to assess if $$x$$ is prime. 
+/// It is a probabilistic test, so it can mistakenly identify a composite number 
+/// as prime. However, the probability of such errors decreases with more testing
+/// iterations (the function uses 64 iterations internally, which is typically 
+/// more than sufficient). The Miller-Rabin test is particularly useful for large
+/// numbers.
 /// 
 /// <details>
 ///     <summary>Details</summary>
