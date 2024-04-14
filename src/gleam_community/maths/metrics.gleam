@@ -130,7 +130,7 @@ fn validate_weights(warr: List(Float)) -> Result(Bool, String) {
 ///
 /// In the formula, $$n$$ is the length of the list and $$x_i$$ is the value in 
 /// the input list indexed by $$i$$, while $$w_i \in \mathbb{R}_{+}$$ is
-/// a corresponding positive weight ($$w_i = 1.0\;\forall i=1...n$$ by default).
+/// a corresponding positive weight ($$w_i = 1.0\\;\forall i=1...n$$ by default).
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -245,7 +245,7 @@ pub fn norm(
 /// In the formula, $$n$$ is the length of the two lists and $$x_i, y_i$$ are the 
 /// values in the respective input lists indexed by $$i$$, while 
 /// $$w_i \in \mathbb{R}_{+}$$ is a corresponding positive weight 
-/// ($$w_i = 1.0\;\forall i=1...n$$ by default).
+/// ($$w_i = 1.0\\;\forall i=1...n$$ by default).
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -305,7 +305,7 @@ pub fn manhattan_distance(
 /// In the formula, $$p >= 1$$ is the order, $$n$$ is the length of the two lists 
 /// and $$x_i, y_i$$ are the values in the respective input lists indexed by $$i$$.
 /// $$w_i \in \mathbb{R}_{+}$$ is a corresponding positive weight 
-/// ($$w_i = 1.0\;\forall i=1...n$$ by default).
+/// ($$w_i = 1.0\\;\forall i=1...n$$ by default).
 ///
 /// The Minkowski distance is a generalization of both the Euclidean distance 
 /// ($$p=2$$) and the Manhattan distance ($$p = 1$$).
@@ -395,7 +395,7 @@ pub fn minkowski_distance(
 /// In the formula, $$n$$ is the length of the two lists and $$x_i, y_i$$ are the
 /// values in the respective input lists indexed by $$i$$, while
 /// $$w_i \in \mathbb{R}_{+}$$ is a corresponding positive weight 
-/// ($$w_i = 1.0\;\forall i=1...n$$ by default).
+/// ($$w_i = 1.0\\;\forall i=1...n$$ by default).
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -1034,17 +1034,17 @@ pub fn overlap_coefficient(xset: set.Set(a), yset: set.Set(a)) -> Float {
 /// vectors):
 ///
 /// \\[
-/// \frac{\sum_{i=1}^n w_i \cdot x_i \cdot y_i}
-/// {\left(\sum_{i=1}^n x_i^2\right)^{\frac{1}{2}}
+/// \frac{\sum_{i=1}^n w_{i} \cdot x_i \cdot y_i}
+/// {\left(\sum_{i=1}^n w_{i} \cdot x_i^2\right)^{\frac{1}{2}}
 /// \cdot 
-/// \left(\sum_{i=1}^n w_i y_i^2\right)^{\frac{1}{2}}} 
+/// \left(\sum_{i=1}^n w_{i} \cdot y_i^2\right)^{\frac{1}{2}}} 
 /// \\; \in \\; \left[-1, 1\right]
 /// \\]
 ///
 /// In the formula, $$n$$ is the length of the two lists and $$x_i$$, $$y_i$$ are
 /// the values in the respective input lists indexed by $$i$$, while 
 /// $$w_i \in \mathbb{R}_{+}$$ is a corresponding positive weight 
-/// ($$w_i = 1.0\;\forall i=1...n$$ by default). 
+/// ($$w_i = 1.0\\;\forall i=1...n$$ by default). 
 /// 
 /// The cosine similarity provides a value between -1 and 1, where 1 means the 
 /// vectors are in the same direction, -1 means they are in exactly opposite 

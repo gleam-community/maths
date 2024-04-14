@@ -490,7 +490,7 @@ fn do_ceiling(a: Float) -> Float
 /// The absolute value:
 ///
 /// \\[
-///  \forall x, y \in \mathbb{R}, \\; |x|  \in \mathbb{R}_{+}. 
+///  \forall x \in \mathbb{R}, \\; |x|  \in \mathbb{R}_{+}. 
 /// \\]
 ///
 /// The function takes an input $$x$$ and returns a positive float value.
@@ -519,7 +519,7 @@ pub fn float_absolute_value(x: Float) -> Float {
 /// The absolute value:
 ///
 /// \\[
-///  \forall x, y \in \mathbb{Z}, \\; |x|  \in \mathbb{Z}_{+}. 
+///  \forall x \in \mathbb{Z}, \\; |x|  \in \mathbb{Z}_{+}. 
 /// \\]
 ///
 /// The function takes an input $$x$$ and returns a positive integer value.
@@ -592,7 +592,8 @@ pub fn float_absolute_difference(a: Float, b: Float) -> Float {
 ///  \forall x, y \in \mathbb{Z}, \\; |x - y|  \in \mathbb{Z}_{+}. 
 /// \\]
 ///
-/// The function takes two inputs $$x$$ and $$y$$ and returns a positive integer value which is the the absolute difference of the inputs.
+/// The function takes two inputs $$x$$ and $$y$$ and returns a positive integer
+/// value which is the the absolute difference of the inputs.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -698,7 +699,8 @@ fn do_int_sign(a: Int) -> Int
 ///     </a>
 /// </div>
 ///
-/// The function takes two arguments $$x, y \in \mathbb{R}$$ and returns $$x$$ such that it has the same sign as $$y$$.
+/// The function takes two arguments $$x, y \in \mathbb{R}$$ and returns $$x$$ 
+/// such that it has the same sign as $$y$$.
 ///
 /// <div style="text-align: right;">
 ///     <a href="#">
@@ -723,7 +725,8 @@ pub fn float_copy_sign(x: Float, y: Float) -> Float {
 ///     </a>
 /// </div>
 ///
-/// The function takes two arguments $$x, y \in \mathbb{Z}$$ and returns $$x$$ such that it has the same sign as $$y$$.
+/// The function takes two arguments $$x, y \in \mathbb{Z}$$ and returns $$x$$ 
+/// such that it has the same sign as $$y$$.
 ///
 /// <div style="text-align: right;">
 ///     <a href="#">

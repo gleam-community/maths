@@ -307,7 +307,7 @@ pub fn proper_divisors(n: Int) -> List(Int) {
 ///
 /// In the formula, $$n$$ is the length of the list and $$x_i \in \mathbb{R}$$ is
 /// the value in the input list indexed by $$i$$, while $$w_i \in \mathbb{R}$$ is
-/// a corresponding weight ($$w_i = 1.0\;\forall i=1...n$$ by default).
+/// a corresponding weight ($$w_i = 1.0\\;\forall i=1...n$$ by default).
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -413,7 +413,7 @@ pub fn int_sum(arr: List(Int)) -> Int {
 ///
 /// In the formula, $$n$$ is the length of the list and $$x_i \in \mathbb{R}$$ is
 /// the value in the input list indexed by $$i$$, while $$w_i \in \mathbb{R}$$ is
-/// a corresponding weight ($$w_i = 1.0\;\forall i=1...n$$ by default).
+/// a corresponding weight ($$w_i = 1.0\\;\forall i=1...n$$ by default).
 /// 
 /// <details>
 ///     <summary>Example:</summary>
