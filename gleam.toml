@@ -1,5 +1,5 @@
 name = "gleam_community_maths"
-version = "1.1.0"
+version = "1.1.1"
 
 licences = ["Apache-2.0"]
 description = "A basic maths library"
