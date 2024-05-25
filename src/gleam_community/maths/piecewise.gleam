@@ -20,11 +20,11 @@
 ////<style>
 ////    .katex { font-size: 1.1em; }
 ////</style>
-//// 
+////
 //// ---
-//// 
+////
 //// Piecewise: A module containing functions that have different definitions depending on conditions or intervals of their domain.
-//// 
+////
 //// * **Rounding functions**
 ////   * [`ceiling`](#ceiling)
 ////   * [`floor`](#floor)
@@ -52,11 +52,11 @@
 ////   * [`arg_maximum`](#arg_maximum)
 ////
 
-import gleam/option
+import gleam/int
 import gleam/list
+import gleam/option
 import gleam/order
 import gleam/pair
-import gleam/int
 import gleam_community/maths/conversion
 import gleam_community/maths/elementary
 
@@ -66,7 +66,7 @@ import gleam_community/maths/elementary
 ///     </a>
 /// </div>
 ///
-/// The ceiling function rounds a given input value $$x \in \mathbb{R}$$ to the nearest integer value (at the specified digit) that is larger than or equal to the input $$x$$. 
+/// The ceiling function rounds a given input value $$x \in \mathbb{R}$$ to the nearest integer value (at the specified digit) that is larger than or equal to the input $$x$$.
 ///
 /// Note: The ceiling function is used as an alias for the rounding function [`round`](#round) with rounding mode `RoundUp`.
 ///
@@ -325,7 +325,7 @@ pub fn truncate(x: Float, digits: option.Option(Int)) -> Result(Float, String) {
 ///       piecewise.round(12.0654, option.None, option.Some(piecewise.RoundNearest))
 ///       |> should.equal(Ok(12.0))
 ///
-///       // The default rounding mode is "RoundNearest" if None is provided 
+///       // The default rounding mode is "RoundNearest" if None is provided
 ///       piecewise.round(12.0654, option.None, option.None)
 ///       |> should.equal(Ok(12.0))
 ///
@@ -490,7 +490,7 @@ fn do_ceiling(a: Float) -> Float
 /// The absolute value:
 ///
 /// \\[
-///  \forall x, y \in \mathbb{R}, \\; |x|  \in \mathbb{R}_{+}. 
+///  \forall x, y \in \mathbb{R}, \\; |x|  \in \mathbb{R}_{+}.
 /// \\]
 ///
 /// The function takes an input $$x$$ and returns a positive float value.
@@ -519,7 +519,7 @@ pub fn float_absolute_value(x: Float) -> Float {
 /// The absolute value:
 ///
 /// \\[
-///  \forall x, y \in \mathbb{Z}, \\; |x|  \in \mathbb{Z}_{+}. 
+///  \forall x, y \in \mathbb{Z}, \\; |x|  \in \mathbb{Z}_{+}.
 /// \\]
 ///
 /// The function takes an input $$x$$ and returns a positive integer value.
@@ -548,7 +548,7 @@ pub fn int_absolute_value(x: Int) -> Int {
 /// The absolute difference:
 ///
 /// \\[
-///  \forall x, y \in \mathbb{R}, \\; |x - y|  \in \mathbb{R}_{+}. 
+///  \forall x, y \in \mathbb{R}, \\; |x - y|  \in \mathbb{R}_{+}.
 /// \\]
 ///
 /// The function takes two inputs $$x$$ and $$y$$ and returns a positive float
@@ -589,7 +589,7 @@ pub fn float_absolute_difference(a: Float, b: Float) -> Float {
 /// The absolute difference:
 ///
 /// \\[
-///  \forall x, y \in \mathbb{Z}, \\; |x - y|  \in \mathbb{Z}_{+}. 
+///  \forall x, y \in \mathbb{Z}, \\; |x - y|  \in \mathbb{Z}_{+}.
 /// \\]
 ///
 /// The function takes two inputs $$x$$ and $$y$$ and returns a positive integer value which is the the absolute difference of the inputs.
@@ -627,7 +627,7 @@ pub fn int_absolute_difference(a: Int, b: Int) -> Int {
 /// </div>
 ///
 /// The function takes an input $$x \in \mathbb{R}$$ and returns the sign of
-/// the input, indicating whether it is positive (+1.0), negative (-1.0), or 
+/// the input, indicating whether it is positive (+1.0), negative (-1.0), or
 /// zero (0.0).
 ///
 /// <div style="text-align: right;">
@@ -871,7 +871,7 @@ pub fn maximum(x: a, y: a, compare: fn(a, a) -> order.Order) -> a {
 /// </div>
 ///
 /// The minmax function takes two arguments $$x, y$$ along with a function
-/// for comparing $$x, y$$. The function returns a tuple with the smallest 
+/// for comparing $$x, y$$. The function returns a tuple with the smallest
 /// value first and largest second.
 ///
 /// <details>
@@ -906,7 +906,7 @@ pub fn minmax(x: a, y: a, compare: fn(a, a) -> order.Order) -> #(a, a) {
 ///     </a>
 /// </div>
 ///
-/// Returns the minimum value of a given list. 
+/// Returns the minimum value of a given list.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -920,7 +920,7 @@ pub fn minmax(x: a, y: a, compare: fn(a, a) -> order.Order) -> #(a, a) {
 ///       []
 ///       |> piecewise.list_minimum(int.compare)
 ///       |> should.be_error()
-///     
+///
 ///       // Valid input returns a result
 ///       [4, 4, 3, 2, 1]
 ///       |> piecewise.list_minimum(int.compare)
@@ -941,17 +941,15 @@ pub fn list_minimum(
     [] ->
       "Invalid input argument: The list is empty."
       |> Error
-    _ -> {
-      let assert Ok(val0) = list.at(arr, 0)
-      arr
-      |> list.fold(val0, fn(acc: a, element: a) {
-        case compare(element, acc) {
-          order.Lt -> element
-          _ -> acc
-        }
-      })
-      |> Ok
-    }
+    [x, ..rest] ->
+      Ok(
+        list.fold(rest, x, fn(acc: a, element: a) {
+          case compare(element, acc) {
+            order.Lt -> element
+            _ -> acc
+          }
+        }),
+      )
   }
 }
 
@@ -961,7 +959,7 @@ pub fn list_minimum(
 ///     </a>
 /// </div>
 ///
-/// Returns the maximum value of a given list. 
+/// Returns the maximum value of a given list.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -997,17 +995,15 @@ pub fn list_maximum(
     [] ->
       "Invalid input argument: The list is empty."
       |> Error
-    _ -> {
-      let assert Ok(val0) = list.at(arr, 0)
-      arr
-      |> list.fold(val0, fn(acc: a, element: a) {
-        case compare(acc, element) {
-          order.Lt -> element
-          _ -> acc
-        }
-      })
-      |> Ok
-    }
+    [x, ..rest] ->
+      Ok(
+        list.fold(rest, x, fn(acc: a, element: a) {
+          case compare(acc, element) {
+            order.Lt -> element
+            _ -> acc
+          }
+        }),
+      )
   }
 }
 
@@ -1023,7 +1019,7 @@ pub fn list_maximum(
 ///     </a>
 /// </div>
 ///
-/// Returns the indices of the minimum values in a given list. 
+/// Returns the indices of the minimum values in a given list.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -1037,7 +1033,7 @@ pub fn list_maximum(
 ///       []
 ///       |> piecewise.arg_minimum(float.compare)
 ///       |> should.be_error()
-///     
+///
 ///       // Valid input returns a result
 ///       [4.0, 4.0, 3.0, 2.0, 1.0]
 ///       |> piecewise.arg_minimum(float.compare)
@@ -1107,7 +1103,7 @@ pub fn arg_minimum(
 ///       []
 ///       |> piecewise.arg_maximum(float.compare)
 ///       |> should.be_error()
-///     
+///
 ///       // Valid input returns a result
 ///       [4.0, 4.0, 3.0, 2.0, 1.0]
 ///       |> piecewise.arg_maximum(float.compare)
@@ -1163,7 +1159,7 @@ pub fn arg_maximum(
 ///     </a>
 /// </div>
 ///
-/// Returns a tuple consisting of the minimum and maximum values of a given list. 
+/// Returns a tuple consisting of the minimum and maximum values of a given list.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -1177,7 +1173,7 @@ pub fn arg_maximum(
 ///       []
 ///       |> piecewise.extrema(float.compare)
 ///       |> should.be_error()
-///     
+///
 ///       // Valid input returns a result
 ///       [4.0, 4.0, 3.0, 2.0, 1.0]
 ///       |> piecewise.extrema(float.compare)
@@ -1199,21 +1195,18 @@ pub fn extrema(
     [] ->
       "Invalid input argument: The list is empty."
       |> Error
-    _ -> {
-      let assert Ok(val_max) = list.at(arr, 0)
-      let assert Ok(val_min) = list.at(arr, 0)
-      arr
-      |> list.fold(#(val_min, val_max), fn(acc: #(a, a), element: a) {
-        let first: a = pair.first(acc)
-        let second: a = pair.second(acc)
-        case compare(element, first), compare(second, element) {
-          order.Lt, order.Lt -> #(element, element)
-          order.Lt, _ -> #(element, second)
-          _, order.Lt -> #(first, element)
-          _, _ -> #(first, second)
-        }
-      })
-      |> Ok
-    }
+    [x, ..rest] ->
+      Ok(
+        list.fold(rest, #(x, x), fn(acc: #(a, a), element: a) {
+          let first: a = pair.first(acc)
+          let second: a = pair.second(acc)
+          case compare(element, first), compare(second, element) {
+            order.Lt, order.Lt -> #(element, element)
+            order.Lt, _ -> #(element, second)
+            _, order.Lt -> #(first, element)
+            _, _ -> #(first, second)
+          }
+        }),
+      )
   }
 }

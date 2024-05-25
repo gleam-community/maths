@@ -20,11 +20,11 @@
 ////<style>
 ////    .katex { font-size: 1.1em; }
 ////</style>
-//// 
+////
 //// ---
-//// 
+////
 //// Metrics: A module offering functions for calculating distances and other types of metrics.
-//// 
+////
 //// * **Distances**
 ////   * [`norm`](#norm)
 ////   * [`manhatten_distance`](#float_manhatten_distance)
@@ -35,16 +35,15 @@
 ////   * [`median`](#median)
 ////   * [`variance`](#variance)
 ////   * [`standard_deviation`](#standard_deviation)
-//// 
+////
 
-import gleam_community/maths/elementary
-import gleam_community/maths/piecewise
-import gleam_community/maths/arithmetics
-import gleam_community/maths/predicates
-import gleam_community/maths/conversion
+import gleam/bool
 import gleam/list
 import gleam/pair
-import gleam/float
+import gleam_community/maths/arithmetics
+import gleam_community/maths/conversion
+import gleam_community/maths/elementary
+import gleam_community/maths/piecewise
 
 /// <div style="text-align: right;">
 ///     <a href="https://github.com/gleam-community/maths/issues">
@@ -130,15 +129,15 @@ pub fn norm(arr: List(Float), p: Float) -> Float {
 ///
 ///     pub fn example () {
 ///       let assert Ok(tol) = elementary.power(-10.0, -6.0)
-///     
+///
 ///       // Empty lists returns 0.0
 ///       metrics.float_manhatten_distance([], [])
 ///       |> should.equal(Ok(0.0))
-///     
+///
 ///       // Differing lengths returns error
 ///       metrics.manhatten_distance([], [1.0])
 ///       |> should.be_error()
-///     
+///
 ///       let assert Ok(result) = metrics.manhatten_distance([0.0, 0.0], [1.0, 2.0])
 ///       result
 ///       |> predicates.is_close(3.0, 0.0, tol)
@@ -185,23 +184,23 @@ pub fn manhatten_distance(
 ///
 ///     pub fn example () {
 ///       let assert Ok(tol) = elementary.power(-10.0, -6.0)
-///     
+///
 ///       // Empty lists returns 0.0
 ///       metrics.minkowski_distance([], [], 1.0)
 ///       |> should.equal(Ok(0.0))
-///     
+///
 ///       // Differing lengths returns error
 ///       metrics.minkowski_distance([], [1.0], 1.0)
 ///       |> should.be_error()
-///     
+///
 ///       // Test order < 1
 ///       metrics.minkowski_distance([0.0, 0.0], [0.0, 0.0], -1.0)
 ///       |> should.be_error()
-///     
+///
 ///       let assert Ok(result) = metrics.minkowski_distance([0.0, 0.0], [1.0, 2.0], 1.0)
 ///       result
 ///       |> predicates.is_close(3.0, 0.0, tol)
-///       |> should.be_true()  
+///       |> should.be_true()
 ///     }
 /// </details>
 ///
@@ -262,15 +261,15 @@ pub fn minkowski_distance(
 ///
 ///     pub fn example () {
 ///       let assert Ok(tol) = elementary.power(-10.0, -6.0)
-///     
+///
 ///       // Empty lists returns 0.0
 ///       metrics.euclidean_distance([], [])
 ///       |> should.equal(Ok(0.0))
-///     
+///
 ///       // Differing lengths returns error
 ///       metrics.euclidean_distance([], [1.0])
 ///       |> should.be_error()
-///     
+///
 ///       let assert Ok(result) = metrics.euclidean_distance([0.0, 0.0], [1.0, 2.0])
 ///       result
 ///       |> predicates.is_close(2.23606797749979, 0.0, tol)
@@ -303,7 +302,7 @@ pub fn euclidean_distance(
 /// \bar{x} = \frac{1}{n}\sum_{i=1}^n x_i
 /// \\]
 ///
-/// In the formula, $$n$$ is the sample size (the length of the list) and 
+/// In the formula, $$n$$ is the sample size (the length of the list) and
 /// $$x_i$$ is the sample point in the input list indexed by $$i$$.
 ///
 /// <details>
@@ -370,7 +369,7 @@ pub fn mean(arr: List(Float)) -> Result(Float, String) {
 ///       [1., 2., 3.]
 ///       |> metrics.median()
 ///       |> should.equal(Ok(2.))
-///     
+///
 ///       [1., 2., 3., 4.]
 ///       |> metrics.median()
 ///       |> should.equal(Ok(2.5))
@@ -383,33 +382,31 @@ pub fn mean(arr: List(Float)) -> Result(Float, String) {
 ///     </a>
 /// </div>
 ///
-pub fn median(arr: List(Float)) -> Result(Float, String) {
-  case arr {
-    [] ->
-      "Invalid input argument: The list is empty."
-      |> Error
-    _ -> {
-      let count: Int = list.length(arr)
-      let mid: Int = list.length(arr) / 2
-      let sorted: List(Float) = list.sort(arr, float.compare)
-      case predicates.is_odd(count) {
-        // If there is an odd number of elements in the list, then the median
-        // is just the middle value
-        True -> {
-          let assert Ok(val0) = list.at(sorted, mid)
-          val0
-          |> Ok
-        }
-        // If there is an even number of elements in the list, then the median
-        // is the mean of the two middle values
-        False -> {
-          let assert Ok(val0) = list.at(sorted, mid - 1)
-          let assert Ok(val1) = list.at(sorted, mid)
-          [val0, val1]
-          |> mean()
-        }
-      }
-    }
+pub fn median(arr: List(Float)) -> Result(Float, Nil) {
+  use <- bool.guard(list.is_empty(arr), Error(Nil))
+  let length = list.length(arr)
+  let mid = length / 2
+
+  case length % 2 == 0 {
+    True -> do_median(arr, mid, True, 0)
+    False -> do_median(arr, mid, False, 0)
+  }
+}
+
+fn do_median(
+  xs: List(Float),
+  mid: Int,
+  mean: Bool,
+  index: Int,
+) -> Result(Float, Nil) {
+  use <- bool.guard(index > mid, Error(Nil))
+  let mid_less_one = mid - 1
+
+  case xs {
+    [x, ..] if !mean && index == mid -> Ok(x)
+    [x, y, ..] if mean && index == mid_less_one -> Ok({ x +. y } /. 2.0)
+    [_, ..rest] -> do_median(rest, mid, mean, index + 1)
+    [] -> Error(Nil)
   }
 }
 
@@ -424,9 +421,9 @@ pub fn median(arr: List(Float)) -> Result(Float, String) {
 /// s^{2} = \frac{1}{n - d} \sum_{i=1}^{n}(x_i - \bar{x})
 /// \\]
 ///
-/// In the formula, $$n$$ is the sample size (the length of the list) and 
-/// $$x_i$$ is the sample point in the input list indexed by $$i$$. 
-/// Furthermore, $$\bar{x}$$ is the sample mean and $$d$$ is the "Delta 
+/// In the formula, $$n$$ is the sample size (the length of the list) and
+/// $$x_i$$ is the sample point in the input list indexed by $$i$$.
+/// Furthermore, $$\bar{x}$$ is the sample mean and $$d$$ is the "Delta
 /// Degrees of Freedom", and is by default set to $$d = 0$$, which gives a biased
 /// estimate of the sample variance. Setting $$d = 1$$ gives an unbiased estimate.
 ///
@@ -439,12 +436,12 @@ pub fn median(arr: List(Float)) -> Result(Float, String) {
 ///     pub fn example () {
 ///       // Degrees of freedom
 ///       let ddof: Int = 1
-///     
+///
 ///       // An empty list returns an error
 ///       []
 ///       |> metrics.variance(ddof)
 ///       |> should.be_error()
-///     
+///
 ///       // Valid input returns a result
 ///       [1., 2., 3.]
 ///       |> metrics.variance(ddof)
@@ -500,9 +497,9 @@ pub fn variance(arr: List(Float), ddof: Int) -> Result(Float, String) {
 /// s = \left(\frac{1}{n - d} \sum_{i=1}^{n}(x_i - \bar{x})\right)^{\frac{1}{2}}
 /// \\]
 ///
-/// In the formula, $$n$$ is the sample size (the length of the list) and 
-/// $$x_i$$ is the sample point in the input list indexed by $$i$$. 
-/// Furthermore, $$\bar{x}$$ is the sample mean and $$d$$ is the "Delta 
+/// In the formula, $$n$$ is the sample size (the length of the list) and
+/// $$x_i$$ is the sample point in the input list indexed by $$i$$.
+/// Furthermore, $$\bar{x}$$ is the sample mean and $$d$$ is the "Delta
 /// Degrees of Freedom", and is by default set to $$d = 0$$, which gives a biased
 /// estimate of the sample standard deviation. Setting $$d = 1$$ gives an unbiased estimate.
 ///
@@ -515,12 +512,12 @@ pub fn variance(arr: List(Float), ddof: Int) -> Result(Float, String) {
 ///     pub fn example () {
 ///       // Degrees of freedom
 ///       let ddof: Int = 1
-///     
+///
 ///       // An empty list returns an error
 ///       []
 ///       |> metrics.standard_deviationddof)
 ///       |> should.be_error()
-///     
+///
 ///       // Valid input returns a result
 ///       [1., 2., 3.]
 ///       |> metrics.standard_deviation(ddof)
@@ -547,7 +544,7 @@ pub fn standard_deviation(arr: List(Float), ddof: Int) -> Result(Float, String) 
         False -> {
           let assert Ok(variance) = variance(arr, ddof)
           // The computed variance will always be positive
-          // So an error should never be returned 
+          // So an error should never be returned
           let assert Ok(stdev) = elementary.square_root(variance)
           stdev
           |> Ok
