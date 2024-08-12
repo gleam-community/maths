@@ -96,13 +96,13 @@ import gleam_community/maths/elementary
 ///
 ///     pub fn example() {
 ///       piecewise.ceiling(12.0654, option.Some(1))
-///       |> should.equal(Ok(12.1))
+///       |> should.equal(12.1)
 ///
 ///       piecewise.ceiling(12.0654, option.Some(2))
-///       |> should.equal(Ok(12.07))
+///       |> should.equal(12.07)
 ///
 ///       piecewise.ceiling(12.0654, option.Some(3))
-///       |> should.equal(Ok(12.066))
+///       |> should.equal(12.066)
 ///     }
 /// </details>
 ///
@@ -112,7 +112,7 @@ import gleam_community/maths/elementary
 ///     </a>
 /// </div>
 ///
-pub fn ceiling(x: Float, digits: option.Option(Int)) -> Result(Float, String) {
+pub fn ceiling(x: Float, digits: option.Option(Int)) -> Float {
   round(x, digits, option.Some(RoundUp))
 }
 
@@ -151,13 +151,13 @@ pub fn ceiling(x: Float, digits: option.Option(Int)) -> Result(Float, String) {
 ///
 ///     pub fn example() {
 ///       piecewise.floor(12.0654, option.Some(1))
-///       |> should.equal(Ok(12.0))
+///       |> should.equal(12.0)
 ///
 ///       piecewise.floor(12.0654, option.Some(2))
-///       |> should.equal(Ok(12.06))
+///       |> should.equal(12.06)
 ///
 ///       piecewise.floor(12.0654, option.Some(3))
-///       |> should.equal(Ok(12.065))
+///       |> should.equal(12.065)
 ///     }
 /// </details>
 ///
@@ -167,7 +167,7 @@ pub fn ceiling(x: Float, digits: option.Option(Int)) -> Result(Float, String) {
 ///     </a>
 /// </div>
 ///
-pub fn floor(x: Float, digits: option.Option(Int)) -> Result(Float, String) {
+pub fn floor(x: Float, digits: option.Option(Int)) -> Float {
   round(x, digits, option.Some(RoundDown))
 }
 
@@ -206,13 +206,13 @@ pub fn floor(x: Float, digits: option.Option(Int)) -> Result(Float, String) {
 ///
 ///     pub fn example() {
 ///       piecewise.truncate(12.0654, option.Some(1))
-///       |> should.equal(Ok(12.0))
+///       |> should.equal(12.0)
 ///
 ///       piecewise.truncate(12.0654, option.Some(2))
-///       |> should.equal(Ok(12.0))
+///       |> should.equal(12.06)
 ///
 ///       piecewise.truncate(12.0654, option.Some(3))
-///       |> should.equal(Ok(12.0))
+///       |> should.equal(12.065)
 ///     }
 /// </details>
 ///
@@ -222,7 +222,7 @@ pub fn floor(x: Float, digits: option.Option(Int)) -> Result(Float, String) {
 ///     </a>
 /// </div>
 ///
-pub fn truncate(x: Float, digits: option.Option(Int)) -> Result(Float, String) {
+pub fn truncate(x: Float, digits: option.Option(Int)) -> Float {
   round(x, digits, option.Some(RoundToZero))
 }
 
@@ -323,30 +323,30 @@ pub fn truncate(x: Float, digits: option.Option(Int)) -> Result(Float, String) {
 ///     pub fn example() {
 ///       // The default number of digits is 0 if None is provided
 ///       piecewise.round(12.0654, option.None, option.Some(piecewise.RoundNearest))
-///       |> should.equal(Ok(12.0))
+///       |> should.equal(12.0)
 ///
 ///       // The default rounding mode is "RoundNearest" if None is provided
 ///       piecewise.round(12.0654, option.None, option.None)
-///       |> should.equal(Ok(12.0))
+///       |> should.equal(12.0)
 ///
 ///       // Try different rounding modes
 ///       piecewise.round(12.0654, option.Some(2), option.Some(piecewise.RoundNearest))
-///       |> should.equal(Ok(12.07))
+///       |> should.equal(12.07)
 ///
 ///       piecewise.round(12.0654, option.Some(2), option.Some(piecewise.RoundTiesAway))
-///       |> should.equal(Ok(12.07))
+///       |> should.equal(12.07)
 ///
 ///       piecewise.round(12.0654, option.Some(2), option.Some(piecewise.RoundTiesUp))
-///       |> should.equal(Ok(12.07))
+///       |> should.equal(12.07)
 ///
 ///       piecewise.round(12.0654, option.Some(2), option.Some(piecewise.RoundToZero))
-///       |> should.equal(Ok(12.06))
+///       |> should.equal(12.06)
 ///
 ///       piecewise.round(12.0654, option.Some(2), option.Some(piecewise.RoundDown))
-///       |> should.equal(Ok(12.06))
+///       |> should.equal(12.06)
 ///
 ///       piecewise.round(12.0654, option.Some(2), option.Some(piecewise.RoundUp))
-///       |> should.equal(Ok(12.07))
+///       |> should.equal(12.07)
 ///     }
 /// </details>
 ///
@@ -360,7 +360,7 @@ pub fn round(
   x: Float,
   digits: option.Option(Int),
   mode: option.Option(RoundingMode),
-) -> Result(Float, String) {
+) -> Float {
   case digits {
     option.Some(a) -> {
       let assert Ok(p) = elementary.power(10.0, conversion.int_to_float(a))
@@ -381,35 +381,17 @@ pub type RoundingMode {
   RoundUp
 }
 
-fn do_round(
-  p: Float,
-  x: Float,
-  mode: option.Option(RoundingMode),
-) -> Result(Float, String) {
+fn do_round(p: Float, x: Float, mode: option.Option(RoundingMode)) -> Float {
   case mode {
     // Determine the rounding mode
-    option.Some(RoundNearest) ->
-      round_to_nearest(p, x)
-      |> Ok
-    option.Some(RoundTiesAway) ->
-      round_ties_away(p, x)
-      |> Ok
-    option.Some(RoundTiesUp) ->
-      round_ties_up(p, x)
-      |> Ok
-    option.Some(RoundToZero) ->
-      round_to_zero(p, x)
-      |> Ok
-    option.Some(RoundDown) ->
-      round_down(p, x)
-      |> Ok
-    option.Some(RoundUp) ->
-      round_up(p, x)
-      |> Ok
+    option.Some(RoundNearest) -> round_to_nearest(p, x)
+    option.Some(RoundTiesAway) -> round_ties_away(p, x)
+    option.Some(RoundTiesUp) -> round_ties_up(p, x)
+    option.Some(RoundToZero) -> round_to_zero(p, x)
+    option.Some(RoundDown) -> round_down(p, x)
+    option.Some(RoundUp) -> round_up(p, x)
     // Otherwise, use the default rounding mode
-    option.None ->
-      round_to_nearest(p, x)
-      |> Ok
+    option.None -> round_to_nearest(p, x)
   }
 }
 
