@@ -20,7 +20,7 @@
 ////<style>
 ////    .katex { font-size: 1.1em; }
 ////</style>
-//// 
+////
 //// ---
 //// 
 //// Metrics: A module offering functions for calculating distances and other 
@@ -46,15 +46,15 @@
 ////   * [`median`](#median)
 ////   * [`variance`](#variance)
 ////   * [`standard_deviation`](#standard_deviation)
-//// 
+////
 
-import gleam_community/maths/elementary
-import gleam_community/maths/piecewise
-import gleam_community/maths/arithmetics
-import gleam_community/maths/predicates
-import gleam_community/maths/conversion
+import gleam/bool
 import gleam/list
 import gleam/pair
+import gleam_community/maths/arithmetics
+import gleam_community/maths/conversion
+import gleam_community/maths/elementary
+import gleam_community/maths/piecewise
 import gleam/set
 import gleam/float
 import gleam/int
@@ -258,7 +258,7 @@ pub fn norm(
 ///
 ///     pub fn example() {
 ///       let assert Ok(tol) = elementary.power(-10.0, -6.0)
-///     
+///
 ///       // Empty lists returns an error
 ///       metrics.manhattan_distance([], [], option.None)
 ///       |> should.be_error()
@@ -329,7 +329,7 @@ pub fn manhattan_distance(
 ///       // Differing lengths returns error
 ///       metrics.minkowski_distance([], [1.0], 1.0, option.None)
 ///       |> should.be_error()
-///     
+///
 ///       // Test order < 1
 ///       metrics.minkowski_distance([0.0, 0.0], [0.0, 0.0], -1.0, option.None)
 ///       |> should.be_error()
@@ -580,7 +580,7 @@ pub fn mean(arr: List(Float)) -> Result(Float, String) {
 ///       [1., 2., 3.]
 ///       |> metrics.median()
 ///       |> should.equal(Ok(2.))
-///     
+///
 ///       [1., 2., 3., 4.]
 ///       |> metrics.median()
 ///       |> should.equal(Ok(2.5))
@@ -593,33 +593,31 @@ pub fn mean(arr: List(Float)) -> Result(Float, String) {
 ///     </a>
 /// </div>
 ///
-pub fn median(arr: List(Float)) -> Result(Float, String) {
-  case arr {
-    [] ->
-      "Invalid input argument: The list is empty."
-      |> Error
-    _ -> {
-      let count: Int = list.length(arr)
-      let mid: Int = list.length(arr) / 2
-      let sorted: List(Float) = list.sort(arr, float.compare)
-      case predicates.is_odd(count) {
-        // If there is an odd number of elements in the list, then the median
-        // is just the middle value
-        True -> {
-          let assert Ok(val0) = list.at(sorted, mid)
-          val0
-          |> Ok
-        }
-        // If there is an even number of elements in the list, then the median
-        // is the mean of the two middle values
-        False -> {
-          let assert Ok(val0) = list.at(sorted, mid - 1)
-          let assert Ok(val1) = list.at(sorted, mid)
-          [val0, val1]
-          |> mean()
-        }
-      }
-    }
+pub fn median(arr: List(Float)) -> Result(Float, Nil) {
+  use <- bool.guard(list.is_empty(arr), Error(Nil))
+  let length = list.length(arr)
+  let mid = length / 2
+
+  case length % 2 == 0 {
+    True -> do_median(arr, mid, True, 0)
+    False -> do_median(arr, mid, False, 0)
+  }
+}
+
+fn do_median(
+  xs: List(Float),
+  mid: Int,
+  mean: Bool,
+  index: Int,
+) -> Result(Float, Nil) {
+  use <- bool.guard(index > mid, Error(Nil))
+  let mid_less_one = mid - 1
+
+  case xs {
+    [x, ..] if !mean && index == mid -> Ok(x)
+    [x, y, ..] if mean && index == mid_less_one -> Ok({ x +. y } /. 2.0)
+    [_, ..rest] -> do_median(rest, mid, mean, index + 1)
+    [] -> Error(Nil)
   }
 }
 
@@ -650,12 +648,12 @@ pub fn median(arr: List(Float)) -> Result(Float, String) {
 ///     pub fn example () {
 ///       // Degrees of freedom
 ///       let ddof: Int = 1
-///     
+///
 ///       // An empty list returns an error
 ///       []
 ///       |> metrics.variance(ddof)
 ///       |> should.be_error()
-///     
+///
 ///       // Valid input returns a result
 ///       [1., 2., 3.]
 ///       |> metrics.variance(ddof)
@@ -727,12 +725,12 @@ pub fn variance(arr: List(Float), ddof: Int) -> Result(Float, String) {
 ///     pub fn example () {
 ///       // Degrees of freedom
 ///       let ddof: Int = 1
-///     
+///
 ///       // An empty list returns an error
 ///       []
 ///       |> metrics.standard_deviationddof)
 ///       |> should.be_error()
-///     
+///
 ///       // Valid input returns a result
 ///       [1., 2., 3.]
 ///       |> metrics.standard_deviation(ddof)
@@ -759,7 +757,7 @@ pub fn standard_deviation(arr: List(Float), ddof: Int) -> Result(Float, String) 
         False -> {
           let assert Ok(variance) = variance(arr, ddof)
           // The computed variance will always be positive
-          // So an error should never be returned 
+          // So an error should never be returned
           let assert Ok(stdev) = elementary.square_root(variance)
           stdev
           |> Ok
