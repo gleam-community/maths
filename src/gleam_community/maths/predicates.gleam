@@ -30,10 +30,13 @@
 ////   * [`is_close`](#is_close)
 ////   * [`list_all_close`](#all_close)
 ////   * [`is_fractional`](#is_fractional)
+////   * [`is_between`](#is_between)
 ////   * [`is_power`](#is_power)
 ////   * [`is_perfect`](#is_perfect)
 ////   * [`is_even`](#is_even)
 ////   * [`is_odd`](#is_odd)
+////   * [`is_divisible`](#is_divisible)
+////   * [`is_multiple`](#is_multiple)
 ////   * [`is_prime`](#is_prime)
 //// 
 
@@ -463,4 +466,127 @@ fn powmod_with_check(base: Int, exponent: Int, modulus: Int) -> Int {
     }
     _, _ -> { base * powmod_with_check(base, exponent - 1, modulus) } % modulus
   }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// A function that tests whether a given real number $$x \in \mathbb{R}$$ is strictly
+/// between two other real numbers, $$a,b \in \mathbb{R}$$, such that $$a < x < b$$.
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths/predicates
+///
+///     pub fn example() {
+///       predicates.is_between(5.5, 5.0, 6.0)
+///       |> should.equal(True)
+///
+///       predicates.is_between(5.0, 5.0, 6.0)
+///       |> should.equal(False)
+///
+///       predicates.is_between(6.0, 5.0, 6.0)
+///       |> should.equal(False)
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn is_between(x: Float, lower: Float, upper: Float) -> Bool {
+  lower <. x && x <. upper
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// A function that tests whether a given integer $$n \in \mathbb{Z}$$ is divisible by another 
+/// integer $$d \in \mathbb{Z}$$, such that $$n \mod d = 0$$.
+/// 
+/// <details>
+///     <summary>Details</summary>
+///
+///   For example:
+///   - $$n = 10$$ is divisible by $$d = 2$$ because $$10 \mod 2 = 0$$.
+///   - $$n = 7$$ is not divisible by $$d = 3$$ because $$7 \mod 3 \neq 0$$.
+///
+/// </details>
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths/predicates
+///
+///     pub fn example() {
+///       predicates.is_divisible(10, 2)
+///       |> should.equal(True)
+///
+///       predicates.is_divisible(7, 3)
+///       |> should.equal(False)
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn is_divisible(n: Int, d: Int) -> Bool {
+  n % d == 0
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// A function that tests whether a given integer $$m \in \mathbb{Z}$$ is a multiple of another 
+/// integer $$k \in \mathbb{Z}$$, such that $$m = k \times q \quad q \in \mathbb{Z}$$.
+/// 
+/// <details>
+///     <summary>Details</summary>
+///
+///   For example:
+///   - $$m = 15$$ is a multiple of $$k = 5$$ because $$15 = 5 \times 3$$.
+///   - $$m = 14$$ is not a multiple of $$k = 5$$ because $$14 \div 5$$ does not yield an integer quotient.
+///
+/// </details>
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths/predicates
+///
+///     pub fn example() {
+///       predicates.is_multiple(15, 5)
+///       |> should.equal(True)
+///
+///       predicates.is_multiple(14, 5)
+///       |> should.equal(False)
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn is_multiple(m: Int, k: Int) -> Bool {
+  m % k == 0
 }

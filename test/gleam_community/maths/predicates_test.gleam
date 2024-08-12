@@ -174,3 +174,30 @@ pub fn int_is_prime_test() {
   predicates.is_prime(1105)
   |> should.equal(False)
 }
+
+pub fn is_between_test() {
+  predicates.is_between(5.5, 5.0, 6.0)
+  |> should.equal(True)
+
+  predicates.is_between(5.0, 5.0, 6.0)
+  |> should.equal(False)
+
+  predicates.is_between(6.0, 5.0, 6.0)
+  |> should.equal(False)
+}
+
+pub fn is_divisible_test() {
+  predicates.is_divisible(10, 2)
+  |> should.equal(True)
+
+  predicates.is_divisible(7, 3)
+  |> should.equal(False)
+}
+
+pub fn is_multiple_test() {
+  predicates.is_multiple(15, 5)
+  |> should.equal(True)
+
+  predicates.is_multiple(14, 5)
+  |> should.equal(False)
+}
