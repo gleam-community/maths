@@ -23,7 +23,8 @@
 //// 
 //// ---
 //// 
-//// Predicates: A module containing functions for testing various mathematical properties of numbers.
+//// Predicates: A module containing functions for testing various mathematical 
+//// properties of numbers.
 //// 
 //// * **Tests**
 ////   * [`is_close`](#is_close)
@@ -33,6 +34,7 @@
 ////   * [`is_perfect`](#is_perfect)
 ////   * [`is_even`](#is_even)
 ////   * [`is_odd`](#is_odd)
+////   * [`is_prime`](#is_prime)
 
 import gleam/pair
 import gleam/int
@@ -49,8 +51,9 @@ import gleam_community/maths/arithmetics
 /// </div>
 ///
 /// Determine if a given value $$a$$ is close to or equivalent to a reference value 
-/// $$b$$ based on supplied relative $$r_{tol}$$ and absolute $$a_{tol}$$ tolerance values.
-/// The equivalance of the two given values are then determined based on the equation:
+/// $$b$$ based on supplied relative $$r_{tol}$$ and absolute $$a_{tol}$$ tolerance
+/// values. The equivalance of the two given values are then determined based on 
+/// the equation:
 ///
 /// \\[
 ///     \|a - b\| \leq (a_{tol} + r_{tol} \cdot \|b\|)
@@ -61,7 +64,7 @@ import gleam_community/maths/arithmetics
 ///     <summary>Example</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/tests
+///     import gleam_community/maths/predicates
 ///
 ///     pub fn example () {
 ///       let val: Float = 99.
@@ -108,14 +111,15 @@ fn float_absolute_difference(a: Float, b: Float) -> Float {
 ///     </a>
 /// </div>
 ///
-/// Determine if a list of values are close to or equivalent to a another list of reference values.
+/// Determine if a list of values are close to or equivalent to a another list of
+/// reference values.
 ///
 /// <details>
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
 ///     import gleam/list
-///     import gleam_community/maths/tests
+///     import gleam_community/maths/predicates
 ///
 ///     pub fn example () {
 ///       let val: Float = 99.
@@ -126,7 +130,7 @@ fn float_absolute_difference(a: Float, b: Float) -> Float {
 ///       // if 'val' is within 1 percent of 'ref_val' +/- 0.1
 ///       let rtol: Float = 0.01
 ///       let atol: Float = 0.10
-///       tests.all_close(xarr, yarr, rtol, atol)
+///       predicates.all_close(xarr, yarr, rtol, atol)
 ///       |> fn(zarr: Result(List(Bool), String)) -> Result(Bool, Nil) {
 ///         case zarr {
 ///           Ok(arr) ->
@@ -175,19 +179,20 @@ pub fn all_close(
 ///
 /// Determine if a given value is fractional.
 /// 
-/// `True` is returned if the given value is fractional, otherwise `False` is returned. 
+/// `True` is returned if the given value is fractional, otherwise `False` is 
+/// returned. 
 /// 
 /// <details>
 ///     <summary>Example</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/tests
+///     import gleam_community/maths/predicates
 ///
 ///     pub fn example () {
-///       tests.is_fractional(0.3333)
+///       predicates.is_fractional(0.3333)
 ///       |> should.equal(True)
 ///       
-///       tests.is_fractional(1.0)
+///       predicates.is_fractional(1.0)
 ///       |> should.equal(False)
 ///     }
 /// </details>
@@ -212,21 +217,22 @@ fn do_ceiling(a: Float) -> Float
 ///     </a>
 /// </div>
 ///
-/// A function that tests whether a given integer value $$x \in \mathbb{Z}$$ is a power of another integer value $$y \in \mathbb{Z}$$.  
+/// A function that tests whether a given integer value $$x \in \mathbb{Z}$$ is a
+/// power of another integer value $$y \in \mathbb{Z}$$.  
 ///
 /// <details>
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/tests
+///     import gleam_community/maths/predicates
 ///
 ///     pub fn example() {
 ///       // Check if 4 is a power of 2 (it is)
-///       tests.is_power(4, 2)
+///       predicates.is_power(4, 2)
 ///       |> should.equal(True)
 ///
 ///       // Check if 5 is a power of 2 (it is not)
-///       tests.is_power(5, 2)
+///       predicates.is_power(5, 2)
 ///       |> should.equal(False)
 ///     }
 /// </details>
@@ -251,7 +257,9 @@ pub fn is_power(x: Int, y: Int) -> Bool {
 ///     </a>
 /// </div>
 ///
-/// A function that tests whether a given integer value $$n \in \mathbb{Z}$$ is a perfect number. A number is perfect if it is equal to the sum of its proper positive divisors.
+/// A function that tests whether a given integer value $$n \in \mathbb{Z}$$ is a
+/// perfect number. A number is perfect if it is equal to the sum of its proper 
+/// positive divisors.
 /// 
 /// <details>
 ///     <summary>Details</summary>
@@ -266,13 +274,13 @@ pub fn is_power(x: Int, y: Int) -> Bool {
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/tests
+///     import gleam_community/maths/predicates
 ///
 ///     pub fn example() {
-///       tests.is_perfect(6)
+///       predicates.is_perfect(6)
 ///       |> should.equal(True)
 ///
-///       tests.is_perfect(28)
+///       predicates.is_perfect(28)
 ///       |> should.equal(True)
 ///     }
 /// </details>
@@ -308,13 +316,13 @@ fn do_sum(arr: List(Int)) -> Int {
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/tests
+///     import gleam_community/maths/predicates
 ///
 ///     pub fn example() {
-///       tests.is_even(-3)
+///       predicates.is_even(-3)
 ///       |> should.equal(False)
 ///     
-///       tests.is_even(-4)
+///       predicates.is_even(-4)
 ///       |> should.equal(True)
 ///     }
 /// </details>
@@ -341,13 +349,13 @@ pub fn is_even(x: Int) -> Bool {
 ///     <summary>Example:</summary>
 ///
 ///     import gleeunit/should
-///     import gleam_community/maths/tests
+///     import gleam_community/maths/predicates
 ///
 ///     pub fn example() {
-///       tests.is_odd(-3)
+///       predicates.is_odd(-3)
 ///       |> should.equal(True)
 ///     
-///       tests.is_odd(-4)
+///       predicates.is_odd(-4)
 ///       |> should.equal(False)
 ///     }
 /// </details>
@@ -360,4 +368,98 @@ pub fn is_even(x: Int) -> Bool {
 ///
 pub fn is_odd(x: Int) -> Bool {
   x % 2 != 0
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// A function that tests whether a given integer value $$x \in \mathbb{Z}$$ is a 
+/// prime number. A prime number is a natural number greater than 1 that has no 
+/// positive divisors other than 1 and itself.
+/// 
+/// The function uses the Miller-Rabin primality test to assess if $$x$$ is prime. 
+/// It is a probabilistic test, so it can mistakenly identify a composite number 
+/// as prime. However, the probability of such errors decreases with more testing
+/// iterations (the function uses 64 iterations internally, which is typically 
+/// more than sufficient). The Miller-Rabin test is particularly useful for large
+/// numbers.
+/// 
+/// <details>
+///     <summary>Details</summary>
+///
+///   Examples of prime numbers:
+///   - $$2$$ is a prime number since it has only two divisors: $$1$$ and $$2$$.
+///   - $$7$$ is a prime number since it has only two divisors: $$1$$ and $$7$$.
+///   - $$4$$ is not a prime number since it has divisors other than $$1$$ and itself, such as $$2$$.
+///
+/// </details>
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths/predicates
+///
+///     pub fn example() {
+///       predicates.is_prime(2)
+///       |> should.equal(True)
+///
+///       predicates.is_prime(4)
+///       |> should.equal(False)
+///       
+///       // Test the 2nd Carmichael number
+///       predicates.is_prime(1105)
+///       |> should.equal(False)
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn is_prime(x: Int) -> Bool {
+  case x {
+    x if x < 2 -> {
+      False
+    }
+    x if x == 2 -> {
+      True
+    }
+    _ -> {
+      miller_rabin_test(x, 64)
+    }
+  }
+}
+
+fn miller_rabin_test(n: Int, k: Int) -> Bool {
+  case n, k {
+    _, 0 -> True
+    _, _ -> {
+      // Generate a random int in the range [2, n]
+      let random_candidate: Int = 2 + int.random(n - 2)
+      case powmod_with_check(random_candidate, n - 1, n) == 1 {
+        True -> miller_rabin_test(n, k - 1)
+        False -> False
+      }
+    }
+  }
+}
+
+fn powmod_with_check(base: Int, exponent: Int, modulus: Int) -> Int {
+  case exponent, { exponent % 2 } == 0 {
+    0, _ -> 1
+    _, True -> {
+      let x: Int = powmod_with_check(base, exponent / 2, modulus)
+      case { x * x } % modulus, x != 1 && x != { modulus - 1 } {
+        1, True -> 0
+        _, _ -> { x * x } % modulus
+      }
+    }
+    _, _ -> { base * powmod_with_check(base, exponent - 1, modulus) } % modulus
+  }
 }

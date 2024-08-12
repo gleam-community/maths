@@ -1,5 +1,6 @@
 import gleam_community/maths/arithmetics
 import gleeunit/should
+import gleam/option
 
 pub fn int_gcd_test() {
   arithmetics.gcd(1, 1)
@@ -100,16 +101,16 @@ pub fn int_divisors_test() {
 pub fn float_list_sum_test() {
   // An empty list returns 0
   []
-  |> arithmetics.float_sum()
+  |> arithmetics.float_sum(option.None)
   |> should.equal(0.0)
 
   // Valid input returns a result
   [1.0, 2.0, 3.0]
-  |> arithmetics.float_sum()
+  |> arithmetics.float_sum(option.None)
   |> should.equal(6.0)
 
   [-2.0, 4.0, 6.0]
-  |> arithmetics.float_sum()
+  |> arithmetics.float_sum(option.None)
   |> should.equal(8.0)
 }
 
@@ -132,17 +133,17 @@ pub fn int_list_sum_test() {
 pub fn float_list_product_test() {
   // An empty list returns 0
   []
-  |> arithmetics.float_product()
-  |> should.equal(1.0)
+  |> arithmetics.float_product(option.None)
+  |> should.equal(Ok(1.0))
 
   // Valid input returns a result
   [1.0, 2.0, 3.0]
-  |> arithmetics.float_product()
-  |> should.equal(6.0)
+  |> arithmetics.float_product(option.None)
+  |> should.equal(Ok(6.0))
 
   [-2.0, 4.0, 6.0]
-  |> arithmetics.float_product()
-  |> should.equal(-48.0)
+  |> arithmetics.float_product(option.None)
+  |> should.equal(Ok(-48.0))
 }
 
 pub fn int_list_product_test() {
@@ -196,16 +197,16 @@ pub fn int_list_cumulative_sum_test() {
 pub fn float_list_cumulative_product_test() {
   // An empty lists returns an empty list
   []
-  |> arithmetics.float_cumumlative_product()
+  |> arithmetics.float_cumulative_product()
   |> should.equal([])
 
   // Valid input returns a result
   [1.0, 2.0, 3.0]
-  |> arithmetics.float_cumumlative_product()
+  |> arithmetics.float_cumulative_product()
   |> should.equal([1.0, 2.0, 6.0])
 
   [-2.0, 4.0, 6.0]
-  |> arithmetics.float_cumumlative_product()
+  |> arithmetics.float_cumulative_product()
   |> should.equal([-2.0, -8.0, -48.0])
 }
 

@@ -100,8 +100,8 @@ pub fn erf(x: Float) -> Float {
 ///     </a>
 /// </div>
 ///
-/// The gamma function over the real numbers. The function is essentially equal to the
-/// factorial for any positive integer argument: $$\Gamma(n) = (n - 1)!$$
+/// The gamma function over the real numbers. The function is essentially equal to 
+/// the factorial for any positive integer argument: $$\Gamma(n) = (n - 1)!$$
 ///
 /// The implemented gamma function is approximated through Lanczos approximation
 /// using the same coefficients used by the GNU Scientific Library.
@@ -174,7 +174,7 @@ pub fn incomplete_gamma(a: Float, x: Float) -> Result(Float, String) {
     }
 
     False ->
-      "Invlaid input argument: a <= 0 or x < 0. Valid input is a > 0 and x >= 0."
+      "Invalid input argument: a <= 0 or x < 0. Valid input is a > 0 and x >= 0."
       |> Error
   }
 }

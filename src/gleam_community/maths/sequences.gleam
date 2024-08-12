@@ -23,7 +23,8 @@
 //// 
 //// ---
 //// 
-//// Sequences: A module containing functions for generating various types of sequences, ranges and intervals.
+//// Sequences: A module containing functions for generating various types of 
+//// sequences, ranges and intervals.
 //// 
 //// * **Ranges and intervals**
 ////   * [`arange`](#arange)
@@ -42,8 +43,10 @@ import gleam/list
 ///     </a>
 /// </div>
 ///
-/// The function returns a list with evenly spaced values within a given interval based on a start, stop value and a given increment (step-length) between consecutive values. 
-/// The list returned includes the given start value but excludes the stop value.
+/// The function returns a list with evenly spaced values within a given interval 
+/// based on a start, stop value and a given increment (step-length) between 
+/// consecutive values. The list returned includes the given start value but 
+/// excludes the stop value.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -98,7 +101,8 @@ pub fn arange(start: Float, stop: Float, step: Float) -> List(Float) {
 ///     </a>
 /// </div>
 ///
-/// Generate a linearly spaced list of points over a specified interval. The endpoint of the interval can optionally be included/excluded.
+/// Generate a linearly spaced list of points over a specified interval. The 
+/// endpoint of the interval can optionally be included/excluded.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -176,7 +180,8 @@ pub fn linear_space(
 ///     </a>
 /// </div>
 ///
-/// Generate a logarithmically spaced list of points over a specified interval. The endpoint of the interval can optionally be included/excluded.
+/// Generate a logarithmically spaced list of points over a specified interval. The 
+/// endpoint of the interval can optionally be included/excluded.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -236,8 +241,11 @@ pub fn logarithmic_space(
 ///     </a>
 /// </div>
 ///
-/// The function returns a list of numbers spaced evenly on a log scale (a geometric progression). Each point in the list is a constant multiple of the previous.
-/// The function is similar to the [`logarithmic_space`](#logarithmic_space) function, but with endpoints specified directly.
+/// The function returns a list of numbers spaced evenly on a log scale (a 
+/// geometric progression). Each point in the list is a constant multiple of the 
+/// previous. The function is similar to the 
+/// [`logarithmic_space`](#logarithmic_space) function, but with endpoints 
+/// specified directly.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -283,7 +291,7 @@ pub fn geometric_space(
 ) -> Result(List(Float), String) {
   case start == 0.0 || stop == 0.0 {
     True ->
-      ""
+      "Invalid input: Neither 'start' nor 'stop' can be zero, as they must be non-zero for logarithmic calculations."
       |> Error
     False ->
       case num > 0 {
