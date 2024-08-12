@@ -35,14 +35,15 @@
 ////   * [`is_even`](#is_even)
 ////   * [`is_odd`](#is_odd)
 ////   * [`is_prime`](#is_prime)
+//// 
 
-import gleam/pair
 import gleam/int
 import gleam/list
 import gleam/option
+import gleam/pair
+import gleam_community/maths/arithmetics
 import gleam_community/maths/elementary
 import gleam_community/maths/piecewise
-import gleam_community/maths/arithmetics
 
 /// <div style="text-align: right;">
 ///     <a href="https://github.com/gleam-community/maths/issues">

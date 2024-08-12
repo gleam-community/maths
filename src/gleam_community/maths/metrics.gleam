@@ -20,11 +20,17 @@
 ////<style>
 ////    .katex { font-size: 1.1em; }
 ////</style>
-////
+//// 
 //// ---
 //// 
 //// Metrics: A module offering functions for calculating distances and other 
 //// types of metrics.
+//// 
+//// Disclaimer: In this module, the terms "distance" and "metric" are used in
+//// a broad and practical sense. That is, they are used to denote any difference
+//// or discrepancy between two inputs. Consequently, they may not align with their 
+//// precise mathematical definitions (in particular, some "distance" functions in
+//// this module do not satisfy the triangle inequality).
 //// 
 //// * **Distance measures**
 ////   * [`norm`](#norm)
@@ -40,26 +46,24 @@
 ////   * [`sorensen_dice_coefficient`](#sorensen_dice_coefficient)
 ////   * [`tversky_index`](#tversky_index)
 ////   * [`overlap_coefficient`](#overlap_coefficient)
-////   * [`levenshtein_distance`](#levenshtein_distance)
 //// * **Basic statistical measures**
 ////   * [`mean`](#mean)
 ////   * [`median`](#median)
 ////   * [`variance`](#variance)
 ////   * [`standard_deviation`](#standard_deviation)
-////
+//// 
 
 import gleam/bool
+import gleam/float
+import gleam/int
 import gleam/list
+import gleam/option
 import gleam/pair
+import gleam/set
 import gleam_community/maths/arithmetics
 import gleam_community/maths/conversion
 import gleam_community/maths/elementary
 import gleam_community/maths/piecewise
-import gleam/set
-import gleam/float
-import gleam/int
-import gleam/string
-import gleam/option
 
 /// Utility function that checks all lists have the expected length and contents
 /// The function is primarily used by all distance measures taking 'List(Float)'
@@ -1132,125 +1136,6 @@ pub fn cosine_similarity(
 ///     </a>
 /// </div>
 /// 
-/// Calculate the Levenshtein distance between two strings, i.e., measure the 
-/// difference between two strings (essentially sequences). It is defined as 
-/// the minimum number of single-character edits required to change one string
-/// into the other, using operations:
-/// - insertions
-/// - deletions
-/// - substitutions
-/// 
-/// Note: The implementation is primarily based on the Elixir implementation 
-/// [levenshtein](https://hex.pm/packages/levenshtein).
-/// 
-/// <details>
-///     <summary>Example:</summary>
-///
-///     import gleeunit/should
-///     import gleam_community/maths/metrics
-///
-///     pub fn example () {
-///       metrics.levenshtein_distance("hello", "hello")
-///       |> should.equal(0)
-///       
-///       metrics.levenshtein_distance("cat", "cut")
-///       |> should.equal(1)
-///       
-///       metrics.levenshtein_distance("kitten", "sitting")
-///       |> should.equal(3)
-///     }
-/// </details>
-///
-/// <div style="text-align: right;">
-///     <a href="#">
-///         <small>Back to top ↑</small>
-///     </a>
-/// </div>
-///
-///
-pub fn levenshtein_distance(xstring: String, ystring: String) -> Int {
-  case xstring, ystring {
-    xstring, ystring if xstring == ystring -> {
-      0
-    }
-    xstring, ystring if xstring == "" -> {
-      string.length(ystring)
-    }
-    xstring, ystring if ystring == "" -> {
-      string.length(xstring)
-    }
-    _, _ -> {
-      let xstring_graphemes = string.to_graphemes(xstring)
-      let ystring_graphemes = string.to_graphemes(ystring)
-      let ystring_length = list.length(ystring_graphemes)
-      let distance_list = list.range(0, ystring_length)
-
-      do_edit_distance(xstring_graphemes, ystring_graphemes, distance_list, 1)
-    }
-  }
-}
-
-fn do_edit_distance(
-  xstring: List(String),
-  ystring: List(String),
-  distance_list: List(Int),
-  step: Int,
-) -> Int {
-  case xstring {
-    // Safe as 'distance_list' is never empty
-    [] -> {
-      let assert Ok(last) = list.last(distance_list)
-      last
-    }
-    [xstring_head, ..xstring_tail] -> {
-      let new_distance_list =
-        distance_list_helper(ystring, distance_list, xstring_head, [step], step)
-      do_edit_distance(xstring_tail, ystring, new_distance_list, step + 1)
-    }
-  }
-}
-
-fn distance_list_helper(
-  ystring: List(String),
-  distance_list: List(Int),
-  grapheme: String,
-  new_distance_list: List(Int),
-  last_distance: Int,
-) -> List(Int) {
-  case ystring {
-    [] -> list.reverse(new_distance_list)
-    [ystring_head, ..ystring_tail] -> {
-      let assert [distance_list_head, ..distance_list_tail] = distance_list
-      let difference = case ystring_head == grapheme {
-        True -> {
-          0
-        }
-        False -> {
-          1
-        }
-      }
-      let assert [first, ..] = distance_list_tail
-      let min =
-        last_distance + 1
-        |> piecewise.minimum(first + 1, int.compare)
-        |> piecewise.minimum(distance_list_head + difference, int.compare)
-      distance_list_helper(
-        ystring_tail,
-        distance_list_tail,
-        grapheme,
-        [min, ..new_distance_list],
-        min,
-      )
-    }
-  }
-}
-
-/// <div style="text-align: right;">
-///     <a href="https://github.com/gleam-community/maths/issues">
-///         <small>Spot a typo? Open an issue!</small>
-///     </a>
-/// </div>
-/// 
 /// Calculate the (weighted) Canberra distance between two lists:
 ///
 /// \\[
@@ -1292,7 +1177,6 @@ fn distance_list_helper(
 ///         <small>Back to top ↑</small>
 ///     </a>
 /// </div>
-///
 ///
 pub fn canberra_distance(
   xarr: List(Float),

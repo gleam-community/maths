@@ -1,11 +1,11 @@
-import gleam_community/maths/elementary
-import gleam_community/maths/special
-import gleam_community/maths/predicates
-import gleeunit/should
 import gleam/result
+import gleam_community/maths/elementary
+import gleam_community/maths/predicates
+import gleam_community/maths/special
+import gleeunit/should
 
 pub fn float_beta_function_test() {
-  let assert Ok(tol) = elementary.power(-10.0, -6.0)
+  let assert Ok(tol) = elementary.power(10.0, -6.0)
 
   // Valid input returns a result
   special.beta(-0.5, 0.5)
@@ -26,7 +26,7 @@ pub fn float_beta_function_test() {
 }
 
 pub fn float_error_function_test() {
-  let assert Ok(tol) = elementary.power(-10.0, -6.0)
+  let assert Ok(tol) = elementary.power(10.0, -6.0)
 
   // Valid input returns a result
   special.erf(-0.5)
@@ -51,7 +51,7 @@ pub fn float_error_function_test() {
 }
 
 pub fn float_gamma_function_test() {
-  let assert Ok(tol) = elementary.power(-10.0, -6.0)
+  let assert Ok(tol) = elementary.power(10.0, -6.0)
 
   // Valid input returns a result
   special.gamma(-0.5)
@@ -80,7 +80,7 @@ pub fn float_gamma_function_test() {
 }
 
 pub fn float_incomplete_gamma_function_test() {
-  let assert Ok(tol) = elementary.power(-10.0, -6.0)
+  let assert Ok(tol) = elementary.power(10.0, -6.0)
 
   // Invalid input gives an error
   // 1st arg is invalid

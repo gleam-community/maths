@@ -1,6 +1,6 @@
+import gleam/option
 import gleam_community/maths/arithmetics
 import gleeunit/should
-import gleam/option
 
 pub fn int_gcd_test() {
   arithmetics.gcd(1, 1)

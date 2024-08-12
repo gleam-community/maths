@@ -1,10 +1,10 @@
+import gleam/option
 import gleam_community/maths/elementary
 import gleam_community/maths/predicates
 import gleeunit/should
-import gleam/option
 
 pub fn float_acos_test() {
-  let assert Ok(tol) = elementary.power(-10.0, -6.0)
+  let assert Ok(tol) = elementary.power(10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   let assert Ok(result) = elementary.acos(1.0)
@@ -27,7 +27,7 @@ pub fn float_acos_test() {
 }
 
 pub fn float_acosh_test() {
-  let assert Ok(tol) = elementary.power(-10.0, -6.0)
+  let assert Ok(tol) = elementary.power(10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   let assert Ok(result) = elementary.acosh(1.0)
@@ -47,7 +47,7 @@ pub fn float_asin_test() {
   elementary.asin(0.0)
   |> should.equal(Ok(0.0))
 
-  let assert Ok(tol) = elementary.power(-10.0, -6.0)
+  let assert Ok(tol) = elementary.power(10.0, -6.0)
   let assert Ok(result) = elementary.asin(0.5)
   result
   |> predicates.is_close(0.523598, 0.0, tol)
@@ -63,7 +63,7 @@ pub fn float_asin_test() {
 }
 
 pub fn float_asinh_test() {
-  let assert Ok(tol) = elementary.power(-10.0, -6.0)
+  let assert Ok(tol) = elementary.power(10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   elementary.asinh(0.0)
@@ -76,7 +76,7 @@ pub fn float_asinh_test() {
 }
 
 pub fn float_atan_test() {
-  let assert Ok(tol) = elementary.power(-10.0, -6.0)
+  let assert Ok(tol) = elementary.power(10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   elementary.atan(0.0)
@@ -89,7 +89,7 @@ pub fn float_atan_test() {
 }
 
 pub fn math_atan2_test() {
-  let assert Ok(tol) = elementary.power(-10.0, -6.0)
+  let assert Ok(tol) = elementary.power(10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   elementary.atan2(0.0, 0.0)
@@ -137,7 +137,7 @@ pub fn math_atan2_test() {
 }
 
 pub fn float_atanh_test() {
-  let assert Ok(tol) = elementary.power(-10.0, -6.0)
+  let assert Ok(tol) = elementary.power(10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   let assert Ok(result) = elementary.atanh(0.0)
@@ -166,7 +166,7 @@ pub fn float_atanh_test() {
 }
 
 pub fn float_cos_test() {
-  let assert Ok(tol) = elementary.power(-10.0, -6.0)
+  let assert Ok(tol) = elementary.power(10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   elementary.cos(0.0)
@@ -183,7 +183,7 @@ pub fn float_cos_test() {
 }
 
 pub fn float_cosh_test() {
-  let assert Ok(tol) = elementary.power(-10.0, -6.0)
+  let assert Ok(tol) = elementary.power(10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   elementary.cosh(0.0)
@@ -200,7 +200,7 @@ pub fn float_cosh_test() {
 }
 
 pub fn float_sin_test() {
-  let assert Ok(tol) = elementary.power(-10.0, -6.0)
+  let assert Ok(tol) = elementary.power(10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   elementary.sin(0.0)
@@ -217,7 +217,7 @@ pub fn float_sin_test() {
 }
 
 pub fn float_sinh_test() {
-  let assert Ok(tol) = elementary.power(-10.0, -6.0)
+  let assert Ok(tol) = elementary.power(10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   elementary.sinh(0.0)
@@ -234,7 +234,7 @@ pub fn float_sinh_test() {
 }
 
 pub fn math_tan_test() {
-  let assert Ok(tol) = elementary.power(-10.0, -6.0)
+  let assert Ok(tol) = elementary.power(10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   elementary.tan(0.0)
@@ -247,7 +247,7 @@ pub fn math_tan_test() {
 }
 
 pub fn math_tanh_test() {
-  let assert Ok(tol) = elementary.power(-10.0, -6.0)
+  let assert Ok(tol) = elementary.power(10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   elementary.tanh(0.0)
@@ -268,7 +268,7 @@ pub fn math_tanh_test() {
 }
 
 pub fn float_exponential_test() {
-  let assert Ok(tol) = elementary.power(-10.0, -6.0)
+  let assert Ok(tol) = elementary.power(10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   elementary.exponential(0.0)
@@ -285,7 +285,7 @@ pub fn float_exponential_test() {
 }
 
 pub fn float_natural_logarithm_test() {
-  let assert Ok(tol) = elementary.power(-10.0, -6.0)
+  let assert Ok(tol) = elementary.power(10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   elementary.natural_logarithm(1.0)
@@ -336,7 +336,7 @@ pub fn float_logarithm_test() {
 }
 
 pub fn float_logarithm_2_test() {
-  let assert Ok(tol) = elementary.power(-10.0, -6.0)
+  let assert Ok(tol) = elementary.power(10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   elementary.logarithm_2(1.0)
@@ -357,7 +357,7 @@ pub fn float_logarithm_2_test() {
 }
 
 pub fn float_logarithm_10_test() {
-  let assert Ok(tol) = elementary.power(-10.0, -6.0)
+  let assert Ok(tol) = elementary.power(10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   let assert Ok(result) = elementary.logarithm_10(1.0)
@@ -396,6 +396,15 @@ pub fn float_power_test() {
 
   elementary.power(2.0, -1.0)
   |> should.equal(Ok(0.5))
+
+  elementary.power(2.0, -1.0)
+  |> should.equal(Ok(0.5))
+
+  // When y = 0, the result should universally be 1, regardless of the value of x 
+  elementary.power(10.0, 0.0)
+  |> should.equal(Ok(1.0))
+  elementary.power(-10.0, 0.0)
+  |> should.equal(Ok(1.0))
 
   elementary.power(2.0, -1.0)
   |> should.equal(Ok(0.5))

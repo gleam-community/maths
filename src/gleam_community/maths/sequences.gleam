@@ -31,11 +31,12 @@
 ////   * [`linear_space`](#linear_space)
 ////   * [`logarithmic_space`](#logarithmic_space)
 ////   * [`geometric_space`](#geometric_space)
+//// 
 
+import gleam/list
+import gleam_community/maths/conversion
 import gleam_community/maths/elementary
 import gleam_community/maths/piecewise
-import gleam_community/maths/conversion
-import gleam/list
 
 /// <div style="text-align: right;">
 ///     <a href="https://github.com/gleam-community/maths/issues">
