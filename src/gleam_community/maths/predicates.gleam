@@ -247,9 +247,9 @@ fn do_ceiling(a: Float) -> Float
 pub fn is_power(x: Int, y: Int) -> Bool {
   let assert Ok(value) =
     elementary.logarithm(int.to_float(x), option.Some(int.to_float(y)))
-  let assert Ok(truncated) = piecewise.truncate(value, option.Some(0))
-  let rem = value -. truncated
-  rem == 0.0
+  let truncated = piecewise.truncate(value, option.Some(0))
+  let remainder = value -. truncated
+  remainder == 0.0
 }
 
 /// <div style="text-align: right;">
