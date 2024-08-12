@@ -1000,7 +1000,7 @@ pub fn power(x: Float, y: Float) -> Result(Float, String) {
   // 2. If the base (x) is 0 and the exponent (y) is negative then the
   //    expression is equivalent to the exponent (y) divided by 0 and an
   //    error should be returned
-  case x <. 0.0 && fractional || x == 0.0 && y <. 0.0 {
+  case { x <. 0.0 && fractional } || { x == 0.0 && y <. 0.0 } {
     True ->
       "Invalid input argument: x < 0 and y is fractional or x = 0 and y < 0."
       |> Error

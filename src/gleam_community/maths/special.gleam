@@ -32,10 +32,10 @@
 ////   * [`incomplete_gamma`](#incomplete_gamma)
 //// 
 
+import gleam/list
 import gleam_community/maths/conversion
 import gleam_community/maths/elementary
 import gleam_community/maths/piecewise
-import gleam/list
 
 /// <div style="text-align: right;">
 ///     <a href="https://github.com/gleam-community/maths/issues">

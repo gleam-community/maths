@@ -1,8 +1,8 @@
-import gleam_community/maths/piecewise
-import gleeunit/should
-import gleam/option
 import gleam/float
 import gleam/int
+import gleam/option
+import gleam_community/maths/piecewise
+import gleeunit/should
 
 pub fn float_ceiling_test() {
   // Round 3. digit AFTER decimal point 

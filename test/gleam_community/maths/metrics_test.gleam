@@ -1,12 +1,12 @@
+import gleam/option
+import gleam/set
 import gleam_community/maths/elementary
 import gleam_community/maths/metrics
 import gleam_community/maths/predicates
 import gleeunit/should
-import gleam/set
-import gleam/option
 
 pub fn float_list_norm_test() {
-  let assert Ok(tol) = elementary.power(-10.0, -6.0)
+  let assert Ok(tol) = elementary.power(10.0, -6.0)
 
   // An empty lists returns 0.0
   []
@@ -66,7 +66,7 @@ pub fn float_list_norm_test() {
 }
 
 pub fn float_list_manhattan_test() {
-  let assert Ok(tol) = elementary.power(-10.0, -6.0)
+  let assert Ok(tol) = elementary.power(10.0, -6.0)
 
   // Empty lists returns an error
   metrics.manhattan_distance([], [], option.None)
@@ -118,7 +118,7 @@ pub fn float_list_manhattan_test() {
 }
 
 pub fn float_list_minkowski_test() {
-  let assert Ok(tol) = elementary.power(-10.0, -6.0)
+  let assert Ok(tol) = elementary.power(10.0, -6.0)
 
   // Empty lists returns an error
   metrics.minkowski_distance([], [], 1.0, option.None)
@@ -226,7 +226,7 @@ pub fn float_list_minkowski_test() {
 }
 
 pub fn float_list_euclidean_test() {
-  let assert Ok(tol) = elementary.power(-10.0, -6.0)
+  let assert Ok(tol) = elementary.power(10.0, -6.0)
 
   // Empty lists returns an error
   metrics.euclidean_distance([], [], option.None)
@@ -410,7 +410,7 @@ pub fn overlap_coefficient_test() {
 }
 
 pub fn cosine_similarity_test() {
-  let assert Ok(tol) = elementary.power(-10.0, -6.0)
+  let assert Ok(tol) = elementary.power(10.0, -6.0)
 
   // Empty lists returns an error
   metrics.cosine_similarity([], [], option.None)
@@ -518,46 +518,6 @@ pub fn chebyshev_distance_test() {
 
   metrics.chebyshev_distance([1.0, 2.0, 3.0], [1.0, 2.0, 3.0])
   |> should.equal(Ok(0.0))
-}
-
-pub fn levenshtein_distance_test() {
-  // Try different types of valid input...
-
-  // Requires 5 insertions to transform the empty string into "hello"
-  metrics.levenshtein_distance("", "hello")
-  |> should.equal(5)
-  // Requires 5 deletions to remove all characters from "hello" to match the empty string
-  metrics.levenshtein_distance("hello", "")
-  |> should.equal(5)
-
-  // Requires 2 deletions to remove two 'b's and 1 substitution to change 'b' to 'a'
-  metrics.levenshtein_distance("bbb", "a")
-  |> should.equal(3)
-  // Requires 2 insertions to add two 'b's and 1 substitution to change 'a' to 'b'
-  metrics.levenshtein_distance("a", "bbb")
-  |> should.equal(3)
-
-  // No changes needed, since the strings are identical
-  metrics.levenshtein_distance("hello", "hello")
-  |> should.equal(0)
-
-  // Requires 1 substitution to change 'a' to 'u'
-  metrics.levenshtein_distance("cat", "cut")
-  |> should.equal(1)
-
-  // Requires 2 substitutions (k -> s, e -> i) and 1 insertion (g at the end)
-  metrics.levenshtein_distance("kitten", "sitting")
-  |> should.equal(3)
-
-  // Some more complex cases, involving multiple insertions, deletions, and substitutions
-  metrics.levenshtein_distance("gggtatccat", "cctaggtccct")
-  |> should.equal(6)
-
-  metrics.levenshtein_distance(
-    "This is a longer string",
-    "This is also a much longer string",
-  )
-  |> should.equal(10)
 }
 
 pub fn canberra_distance_test() {

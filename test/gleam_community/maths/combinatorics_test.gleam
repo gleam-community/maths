@@ -1,6 +1,6 @@
-import gleam_community/maths/combinatorics
-import gleam/set
 import gleam/list
+import gleam/set
+import gleam_community/maths/combinatorics
 import gleeunit/should
 
 pub fn int_factorial_test() {

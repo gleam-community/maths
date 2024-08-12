@@ -1,10 +1,10 @@
+import gleam_community/maths/conversion
 import gleam_community/maths/elementary
 import gleam_community/maths/predicates
-import gleam_community/maths/conversion
 import gleeunit/should
 
 pub fn float_to_degree_test() {
-  let assert Ok(tol) = elementary.power(-10.0, -6.0)
+  let assert Ok(tol) = elementary.power(10.0, -6.0)
   conversion.radians_to_degrees(0.0)
   |> predicates.is_close(0.0, 0.0, tol)
   |> should.be_true()
@@ -15,7 +15,7 @@ pub fn float_to_degree_test() {
 }
 
 pub fn float_to_radian_test() {
-  let assert Ok(tol) = elementary.power(-10.0, -6.0)
+  let assert Ok(tol) = elementary.power(10.0, -6.0)
   conversion.degrees_to_radians(0.0)
   |> predicates.is_close(0.0, 0.0, tol)
   |> should.be_true()

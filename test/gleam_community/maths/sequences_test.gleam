@@ -1,11 +1,11 @@
-import gleam_community/maths/elementary
-import gleam_community/maths/sequences
-import gleam_community/maths/predicates
 import gleam/list
+import gleam_community/maths/elementary
+import gleam_community/maths/predicates
+import gleam_community/maths/sequences
 import gleeunit/should
 
 pub fn float_list_linear_space_test() {
-  let assert Ok(tol) = elementary.power(-10.0, -6.0)
+  let assert Ok(tol) = elementary.power(10.0, -6.0)
 
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
@@ -83,7 +83,7 @@ pub fn float_list_linear_space_test() {
 }
 
 pub fn float_list_logarithmic_space_test() {
-  let assert Ok(tol) = elementary.power(-10.0, -6.0)
+  let assert Ok(tol) = elementary.power(10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   // ---> With endpoint included
@@ -147,7 +147,7 @@ pub fn float_list_logarithmic_space_test() {
 }
 
 pub fn float_list_geometric_space_test() {
-  let assert Ok(tol) = elementary.power(-10.0, -6.0)
+  let assert Ok(tol) = elementary.power(10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   // ---> With endpoint included

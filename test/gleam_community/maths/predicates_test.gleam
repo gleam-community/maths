@@ -1,5 +1,5 @@
-import gleam_community/maths/predicates
 import gleam/list
+import gleam_community/maths/predicates
 import gleeunit/should
 
 pub fn float_is_close_test() {
