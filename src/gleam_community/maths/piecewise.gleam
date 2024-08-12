@@ -96,13 +96,13 @@ import gleam_community/maths/elementary
 ///
 ///     pub fn example() {
 ///       piecewise.ceiling(12.0654, option.Some(1))
-///       |> should.equal(Ok(12.1))
+///       |> should.equal(12.1)
 ///
 ///       piecewise.ceiling(12.0654, option.Some(2))
-///       |> should.equal(Ok(12.07))
+///       |> should.equal(12.07)
 ///
 ///       piecewise.ceiling(12.0654, option.Some(3))
-///       |> should.equal(Ok(12.066))
+///       |> should.equal(12.066)
 ///     }
 /// </details>
 ///
@@ -151,13 +151,13 @@ pub fn ceiling(x: Float, digits: option.Option(Int)) -> Float {
 ///
 ///     pub fn example() {
 ///       piecewise.floor(12.0654, option.Some(1))
-///       |> should.equal(Ok(12.0))
+///       |> should.equal(12.0)
 ///
 ///       piecewise.floor(12.0654, option.Some(2))
-///       |> should.equal(Ok(12.06))
+///       |> should.equal(12.06)
 ///
 ///       piecewise.floor(12.0654, option.Some(3))
-///       |> should.equal(Ok(12.065))
+///       |> should.equal(12.065)
 ///     }
 /// </details>
 ///
@@ -206,13 +206,13 @@ pub fn floor(x: Float, digits: option.Option(Int)) -> Float {
 ///
 ///     pub fn example() {
 ///       piecewise.truncate(12.0654, option.Some(1))
-///       |> should.equal(Ok(12.0))
+///       |> should.equal(12.0)
 ///
 ///       piecewise.truncate(12.0654, option.Some(2))
-///       |> should.equal(Ok(12.0))
+///       |> should.equal(12.06)
 ///
 ///       piecewise.truncate(12.0654, option.Some(3))
-///       |> should.equal(Ok(12.0))
+///       |> should.equal(12.065)
 ///     }
 /// </details>
 ///
@@ -323,30 +323,30 @@ pub fn truncate(x: Float, digits: option.Option(Int)) -> Float {
 ///     pub fn example() {
 ///       // The default number of digits is 0 if None is provided
 ///       piecewise.round(12.0654, option.None, option.Some(piecewise.RoundNearest))
-///       |> should.equal(Ok(12.0))
+///       |> should.equal(12.0)
 ///
 ///       // The default rounding mode is "RoundNearest" if None is provided
 ///       piecewise.round(12.0654, option.None, option.None)
-///       |> should.equal(Ok(12.0))
+///       |> should.equal(12.0)
 ///
 ///       // Try different rounding modes
 ///       piecewise.round(12.0654, option.Some(2), option.Some(piecewise.RoundNearest))
-///       |> should.equal(Ok(12.07))
+///       |> should.equal(12.07)
 ///
 ///       piecewise.round(12.0654, option.Some(2), option.Some(piecewise.RoundTiesAway))
-///       |> should.equal(Ok(12.07))
+///       |> should.equal(12.07)
 ///
 ///       piecewise.round(12.0654, option.Some(2), option.Some(piecewise.RoundTiesUp))
-///       |> should.equal(Ok(12.07))
+///       |> should.equal(12.07)
 ///
 ///       piecewise.round(12.0654, option.Some(2), option.Some(piecewise.RoundToZero))
-///       |> should.equal(Ok(12.06))
+///       |> should.equal(12.06)
 ///
 ///       piecewise.round(12.0654, option.Some(2), option.Some(piecewise.RoundDown))
-///       |> should.equal(Ok(12.06))
+///       |> should.equal(12.06)
 ///
 ///       piecewise.round(12.0654, option.Some(2), option.Some(piecewise.RoundUp))
-///       |> should.equal(Ok(12.07))
+///       |> should.equal(12.07)
 ///     }
 /// </details>
 ///
