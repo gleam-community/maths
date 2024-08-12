@@ -35,6 +35,8 @@
 ////   * [`is_perfect`](#is_perfect)
 ////   * [`is_even`](#is_even)
 ////   * [`is_odd`](#is_odd)
+////   * [`is_divisible`](#is_divisible)
+////   * [`is_multiple`](#is_multiple)
 ////   * [`is_prime`](#is_prime)
 //// 
 
