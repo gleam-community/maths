@@ -23,7 +23,8 @@
 //// 
 //// ---
 //// 
-//// Combinatorics: A module that offers mathematical functions related to counting, arrangements, and combinations. 
+//// Combinatorics: A module that offers mathematical functions related to counting, arrangements, 
+//// and combinations. 
 //// 
 //// * **Combinatorial functions**
 ////   * [`combination`](#combination)
@@ -34,8 +35,17 @@
 ////   * [`cartesian_product`](#cartesian_product)
 //// 
 
+import gleam/iterator
 import gleam/list
+import gleam/option
 import gleam/set
+import gleam_community/maths/conversion
+import gleam_community/maths/elementary
+
+pub type CombinatoricsMode {
+  WithRepetitions
+  WithoutRepetitions
+}
 
 /// <div style="text-align: right;">
 ///     <a href="https://github.com/gleam-community/maths/issues">
@@ -43,15 +53,46 @@ import gleam/set
 ///     </a>
 /// </div>
 ///
-/// A combinatorial function for computing the number of a $$k$$-combinations of $$n$$ elements:
+/// A combinatorial function for computing the number of $$k$$-combinations of $$n$$ elements:
+///
+/// **Without Repetitions:**
 ///
 /// \\[
 /// C(n, k) = \binom{n}{k} = \frac{n!}{k! (n-k)!}
 /// \\]
 /// Also known as "$$n$$ choose $$k$$" or the binomial coefficient.
 ///
-/// The implementation uses the effecient iterative multiplicative formula for the computation.
+/// **With Repetitions:**
 ///
+/// \\[
+/// C^*(n, k) = \binom{n + k - 1}{k} = \frac{(n + k - 1)!}{k! (n - 1)!}
+/// \\]
+/// Also known as the "stars and bars" problem in combinatorics.
+///
+/// The implementation uses an efficient iterative multiplicative formula for computing the result.
+/// 
+/// <details>
+/// <summary>Details</summary>
+/// A $$k$$-combination is a sequence of $$k$$ elements selected from $$n$$ elements where 
+/// the order of selection does not matter. For example, consider selecting 2 elements from a list 
+/// of 3 elements: `["A", "B", "C"]`:
+/// 
+/// - For $$k$$-combinations (without repetitions), where order does not matter, the possible 
+///   selections are:
+///   - ["A", "B"]
+///   - ["A", "C"]
+///   - ["B", "C"]
+///
+/// - For $$k$$-combinations (with repetitions), where order does not matter but elements can 
+///   repeat, the possible selections are:
+///   - ["A", "A"], ["A", "B"], ["A", "C"]
+///   - ["B", "B"], ["B", "C"], ["C", "C"]
+///
+/// - On the contrary, for $$k$$-permutations, the order matters, so the possible selections are:
+///   - `["A", "B"], ["B", "A"]`
+///   - `["A", "C"], ["C", "A"]`
+///   - `["B", "C"], ["C", "B"]`
+/// </details>
 /// <details>
 ///     <summary>Example:</summary>
 ///
@@ -81,35 +122,51 @@ import gleam/set
 ///         <small>Back to top ↑</small>
 ///     </a>
 /// </div>
-///
-pub fn combination(n: Int, k: Int) -> Result(Int, String) {
-  case n < 0 {
-    True ->
-      "Invalid input argument: n < 0. Valid input is n > 0."
-      |> Error
+/// 
+pub fn combination(
+  n: Int,
+  k: Int,
+  mode: option.Option(CombinatoricsMode),
+) -> Result(Int, String) {
+  case mode {
+    option.Some(WithRepetitions) -> combination_with_repetitions(n, k)
+    _ -> combination_without_repetitions(n, k)
+  }
+}
+
+fn combination_without_repetitions(n: Int, k: Int) -> Result(Int, String) {
+  case n < 0 || k < 0 || k > n {
+    True -> "Invalid input: Ensure n >= 0, k >= 0, and k <= n." |> Error
     False ->
-      case k < 0 || k > n {
-        True ->
-          0
-          |> Ok
-        False ->
-          case k == 0 || k == n {
-            True ->
-              1
-              |> Ok
-            False -> {
-              let min = case k < n - k {
-                True -> k
-                False -> n - k
-              }
-              list.range(1, min)
-              |> list.fold(1, fn(acc: Int, x: Int) -> Int {
-                acc * { n + 1 - x } / x
-              })
-              |> Ok
-            }
+      case k == 0 || k == n {
+        True -> 1 |> Ok
+        False -> {
+          let min = case k < n - k {
+            True -> k
+            False -> n - k
           }
+          list.range(1, min)
+          |> list.fold(1, fn(acc: Int, x: Int) -> Int {
+            acc * { n + 1 - x } / x
+          })
+          |> Ok
+        }
       }
+  }
+}
+
+fn combination_with_repetitions(n: Int, k: Int) -> Result(Int, String) {
+  case n < 0 {
+    True -> "Invalid input argument: n < 0. Valid input is n >= 0 " |> Error
+    False -> {
+      case k < 0 {
+        True -> "Invalid input argument: k < 0. Valid input is k >= 0 " |> Error
+        False -> {
+          { n + k - 1 }
+          |> combination_without_repetitions(k)
+        }
+      }
+    }
   }
 }
 
@@ -160,7 +217,7 @@ pub fn combination(n: Int, k: Int) -> Result(Int, String) {
 pub fn factorial(n) -> Result(Int, String) {
   case n < 0 {
     True ->
-      "Invalid input argument: n < 0. Valid input is n > 0."
+      "Invalid input argument: n < 0. Valid input is n >= 0."
       |> Error
     False ->
       case n {
@@ -172,7 +229,7 @@ pub fn factorial(n) -> Result(Int, String) {
           |> Ok
         _ ->
           list.range(1, n)
-          |> list.fold(1, fn(acc: Int, x: Int) { acc * x })
+          |> list.fold(1, fn(acc: Int, x: Int) -> Int { acc * x })
           |> Ok
       }
   }
@@ -184,13 +241,46 @@ pub fn factorial(n) -> Result(Int, String) {
 ///     </a>
 /// </div>
 ///
-/// A combinatorial function for computing the number of $$k$$-permuations (without repetitions)
-/// of $$n$$ elements:
+/// A combinatorial function for computing the number of $$k$$-permutations (without and without
+/// repetitions) of $$n$$ elements.
+/// 
+/// **Without** repetitions:
 ///
 /// \\[
-/// P(n, k) = \frac{n!}{(n - k)!}
+/// P(n, k) = \binom{n}{k} \cdot k! = \frac{n!}{(n - k)!}
 /// \\]
+/// 
+/// **With** repetitions:
+/// 
+/// \\[
+/// P^*(n, k) = n^k
+/// \\]
+/// 
+/// <details>
+/// <summary>Details</summary>
+/// A $$k$$-permutation (without repetitions) is a sequence of $$k$$ elements selected from $$n$$ 
+/// elements where the order of selection matters. For example, consider selecting 2 elements from 
+/// a list of 3 elements: `["A", "B", "C"]`:
+/// 
+/// - For $$k$$-permutations (without repetitions), the order matters, so the possible selections 
+/// are:
+///   - `["A", "B"], ["B", "A"]`
+///   - `["A", "C"], ["C", "A"]`
+///   - `["B", "C"], ["C", "B"]`
+/// 
+/// - For $$k$$-permutations (with repetitions), the order also matters, but we have repeated 
+///   selections:
+///   - ["A", "A"], ["A", "B"], ["A", "C"]
+///   - ["B", "A"], ["B", "B"], ["B", "C"]
+///   - ["C", "A"], ["C", "B"], ["C", "C"]
 ///
+/// - On the contrary, for $$k$$-combinations, where order does not matter, the possible selections
+///   are:
+///   - ["A", "B"]
+///   - ["A", "C"]
+///   - ["B", "C"]
+/// </details>
+/// 
 /// <details>
 ///     <summary>Example:</summary>
 ///
@@ -221,10 +311,21 @@ pub fn factorial(n) -> Result(Int, String) {
 ///     </a>
 /// </div>
 ///
-pub fn permutation(n: Int, k: Int) -> Result(Int, String) {
+pub fn permutation(
+  n: Int,
+  k: Int,
+  mode: option.Option(CombinatoricsMode),
+) -> Result(Int, String) {
+  case mode {
+    option.Some(WithRepetitions) -> permutation_with_repetitions(n, k)
+    _ -> permutation_without_repetitions(n, k)
+  }
+}
+
+fn permutation_without_repetitions(n: Int, k: Int) -> Result(Int, String) {
   case n < 0 {
     True ->
-      "Invalid input argument: n < 0. Valid input is n > 0."
+      "Invalid input argument: n < 0. Valid input is n >= 0."
       |> Error
     False ->
       case k < 0 || k > n {
@@ -232,17 +333,35 @@ pub fn permutation(n: Int, k: Int) -> Result(Int, String) {
           0
           |> Ok
         False ->
-          case k == n {
-            True ->
-              1
+          case k == 0 {
+            True -> 1 |> Ok
+            False ->
+              list.range(0, k - 1)
+              |> list.fold(1, fn(acc: Int, x: Int) -> Int { acc * { n - x } })
               |> Ok
-            False -> {
-              let assert Ok(v1) = factorial(n)
-              let assert Ok(v2) = factorial(n - k)
-              v1 / v2
-              |> Ok
-            }
           }
+      }
+  }
+}
+
+fn permutation_with_repetitions(n: Int, k: Int) -> Result(Int, String) {
+  case n < 0 {
+    True ->
+      "Invalid input argument: n < 0. Valid input is n >= 0."
+      |> Error
+    False ->
+      case k < 0 {
+        True ->
+          "Invalid input argument: k < 0. Valid input is k >= 0."
+          |> Error
+        False -> {
+          let n_float = conversion.int_to_float(n)
+          let k_float = conversion.int_to_float(k)
+          let assert Ok(result) = elementary.power(n_float, k_float)
+          result
+          |> conversion.float_to_int()
+          |> Ok
+        }
       }
   }
 }
@@ -276,35 +395,38 @@ pub fn permutation(n: Int, k: Int) -> Result(Int, String) {
 ///     </a>
 /// </div>
 ///
-pub fn list_combination(arr: List(a), k: Int) -> Result(List(List(a)), String) {
+pub fn list_combination(
+  arr: List(a),
+  k: Int,
+) -> Result(iterator.Iterator(List(a)), String) {
   case k < 0 {
-    True ->
-      "Invalid input argument: k < 0. Valid input is k > 0."
-      |> Error
+    True -> Error("Invalid input argument: k < 0. Valid input is k >= 0.")
     False -> {
       case k > list.length(arr) {
         True ->
-          "Invalid input argument: k > length(arr). Valid input is 0 < k <= length(arr)."
-          |> Error
-        False -> {
-          do_list_combination(arr, k, [])
-          |> Ok
-        }
+          Error(
+            "Invalid input argument: k > length(arr). Valid input is 0 <= k <= length(arr).",
+          )
+        False -> Ok(do_list_combination(iterator.from_list(arr), k, []))
       }
     }
   }
 }
 
-fn do_list_combination(arr: List(a), k: Int, prefix: List(a)) -> List(List(a)) {
+fn do_list_combination(
+  arr: iterator.Iterator(a),
+  k: Int,
+  prefix: List(a),
+) -> iterator.Iterator(List(a)) {
   case k {
-    0 -> [list.reverse(prefix)]
+    0 -> iterator.single(list.reverse(prefix))
     _ ->
-      case arr {
-        [] -> []
-        [x, ..xs] -> {
+      case arr |> iterator.step {
+        iterator.Done -> iterator.empty()
+        iterator.Next(x, xs) -> {
           let with_x = do_list_combination(xs, k - 1, [x, ..prefix])
           let without_x = do_list_combination(xs, k, prefix)
-          list.append(with_x, without_x)
+          iterator.concat([with_x, without_x])
         }
       }
   }
@@ -323,12 +445,6 @@ fn do_list_combination(arr: List(a), k: Int, prefix: List(a)) -> List(List(a)) {
 /// for example will appear "both ways round". This
 /// means lists with repeated elements return the same
 /// number of permutations as ones without.
-///
-/// N.B. The output of this function is a list of size
-/// factorial in the size of the input list. Caution is
-/// advised on input lists longer than ~11 elements, which
-/// may cause the VM to use unholy amounts of memory for
-/// the output.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -362,16 +478,35 @@ fn do_list_combination(arr: List(a), k: Int, prefix: List(a)) -> List(List(a)) {
 ///     </a>
 /// </div>
 ///
-pub fn list_permutation(arr: List(a)) -> List(List(a)) {
+pub fn list_permutation(arr: List(a)) -> iterator.Iterator(List(a)) {
   case arr {
-    [] -> [[]]
-    _ -> {
-      use x <- list.flat_map(arr)
-      // `x` is drawn from the list `arr` above,
-      // so Ok(...) can be safely asserted as the result of `list.pop` below
-      let assert Ok(#(_, remaining)) = list.pop(arr, fn(y) { x == y })
-      list.map(list_permutation(remaining), fn(perm) { [x, ..perm] })
-    }
+    [] -> iterator.single([])
+    _ ->
+      iterator.from_list(arr)
+      // Iterate over each element in the list 'arr' to generate permutations for each possible 
+      // starting element 'x'.
+      |> iterator.flat_map(fn(x) {
+        // For each element 'x', we remove it from the list. This will gives us the remaining list
+        // that contains all elements except 'x'.
+        let remaining = remove_first(arr, x)
+        // Recursively call 'list_permutation' on the remaining list to generate all permutations
+        // of the smaller list.
+        let permutations = list_permutation(remaining)
+        // For each permutation generated by the recursive call, we prepend the element 'x' back to
+        // the front of the permutation.
+        iterator.map(permutations, fn(permutation) { [x, ..permutation] })
+      })
+  }
+}
+
+fn remove_first(list: List(a), x: a) -> List(a) {
+  case list {
+    [] -> []
+    [head, ..tail] ->
+      case head == x {
+        True -> tail
+        False -> [head, ..remove_first(tail, x)]
+      }
   }
 }
 
