@@ -1,6 +1,6 @@
-////<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" integrity="sha384-wcIxkf4k558AjM3Yz3BBFQUbk/zgIYC2R0QpeeYb+TwlBVMrlgLqwRjRtGZiK7ww" crossorigin="anonymous">
-////<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" integrity="sha384-hIoBPJpTUs74ddyc4bFZSM1TVlQDA60VBbJS0oA934VSz82sBx1X7kSx2ATBDIyd" crossorigin="anonymous"></script>
-////<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"></script>
+////<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+" crossorigin="anonymous">
+////<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" integrity="sha384-7zkQWkzuo3B5mTepMUcHkMB5jZaolc2xDwL6VFqjFALcbeS9Ggm/Yr2r3Dy4lfFg" crossorigin="anonymous"></script>
+////<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"></script>
 ////<script>
 ////    document.addEventListener("DOMContentLoaded", function() {
 ////        renderMathInElement(document.body, {
@@ -8,12 +8,12 @@
 ////          // • auto-render specific keys, e.g.:
 ////          delimiters: [
 ////              {left: '$$', right: '$$', display: false},
-////            //   {left: '$', right: '$', display: false},
-////            //   {left: '\\(', right: '\\)', display: false},
+////              {left: '$', right: '$', display: false},
+////              {left: '\\(', right: '\\)', display: false},
 ////              {left: '\\[', right: '\\]', display: true}
 ////          ],
 ////          // • rendering keys, e.g.:
-////          throwOnError : false
+////          throwOnError : true
 ////        });
 ////    });
 ////</script>
@@ -58,8 +58,8 @@ import gleam_community/maths/piecewise
 /// </div>
 ///
 /// The function calculates the greatest common divisor of two integers 
-/// $$x, y \in \mathbb{Z}$$. The greatest common divisor is the largest positive
-/// integer that is divisible by both $$x$$ and $$y$$.
+/// \\(x, y \in \mathbb{Z}\\). The greatest common divisor is the largest positive
+/// integer that is divisible by both \\(x\\) and \\(y\\).
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -108,15 +108,15 @@ fn do_gcd(x: Int, y: Int) -> Int {
 /// </div>
 ///
 /// 
-/// Given two integers, $$x$$ (dividend) and $$y$$ (divisor), the Euclidean modulo
-/// of $$x$$ by $$y$$, denoted as $$x \mod y$$, is the remainder $$r$$ of the 
-/// division of $$x$$ by $$y$$, such that:
+/// Given two integers, \\(x\\) (dividend) and \\(y\\) (divisor), the Euclidean modulo
+/// of \\(x\\) by \\(y\\), denoted as \\(x \mod y\\), is the remainder \\(r\\) of the 
+/// division of \\(x\\) by \\(y\\), such that:
 /// 
 /// \\[
 /// x = q \cdot y + r \quad \text{and} \quad 0 \leq r < |y|,
 /// \\]
 /// 
-/// where $$q$$ is an integer that represents the quotient of the division.
+/// where \\(q\\) is an integer that represents the quotient of the division.
 ///
 /// The Euclidean modulo function of two numbers, is the remainder operation most 
 /// commonly utilized in mathematics. This differs from the standard truncating 
@@ -169,8 +169,8 @@ pub fn int_euclidean_modulo(x: Int, y: Int) -> Int {
 /// </div>
 ///
 /// The function calculates the least common multiple of two integers 
-/// $$x, y \in \mathbb{Z}$$. The least common multiple is the smallest positive
-/// integer that has both $$x$$ and $$y$$ as factors.
+/// \\(x, y \in \mathbb{Z}\\). The least common multiple is the smallest positive
+/// integer that has both \\(x\\) and \\(y\\) as factors.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -305,9 +305,9 @@ pub fn proper_divisors(n: Int) -> List(Int) {
 /// \sum_{i=1}^n w_i x_i
 /// \\]
 ///
-/// In the formula, $$n$$ is the length of the list and $$x_i \in \mathbb{R}$$ is
-/// the value in the input list indexed by $$i$$, while the $$w_i \in \mathbb{R}$$
-/// are corresponding weights ($$w_i = 1.0\\;\forall i=1...n$$ by default).
+/// In the formula, \\(n\\) is the length of the list and \\(x_i \in \mathbb{R}\\) is
+/// the value in the input list indexed by \\(i\\), while the \\(w_i \in \mathbb{R}\\)
+/// are corresponding weights (\\(w_i = 1.0\\;\forall i=1...n\\) by default).
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -362,8 +362,8 @@ pub fn float_sum(arr: List(Float), weights: option.Option(List(Float))) -> Float
 /// \sum_{i=1}^n x_i
 /// \\]
 ///
-/// In the formula, $$n$$ is the length of the list and $$x_i \in \mathbb{Z}$$ is 
-/// the value in the input list indexed by $$i$$.
+/// In the formula, \\(n\\) is the length of the list and \\(x_i \in \mathbb{Z}\\) is 
+/// the value in the input list indexed by \\(i\\).
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -411,9 +411,9 @@ pub fn int_sum(arr: List(Int)) -> Int {
 /// \prod_{i=1}^n x_i^{w_i}
 /// \\]
 ///
-/// In the formula, $$n$$ is the length of the list and $$x_i \in \mathbb{R}$$ is
-/// the value in the input list indexed by $$i$$, while the $$w_i \in \mathbb{R}$$
-/// are corresponding weights ($$w_i = 1.0\\;\forall i=1...n$$ by default).
+/// In the formula, \\(n\\) is the length of the list and \\(x_i \in \mathbb{R}\\) is
+/// the value in the input list indexed by \\(i\\), while the \\(w_i \in \mathbb{R}\\)
+/// are corresponding weights (\\(w_i = 1.0\\;\forall i=1...n\\) by default).
 /// 
 /// <details>
 ///     <summary>Example:</summary>
@@ -486,8 +486,8 @@ pub fn float_product(
 /// \prod_{i=1}^n x_i
 /// \\]
 ///
-/// In the formula, $$n$$ is the length of the list and $$x_i \in \mathbb{Z}$$ is 
-/// the value in the input list indexed by $$i$$.
+/// In the formula, \\(n\\) is the length of the list and \\(x_i \in \mathbb{Z}\\) is 
+/// the value in the input list indexed by \\(i\\).
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -535,10 +535,10 @@ pub fn int_product(arr: List(Int)) -> Int {
 /// v_j = \sum_{i=1}^j x_i \\;\\; \forall j = 1,\dots, n
 /// \\]
 ///
-/// In the formula, $$v_j$$ is the $$j$$'th element in the cumulative sum of $$n$$
-/// elements. That is, $$n$$ is the length of the list and $$x_i \in \mathbb{R}$$ 
-/// is the value in the input list indexed by $$i$$. The value $$v_j$$ is thus the
-/// sum of the $$1$$ to $$j$$ first elements in the given list.
+/// In the formula, \\(v_j\\) is the \\(j\\)'th element in the cumulative sum of \\(n\\)
+/// elements. That is, \\(n\\) is the length of the list and \\(x_i \in \mathbb{R}\\) 
+/// is the value in the input list indexed by \\(i\\). The value \\(v_j\\) is thus the
+/// sum of the \\(1\\) to \\(j\\) first elements in the given list.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -585,10 +585,10 @@ pub fn float_cumulative_sum(arr: List(Float)) -> List(Float) {
 /// v_j = \sum_{i=1}^j x_i \\;\\; \forall j = 1,\dots, n
 /// \\]
 ///
-/// In the formula, $$v_j$$ is the $$j$$'th element in the cumulative sum of $$n$$
-/// elements. That is, $$n$$ is the length of the list and $$x_i \in \mathbb{Z}$$ 
-/// is the value in the input list indexed by $$i$$. The value $$v_j$$ is thus the
-/// sum of the $$1$$ to $$j$$ first elements in the given list.
+/// In the formula, \\(v_j\\) is the \\(j\\)'th element in the cumulative sum of \\(n\\)
+/// elements. That is, \\(n\\) is the length of the list and \\(x_i \in \mathbb{Z}\\) 
+/// is the value in the input list indexed by \\(i\\). The value \\(v_j\\) is thus the
+/// sum of the \\(1\\) to \\(j\\) first elements in the given list.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -635,10 +635,10 @@ pub fn int_cumulative_sum(arr: List(Int)) -> List(Int) {
 /// v_j = \prod_{i=1}^j x_i \\;\\; \forall j = 1,\dots, n
 /// \\]
 ///
-/// In the formula, $$v_j$$ is the $$j$$'th element in the cumulative product of 
-/// $$n$$ elements. That is, $$n$$ is the length of the list and 
-/// $$x_i \in \mathbb{R}$$ is the value in the input list indexed by $$i$$. The 
-/// value $$v_j$$ is thus the sum of the $$1$$ to $$j$$ first elements in the 
+/// In the formula, \\(v_j\\) is the \\(j\\)'th element in the cumulative product of 
+/// \\(n\\) elements. That is, \\(n\\) is the length of the list and 
+/// \\(x_i \in \mathbb{R}\\) is the value in the input list indexed by \\(i\\). The 
+/// value \\(v_j\\) is thus the sum of the \\(1\\) to \\(j\\) first elements in the 
 /// given list.
 ///
 /// <details>
@@ -687,10 +687,10 @@ pub fn float_cumulative_product(arr: List(Float)) -> List(Float) {
 /// v_j = \prod_{i=1}^j x_i \\;\\; \forall j = 1,\dots, n
 /// \\]
 ///
-/// In the formula, $$v_j$$ is the $$j$$'th element in the cumulative product of 
-/// $$n$$ elements. That is, $$n$$ is the length of the list and 
-/// $$x_i \in \mathbb{Z}$$ is the value in the input list indexed by $$i$$. The 
-/// value $$v_j$$ is thus the product of the $$1$$ to $$j$$ first elements in the
+/// In the formula, \\(v_j\\) is the \\(j\\)'th element in the cumulative product of 
+/// \\(n\\) elements. That is, \\(n\\) is the length of the list and 
+/// \\(x_i \in \mathbb{Z}\\) is the value in the input list indexed by \\(i\\). The 
+/// value \\(v_j\\) is thus the product of the \\(1\\) to \\(j\\) first elements in the
 /// given list.
 ///
 /// <details>

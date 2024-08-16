@@ -1,6 +1,6 @@
-////<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" integrity="sha384-GvrOXuhMATgEsSwCs4smul74iXGOixntILdUW9XmUC6+HX0sLNAK3q71HotJqlAn" crossorigin="anonymous">
-////<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" integrity="sha384-cpW21h6RZv/phavutF+AuVYrr+dA8xD9zs6FwLpaCct6O9ctzYFfFr4dgmgccOTx" crossorigin="anonymous"></script>
-////<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+////<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+" crossorigin="anonymous">
+////<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" integrity="sha384-7zkQWkzuo3B5mTepMUcHkMB5jZaolc2xDwL6VFqjFALcbeS9Ggm/Yr2r3Dy4lfFg" crossorigin="anonymous"></script>
+////<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"></script>
 ////<script>
 ////    document.addEventListener("DOMContentLoaded", function() {
 ////        renderMathInElement(document.body, {
@@ -8,12 +8,12 @@
 ////          // • auto-render specific keys, e.g.:
 ////          delimiters: [
 ////              {left: '$$', right: '$$', display: false},
-////            //   {left: '$', right: '$', display: false},
-////            //   {left: '\\(', right: '\\)', display: false},
+////              {left: '$', right: '$', display: false},
+////              {left: '\\(', right: '\\)', display: false},
 ////              {left: '\\[', right: '\\]', display: true}
 ////          ],
 ////          // • rendering keys, e.g.:
-////          throwOnError : false
+////          throwOnError : true
 ////        });
 ////    });
 ////</script>
@@ -33,7 +33,7 @@
 ////   * [`geometric_space`](#geometric_space)
 //// 
 
-import gleam/list
+import gleam/iterator
 import gleam_community/maths/conversion
 import gleam_community/maths/elementary
 import gleam_community/maths/piecewise
@@ -44,29 +44,32 @@ import gleam_community/maths/piecewise
 ///     </a>
 /// </div>
 ///
-/// The function returns a list with evenly spaced values within a given interval 
-/// based on a start, stop value and a given increment (step-length) between 
-/// consecutive values. The list returned includes the given start value but 
-/// excludes the stop value.
-///
+/// The function returns an iterator generating evenly spaced values within a given interval.
+/// based on a start value but excludes the stop value. The spacing between values is determined
+/// by the step size provided. The function supports both positive and negative step values.
+/// 
 /// <details>
 ///     <summary>Example:</summary>
 ///
+///     import gleam/iterator
 ///     import gleeunit/should
 ///     import gleam_community/maths/sequences
 ///
 ///     pub fn example () {
 ///       sequences.arange(1.0, 5.0, 1.0)
+///       |> iterator.to_list()
 ///       |> should.equal([1.0, 2.0, 3.0, 4.0])
 ///       
 ///       // No points returned since
-///       // start smaller than stop and positive step
+///       // start is smaller than stop and the step is positive
 ///       sequences.arange(5.0, 1.0, 1.0)
+///       |> iterator.to_list()
 ///       |> should.equal([])
 ///       
 ///       // Points returned since
 ///       // start smaller than stop but negative step
 ///       sequences.arange(5.0, 1.0, -1.0)
+///       |> iterator.to_list()
 ///       |> should.equal([5.0, 4.0, 3.0, 2.0])
 ///     }
 /// </details>
@@ -77,19 +80,29 @@ import gleam_community/maths/piecewise
 ///     </a>
 /// </div>
 ///
-pub fn arange(start: Float, stop: Float, step: Float) -> List(Float) {
+pub fn arange(
+  start: Float,
+  stop: Float,
+  step: Float,
+) -> iterator.Iterator(Float) {
   case start >=. stop && step >. 0.0 || start <=. stop && step <. 0.0 {
-    True -> []
+    True -> iterator.empty()
     False -> {
-      let direction: Float = case start <=. stop {
-        True -> 1.0
-        False -> -1.0
+      let direction = case start <=. stop {
+        True -> {
+          1.0
+        }
+        False -> {
+          -1.0
+        }
       }
-      let step_abs: Float = piecewise.float_absolute_value(step)
-      let num: Float = piecewise.float_absolute_value(start -. stop) /. step_abs
+      let step_abs = piecewise.float_absolute_value(step)
+      let num =
+        piecewise.float_absolute_value(start -. stop) /. step_abs
+        |> conversion.float_to_int()
 
-      list.range(0, conversion.float_to_int(num) - 1)
-      |> list.map(fn(i: Int) -> Float {
+      iterator.range(0, num - 1)
+      |> iterator.map(fn(i: Int) {
         start +. conversion.int_to_float(i) *. step_abs *. direction
       })
     }
@@ -102,22 +115,30 @@ pub fn arange(start: Float, stop: Float, step: Float) -> List(Float) {
 ///     </a>
 /// </div>
 ///
-/// Generate a linearly spaced list of points over a specified interval. The 
-/// endpoint of the interval can optionally be included/excluded.
-///
+/// The function returns an iterator for generating linearly spaced points over a specified 
+/// interval. The endpoint of the interval can optionally be included/excluded. The number of 
+/// points and whether the endpoint is included determine the spacing between values.
+/// 
 /// <details>
 ///     <summary>Example:</summary>
 ///
+///     import gleam/iterator
 ///     import gleeunit/should
 ///     import gleam_community/maths/elementary
 ///     import gleam_community/maths/sequences
 ///     import gleam_community/maths/predicates
 ///
 ///     pub fn example () {
-///       let assert Ok(tol) = elementary.power(-10.0, -6.0)
-///       let assert Ok(linspace) = sequences.linear_space(10.0, 50.0, 5, True)
+///       let assert Ok(tol) = elementary.power(10.0, -6.0)
+///       let assert Ok(linspace) = sequences.linear_space(10.0, 20.0, 5, True)
 ///       let assert Ok(result) =
-///         predicates.all_close(linspace, [10.0, 20.0, 30.0, 40.0, 50.0], 0.0, tol)
+///         predicates.all_close(
+///           linspace |> iterator.to_list(),
+///           [10.0, 12.5, 15.0, 17.5, 20.0],
+///           0.0,
+///           tol,
+///         )
+///     
 ///       result
 ///       |> list.all(fn(x) { x == True })
 ///       |> should.be_true()
@@ -139,38 +160,32 @@ pub fn linear_space(
   stop: Float,
   num: Int,
   endpoint: Bool,
-) -> Result(List(Float), String) {
+) -> Result(iterator.Iterator(Float), String) {
   let direction: Float = case start <=. stop {
     True -> 1.0
     False -> -1.0
   }
-  case num > 0 {
-    True ->
-      case endpoint {
-        True -> {
-          let increment: Float =
-            piecewise.float_absolute_value(start -. stop)
-            /. conversion.int_to_float(num - 1)
-          list.range(0, num - 1)
-          |> list.map(fn(i: Int) -> Float {
-            start +. conversion.int_to_float(i) *. increment *. direction
-          })
-          |> Ok
-        }
-        False -> {
-          let increment: Float =
-            piecewise.float_absolute_value(start -. stop)
-            /. conversion.int_to_float(num)
-          list.range(0, num - 1)
-          |> list.map(fn(i: Int) -> Float {
-            start +. conversion.int_to_float(i) *. increment *. direction
-          })
-          |> Ok
-        }
-      }
 
+  let increment = case endpoint {
+    True -> {
+      piecewise.float_absolute_value(start -. stop)
+      /. conversion.int_to_float(num - 1)
+    }
+    False -> {
+      piecewise.float_absolute_value(start -. stop)
+      /. conversion.int_to_float(num)
+    }
+  }
+  case num > 0 {
+    True -> {
+      iterator.range(0, num - 1)
+      |> iterator.map(fn(i: Int) -> Float {
+        start +. conversion.int_to_float(i) *. increment *. direction
+      })
+      |> Ok
+    }
     False ->
-      "Invalid input: num < 0. Valid input is num > 0."
+      "Invalid input: num < 1. Valid input is num >= 1."
       |> Error
   }
 }
@@ -181,22 +196,29 @@ pub fn linear_space(
 ///     </a>
 /// </div>
 ///
-/// Generate a logarithmically spaced list of points over a specified interval. The 
-/// endpoint of the interval can optionally be included/excluded.
-///
+/// The function returns an iterator of logarithmically spaced points over a specified interval. 
+/// The endpoint of the interval can optionally be included/excluded. The number of points, base, 
+/// and whether the endpoint is included determine the spacing between values.
+/// 
 /// <details>
 ///     <summary>Example:</summary>
 ///
+///     import gleam/iterator
 ///     import gleeunit/should
 ///     import gleam_community/maths/elementary
 ///     import gleam_community/maths/sequences
 ///     import gleam_community/maths/predicates
 ///
 ///     pub fn example () {
-///       let assert Ok(tol) = elementary.power(-10.0, -6.0)
+///       let assert Ok(tol) = elementary.power(10.0, -6.0)
 ///       let assert Ok(logspace) = sequences.logarithmic_space(1.0, 3.0, 3, True, 10.0)
 ///       let assert Ok(result) =
-///         predicates.all_close(logspace, [10.0, 100.0, 1000.0], 0.0, tol)
+///         predicates.all_close(
+///           logspace |> iterator.to_list(),
+///           [10.0, 100.0, 1000.0],
+///           0.0,
+///           tol,
+///         )
 ///       result
 ///       |> list.all(fn(x) { x == True })
 ///       |> should.be_true()
@@ -219,19 +241,19 @@ pub fn logarithmic_space(
   num: Int,
   endpoint: Bool,
   base: Float,
-) -> Result(List(Float), String) {
+) -> Result(iterator.Iterator(Float), String) {
   case num > 0 {
     True -> {
       let assert Ok(linspace) = linear_space(start, stop, num, endpoint)
       linspace
-      |> list.map(fn(i: Float) -> Float {
+      |> iterator.map(fn(i: Float) -> Float {
         let assert Ok(result) = elementary.power(base, i)
         result
       })
       |> Ok
     }
     False ->
-      "Invalid input: num < 0. Valid input is num > 0."
+      "Invalid input: num < 1. Valid input is num >= 1."
       |> Error
   }
 }
@@ -242,25 +264,30 @@ pub fn logarithmic_space(
 ///     </a>
 /// </div>
 ///
-/// The function returns a list of numbers spaced evenly on a log scale (a 
-/// geometric progression). Each point in the list is a constant multiple of the 
-/// previous. The function is similar to the 
-/// [`logarithmic_space`](#logarithmic_space) function, but with endpoints 
+/// The function returns an iterator of numbers spaced evenly on a log scale (a geometric 
+/// progression). Each point in the list is a constant multiple of the previous. The function is 
+/// similar to the [`logarithmic_space`](#logarithmic_space) function, but with endpoints 
 /// specified directly.
 ///
 /// <details>
 ///     <summary>Example:</summary>
 ///
+///     import gleam/iterator
 ///     import gleeunit/should
 ///     import gleam_community/maths/elementary
 ///     import gleam_community/maths/sequences
 ///     import gleam_community/maths/predicates
 ///
 ///     pub fn example () {
-///       let assert Ok(tol) = elementary.power(-10.0, -6.0)
+///       let assert Ok(tol) = elementary.power(10.0, -6.0)
 ///       let assert Ok(logspace) = sequences.geometric_space(10.0, 1000.0, 3, True)
 ///       let assert Ok(result) =
-///         predicates.all_close(logspace, [10.0, 100.0, 1000.0], 0.0, tol)
+///         predicates.all_close(
+///           logspace |> iterator.to_list(),
+///           [10.0, 100.0, 1000.0],
+///           0.0,
+///           tol,
+///         )
 ///       result
 ///       |> list.all(fn(x) { x == True })
 ///       |> should.be_true()
@@ -289,7 +316,7 @@ pub fn geometric_space(
   stop: Float,
   num: Int,
   endpoint: Bool,
-) -> Result(List(Float), String) {
+) -> Result(iterator.Iterator(Float), String) {
   case start == 0.0 || stop == 0.0 {
     True ->
       "Invalid input: Neither 'start' nor 'stop' can be zero, as they must be non-zero for logarithmic calculations."
@@ -302,7 +329,7 @@ pub fn geometric_space(
           logarithmic_space(log_start, log_stop, num, endpoint, 10.0)
         }
         False ->
-          "Invalid input: num < 0. Valid input is num > 0."
+          "Invalid input: num < 1. Valid input is num >= 1."
           |> Error
       }
   }

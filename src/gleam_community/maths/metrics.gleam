@@ -1,6 +1,6 @@
-////<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" integrity="sha384-wcIxkf4k558AjM3Yz3BBFQUbk/zgIYC2R0QpeeYb+TwlBVMrlgLqwRjRtGZiK7ww" crossorigin="anonymous">
-////<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" integrity="sha384-hIoBPJpTUs74ddyc4bFZSM1TVlQDA60VBbJS0oA934VSz82sBx1X7kSx2ATBDIyd" crossorigin="anonymous"></script>
-////<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"></script>
+////<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+" crossorigin="anonymous">
+////<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" integrity="sha384-7zkQWkzuo3B5mTepMUcHkMB5jZaolc2xDwL6VFqjFALcbeS9Ggm/Yr2r3Dy4lfFg" crossorigin="anonymous"></script>
+////<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"></script>
 ////<script>
 ////    document.addEventListener("DOMContentLoaded", function() {
 ////        renderMathInElement(document.body, {
@@ -8,12 +8,12 @@
 ////          // • auto-render specific keys, e.g.:
 ////          delimiters: [
 ////              {left: '$$', right: '$$', display: false},
-////            //   {left: '$', right: '$', display: false},
-////            //   {left: '\\(', right: '\\)', display: false},
+////              {left: '$', right: '$', display: false},
+////              {left: '\\(', right: '\\)', display: false},
 ////              {left: '\\[', right: '\\]', display: true}
 ////          ],
 ////          // • rendering keys, e.g.:
-////          throwOnError : false
+////          throwOnError : true
 ////        });
 ////    });
 ////</script>
@@ -126,15 +126,15 @@ fn validate_weights(warr: List(Float)) -> Result(Bool, String) {
 ///     </a>
 /// </div>
 ///
-/// Calculate the (weighted) $$p$$-norm of a list (representing a vector):
+/// Calculate the (weighted) \\(p\\)-norm of a list (representing a vector):
 ///
 /// \\[
 /// \left( \sum_{i=1}^n w_{i} \left|x_{i}\right|^{p} \right)^{\frac{1}{p}}
 /// \\]
 ///
-/// In the formula, $$n$$ is the length of the list and $$x_i$$ is the value in 
-/// the input list indexed by $$i$$, while $$w_i \in \mathbb{R}_{+}$$ is
-/// a corresponding positive weight ($$w_i = 1.0\\;\forall i=1...n$$ by default).
+/// In the formula, \\(n\\) is the length of the list and \\(x_i\\) is the value in 
+/// the input list indexed by \\(i\\), while \\(w_i \in \mathbb{R}_{+}\\) is
+/// a corresponding positive weight (\\(w_i = 1.0\\;\forall i=1...n\\) by default).
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -246,10 +246,10 @@ pub fn norm(
 /// \sum_{i=1}^n w_{i} \left|x_i - y_i \right|
 /// \\]
 ///
-/// In the formula, $$n$$ is the length of the two lists and $$x_i, y_i$$ are the 
-/// values in the respective input lists indexed by $$i$$, while the
-/// $$w_i \in \mathbb{R}_{+}$$ are corresponding positive weights 
-/// ($$w_i = 1.0\\;\forall i=1...n$$ by default).
+/// In the formula, \\(n\\) is the length of the two lists and \\(x_i, y_i\\) are the 
+/// values in the respective input lists indexed by \\(i\\), while the
+/// \\(w_i \in \mathbb{R}_{+}\\) are corresponding positive weights 
+/// (\\(w_i = 1.0\\;\forall i=1...n\\) by default).
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -306,13 +306,13 @@ pub fn manhattan_distance(
 /// \left( \sum_{i=1}^n w_{i} \left|x_i - y_i \right|^{p} \right)^{\frac{1}{p}}
 /// \\]
 ///
-/// In the formula, $$p >= 1$$ is the order, $$n$$ is the length of the two lists 
-/// and $$x_i, y_i$$ are the values in the respective input lists indexed by $$i$$.
-/// The $$w_i \in \mathbb{R}_{+}$$ are corresponding positive weights 
-/// ($$w_i = 1.0\\;\forall i=1...n$$ by default).
+/// In the formula, \\(p >= 1\\) is the order, \\(n\\) is the length of the two lists 
+/// and \\(x_i, y_i\\) are the values in the respective input lists indexed by \\(i\\).
+/// The \\(w_i \in \mathbb{R}_{+}\\) are corresponding positive weights 
+/// (\\(w_i = 1.0\\;\forall i=1...n\\) by default).
 ///
 /// The Minkowski distance is a generalization of both the Euclidean distance 
-/// ($$p=2$$) and the Manhattan distance ($$p = 1$$).
+/// (\\(p=2\\)) and the Manhattan distance (\\(p = 1\\)).
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -396,10 +396,10 @@ pub fn minkowski_distance(
 /// \left( \sum_{i=1}^n w_{i} \left|x_i - y_i \right|^{2} \right)^{\frac{1}{2}}
 /// \\]
 ///
-/// In the formula, $$n$$ is the length of the two lists and $$x_i, y_i$$ are the
-/// values in the respective input lists indexed by $$i$$, while the
-/// $$w_i \in \mathbb{R}_{+}$$ are corresponding positive weights 
-/// ($$w_i = 1.0\\;\forall i=1...n$$ by default).
+/// In the formula, \\(n\\) is the length of the two lists and \\(x_i, y_i\\) are the
+/// values in the respective input lists indexed by \\(i\\), while the
+/// \\(w_i \in \mathbb{R}_{+}\\) are corresponding positive weights 
+/// (\\(w_i = 1.0\\;\forall i=1...n\\) by default).
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -455,8 +455,8 @@ pub fn euclidean_distance(
 /// \text{max}_{i=1}^n \left|x_i - y_i \right|
 /// \\]
 ///
-/// In the formula, $$n$$ is the length of the two lists and $$x_i, y_i$$ are the 
-/// values in the respective input lists indexed by $$i$$.
+/// In the formula, \\(n\\) is the length of the two lists and \\(x_i, y_i\\) are the 
+/// values in the respective input lists indexed by \\(i\\).
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -517,8 +517,8 @@ pub fn chebyshev_distance(
 /// \bar{x} = \frac{1}{n}\sum_{i=1}^n x_i
 /// \\]
 ///
-/// In the formula, $$n$$ is the sample size (the length of the list) and $$x_i$$
-/// is the sample point in the input list indexed by $$i$$.
+/// In the formula, \\(n\\) is the sample size (the length of the list) and \\(x_i\\)
+/// is the sample point in the input list indexed by \\(i\\).
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -637,11 +637,11 @@ fn do_median(
 /// s^{2} = \frac{1}{n - d} \sum_{i=1}^{n}(x_i - \bar{x})
 /// \\]
 ///
-/// In the formula, $$n$$ is the sample size (the length of the list) and $$x_i$$ 
-/// is the sample point in the input list indexed by $$i$$. 
-/// Furthermore, $$\bar{x}$$ is the sample mean and $$d$$ is the "Delta 
-/// Degrees of Freedom", and is by default set to $$d = 0$$, which gives a biased
-/// estimate of the sample variance. Setting $$d = 1$$ gives an unbiased estimate.
+/// In the formula, \\(n\\) is the sample size (the length of the list) and \\(x_i\\) 
+/// is the sample point in the input list indexed by \\(i\\). 
+/// Furthermore, \\(\bar{x}\\) is the sample mean and \\(d\\) is the "Delta 
+/// Degrees of Freedom", and is by default set to \\(d = 0\\), which gives a biased
+/// estimate of the sample variance. Setting \\(d = 1\\) gives an unbiased estimate.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -713,11 +713,11 @@ pub fn variance(arr: List(Float), ddof: Int) -> Result(Float, String) {
 /// s = \left(\frac{1}{n - d} \sum_{i=1}^{n}(x_i - \bar{x})\right)^{\frac{1}{2}}
 /// \\]
 ///
-/// In the formula, $$n$$ is the sample size (the length of the list) and $$x_i$$ 
-/// is the sample point in the input list indexed by $$i$$. 
-/// Furthermore, $$\bar{x}$$ is the sample mean and $$d$$ is the "Delta 
-/// Degrees of Freedom", and is by default set to $$d = 0$$, which gives a biased
-/// estimate of the sample standard deviation. Setting $$d = 1$$ gives an unbiased 
+/// In the formula, \\(n\\) is the sample size (the length of the list) and \\(x_i\\) 
+/// is the sample point in the input list indexed by \\(i\\). 
+/// Furthermore, \\(\bar{x}\\) is the sample mean and \\(d\\) is the "Delta 
+/// Degrees of Freedom", and is by default set to \\(d = 0\\), which gives a biased
+/// estimate of the sample standard deviation. Setting \\(d = 1\\) gives an unbiased 
 /// estimate.
 ///
 /// <details>
@@ -785,14 +785,14 @@ pub fn standard_deviation(arr: List(Float), ddof: Int) -> Result(Float, String) 
 /// 
 /// where:
 ///
-/// - $$X$$ and $$Y$$ are two sets being compared,
-/// - $$|X \cap Y|$$ represents the size of the intersection of the two sets
-/// - $$|X \cup Y|$$ denotes the size of the union of the two sets
+/// - \\(X\\) and \\(Y\\) are two sets being compared,
+/// - \\(|X \cap Y|\\) represents the size of the intersection of the two sets
+/// - \\(|X \cup Y|\\) denotes the size of the union of the two sets
 /// 
 /// The value of the Jaccard index ranges from 0 to 1, where 0 indicates that the 
 /// two sets share no elements and 1 indicates that the sets are identical. The 
 /// Jaccard index is a special case of the  [Tversky index](#tversky_index) (with
-/// $$\alpha=\beta=1$$).
+/// \\(\alpha=\beta=1\\)).
 /// 
 /// <details>
 ///     <summary>Example:</summary>
@@ -835,16 +835,16 @@ pub fn jaccard_index(xset: set.Set(a), yset: set.Set(a)) -> Float {
 /// \\]
 /// 
 /// where:
-/// - $$X$$ and $$Y$$ are two sets being compared
-/// - $$|X \cap Y|$$ is the size of the intersection of the two sets (i.e., the 
+/// - \\(X\\) and \\(Y\\) are two sets being compared
+/// - \\(|X \cap Y|\\) is the size of the intersection of the two sets (i.e., the 
 /// number of elements common to both sets)
-/// - $$|X|$$ and $$|Y|$$ are the sizes of the sets $$X$$ and $$Y$$, respectively
+/// - \\(|X|\\) and \\(|Y|\\) are the sizes of the sets \\(X\\) and \\(Y\\), respectively
 /// 
 /// The coefficient ranges from 0 to 1, where 0 indicates no similarity (the sets
 /// share no elements) and 1 indicates perfect similarity (the sets are identical).
 /// The higher the coefficient, the greater the similarity between the two sets. 
 /// The Sørensen-Dice coefficient is a special case of the 
-/// [Tversky index](#tversky_index) (with $$\alpha=\beta=0.5$$).
+/// [Tversky index](#tversky_index) (with \\(\alpha=\beta=0.5\\)).
 /// 
 /// <details>
 ///     <summary>Example:</summary>
@@ -880,8 +880,8 @@ pub fn sorensen_dice_coefficient(xset: set.Set(a), yset: set.Set(a)) -> Float {
 /// </div>
 /// 
 /// The Tversky index is a generalization of the Jaccard index and Sørensen-Dice 
-/// coefficient, which adds flexibility through two parameters, $$\alpha$$ and 
-/// $$\beta$$, allowing for asymmetric similarity measures between sets. The 
+/// coefficient, which adds flexibility through two parameters, \\(\alpha\\) and 
+/// \\(\beta\\), allowing for asymmetric similarity measures between sets. The 
 /// Tversky index is defined as:
 /// 
 /// \\[
@@ -890,18 +890,18 @@ pub fn sorensen_dice_coefficient(xset: set.Set(a), yset: set.Set(a)) -> Float {
 /// 
 /// where:
 /// 
-/// - $$X$$ and $$Y$$ are the sets being compared
-/// - $$|X - Y|$$ and $$|Y - X|$$ are the sizes of the relative complements of 
-/// $$Y$$ in $$X$$ and $$X$$ in $$Y$$, respectively,
-/// - $$\alpha$$ and $$\beta$$ are parameters that weigh the relative importance
-/// of the elements unique to $$X$$ and $$Y$$
+/// - \\(X\\) and \\(Y\\) are the sets being compared
+/// - \\(|X - Y|\\) and \\(|Y - X|\\) are the sizes of the relative complements of 
+/// \\(Y\\) in \\(X\\) and \\(X\\) in \\(Y\\), respectively,
+/// - \\(\alpha\\) and \\(\beta\\) are parameters that weigh the relative importance
+/// of the elements unique to \\(X\\) and \\(Y\\)
 /// 
-/// The Tversky index reduces to the Jaccard index when $$\alpha = \beta = 1$$ and
-/// to the Sørensen-Dice coefficient when $$\alpha = \beta = 0.5$$. In general, the
+/// The Tversky index reduces to the Jaccard index when \\(\alpha = \beta = 1\\) and
+/// to the Sørensen-Dice coefficient when \\(\alpha = \beta = 0.5\\). In general, the
 /// Tversky index can take on any non-negative value, including 0. The index equals
 /// 0 when there is no intersection between the two sets, indicating no similarity. 
 /// However, unlike similarity measures bounded strictly between 0 and 1, the 
-/// Tversky index does not have a strict upper limit of 1 when $$\alpha \neq \beta$$.
+/// Tversky index does not have a strict upper limit of 1 when \\(\alpha \neq \beta\\).
 ///  
 /// <details>
 ///     <summary>Example:</summary>
@@ -982,9 +982,9 @@ pub fn tversky_index(
 ///
 /// where:
 ///
-/// - $$X$$ and $$Y$$ are the sets being compared
-/// - $$|X \cap Y|$$ is the size of the intersection of the sets
-/// - $$\min(|X|, |Y|)$$ is the size of the smaller set among $$X$$ and $$Y$$
+/// - \\(X\\) and \\(Y\\) are the sets being compared
+/// - \\(|X \cap Y|\\) is the size of the intersection of the sets
+/// - \\(\min(|X|, |Y|)\\) is the size of the smaller set among \\(X\\) and \\(Y\\)
 ///
 /// The coefficient ranges from 0 to 1, where 0 indicates no overlap and 1 
 /// indicates that the smaller set is a suyset of the larger set. This 
@@ -1043,10 +1043,10 @@ pub fn overlap_coefficient(xset: set.Set(a), yset: set.Set(a)) -> Float {
 /// \\; \in \\; \left[-1, 1\right]
 /// \\]
 ///
-/// In the formula, $$n$$ is the length of the two lists and $$x_i$$, $$y_i$$ are
-/// the values in the respective input lists indexed by $$i$$, while the
-/// $$w_i \in \mathbb{R}_{+}$$ are corresponding positive weights 
-/// ($$w_i = 1.0\\;\forall i=1...n$$ by default). 
+/// In the formula, \\(n\\) is the length of the two lists and \\(x_i\\), \\(y_i\\) are
+/// the values in the respective input lists indexed by \\(i\\), while the
+/// \\(w_i \in \mathbb{R}_{+}\\) are corresponding positive weights 
+/// (\\(w_i = 1.0\\;\forall i=1...n\\) by default). 
 /// 
 /// The cosine similarity provides a value between -1 and 1, where 1 means the 
 /// vectors are in the same direction, -1 means they are in exactly opposite 
@@ -1143,10 +1143,10 @@ pub fn cosine_similarity(
 /// {\left| x_i \right| + \left| y_i \right|}
 /// \\]
 ///
-/// In the formula, $$n$$ is the length of the two lists, and $$x_i, y_i$$ are the 
-/// values in the respective input lists indexed by $$i$$, while the 
-/// $$w_i \in \mathbb{R}_{+}$$ are corresponding positive weights 
-/// ($$w_i = 1.0\\;\forall i=1...n$$ by default). 
+/// In the formula, \\(n\\) is the length of the two lists, and \\(x_i, y_i\\) are the 
+/// values in the respective input lists indexed by \\(i\\), while the 
+/// \\(w_i \in \mathbb{R}_{+}\\) are corresponding positive weights 
+/// (\\(w_i = 1.0\\;\forall i=1...n\\) by default). 
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -1231,12 +1231,12 @@ fn canberra_distance_helper(tuple: #(Float, Float)) -> Float {
 /// {\sum_{i=1}^n w_{i}\left| x_i + y_i \right|}
 /// \\]
 ///
-/// In the formula, $$n$$ is the length of the two lists, and $$x_i, y_i$$ are the values 
-/// in the respective input lists indexed by $$i$$, while the 
-/// $$w_i \in \mathbb{R}_{+}$$ are corresponding positive weights 
-/// ($$w_i = 1.0\\;\forall i=1...n$$ by default).
+/// In the formula, \\(n\\) is the length of the two lists, and \\(x_i, y_i\\) are the values 
+/// in the respective input lists indexed by \\(i\\), while the 
+/// \\(w_i \in \mathbb{R}_{+}\\) are corresponding positive weights 
+/// (\\(w_i = 1.0\\;\forall i=1...n\\) by default).
 /// 
-/// The Bray-Curtis distance is in the range $$[0, 1]$$ if all entries $$x_i, y_i$$ are
+/// The Bray-Curtis distance is in the range \\([0, 1]\\) if all entries \\(x_i, y_i\\) are
 /// positive.
 ///
 /// <details>

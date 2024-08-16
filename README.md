@@ -10,43 +10,49 @@ The library supports both targets: Erlang and JavaScript.
 ## Quickstart
 
 ```gleam
+import gleam/float
+import gleam/iterator
+import gleam/option.{Some}
 import gleam_community/maths/arithmetics
-import gleam_community/maths/combinatorics
+import gleam_community/maths/combinatorics.{WithoutRepetitions}
 import gleam_community/maths/elementary
 import gleam_community/maths/piecewise
 import gleam_community/maths/predicates
-import gleam/float
-import gleam/int
+import gleeunit/should
 
-pub fn main() {
+pub fn example() {
   // Evaluate the sine function
-  elementary.sin(elementary.pi())
-  // Returns Float: 0.0
+  let result = elementary.sin(elementary.pi())
+
+  // Set the relative and absolute tolerance
+  let assert Ok(absolute_tol) = elementary.power(10.0, -6.0)
+  let relative_tol = 0.0
+
+  // Check that the value is very close to 0.0
+  // That is, if 'result' is within +/- 10^(-6)
+  predicates.is_close(result, 0.0, relative_tol, absolute_tol)
+  |> should.be_true()
 
   // Find the greatest common divisor
   arithmetics.gcd(54, 24)
-  // Returns Int: 6
+  |> should.equal(6)
 
   // Find the minimum and maximum of a list
   piecewise.extrema([10.0, 3.0, 50.0, 20.0, 3.0], float.compare)
-  // Returns Tuple: Ok(#(3.0, 50.0))
-
-  // Find the list indices of the smallest value 
-  piecewise.arg_minimum([10, 3, 50, 20, 3], int.compare)
-  // Returns List: Ok([1, 4])
+  |> should.equal(Ok(#(3.0, 50.0)))
 
   // Determine if a number is fractional
   predicates.is_fractional(0.3333)
-  // Returns Bool: True
+  |> should.equal(True)
 
-  // Determine if 28 is a power of 3
-  predicates.is_power(28, 3)
-  // Returns Bool: False
-
-  // Generate all k = 1 combinations of [1, 2]
-  combinatorics.list_combination([1, 2], 1)
-  // Returns List: Ok([[1], [2]])
+  // Generate all k = 2 combinations of [1, 2, 3]
+  let assert Ok(combinations) =
+    combinatorics.list_combination([1, 2, 3], 2, Some(WithoutRepetitions))
+  combinations
+  |> iterator.to_list()
+  |> should.equal([[1, 2], [1, 3], [2, 3]])
 }
+
 ```
 
 ## Installation
