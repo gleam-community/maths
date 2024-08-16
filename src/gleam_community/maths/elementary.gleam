@@ -1,6 +1,6 @@
-////<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" integrity="sha384-wcIxkf4k558AjM3Yz3BBFQUbk/zgIYC2R0QpeeYb+TwlBVMrlgLqwRjRtGZiK7ww" crossorigin="anonymous">
-////<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" integrity="sha384-hIoBPJpTUs74ddyc4bFZSM1TVlQDA60VBbJS0oA934VSz82sBx1X7kSx2ATBDIyd" crossorigin="anonymous"></script>
-////<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"></script>
+////<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+" crossorigin="anonymous">
+////<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" integrity="sha384-7zkQWkzuo3B5mTepMUcHkMB5jZaolc2xDwL6VFqjFALcbeS9Ggm/Yr2r3Dy4lfFg" crossorigin="anonymous"></script>
+////<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"></script>
 ////<script>
 ////    document.addEventListener("DOMContentLoaded", function() {
 ////        renderMathInElement(document.body, {
@@ -8,12 +8,12 @@
 ////          // • auto-render specific keys, e.g.:
 ////          delimiters: [
 ////              {left: '$$', right: '$$', display: false},
-////            //   {left: '$', right: '$', display: false},
-////            //   {left: '\\(', right: '\\)', display: false},
+////              {left: '$', right: '$', display: false},
+////              {left: '\\(', right: '\\)', display: false},
 ////              {left: '\\[', right: '\\]', display: true}
 ////          ],
 ////          // • rendering keys, e.g.:
-////          throwOnError : false
+////          throwOnError : true
 ////        });
 ////    });
 ////</script>
@@ -54,10 +54,8 @@
 ////   * [`tau`](#tau)
 ////   * [`e`](#e)
 //// 
-//// 
 
 import gleam/int
-import gleam/list
 import gleam/option
 
 /// <div style="text-align: right;">
@@ -72,8 +70,8 @@ import gleam/option
 /// \forall x \in \[-1, 1\],   \\; \cos^{-1}{(x)} = y \in \[0, \pi \]
 /// \\]
 ///
-/// The function takes a number $$x$$ in its domain $$\[-1, 1\]$$ as input and returns a
-/// numeric value $$y$$ that lies in the range $$\[0, \pi \]$$ (an angle in radians).
+/// The function takes a number \\(x\\) in its domain \\(\[-1, 1\]\\) as input and returns a
+/// numeric value \\(y\\) that lies in the range \\(\[0, \pi \]\\) (an angle in radians).
 /// If the input value is outside the domain of the function an error is returned.
 ///
 /// <details>
@@ -127,8 +125,8 @@ fn do_acos(a: Float) -> Float
 /// \forall x \in [1, +\infty\),   \\; \cosh^{-1}{(x)} = y \in \[0, +\infty\)
 /// \\]
 ///
-/// The function takes a number $$x$$ in its domain $$\[1, +\infty\)$$ as input and returns
-/// a numeric value $$y$$ that lies in the range $$\[0, +\infty\)$$ (an angle in radians).
+/// The function takes a number \\(x\\) in its domain \\(\[1, +\infty\)\\) as input and returns
+/// a numeric value \\(y\\) that lies in the range \\(\[0, +\infty\)\\) (an angle in radians).
 /// If the input value is outside the domain of the function an error is returned.
 ///
 /// <details>
@@ -179,9 +177,9 @@ fn do_acosh(a: Float) -> Float
 /// \forall x \in \[-1, 1\],   \\; \sin^{-1}{(x)} = y \in \(-\infty, +\infty\)
 /// \\]
 ///
-/// The function takes a number $$x$$ in its domain $$\[-1, 1\]$$ as input and returns a numeric
-/// value $$y$$ that lies in the range $$\[-\frac{\pi}{2}, \frac{\pi}{2}\]$$ (an angle in radians).
-/// If the input value is outside the domain of the function an error is returned.
+/// The function takes a number \\(x\\) in its domain \\(\[-1, 1\]\\) as input and returns a numeric
+/// value \\(y\\) that lies in the range \\(\[-\frac{\pi}{2}, \frac{\pi}{2}\]\\) (an angle in 
+/// radians). If the input value is outside the domain of the function an error is returned.
 ///
 /// <details>
 ///     <summary>Example</summary>
@@ -234,8 +232,9 @@ fn do_asin(a: Float) -> Float
 /// \forall x \in \(-\infty, \infty\),   \\; \sinh^{-1}{(x)} = y \in \(-\infty, +\infty\)
 /// \\]
 ///
-/// The function takes a number $$x$$ in its domain $$\(-\infty, +\infty\)$$ as input and returns
-/// a numeric value $$y$$ that lies in the range $$\(-\infty, +\infty\)$$ (an angle in radians).
+/// The function takes a number \\(x\\) in its domain \\(\(-\infty, +\infty\)\\) as input and 
+/// returns a numeric value \\(y\\) that lies in the range \\(\(-\infty, +\infty\)\\) (an angle in 
+/// radians).
 ///
 /// <details>
 ///     <summary>Example</summary>
@@ -272,11 +271,12 @@ fn do_asinh(a: Float) -> Float
 /// The inverse tangent function:
 ///
 /// \\[
-/// \forall x \in \(-\infty, \infty\),   \\; \tan^{-1}{(x)} = y \in \[-\frac{\pi}{2}, \frac{\pi}{2}\]
+/// \forall x \in \(-\infty, \infty\),  \\; \tan^{-1}{(x)} = y \in \[-\frac{\pi}{2}, \frac{\pi}{2}\]
 /// \\]
 ///
-/// The function takes a number $$x$$ in its domain $$\(-\infty, +\infty\)$$ as input and returns
-/// a numeric value $$y$$ that lies in the range $$\[-\frac{\pi}{2}, \frac{\pi}{2}\]$$ (an angle in radians).
+/// The function takes a number \\(x\\) in its domain \\(\(-\infty, +\infty\)\\) as input and 
+/// returns a numeric value \\(y\\) that lies in the range \\(\[-\frac{\pi}{2}, \frac{\pi}{2}\]\\)
+/// (an angle in radians).
 ///
 /// <details>
 ///     <summary>Example</summary>
@@ -325,8 +325,8 @@ fn do_atan(a: Float) -> Float
 /// \\]
 ///
 /// The function returns the angle in radians from the x-axis to the line containing the
-/// origin $$\(0, 0\)$$ and a point given as input with coordinates $$\(x, y\)$$. The numeric value
-/// returned by $$\text{atan2}(y, x)$$ is in the range $$\[-\pi, \pi\]$$.
+/// origin \\(\(0, 0\)\\) and a point given as input with coordinates \\(\(x, y\)\\). The numeric
+/// value returned by \\(\text{atan2}(y, x)\\) is in the range \\(\[-\pi, \pi\]\\).
 ///
 /// <details>
 ///     <summary>Example</summary>
@@ -366,8 +366,8 @@ fn do_atan2(a: Float, b: Float) -> Float
 /// \forall x \in \(-1, 1\),   \\; \tanh^{-1}{(x)} = y \in \(-\infty, +\infty\)
 /// \\]
 ///
-/// The function takes a number $$x$$ in its domain $$\(-1, 1\)$$ as input and returns
-/// a numeric value $$y$$ that lies in the range $$\(-\infty, \infty\)$$ (an angle in radians).
+/// The function takes a number \\(x\\) in its domain \\(\(-1, 1\)\\) as input and returns
+/// a numeric value \\(y\\) that lies in the range \\(\(-\infty, \infty\)\\) (an angle in radians).
 /// If the input value is outside the domain of the function an error is returned.
 ///
 /// <details>
@@ -421,8 +421,8 @@ fn do_atanh(a: Float) -> Float
 /// \forall x \in \(-\infty, +\infty\),   \\; \cos{(x)} = y \in \[-1, 1\]
 /// \\]
 ///
-/// The function takes a number $$x$$ in its domain $$\(-\infty, \infty\)$$ (an angle in radians)
-/// as input and returns a numeric value $$y$$ that lies in the range $$\[-1, 1\]$$.
+/// The function takes a number \\(x\\) in its domain \\(\(-\infty, \infty\)\\) (an angle in 
+/// radians) as input and returns a numeric value \\(y\\) that lies in the range \\(\[-1, 1\]\\).
 ///
 /// <details>
 ///     <summary>Example</summary>
@@ -465,9 +465,9 @@ fn do_cos(a: Float) -> Float
 /// \forall x \in \(-\infty, \infty\),   \\; \cosh{(x)} = y \in \(-\infty, +\infty\)
 /// \\]
 ///
-/// The function takes a number $$x$$ in its domain $$\(-\infty, \infty\)$$ as input (an angle in radians)
-/// and returns a numeric value $$y$$ that lies in the range $$\(-\infty, \infty\)$$.
-/// If the input value is too large an overflow error might occur.
+/// The function takes a number \\(x\\) in its domain \\(\(-\infty, \infty\)\\) as input (an angle 
+/// in radians) and returns a numeric value \\(y\\) that lies in the range 
+/// \\(\(-\infty, \infty\)\\). If the input value is too large an overflow error might occur.
 ///
 /// <details>
 ///     <summary>Example</summary>
@@ -507,8 +507,8 @@ fn do_cosh(a: Float) -> Float
 /// \forall x \in \(-\infty, +\infty\),   \\; \sin{(x)} = y \in \[-1, 1\]
 /// \\]
 ///
-/// The function takes a number $$x$$ in its domain $$\(-\infty, \infty\)$$ (an angle in radians)
-/// as input and returns a numeric value $$y$$ that lies in the range $$\[-1, 1\]$$.
+/// The function takes a number \\(x\\) in its domain \\(\(-\infty, \infty\)\\) (an angle in 
+/// radians) as input and returns a numeric value \\(y\\) that lies in the range \\(\[-1, 1\]\\).
 ///
 /// <details>
 ///     <summary>Example</summary>
@@ -551,10 +551,9 @@ fn do_sin(a: Float) -> Float
 /// \forall x \in \(-\infty, +\infty\),   \\; \sinh{(x)} = y \in \(-\infty, +\infty\)
 /// \\]
 ///
-/// The function takes a number $$x$$ in its domain $$\(-\infty, +\infty\)$$ as input
-/// (an angle in radians) and returns a numeric value $$y$$ that lies in the range
-/// $$\(-\infty, +\infty\)$$. If the input value is too large an overflow error might
-/// occur.
+/// The function takes a number \\(x\\) in its domain \\(\(-\infty, +\infty\)\\) as input
+/// (an angle in radians) and returns a numeric value \\(y\\) that lies in the range
+/// \\(\(-\infty, +\infty\)\\). If the input value is too large an overflow error might occur.
 ///
 /// <details>
 ///     <summary>Example</summary>
@@ -594,9 +593,9 @@ fn do_sinh(a: Float) -> Float
 /// \forall x \in \(-\infty, +\infty\),   \\; \tan{(x)} = y \in \(-\infty, +\infty\)
 /// \\]
 ///
-/// The function takes a number $$x$$ in its domain $$\(-\infty, +\infty\)$$ as input
-/// (an angle in radians) and returns a numeric value $$y$$ that lies in the range
-/// $$\(-\infty, +\infty\)$$.
+/// The function takes a number \\(x\\) in its domain \\(\(-\infty, +\infty\)\\) as input
+/// (an angle in radians) and returns a numeric value \\(y\\) that lies in the range
+/// \\(\(-\infty, +\infty\)\\).
 ///
 /// <details>
 ///     <summary>Example</summary>
@@ -636,8 +635,8 @@ fn do_tan(a: Float) -> Float
 /// \forall x \in \(-\infty, \infty\),   \\; \tanh{(x)} = y \in \[-1, 1\]
 /// \\]
 ///
-/// The function takes a number $$x$$ in its domain $$\(-\infty, \infty\)$$ as input (an angle in radians)
-/// and returns a numeric value $$y$$ that lies in the range $$\[-1, 1\]$$.
+/// The function takes a number \\(x\\) in its domain \\(\(-\infty, \infty\)\\) as input (an angle
+/// in radians) and returns a numeric value \\(y\\) that lies in the range \\(\[-1, 1\]\\).
 ///
 /// <details>
 ///     <summary>Example</summary>
@@ -683,9 +682,9 @@ fn do_tanh(a: Float) -> Float
 /// \forall x \in \(-\infty, \infty\),   \\; e^{(x)} = y \in \(0, +\infty\)
 /// \\]
 ///
-/// $$e \approx 2.71828\dots$$ is Eulers' number.
+/// \\(e \approx 2.71828\dots\\) is Eulers' number.
 ///
-/// Note: If the input value $$x$$ is too large an overflow error might occur.
+/// Note: If the input value \\(x\\) is too large an overflow error might occur.
 ///
 /// <details>
 ///     <summary>Example</summary>
@@ -725,8 +724,8 @@ fn do_exponential(a: Float) -> Float
 /// \forall x \in \(0, \infty\),   \\; \log_{e}{(x)} = y \in \(-\infty, +\infty\)
 /// \\]
 ///
-/// The function takes a number $$x$$ in its domain $$\(0, \infty\)$$ as input and returns
-/// a numeric value $$y$$ that lies in the range $$\(-\infty, \infty\)$$.
+/// The function takes a number \\(x\\) in its domain \\(\(0, \infty\)\\) as input and returns
+/// a numeric value \\(y\\) that lies in the range \\(\(-\infty, \infty\)\\).
 /// If the input value is outside the domain of the function an error is returned.
 ///
 /// <details>
@@ -775,14 +774,14 @@ fn do_natural_logarithm(a: Float) -> Float
 ///     </a>
 /// </div>
 ///
-/// The base $$b$$ logarithm function (computed through the "change of base" formula):
+/// The base \\(b\\) logarithm function (computed through the "change of base" formula):
 ///
 /// \\[
 /// \forall x \in \(0, \infty\) \textnormal{ and } b > 1,  \\; \log_{b}{(x)} = y \in \(-\infty, +\infty\)
 /// \\]
 ///
-/// The function takes a number $$x$$ in its domain $$\(0, \infty\)$$ and a base $$b > 1$$ as input and returns
-/// a numeric value $$y$$ that lies in the range $$\(-\infty, \infty\)$$.
+/// The function takes a number \\(x\\) in its domain \\(\(0, \infty\)\\) and a base \\(b > 1\\) 
+/// as input and returns a numeric value \\(y\\) that lies in the range \\(\(-\infty, \infty\)\\).
 /// If the input value is outside the domain of the function an error is returned.
 ///
 /// <details>
@@ -850,8 +849,8 @@ pub fn logarithm(x: Float, base: option.Option(Float)) -> Result(Float, String) 
 /// \forall x \in \(0, \infty),   \\; \log_{2}{(x)} = y \in \(-\infty, +\infty\)
 /// \\]
 ///
-/// The function takes a number $$x$$ in its domain $$\(0, \infty\)$$ as input and returns
-/// a numeric value $$y$$ that lies in the range $$\(-\infty, \infty\)$$.
+/// The function takes a number \\(x\\) in its domain \\(\(0, \infty\)\\) as input and returns a 
+/// numeric value \\(y\\) that lies in the range \\(\(-\infty, \infty\)\\).
 /// If the input value is outside the domain of the function an error is returned.
 ///
 /// <details>
@@ -905,8 +904,8 @@ fn do_logarithm_2(a: Float) -> Float
 /// \forall x \in \(0, \infty),   \\; \log_{10}{(x)} = y \in \(-\infty, +\infty\)
 /// \\]
 ///
-/// The function takes a number $$x$$ in its domain $$\(0, \infty\)$$ as input and returns
-/// a numeric value $$y$$ that lies in the range $$\(-\infty, \infty\)$$.
+/// The function takes a number \\(x\\) in its domain \\(\(0, \infty\)\\) as input and returns a 
+/// numeric value \\(y\\) that lies in the range \\(\(-\infty, \infty\)\\).
 /// If the input value is outside the domain of the function an error is returned.
 ///
 /// <details>
@@ -960,14 +959,14 @@ fn do_logarithm_10(a: Float) -> Float
 ///     </a>
 /// </div>
 ///
-/// The exponentiation function: $$y = x^{a}$$.
+/// The exponentiation function: \\(y = x^{a}\\).
 ///
 /// Note that the function is not defined if:
-/// 1. The base is negative ($$x < 0$$) and the exponent is fractional
-///    ($$a = \frac{n}{m}$$ is an irrreducible fraction). An error will be returned
+/// 1. The base is negative (\\(x < 0\\)) and the exponent is fractional
+///    (\\(a = \frac{n}{m}\\) is an irrreducible fraction). An error will be returned
 ///    as an imaginary number will otherwise have to be returned.
-/// 2. The base is zero ($$x = 0$$) and the exponent is negative ($$a < 0$$) then the
-///    expression is equivalent to the exponent $$y$$ divided by $$0$$ and an
+/// 2. The base is zero (\\(x = 0\\)) and the exponent is negative (\\(a < 0\\)) then the
+///    expression is equivalent to the exponent \\(y\\) divided by \\(0\\) and an
 ///    error will have to be returned as the expression is otherwise undefined.
 ///
 /// <details>
@@ -1026,10 +1025,10 @@ fn do_ceiling(a: Float) -> Float
 ///     </a>
 /// </div>
 ///
-/// The square root function: $$y = \sqrt[2]{x} = x^{\frac{1}{2}}$$.
+/// The square root function: \\(y = \sqrt[2]{x} = x^{\frac{1}{2}}\\).
 ///
 /// Note that the function is not defined if:
-/// 1. The input is negative ($$x < 0$$). An error will be returned
+/// 1. The input is negative (\\(x < 0\\)). An error will be returned
 ///    as an imaginary number will otherwise have to be returned.
 ///
 /// <details>
@@ -1078,10 +1077,10 @@ pub fn square_root(x: Float) -> Result(Float, String) {
 ///     </a>
 /// </div>
 ///
-/// The cube root function: $$y = \sqrt[3]{x} = x^{\frac{1}{3}}$$.
+/// The cube root function: \\(y = \sqrt[3]{x} = x^{\frac{1}{3}}\\).
 ///
 /// Note that the function is not defined if:
-/// 1. The input is negative ($$x < 0$$). An error will be returned
+/// 1. The input is negative (\\(x < 0\\)). An error will be returned
 ///    as an imaginary number will otherwise have to be returned.
 ///
 /// <details>
@@ -1130,10 +1129,10 @@ pub fn cube_root(x: Float) -> Result(Float, String) {
 ///     </a>
 /// </div>
 ///
-/// The $$n$$'th root function: $$y = \sqrt[n]{x} = x^{\frac{1}{n}}$$.
+/// The \\(n\\)'th root function: \\(y = \sqrt[n]{x} = x^{\frac{1}{n}}\\).
 ///
 /// Note that the function is not defined if:
-/// 1. The input is negative ($$x < 0$$). An error will be returned
+/// 1. The input is negative (\\(x < 0\\)). An error will be returned
 ///    as an imaginary number will otherwise have to be returned.
 ///
 /// <details>
@@ -1191,7 +1190,7 @@ pub fn nth_root(x: Float, n: Int) -> Result(Float, String) {
 ///     </a>
 /// </div>
 ///
-/// The mathematical constant pi: $$\pi \approx 3.1415\dots$$
+/// The mathematical constant pi: \\(\pi \approx 3.1415\dots\\)
 ///
 /// <div style="text-align: right;">
 ///     <a href="#">
@@ -1213,7 +1212,7 @@ fn do_pi() -> Float
 ///     </a>
 /// </div>
 ///
-/// The mathematical constant tau: $$\tau = 2 \cdot \pi \approx 6.283\dots$$
+/// The mathematical constant tau: \\(\tau = 2 \cdot \pi \approx 6.283\dots\\)
 ///
 /// <div style="text-align: right;">
 ///     <a href="#">
@@ -1231,7 +1230,7 @@ pub fn tau() -> Float {
 ///     </a>
 /// </div>
 ///
-/// Euler's number $$e \approx 2.71828\dots$$.
+/// Euler's number \\(e \approx 2.71828\dots\\).
 ///
 /// <details>
 ///     <summary>Example</summary>
