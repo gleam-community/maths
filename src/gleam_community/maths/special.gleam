@@ -132,7 +132,7 @@ fn gamma_lanczos(x: Float) -> Float {
     False -> {
       let z = x -. 1.0
       let x =
-        list.index_fold(lanczos_p, 0.0, fn(acc: Float, v: Float, index: Int) {
+        list.index_fold(lanczos_p, 0.0, fn(acc, v, index) {
           case index > 0 {
             True -> acc +. v /. { z +. conversion.int_to_float(index) }
             False -> v

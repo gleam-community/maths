@@ -244,7 +244,7 @@ fn find_divisors(n: Int) -> List(Int) {
   let assert Ok(sqrt_result) = elementary.square_root(nabs)
   let max = conversion.float_to_int(sqrt_result) + 1
   list.range(2, max)
-  |> list.fold([1, n], fn(acc: List(Int), i: Int) -> List(Int) {
+  |> list.fold([1, n], fn(acc, i) {
     case n % i == 0 {
       True -> [i, n / i, ..acc]
       False -> acc
@@ -340,10 +340,10 @@ pub fn float_sum(arr: List(Float), weights: option.Option(List(Float))) -> Float
     [], _ -> 0.0
     _, option.None ->
       arr
-      |> list.fold(0.0, fn(acc: Float, a: Float) -> Float { a +. acc })
+      |> list.fold(0.0, fn(acc, a) { a +. acc })
     _, option.Some(warr) -> {
       list.zip(arr, warr)
-      |> list.fold(0.0, fn(acc: Float, a: #(Float, Float)) -> Float {
+      |> list.fold(0.0, fn(acc: Float, a) {
         pair.first(a) *. pair.second(a) +. acc
       })
     }
@@ -395,7 +395,7 @@ pub fn int_sum(arr: List(Int)) -> Int {
     [] -> 0
     _ ->
       arr
-      |> list.fold(0, fn(acc: Int, a: Int) -> Int { a + acc })
+      |> list.fold(0, fn(acc, a) { a + acc })
   }
 }
 
@@ -451,12 +451,12 @@ pub fn float_product(
       |> Ok
     _, option.None ->
       arr
-      |> list.fold(1.0, fn(acc: Float, a: Float) -> Float { a *. acc })
+      |> list.fold(1.0, fn(acc, a) { a *. acc })
       |> Ok
     _, option.Some(warr) -> {
       let results =
         list.zip(arr, warr)
-        |> list.map(fn(a: #(Float, Float)) -> Result(Float, String) {
+        |> list.map(fn(a) {
           pair.first(a)
           |> elementary.power(pair.second(a))
         })
@@ -464,7 +464,7 @@ pub fn float_product(
       case results {
         Ok(prods) ->
           prods
-          |> list.fold(1.0, fn(acc: Float, a: Float) -> Float { a *. acc })
+          |> list.fold(1.0, fn(acc, a) { a *. acc })
           |> Ok
         Error(msg) ->
           msg
@@ -519,7 +519,7 @@ pub fn int_product(arr: List(Int)) -> Int {
     [] -> 1
     _ ->
       arr
-      |> list.fold(1, fn(acc: Int, a: Int) -> Int { a * acc })
+      |> list.fold(1, fn(acc, a) { a * acc })
   }
 }
 
@@ -569,7 +569,7 @@ pub fn float_cumulative_sum(arr: List(Float)) -> List(Float) {
     [] -> []
     _ ->
       arr
-      |> list.scan(0.0, fn(acc: Float, a: Float) -> Float { a +. acc })
+      |> list.scan(0.0, fn(acc, a) { a +. acc })
   }
 }
 
@@ -619,7 +619,7 @@ pub fn int_cumulative_sum(arr: List(Int)) -> List(Int) {
     [] -> []
     _ ->
       arr
-      |> list.scan(0, fn(acc: Int, a: Int) -> Int { a + acc })
+      |> list.scan(0, fn(acc, a) { a + acc })
   }
 }
 
@@ -671,7 +671,7 @@ pub fn float_cumulative_product(arr: List(Float)) -> List(Float) {
     [] -> []
     _ ->
       arr
-      |> list.scan(1.0, fn(acc: Float, a: Float) -> Float { a *. acc })
+      |> list.scan(1.0, fn(acc, a) { a *. acc })
   }
 }
 
@@ -723,6 +723,6 @@ pub fn int_cumulative_product(arr: List(Int)) -> List(Int) {
     [] -> []
     _ ->
       arr
-      |> list.scan(1, fn(acc: Int, a: Int) -> Int { a * acc })
+      |> list.scan(1, fn(acc, a) { a * acc })
   }
 }

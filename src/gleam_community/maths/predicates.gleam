@@ -135,11 +135,11 @@ fn float_absolute_difference(a: Float, b: Float) -> Float {
 ///       let rtol = 0.01
 ///       let atol = 0.10
 ///       predicates.all_close(xarr, yarr, rtol, atol)
-///       |> fn(zarr: Result(List(Bool), String)) -> Result(Bool, Nil) {
+///       |> fn(zarr), String)) {
 ///         case zarr {
 ///           Ok(arr) ->
 ///             arr
-///             |> list.all(fn(a: Bool) -> Bool { a })
+///             |> list.all(fn(a) { a })
 ///             |> Ok
 ///           _ -> Nil |> Error
 ///         }
@@ -168,9 +168,7 @@ pub fn all_close(
       |> Error
     True ->
       list.zip(xarr, yarr)
-      |> list.map(fn(z: #(Float, Float)) -> Bool {
-        is_close(pair.first(z), pair.second(z), rtol, atol)
-      })
+      |> list.map(fn(z) { is_close(pair.first(z), pair.second(z), rtol, atol) })
       |> Ok
   }
 }
@@ -304,7 +302,7 @@ fn do_sum(arr: List(Int)) -> Int {
     [] -> 0
     _ ->
       arr
-      |> list.fold(0, fn(acc: Int, a: Int) -> Int { a + acc })
+      |> list.fold(0, fn(acc, a) { a + acc })
   }
 }
 

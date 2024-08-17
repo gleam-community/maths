@@ -23,11 +23,11 @@ pub fn float_list_all_close_test() {
   let rtol = 0.01
   let atol = 0.1
   predicates.all_close(xarr, yarr, rtol, atol)
-  |> fn(zarr: Result(List(Bool), String)) -> Result(Bool, Nil) {
+  |> fn(zarr) {
     case zarr {
       Ok(arr) ->
         arr
-        |> list.all(fn(a: Bool) -> Bool { a })
+        |> list.all(fn(a) { a })
         |> Ok
       _ ->
         Nil

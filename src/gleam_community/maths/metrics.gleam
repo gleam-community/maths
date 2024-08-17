@@ -182,7 +182,7 @@ pub fn norm(
     _, option.None -> {
       let aggregate =
         arr
-        |> list.fold(0.0, fn(accumulator: Float, element: Float) -> Float {
+        |> list.fold(0.0, fn(accumulator, element) {
           let assert Ok(result) =
             piecewise.float_absolute_value(element)
             |> elementary.power(p)
@@ -202,19 +202,16 @@ pub fn norm(
               let tuples = list.zip(arr, warr)
               let aggregate =
                 tuples
-                |> list.fold(
-                  0.0,
-                  fn(accumulator: Float, tuple: #(Float, Float)) -> Float {
-                    let first_element = pair.first(tuple)
-                    let second_element = pair.second(tuple)
-                    let assert Ok(result) =
-                      elementary.power(
-                        piecewise.float_absolute_value(first_element),
-                        p,
-                      )
-                    second_element *. result +. accumulator
-                  },
-                )
+                |> list.fold(0.0, fn(accumulator, tuple) {
+                  let first_element = pair.first(tuple)
+                  let second_element = pair.second(tuple)
+                  let assert Ok(result) =
+                    elementary.power(
+                      piecewise.float_absolute_value(first_element),
+                      p,
+                    )
+                  second_element *. result +. accumulator
+                })
               let assert Ok(result) = elementary.power(aggregate, 1.0 /. p)
               result
               |> Ok
@@ -370,9 +367,7 @@ pub fn minkowski_distance(
         False -> {
           let differences =
             list.zip(xarr, yarr)
-            |> list.map(fn(tuple: #(Float, Float)) -> Float {
-              pair.first(tuple) -. pair.second(tuple)
-            })
+            |> list.map(fn(tuple) { pair.first(tuple) -. pair.second(tuple) })
 
           let assert Ok(result) = norm(differences, p, weights)
           result
@@ -496,7 +491,7 @@ pub fn chebyshev_distance(
       |> Error
     Ok(_) -> {
       list.zip(xarr, yarr)
-      |> list.map(fn(tuple: #(Float, Float)) -> Float {
+      |> list.map(fn(tuple) {
         { pair.first(tuple) -. pair.second(tuple) }
         |> piecewise.float_absolute_value()
       })
@@ -553,9 +548,7 @@ pub fn mean(arr: List(Float)) -> Result(Float, String) {
     _ ->
       arr
       |> arithmetics.float_sum(option.None)
-      |> fn(a: Float) -> Float {
-        a /. conversion.int_to_float(list.length(arr))
-      }
+      |> fn(a) { a /. conversion.int_to_float(list.length(arr)) }
       |> Ok
   }
 }
@@ -684,12 +677,12 @@ pub fn variance(arr: List(Float), ddof: Int) -> Result(Float, String) {
         False -> {
           let assert Ok(mean) = mean(arr)
           arr
-          |> list.map(fn(a: Float) -> Float {
+          |> list.map(fn(a) {
             let assert Ok(result) = elementary.power(a -. mean, 2.0)
             result
           })
           |> arithmetics.float_sum(option.None)
-          |> fn(a: Float) -> Float {
+          |> fn(a) {
             a
             /. {
               conversion.int_to_float(list.length(arr))
@@ -1094,9 +1087,7 @@ pub fn cosine_similarity(
 
       let numerator_elements =
         zipped_arr
-        |> list.map(fn(tuple: #(Float, Float)) -> Float {
-          pair.first(tuple) *. pair.second(tuple)
-        })
+        |> list.map(fn(tuple) { pair.first(tuple) *. pair.second(tuple) })
 
       case weights {
         option.None -> {
@@ -1284,14 +1275,14 @@ pub fn braycurtis_distance(
       let zipped_arr = list.zip(xarr, yarr)
       let numerator_elements =
         zipped_arr
-        |> list.map(fn(tuple: #(Float, Float)) -> Float {
+        |> list.map(fn(tuple) {
           piecewise.float_absolute_value({
             pair.first(tuple) -. pair.second(tuple)
           })
         })
       let denominator_elements =
         zipped_arr
-        |> list.map(fn(tuple: #(Float, Float)) -> Float {
+        |> list.map(fn(tuple) {
           piecewise.float_absolute_value({
             pair.first(tuple) +. pair.second(tuple)
           })
