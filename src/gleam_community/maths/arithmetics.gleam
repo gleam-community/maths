@@ -343,9 +343,7 @@ pub fn float_sum(arr: List(Float), weights: option.Option(List(Float))) -> Float
       |> list.fold(0.0, fn(acc, a) { a +. acc })
     _, option.Some(warr) -> {
       list.zip(arr, warr)
-      |> list.fold(0.0, fn(acc: Float, a) {
-        pair.first(a) *. pair.second(a) +. acc
-      })
+      |> list.fold(0.0, fn(acc, a) { pair.first(a) *. pair.second(a) +. acc })
     }
   }
 }
