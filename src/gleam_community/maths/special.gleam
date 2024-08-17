@@ -20,17 +20,17 @@
 ////<style>
 ////    .katex { font-size: 1.1em; }
 ////</style>
-//// 
+////
 //// ---
-//// 
+////
 //// Special: A module containing special mathematical functions.
-//// 
+////
 //// * **Special mathematical functions**
 ////   * [`beta`](#beta)
 ////   * [`erf`](#erf)
 ////   * [`gamma`](#gamma)
 ////   * [`incomplete_gamma`](#incomplete_gamma)
-//// 
+////
 
 import gleam/list
 import gleam_community/maths/conversion
@@ -76,17 +76,17 @@ pub fn beta(x: Float, y: Float) -> Float {
 /// </div>
 ///
 pub fn erf(x: Float) -> Float {
-  let assert [a1, a2, a3, a4, a5]: List(Float) = [
+  let assert [a1, a2, a3, a4, a5] = [
     0.254829592, -0.284496736, 1.421413741, -1.453152027, 1.061405429,
   ]
-  let p: Float = 0.3275911
+  let p = 0.3275911
 
-  let sign: Float = piecewise.float_sign(x)
-  let x: Float = piecewise.float_absolute_value(x)
+  let sign = piecewise.float_sign(x)
+  let x = piecewise.float_absolute_value(x)
 
   // Formula 7.1.26 given in Abramowitz and Stegun.
-  let t: Float = 1.0 /. { 1.0 +. p *. x }
-  let y: Float =
+  let t = 1.0 /. { 1.0 +. p *. x }
+  let y =
     1.0
     -. { { { { a5 *. t +. a4 } *. t +. a3 } *. t +. a2 } *. t +. a1 }
     *. t
@@ -100,7 +100,7 @@ pub fn erf(x: Float) -> Float {
 ///     </a>
 /// </div>
 ///
-/// The gamma function over the real numbers. The function is essentially equal to 
+/// The gamma function over the real numbers. The function is essentially equal to
 /// the factorial for any positive integer argument: \\(\Gamma(n) = (n - 1)!\\)
 ///
 /// The implemented gamma function is approximated through Lanczos approximation
@@ -131,14 +131,14 @@ fn gamma_lanczos(x: Float) -> Float {
       /. { elementary.sin(elementary.pi() *. x) *. gamma_lanczos(1.0 -. x) }
     False -> {
       let z = x -. 1.0
-      let x: Float =
+      let x =
         list.index_fold(lanczos_p, 0.0, fn(acc: Float, v: Float, index: Int) {
           case index > 0 {
             True -> acc +. v /. { z +. conversion.int_to_float(index) }
             False -> v
           }
         })
-      let t: Float = z +. lanczos_g +. 0.5
+      let t = z +. lanczos_g +. 0.5
       let assert Ok(v1) = elementary.power(2.0 *. elementary.pi(), 0.5)
       let assert Ok(v2) = elementary.power(t, z +. 0.5)
       v1 *. v2 *. elementary.exponential(-1.0 *. t) *. x
@@ -189,8 +189,8 @@ fn incomplete_gamma_sum(
   case t {
     0.0 -> s
     _ -> {
-      let ns: Float = s +. t
-      let nt: Float = t *. { x /. { a +. n } }
+      let ns = s +. t
+      let nt = t *. { x /. { a +. n } }
       incomplete_gamma_sum(a, x, nt, ns, n +. 1.0)
     }
   }
