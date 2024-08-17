@@ -20,18 +20,18 @@
 ////<style>
 ////    .katex { font-size: 1.1em; }
 ////</style>
-//// 
+////
 //// ---
-//// 
-//// Metrics: A module offering functions for calculating distances and other 
+////
+//// Metrics: A module offering functions for calculating distances and other
 //// types of metrics.
-//// 
+////
 //// Disclaimer: In this module, the terms "distance" and "metric" are used in
 //// a broad and practical sense. That is, they are used to denote any difference
-//// or discrepancy between two inputs. Consequently, they may not align with their 
+//// or discrepancy between two inputs. Consequently, they may not align with their
 //// precise mathematical definitions (in particular, some "distance" functions in
 //// this module do not satisfy the triangle inequality).
-//// 
+////
 //// * **Distance measures**
 ////   * [`norm`](#norm)
 ////   * [`manhattan_distance`](#manhattan_distance)
@@ -51,7 +51,7 @@
 ////   * [`median`](#median)
 ////   * [`variance`](#variance)
 ////   * [`standard_deviation`](#standard_deviation)
-//// 
+////
 
 import gleam/bool
 import gleam/float
@@ -59,6 +59,7 @@ import gleam/int
 import gleam/list
 import gleam/option
 import gleam/pair
+import gleam/result
 import gleam/set
 import gleam_community/maths/arithmetics
 import gleam_community/maths/conversion
@@ -72,21 +73,15 @@ fn validate_lists(
   xarr: List(Float),
   yarr: List(Float),
   weights: option.Option(List(Float)),
-) -> Result(Bool, String) {
+) -> Result(Bool, Nil) {
   case xarr, yarr {
-    [], _ ->
-      "Invalid input argument: The list xarr is empty."
-      |> Error
-    _, [] ->
-      "Invalid input argument: The list yarr is empty."
-      |> Error
+    [], _ -> Error(Nil)
+    _, [] -> Error(Nil)
     _, _ -> {
       let xarr_length: Int = list.length(xarr)
       let yarr_length: Int = list.length(yarr)
       case xarr_length == yarr_length, weights {
-        False, _ ->
-          "Invalid input argument: length(xarr) != length(yarr). Valid input is when length(xarr) == length(yarr)."
-          |> Error
+        False, _ -> Error(Nil)
         True, option.None -> {
           True
           |> Ok
@@ -97,9 +92,7 @@ fn validate_lists(
             True -> {
               validate_weights(warr)
             }
-            False ->
-              "Invalid input argument: length(weights) != length(xarr) and length(weights) != length(yarr). Valid input is when length(weights) == length(xarr) == length(yarr)."
-              |> Error
+            False -> Error(Nil)
           }
         }
       }
@@ -107,16 +100,12 @@ fn validate_lists(
   }
 }
 
-fn validate_weights(warr: List(Float)) -> Result(Bool, String) {
+fn validate_weights(warr: List(Float)) -> Result(Bool, Nil) {
   // Check that all the given weights are positive
   let assert Ok(minimum) = piecewise.list_minimum(warr, float.compare)
   case minimum >=. 0.0 {
-    False ->
-      "Invalid input argument: One or more weights are negative. Valid input is when all weights are >= 0."
-      |> Error
-    True ->
-      True
-      |> Ok
+    False -> Error(Nil)
+    True -> Ok(True)
   }
 }
 
@@ -132,7 +121,7 @@ fn validate_weights(warr: List(Float)) -> Result(Bool, String) {
 /// \left( \sum_{i=1}^n w_{i} \left|x_{i}\right|^{p} \right)^{\frac{1}{p}}
 /// \\]
 ///
-/// In the formula, \\(n\\) is the length of the list and \\(x_i\\) is the value in 
+/// In the formula, \\(n\\) is the length of the list and \\(x_i\\) is the value in
 /// the input list indexed by \\(i\\), while \\(w_i \in \mathbb{R}_{+}\\) is
 /// a corresponding positive weight (\\(w_i = 1.0\\;\forall i=1...n\\) by default).
 ///
@@ -147,14 +136,14 @@ fn validate_weights(warr: List(Float)) -> Result(Bool, String) {
 ///
 ///     pub fn example() {
 ///       let assert Ok(tol) = elementary.power(-10.0, -6.0)
-///     
+///
 ///       let assert Ok(result) =
 ///         [1.0, 1.0, 1.0]
 ///         |> metrics.norm(1.0, option.None)
 ///       result
 ///       |> predicates.is_close(3.0, 0.0, tol)
 ///       |> should.be_true()
-///     
+///
 ///       let assert Ok(result) =
 ///         [1.0, 1.0, 1.0]
 ///         |> metrics.norm(-1.0, option.None)
@@ -174,7 +163,7 @@ pub fn norm(
   arr: List(Float),
   p: Float,
   weights: option.Option(List(Float)),
-) -> Result(Float, String) {
+) -> Result(Float, Nil) {
   case arr, weights {
     [], _ ->
       0.0
@@ -224,10 +213,7 @@ pub fn norm(
               |> Error
           }
         }
-        False -> {
-          "Invalid input argument: length(weights) != length(arr). Valid input is when length(weights) == length(arr)."
-          |> Error
-        }
+        False -> Error(Nil)
       }
     }
   }
@@ -239,16 +225,16 @@ pub fn norm(
 ///     </a>
 /// </div>
 ///
-/// Calculate the (weighted) Manhattan distance between two lists (representing 
+/// Calculate the (weighted) Manhattan distance between two lists (representing
 /// vectors):
 ///
 /// \\[
 /// \sum_{i=1}^n w_{i} \left|x_i - y_i \right|
 /// \\]
 ///
-/// In the formula, \\(n\\) is the length of the two lists and \\(x_i, y_i\\) are the 
+/// In the formula, \\(n\\) is the length of the two lists and \\(x_i, y_i\\) are the
 /// values in the respective input lists indexed by \\(i\\), while the
-/// \\(w_i \in \mathbb{R}_{+}\\) are corresponding positive weights 
+/// \\(w_i \in \mathbb{R}_{+}\\) are corresponding positive weights
 /// (\\(w_i = 1.0\\;\forall i=1...n\\) by default).
 ///
 /// <details>
@@ -266,11 +252,11 @@ pub fn norm(
 ///       // Empty lists returns an error
 ///       metrics.manhattan_distance([], [], option.None)
 ///       |> should.be_error()
-///     
+///
 ///       // Differing lengths returns error
 ///       metrics.manhattan_distance([], [1.0], option.None)
 ///       |> should.be_error()
-///     
+///
 ///       let assert Ok(result) =
 ///         metrics.manhattan_distance([0.0, 0.0], [1.0, 2.0], option.None)
 ///       result
@@ -289,7 +275,7 @@ pub fn manhattan_distance(
   xarr: List(Float),
   yarr: List(Float),
   weights: option.Option(List(Float)),
-) -> Result(Float, String) {
+) -> Result(Float, Nil) {
   minkowski_distance(xarr, yarr, 1.0, weights)
 }
 
@@ -306,12 +292,12 @@ pub fn manhattan_distance(
 /// \left( \sum_{i=1}^n w_{i} \left|x_i - y_i \right|^{p} \right)^{\frac{1}{p}}
 /// \\]
 ///
-/// In the formula, \\(p >= 1\\) is the order, \\(n\\) is the length of the two lists 
+/// In the formula, \\(p >= 1\\) is the order, \\(n\\) is the length of the two lists
 /// and \\(x_i, y_i\\) are the values in the respective input lists indexed by \\(i\\).
-/// The \\(w_i \in \mathbb{R}_{+}\\) are corresponding positive weights 
+/// The \\(w_i \in \mathbb{R}_{+}\\) are corresponding positive weights
 /// (\\(w_i = 1.0\\;\forall i=1...n\\) by default).
 ///
-/// The Minkowski distance is a generalization of both the Euclidean distance 
+/// The Minkowski distance is a generalization of both the Euclidean distance
 /// (\\(p=2\\)) and the Manhattan distance (\\(p = 1\\)).
 ///
 /// <details>
@@ -325,11 +311,11 @@ pub fn manhattan_distance(
 ///
 ///     pub fn example() {
 ///       let assert Ok(tol) = elementary.power(-10.0, -6.0)
-///     
+///
 ///       // Empty lists returns an error
 ///       metrics.minkowski_distance([], [], 1.0, option.None)
 ///       |> should.be_error()
-///     
+///
 ///       // Differing lengths returns error
 ///       metrics.minkowski_distance([], [1.0], 1.0, option.None)
 ///       |> should.be_error()
@@ -337,7 +323,7 @@ pub fn manhattan_distance(
 ///       // Test order < 1
 ///       metrics.minkowski_distance([0.0, 0.0], [0.0, 0.0], -1.0, option.None)
 ///       |> should.be_error()
-///     
+///
 ///       let assert Ok(result) =
 ///         metrics.minkowski_distance([0.0, 0.0], [1.0, 2.0], 1.0, option.None)
 ///       result
@@ -357,28 +343,18 @@ pub fn minkowski_distance(
   yarr: List(Float),
   p: Float,
   weights: option.Option(List(Float)),
-) -> Result(Float, String) {
-  case validate_lists(xarr, yarr, weights) {
-    Error(msg) ->
-      msg
-      |> Error
-    Ok(_) -> {
-      case p <. 1.0 {
-        True ->
-          "Invalid input argument: p < 1. Valid input is p >= 1."
-          |> Error
-        False -> {
-          let differences: List(Float) =
-            list.zip(xarr, yarr)
-            |> list.map(fn(tuple: #(Float, Float)) -> Float {
-              pair.first(tuple) -. pair.second(tuple)
-            })
+) -> Result(Float, Nil) {
+  use _ <- result.try(validate_lists(xarr, yarr, weights))
+  case p <. 1.0 {
+    True -> Error(Nil)
+    False -> {
+      let differences: List(Float) =
+        list.zip(xarr, yarr)
+        |> list.map(fn(tuple: #(Float, Float)) -> Float {
+          pair.first(tuple) -. pair.second(tuple)
+        })
 
-          let assert Ok(result) = norm(differences, p, weights)
-          result
-          |> Ok
-        }
-      }
+      norm(differences, p, weights)
     }
   }
 }
@@ -389,7 +365,7 @@ pub fn minkowski_distance(
 ///     </a>
 /// </div>
 ///
-/// Calculate the (weighted) Euclidean distance between two lists (representing 
+/// Calculate the (weighted) Euclidean distance between two lists (representing
 /// vectors):
 ///
 /// \\[
@@ -398,7 +374,7 @@ pub fn minkowski_distance(
 ///
 /// In the formula, \\(n\\) is the length of the two lists and \\(x_i, y_i\\) are the
 /// values in the respective input lists indexed by \\(i\\), while the
-/// \\(w_i \in \mathbb{R}_{+}\\) are corresponding positive weights 
+/// \\(w_i \in \mathbb{R}_{+}\\) are corresponding positive weights
 /// (\\(w_i = 1.0\\;\forall i=1...n\\) by default).
 ///
 /// <details>
@@ -412,15 +388,15 @@ pub fn minkowski_distance(
 ///
 ///     pub fn example() {
 ///       let assert Ok(tol) = elementary.power(-10.0, -6.0)
-///     
+///
 ///       // Empty lists returns an error
 ///       metrics.euclidean_distance([], [], option.None)
 ///       |> should.be_error()
-///     
+///
 ///       // Differing lengths returns an error
 ///       metrics.euclidean_distance([], [1.0], option.None)
 ///       |> should.be_error()
-///     
+///
 ///       let assert Ok(result) =
 ///         metrics.euclidean_distance([0.0, 0.0], [1.0, 2.0], option.None)
 ///       result
@@ -439,7 +415,7 @@ pub fn euclidean_distance(
   xarr: List(Float),
   yarr: List(Float),
   weights: option.Option(List(Float)),
-) -> Result(Float, String) {
+) -> Result(Float, Nil) {
   minkowski_distance(xarr, yarr, 2.0, weights)
 }
 
@@ -455,7 +431,7 @@ pub fn euclidean_distance(
 /// \text{max}_{i=1}^n \left|x_i - y_i \right|
 /// \\]
 ///
-/// In the formula, \\(n\\) is the length of the two lists and \\(x_i, y_i\\) are the 
+/// In the formula, \\(n\\) is the length of the two lists and \\(x_i, y_i\\) are the
 /// values in the respective input lists indexed by \\(i\\).
 ///
 /// <details>
@@ -470,11 +446,11 @@ pub fn euclidean_distance(
 ///       // Empty lists returns an error
 ///       metrics.chebyshev_distance([], [])
 ///       |> should.be_error()
-///     
+///
 ///       // Differing lengths returns error
 ///       metrics.chebyshev_distance([], [1.0])
 ///       |> should.be_error()
-///     
+///
 ///       metrics.chebyshev_distance([-5.0, -10.0, -3.0], [-1.0, -12.0, -3.0])
 ///       |> should.equal(Ok(4.0))
 ///     }
@@ -489,7 +465,7 @@ pub fn euclidean_distance(
 pub fn chebyshev_distance(
   xarr: List(Float),
   yarr: List(Float),
-) -> Result(Float, String) {
+) -> Result(Float, Nil) {
   case validate_lists(xarr, yarr, option.None) {
     Error(msg) ->
       msg
@@ -545,11 +521,9 @@ pub fn chebyshev_distance(
 ///     </a>
 /// </div>
 ///
-pub fn mean(arr: List(Float)) -> Result(Float, String) {
+pub fn mean(arr: List(Float)) -> Result(Float, Nil) {
   case arr {
-    [] ->
-      "Invalid input argument: The list is empty."
-      |> Error
+    [] -> Error(Nil)
     _ ->
       arr
       |> arithmetics.float_sum(option.None)
@@ -632,14 +606,14 @@ fn do_median(
 /// </div>
 ///
 /// Calculate the sample variance of the elements in a list:
-/// 
+///
 /// \\[
 /// s^{2} = \frac{1}{n - d} \sum_{i=1}^{n}(x_i - \bar{x})
 /// \\]
 ///
-/// In the formula, \\(n\\) is the sample size (the length of the list) and \\(x_i\\) 
-/// is the sample point in the input list indexed by \\(i\\). 
-/// Furthermore, \\(\bar{x}\\) is the sample mean and \\(d\\) is the "Delta 
+/// In the formula, \\(n\\) is the sample size (the length of the list) and \\(x_i\\)
+/// is the sample point in the input list indexed by \\(i\\).
+/// Furthermore, \\(\bar{x}\\) is the sample mean and \\(d\\) is the "Delta
 /// Degrees of Freedom", and is by default set to \\(d = 0\\), which gives a biased
 /// estimate of the sample variance. Setting \\(d = 1\\) gives an unbiased estimate.
 ///
@@ -671,34 +645,27 @@ fn do_median(
 ///     </a>
 /// </div>
 ///
-pub fn variance(arr: List(Float), ddof: Int) -> Result(Float, String) {
-  case arr {
-    [] ->
-      "Invalid input argument: The list is empty."
-      |> Error
-    _ ->
-      case ddof < 0 {
-        True ->
-          "Invalid input argument: ddof < 0. Valid input is ddof >= 0."
-          |> Error
-        False -> {
-          let assert Ok(mean) = mean(arr)
-          arr
-          |> list.map(fn(a: Float) -> Float {
-            let assert Ok(result) = elementary.power(a -. mean, 2.0)
-            result
-          })
-          |> arithmetics.float_sum(option.None)
-          |> fn(a: Float) -> Float {
-            a
-            /. {
-              conversion.int_to_float(list.length(arr))
-              -. conversion.int_to_float(ddof)
-            }
-          }
-          |> Ok
+pub fn variance(arr: List(Float), ddof: Int) -> Result(Float, Nil) {
+  case arr, ddof {
+    [], _ -> Error(Nil)
+    _, _ if ddof < 0 -> Error(Nil)
+    _, _ -> {
+      let assert Ok(mean) = mean(arr)
+      arr
+      |> list.map(fn(a: Float) -> Float {
+        let assert Ok(result) = elementary.power(a -. mean, 2.0)
+        result
+      })
+      |> arithmetics.float_sum(option.None)
+      |> fn(a: Float) -> Float {
+        a
+        /. {
+          conversion.int_to_float(list.length(arr))
+          -. conversion.int_to_float(ddof)
         }
       }
+      |> Ok
+    }
   }
 }
 
@@ -713,11 +680,11 @@ pub fn variance(arr: List(Float), ddof: Int) -> Result(Float, String) {
 /// s = \left(\frac{1}{n - d} \sum_{i=1}^{n}(x_i - \bar{x})\right)^{\frac{1}{2}}
 /// \\]
 ///
-/// In the formula, \\(n\\) is the sample size (the length of the list) and \\(x_i\\) 
-/// is the sample point in the input list indexed by \\(i\\). 
-/// Furthermore, \\(\bar{x}\\) is the sample mean and \\(d\\) is the "Delta 
+/// In the formula, \\(n\\) is the sample size (the length of the list) and \\(x_i\\)
+/// is the sample point in the input list indexed by \\(i\\).
+/// Furthermore, \\(\bar{x}\\) is the sample mean and \\(d\\) is the "Delta
 /// Degrees of Freedom", and is by default set to \\(d = 0\\), which gives a biased
-/// estimate of the sample standard deviation. Setting \\(d = 1\\) gives an unbiased 
+/// estimate of the sample standard deviation. Setting \\(d = 1\\) gives an unbiased
 /// estimate.
 ///
 /// <details>
@@ -748,25 +715,18 @@ pub fn variance(arr: List(Float), ddof: Int) -> Result(Float, String) {
 ///     </a>
 /// </div>
 ///
-pub fn standard_deviation(arr: List(Float), ddof: Int) -> Result(Float, String) {
-  case arr {
-    [] ->
-      "Invalid input argument: The list is empty."
-      |> Error
-    _ ->
-      case ddof < 0 {
-        True ->
-          "Invalid input argument: ddof < 0. Valid input is ddof >= 0."
-          |> Error
-        False -> {
-          let assert Ok(variance) = variance(arr, ddof)
-          // The computed variance will always be positive
-          // So an error should never be returned
-          let assert Ok(stdev) = elementary.square_root(variance)
-          stdev
-          |> Ok
-        }
-      }
+pub fn standard_deviation(arr: List(Float), ddof: Int) -> Result(Float, Nil) {
+  case arr, ddof {
+    [], _ -> Error(Nil)
+    _, _ if ddof < 0 -> Error(Nil)
+    _, _ -> {
+      let assert Ok(variance) = variance(arr, ddof)
+      // The computed variance will always be positive
+      // So an error should never be returned
+      let assert Ok(stdev) = elementary.square_root(variance)
+      stdev
+      |> Ok
+    }
   }
 }
 
@@ -776,24 +736,24 @@ pub fn standard_deviation(arr: List(Float), ddof: Int) -> Result(Float, String) 
 ///     </a>
 /// </div>
 ///
-/// The Jaccard index measures similarity between two sets of elements. 
+/// The Jaccard index measures similarity between two sets of elements.
 /// Mathematically, the Jaccard index is defined as:
-/// 
+///
 /// \\[
 /// \frac{|X \cap Y|}{|X \cup Y|} \\; \in \\; \left[0, 1\right]
 /// \\]
-/// 
+///
 /// where:
 ///
 /// - \\(X\\) and \\(Y\\) are two sets being compared,
 /// - \\(|X \cap Y|\\) represents the size of the intersection of the two sets
 /// - \\(|X \cup Y|\\) denotes the size of the union of the two sets
-/// 
-/// The value of the Jaccard index ranges from 0 to 1, where 0 indicates that the 
-/// two sets share no elements and 1 indicates that the sets are identical. The 
+///
+/// The value of the Jaccard index ranges from 0 to 1, where 0 indicates that the
+/// two sets share no elements and 1 indicates that the sets are identical. The
 /// Jaccard index is a special case of the  [Tversky index](#tversky_index) (with
 /// \\(\alpha=\beta=1\\)).
-/// 
+///
 /// <details>
 ///     <summary>Example:</summary>
 ///
@@ -827,25 +787,25 @@ pub fn jaccard_index(xset: set.Set(a), yset: set.Set(a)) -> Float {
 ///     </a>
 /// </div>
 ///
-/// The Sørensen-Dice coefficient measures the similarity between two sets of 
+/// The Sørensen-Dice coefficient measures the similarity between two sets of
 /// elements. Mathematically, the coefficient is defined as:
-/// 
+///
 /// \\[
 /// \frac{2 |X \cap Y|}{|X| + |Y|} \\; \in \\; \left[0, 1\right]
 /// \\]
-/// 
+///
 /// where:
 /// - \\(X\\) and \\(Y\\) are two sets being compared
-/// - \\(|X \cap Y|\\) is the size of the intersection of the two sets (i.e., the 
+/// - \\(|X \cap Y|\\) is the size of the intersection of the two sets (i.e., the
 /// number of elements common to both sets)
 /// - \\(|X|\\) and \\(|Y|\\) are the sizes of the sets \\(X\\) and \\(Y\\), respectively
-/// 
+///
 /// The coefficient ranges from 0 to 1, where 0 indicates no similarity (the sets
 /// share no elements) and 1 indicates perfect similarity (the sets are identical).
-/// The higher the coefficient, the greater the similarity between the two sets. 
-/// The Sørensen-Dice coefficient is a special case of the 
+/// The higher the coefficient, the greater the similarity between the two sets.
+/// The Sørensen-Dice coefficient is a special case of the
 /// [Tversky index](#tversky_index) (with \\(\alpha=\beta=0.5\\)).
-/// 
+///
 /// <details>
 ///     <summary>Example:</summary>
 ///
@@ -878,31 +838,31 @@ pub fn sorensen_dice_coefficient(xset: set.Set(a), yset: set.Set(a)) -> Float {
 ///         <small>Spot a typo? Open an issue!</small>
 ///     </a>
 /// </div>
-/// 
-/// The Tversky index is a generalization of the Jaccard index and Sørensen-Dice 
-/// coefficient, which adds flexibility through two parameters, \\(\alpha\\) and 
-/// \\(\beta\\), allowing for asymmetric similarity measures between sets. The 
+///
+/// The Tversky index is a generalization of the Jaccard index and Sørensen-Dice
+/// coefficient, which adds flexibility through two parameters, \\(\alpha\\) and
+/// \\(\beta\\), allowing for asymmetric similarity measures between sets. The
 /// Tversky index is defined as:
-/// 
+///
 /// \\[
 /// \frac{|X \cap Y|}{|X \cap Y| + \alpha|X - Y| + \beta|Y - X|}
 /// \\]
-/// 
+///
 /// where:
-/// 
+///
 /// - \\(X\\) and \\(Y\\) are the sets being compared
-/// - \\(|X - Y|\\) and \\(|Y - X|\\) are the sizes of the relative complements of 
+/// - \\(|X - Y|\\) and \\(|Y - X|\\) are the sizes of the relative complements of
 /// \\(Y\\) in \\(X\\) and \\(X\\) in \\(Y\\), respectively,
 /// - \\(\alpha\\) and \\(\beta\\) are parameters that weigh the relative importance
 /// of the elements unique to \\(X\\) and \\(Y\\)
-/// 
+///
 /// The Tversky index reduces to the Jaccard index when \\(\alpha = \beta = 1\\) and
 /// to the Sørensen-Dice coefficient when \\(\alpha = \beta = 0.5\\). In general, the
 /// Tversky index can take on any non-negative value, including 0. The index equals
-/// 0 when there is no intersection between the two sets, indicating no similarity. 
-/// However, unlike similarity measures bounded strictly between 0 and 1, the 
+/// 0 when there is no intersection between the two sets, indicating no similarity.
+/// However, unlike similarity measures bounded strictly between 0 and 1, the
 /// Tversky index does not have a strict upper limit of 1 when \\(\alpha \neq \beta\\).
-///  
+///
 /// <details>
 ///     <summary>Example:</summary>
 ///
@@ -931,7 +891,7 @@ pub fn tversky_index(
   yset: set.Set(a),
   alpha: Float,
   beta: Float,
-) -> Result(Float, String) {
+) -> Result(Float, Nil) {
   case alpha >=. 0.0, beta >=. 0.0 {
     True, True -> {
       let intersection: Float =
@@ -950,18 +910,7 @@ pub fn tversky_index(
       /. { intersection +. alpha *. difference1 +. beta *. difference2 }
       |> Ok
     }
-    False, True -> {
-      "Invalid input argument: alpha < 0. Valid input is alpha >= 0."
-      |> Error
-    }
-    True, False -> {
-      "Invalid input argument: beta < 0. Valid input is beta >= 0."
-      |> Error
-    }
-    _, _ -> {
-      "Invalid input argument: alpha < 0 and beta < 0. Valid input is alpha >= 0 and beta >= 0."
-      |> Error
-    }
+    _, _ -> Error(Nil)
   }
 }
 
@@ -970,10 +919,10 @@ pub fn tversky_index(
 ///         <small>Spot a typo? Open an issue!</small>
 ///     </a>
 /// </div>
-/// 
+///
 /// The Overlap coefficient, also known as the Szymkiewicz–Simpson coefficient, is
-/// a measure of similarity between two sets that focuses on the size of the 
-/// intersection relative to the smaller of the two sets. It is defined 
+/// a measure of similarity between two sets that focuses on the size of the
+/// intersection relative to the smaller of the two sets. It is defined
 /// mathematically as:
 ///
 /// \\[
@@ -986,10 +935,10 @@ pub fn tversky_index(
 /// - \\(|X \cap Y|\\) is the size of the intersection of the sets
 /// - \\(\min(|X|, |Y|)\\) is the size of the smaller set among \\(X\\) and \\(Y\\)
 ///
-/// The coefficient ranges from 0 to 1, where 0 indicates no overlap and 1 
-/// indicates that the smaller set is a suyset of the larger set. This 
+/// The coefficient ranges from 0 to 1, where 0 indicates no overlap and 1
+/// indicates that the smaller set is a suyset of the larger set. This
 /// measure is especially useful in situations where the similarity in terms
-/// of the proportion of overlap is more relevant than the difference in sizes 
+/// of the proportion of overlap is more relevant than the difference in sizes
 /// between the two sets.
 ///
 /// <details>
@@ -1031,27 +980,27 @@ pub fn overlap_coefficient(xset: set.Set(a), yset: set.Set(a)) -> Float {
 ///         <small>Spot a typo? Open an issue!</small>
 ///     </a>
 /// </div>
-/// 
+///
 /// Calculate the (weighted) cosine similarity between two lists (representing
 /// vectors):
 ///
 /// \\[
 /// \frac{\sum_{i=1}^n w_{i} \cdot x_i \cdot y_i}
 /// {\left(\sum_{i=1}^n w_{i} \cdot x_i^2\right)^{\frac{1}{2}}
-/// \cdot 
-/// \left(\sum_{i=1}^n w_{i} \cdot y_i^2\right)^{\frac{1}{2}}} 
+/// \cdot
+/// \left(\sum_{i=1}^n w_{i} \cdot y_i^2\right)^{\frac{1}{2}}}
 /// \\; \in \\; \left[-1, 1\right]
 /// \\]
 ///
 /// In the formula, \\(n\\) is the length of the two lists and \\(x_i\\), \\(y_i\\) are
 /// the values in the respective input lists indexed by \\(i\\), while the
-/// \\(w_i \in \mathbb{R}_{+}\\) are corresponding positive weights 
-/// (\\(w_i = 1.0\\;\forall i=1...n\\) by default). 
-/// 
-/// The cosine similarity provides a value between -1 and 1, where 1 means the 
-/// vectors are in the same direction, -1 means they are in exactly opposite 
-/// directions, and 0 indicates orthogonality. 
-/// 
+/// \\(w_i \in \mathbb{R}_{+}\\) are corresponding positive weights
+/// (\\(w_i = 1.0\\;\forall i=1...n\\) by default).
+///
+/// The cosine similarity provides a value between -1 and 1, where 1 means the
+/// vectors are in the same direction, -1 means they are in exactly opposite
+/// directions, and 0 indicates orthogonality.
+///
 /// <details>
 ///     <summary>Example:</summary>
 ///
@@ -1063,11 +1012,11 @@ pub fn overlap_coefficient(xset: set.Set(a), yset: set.Set(a)) -> Float {
 ///       // Two orthogonal vectors
 ///       metrics.cosine_similarity([-1.0, 1.0, 0.0], [1.0, 1.0, -1.0], option.None)
 ///       |> should.equal(Ok(0.0))
-///     
+///
 ///       // Two identical (parallel) vectors
 ///       metrics.cosine_similarity([1.0, 2.0, 3.0], [1.0, 2.0, 3.0], option.None)
 ///       |> should.equal(Ok(1.0))
-///     
+///
 ///       // Two parallel, but oppositely oriented vectors
 ///       metrics.cosine_similarity([-1.0, -2.0, -3.0], [1.0, 2.0, 3.0], option.None)
 ///       |> should.equal(Ok(-1.0))
@@ -1084,7 +1033,7 @@ pub fn cosine_similarity(
   xarr: List(Float),
   yarr: List(Float),
   weights: option.Option(List(Float)),
-) -> Result(Float, String) {
+) -> Result(Float, Nil) {
   case validate_lists(xarr, yarr, weights) {
     Error(msg) ->
       msg
@@ -1135,7 +1084,7 @@ pub fn cosine_similarity(
 ///         <small>Spot a typo? Open an issue!</small>
 ///     </a>
 /// </div>
-/// 
+///
 /// Calculate the (weighted) Canberra distance between two lists:
 ///
 /// \\[
@@ -1143,10 +1092,10 @@ pub fn cosine_similarity(
 /// {\left| x_i \right| + \left| y_i \right|}
 /// \\]
 ///
-/// In the formula, \\(n\\) is the length of the two lists, and \\(x_i, y_i\\) are the 
-/// values in the respective input lists indexed by \\(i\\), while the 
-/// \\(w_i \in \mathbb{R}_{+}\\) are corresponding positive weights 
-/// (\\(w_i = 1.0\\;\forall i=1...n\\) by default). 
+/// In the formula, \\(n\\) is the length of the two lists, and \\(x_i, y_i\\) are the
+/// values in the respective input lists indexed by \\(i\\), while the
+/// \\(w_i \in \mathbb{R}_{+}\\) are corresponding positive weights
+/// (\\(w_i = 1.0\\;\forall i=1...n\\) by default).
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -1159,15 +1108,15 @@ pub fn cosine_similarity(
 ///       // Empty lists returns an error
 ///       metrics.canberra_distance([], [], option.None)
 ///       |> should.be_error()
-///     
+///
 ///       // Different sized lists returns an error
 ///       metrics.canberra_distance([1.0, 2.0], [1.0, 2.0, 3.0, 4.0], option.None)
 ///       |> should.be_error()
-///     
+///
 ///       // Valid inputs
 ///       metrics.canberra_distance([1.0, 2.0], [-2.0, -1.0], option.None)
 ///       |> should.equal(Ok(2.0))
-///     
+///
 ///       metrics.canberra_distance([1.0, 0.0], [0.0, 2.0], option.Some([1.0, 0.5]))
 ///     }
 /// </details>
@@ -1182,7 +1131,7 @@ pub fn canberra_distance(
   xarr: List(Float),
   yarr: List(Float),
   weights: option.Option(List(Float)),
-) -> Result(Float, String) {
+) -> Result(Float, Nil) {
   case validate_lists(xarr, yarr, weights) {
     Error(msg) ->
       msg
@@ -1223,7 +1172,7 @@ fn canberra_distance_helper(tuple: #(Float, Float)) -> Float {
 ///         <small>Spot a typo? Open an issue!</small>
 ///     </a>
 /// </div>
-/// 
+///
 /// Calculate the (weighted) Bray-Curtis distance between two lists:
 ///
 /// \\[
@@ -1231,11 +1180,11 @@ fn canberra_distance_helper(tuple: #(Float, Float)) -> Float {
 /// {\sum_{i=1}^n w_{i}\left| x_i + y_i \right|}
 /// \\]
 ///
-/// In the formula, \\(n\\) is the length of the two lists, and \\(x_i, y_i\\) are the values 
-/// in the respective input lists indexed by \\(i\\), while the 
-/// \\(w_i \in \mathbb{R}_{+}\\) are corresponding positive weights 
+/// In the formula, \\(n\\) is the length of the two lists, and \\(x_i, y_i\\) are the values
+/// in the respective input lists indexed by \\(i\\), while the
+/// \\(w_i \in \mathbb{R}_{+}\\) are corresponding positive weights
 /// (\\(w_i = 1.0\\;\forall i=1...n\\) by default).
-/// 
+///
 /// The Bray-Curtis distance is in the range \\([0, 1]\\) if all entries \\(x_i, y_i\\) are
 /// positive.
 ///
@@ -1250,15 +1199,15 @@ fn canberra_distance_helper(tuple: #(Float, Float)) -> Float {
 ///       // Empty lists returns an error
 ///       metrics.braycurtis_distance([], [], option.None)
 ///       |> should.be_error()
-///     
+///
 ///       // Different sized lists returns an error
 ///       metrics.braycurtis_distance([1.0, 2.0], [1.0, 2.0, 3.0, 4.0], option.None)
 ///       |> should.be_error()
-///     
+///
 ///       // Valid inputs
 ///       metrics.braycurtis_distance([1.0, 0.0], [0.0, 2.0], option.None)
 ///       |> should.equal(Ok(1.0))
-///     
+///
 ///       metrics.braycurtis_distance([1.0, 2.0], [3.0, 4.0], option.Some([0.5, 1.0]))
 ///       |> should.equal(Ok(0.375))
 ///     }
@@ -1275,7 +1224,7 @@ pub fn braycurtis_distance(
   xarr: List(Float),
   yarr: List(Float),
   weights: option.Option(List(Float)),
-) -> Result(Float, String) {
+) -> Result(Float, Nil) {
   case validate_lists(xarr, yarr, weights) {
     Error(msg) ->
       msg

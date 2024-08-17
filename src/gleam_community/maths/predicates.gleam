@@ -20,12 +20,12 @@
 ////<style>
 ////    .katex { font-size: 1.1em; }
 ////</style>
-//// 
+////
 //// ---
-//// 
-//// Predicates: A module containing functions for testing various mathematical 
+////
+//// Predicates: A module containing functions for testing various mathematical
 //// properties of numbers.
-//// 
+////
 //// * **Tests**
 ////   * [`is_close`](#is_close)
 ////   * [`list_all_close`](#all_close)
@@ -38,7 +38,7 @@
 ////   * [`is_divisible`](#is_divisible)
 ////   * [`is_multiple`](#is_multiple)
 ////   * [`is_prime`](#is_prime)
-//// 
+////
 
 import gleam/int
 import gleam/list
@@ -54,16 +54,16 @@ import gleam_community/maths/piecewise
 ///     </a>
 /// </div>
 ///
-/// Determine if a given value \\(a\\) is close to or equivalent to a reference value 
+/// Determine if a given value \\(a\\) is close to or equivalent to a reference value
 /// \\(b\\) based on supplied relative \\(r_{tol}\\) and absolute \\(a_{tol}\\) tolerance
-/// values. The equivalance of the two given values are then determined based on 
+/// values. The equivalance of the two given values are then determined based on
 /// the equation:
 ///
 /// \\[
 ///     \|a - b\| \leq (a_{tol} + r_{tol} \cdot \|b\|)
 /// \\]
 ///
-/// `True` is returned if statement holds, otherwise `False` is returned. 
+/// `True` is returned if statement holds, otherwise `False` is returned.
 /// <details>
 ///     <summary>Example</summary>
 ///
@@ -135,7 +135,7 @@ fn float_absolute_difference(a: Float, b: Float) -> Float {
 ///       let rtol: Float = 0.01
 ///       let atol: Float = 0.10
 ///       predicates.all_close(xarr, yarr, rtol, atol)
-///       |> fn(zarr: Result(List(Bool), String)) -> Result(Bool, Nil) {
+///       |> fn(zarr: Result(List(Bool), Nil)) -> Result(Bool, Nil) {
 ///         case zarr {
 ///           Ok(arr) ->
 ///             arr
@@ -159,13 +159,11 @@ pub fn all_close(
   yarr: List(Float),
   rtol: Float,
   atol: Float,
-) -> Result(List(Bool), String) {
+) -> Result(List(Bool), Nil) {
   let xlen: Int = list.length(xarr)
   let ylen: Int = list.length(yarr)
   case xlen == ylen {
-    False ->
-      "Invalid input argument: length(xarr) != length(yarr). Valid input is when length(xarr) == length(yarr)."
-      |> Error
+    False -> Error(Nil)
     True ->
       list.zip(xarr, yarr)
       |> list.map(fn(z: #(Float, Float)) -> Bool {
@@ -182,10 +180,10 @@ pub fn all_close(
 /// </div>
 ///
 /// Determine if a given value is fractional.
-/// 
-/// `True` is returned if the given value is fractional, otherwise `False` is 
-/// returned. 
-/// 
+///
+/// `True` is returned if the given value is fractional, otherwise `False` is
+/// returned.
+///
 /// <details>
 ///     <summary>Example</summary>
 ///
@@ -195,7 +193,7 @@ pub fn all_close(
 ///     pub fn example () {
 ///       predicates.is_fractional(0.3333)
 ///       |> should.equal(True)
-///       
+///
 ///       predicates.is_fractional(1.0)
 ///       |> should.equal(False)
 ///     }
@@ -222,7 +220,7 @@ fn do_ceiling(a: Float) -> Float
 /// </div>
 ///
 /// A function that tests whether a given integer value \\(x \in \mathbb{Z}\\) is a
-/// power of another integer value \\(y \in \mathbb{Z}\\).  
+/// power of another integer value \\(y \in \mathbb{Z}\\).
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -262,9 +260,9 @@ pub fn is_power(x: Int, y: Int) -> Bool {
 /// </div>
 ///
 /// A function that tests whether a given integer value \\(n \in \mathbb{Z}\\) is a
-/// perfect number. A number is perfect if it is equal to the sum of its proper 
+/// perfect number. A number is perfect if it is equal to the sum of its proper
 /// positive divisors.
-/// 
+///
 /// <details>
 ///     <summary>Details</summary>
 ///
@@ -314,7 +312,7 @@ fn do_sum(arr: List(Int)) -> Int {
 ///     </a>
 /// </div>
 ///
-/// A function that tests whether a given integer value \\(x \in \mathbb{Z}\\) is even.  
+/// A function that tests whether a given integer value \\(x \in \mathbb{Z}\\) is even.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -325,7 +323,7 @@ fn do_sum(arr: List(Int)) -> Int {
 ///     pub fn example() {
 ///       predicates.is_even(-3)
 ///       |> should.equal(False)
-///     
+///
 ///       predicates.is_even(-4)
 ///       |> should.equal(True)
 ///     }
@@ -347,7 +345,7 @@ pub fn is_even(x: Int) -> Bool {
 ///     </a>
 /// </div>
 ///
-/// A function that tests whether a given integer value \\(x \in \mathbb{Z}\\) is odd.  
+/// A function that tests whether a given integer value \\(x \in \mathbb{Z}\\) is odd.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -358,7 +356,7 @@ pub fn is_even(x: Int) -> Bool {
 ///     pub fn example() {
 ///       predicates.is_odd(-3)
 ///       |> should.equal(True)
-///     
+///
 ///       predicates.is_odd(-4)
 ///       |> should.equal(False)
 ///     }
@@ -380,24 +378,24 @@ pub fn is_odd(x: Int) -> Bool {
 ///     </a>
 /// </div>
 ///
-/// A function that tests whether a given integer value \\(x \in \mathbb{Z}\\) is a 
-/// prime number. A prime number is a natural number greater than 1 that has no 
+/// A function that tests whether a given integer value \\(x \in \mathbb{Z}\\) is a
+/// prime number. A prime number is a natural number greater than 1 that has no
 /// positive divisors other than 1 and itself.
-/// 
-/// The function uses the Miller-Rabin primality test to assess if \\(x\\) is prime. 
-/// It is a probabilistic test, so it can mistakenly identify a composite number 
+///
+/// The function uses the Miller-Rabin primality test to assess if \\(x\\) is prime.
+/// It is a probabilistic test, so it can mistakenly identify a composite number
 /// as prime. However, the probability of such errors decreases with more testing
-/// iterations (the function uses 64 iterations internally, which is typically 
+/// iterations (the function uses 64 iterations internally, which is typically
 /// more than sufficient). The Miller-Rabin test is particularly useful for large
 /// numbers.
-/// 
+///
 /// <details>
 ///     <summary>Details</summary>
 ///
 ///   Examples of prime numbers:
 ///   - \\(2\\) is a prime number since it has only two divisors: \\(1\\) and \\(2\\).
 ///   - \\(7\\) is a prime number since it has only two divisors: \\(1\\) and \\(7\\).
-///   - \\(4\\) is not a prime number since it has divisors other than \\(1\\) and itself, such 
+///   - \\(4\\) is not a prime number since it has divisors other than \\(1\\) and itself, such
 ///     as \\(2\\).
 ///
 /// </details>
@@ -414,7 +412,7 @@ pub fn is_odd(x: Int) -> Bool {
 ///
 ///       predicates.is_prime(4)
 ///       |> should.equal(False)
-///       
+///
 ///       // Test the 2nd Carmichael number
 ///       predicates.is_prime(1105)
 ///       |> should.equal(False)
@@ -512,9 +510,9 @@ pub fn is_between(x: Float, lower: Float, upper: Float) -> Bool {
 ///     </a>
 /// </div>
 ///
-/// A function that tests whether a given integer \\(n \in \mathbb{Z}\\) is divisible by another 
+/// A function that tests whether a given integer \\(n \in \mathbb{Z}\\) is divisible by another
 /// integer \\(d \in \mathbb{Z}\\), such that \\(n \mod d = 0\\).
-/// 
+///
 /// <details>
 ///     <summary>Details</summary>
 ///
@@ -555,9 +553,9 @@ pub fn is_divisible(n: Int, d: Int) -> Bool {
 ///     </a>
 /// </div>
 ///
-/// A function that tests whether a given integer \\(m \in \mathbb{Z}\\) is a multiple of another 
+/// A function that tests whether a given integer \\(m \in \mathbb{Z}\\) is a multiple of another
 /// integer \\(k \in \mathbb{Z}\\), such that \\(m = k \times q\\), with \\(q \in \mathbb{Z}\\).
-/// 
+///
 /// <details>
 ///     <summary>Details</summary>
 ///

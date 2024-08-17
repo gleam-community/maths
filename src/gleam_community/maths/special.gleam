@@ -20,17 +20,17 @@
 ////<style>
 ////    .katex { font-size: 1.1em; }
 ////</style>
-//// 
+////
 //// ---
-//// 
+////
 //// Special: A module containing special mathematical functions.
-//// 
+////
 //// * **Special mathematical functions**
 ////   * [`beta`](#beta)
 ////   * [`erf`](#erf)
 ////   * [`gamma`](#gamma)
 ////   * [`incomplete_gamma`](#incomplete_gamma)
-//// 
+////
 
 import gleam/list
 import gleam_community/maths/conversion
@@ -100,7 +100,7 @@ pub fn erf(x: Float) -> Float {
 ///     </a>
 /// </div>
 ///
-/// The gamma function over the real numbers. The function is essentially equal to 
+/// The gamma function over the real numbers. The function is essentially equal to
 /// the factorial for any positive integer argument: \\(\Gamma(n) = (n - 1)!\\)
 ///
 /// The implemented gamma function is approximated through Lanczos approximation
@@ -163,7 +163,7 @@ fn gamma_lanczos(x: Float) -> Float {
 ///     </a>
 /// </div>
 ///
-pub fn incomplete_gamma(a: Float, x: Float) -> Result(Float, String) {
+pub fn incomplete_gamma(a: Float, x: Float) -> Result(Float, Nil) {
   case a >. 0.0 && x >=. 0.0 {
     True -> {
       let assert Ok(v) = elementary.power(x, a)
@@ -173,9 +173,7 @@ pub fn incomplete_gamma(a: Float, x: Float) -> Result(Float, String) {
       |> Ok
     }
 
-    False ->
-      "Invalid input argument: a <= 0 or x < 0. Valid input is a > 0 and x >= 0."
-      |> Error
+    False -> Error(Nil)
   }
 }
 
