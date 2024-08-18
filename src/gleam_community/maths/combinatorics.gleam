@@ -20,12 +20,12 @@
 ////<style>
 ////    .katex { font-size: 1.1em; }
 ////</style>
-//// 
+////
 //// ---
-//// 
-//// Combinatorics: A module that offers mathematical functions related to counting, arrangements, 
-//// and permutations/combinations. 
-//// 
+////
+//// Combinatorics: A module that offers mathematical functions related to counting, arrangements,
+//// and permutations/combinations.
+////
 //// * **Combinatorial functions**
 ////   * [`combination`](#combination)
 ////   * [`factorial`](#factorial)
@@ -33,7 +33,7 @@
 ////   * [`list_combination`](#list_combination)
 ////   * [`list_permutation`](#list_permutation)
 ////   * [`cartesian_product`](#cartesian_product)
-//// 
+////
 
 import gleam/iterator
 import gleam/list
@@ -70,26 +70,26 @@ pub type CombinatoricsMode {
 /// Also known as the "stars and bars" problem in combinatorics.
 ///
 /// The implementation uses an efficient iterative multiplicative formula for computing the result.
-/// 
+///
 /// <details>
 /// <summary>Details</summary>
-/// 
-/// A \\(k\\)-combination is a sequence of \\(k\\) elements selected from \\(n\\) elements where 
-/// the order of selection does not matter. For example, consider selecting 2 elements from a list 
+///
+/// A \\(k\\)-combination is a sequence of \\(k\\) elements selected from \\(n\\) elements where
+/// the order of selection does not matter. For example, consider selecting 2 elements from a list
 /// of 3 elements: `["A", "B", "C"]`:
-/// 
-/// - For \\(k\\)-combinations (without repetitions), where order does not matter, the possible 
+///
+/// - For \\(k\\)-combinations (without repetitions), where order does not matter, the possible
 ///   selections are:
 ///   - `["A", "B"]`
 ///   - `["A", "C"]`
 ///   - `["B", "C"]`
 ///
-/// - For \\(k\\)-combinations (with repetitions), where order does not matter but elements can 
+/// - For \\(k\\)-combinations (with repetitions), where order does not matter but elements can
 ///   repeat, the possible selections are:
 ///   - `["A", "A"], ["A", "B"], ["A", "C"]`
 ///   - `["B", "B"], ["B", "C"], ["C", "C"]`
 ///
-/// - On the contrary, for \\(k\\)-permutations (without repetitions), the order matters, so the 
+/// - On the contrary, for \\(k\\)-permutations (without repetitions), the order matters, so the
 ///   possible selections are:
 ///   - `["A", "B"], ["B", "A"]`
 ///   - `["A", "C"], ["C", "A"]`
@@ -106,15 +106,15 @@ pub type CombinatoricsMode {
 ///       // Invalid input gives an error
 ///       combinatorics.combination(-1, 1, option.None)
 ///       |> should.be_error()
-///     
+///
 ///       // Valid input: n = 4 and k = 0
 ///       combinatorics.combination(4, 0, option.Some(combinatorics.WithoutRepetitions))
 ///       |> should.equal(Ok(1))
-///     
+///
 ///       // Valid input: k = n (n = 4, k = 4)
 ///       combinatorics.combination(4, 4, option.Some(combinatorics.WithoutRepetitions))
 ///       |> should.equal(Ok(1))
-///     
+///
 ///       // Valid input: combinations with repetition (n = 2, k = 3)
 ///       combinatorics.combination(2, 3, option.Some(combinatorics.WithRepetitions))
 ///       |> should.equal(Ok(4))
@@ -125,7 +125,7 @@ pub type CombinatoricsMode {
 ///         <small>Back to top ↑</small>
 ///     </a>
 /// </div>
-/// 
+///
 pub fn combination(
   n: Int,
   k: Int,
@@ -161,7 +161,7 @@ fn combination_without_repetitions(n: Int, k: Int) -> Result(Int, String) {
         False -> n - k
       }
       list.range(1, min)
-      |> list.fold(1, fn(acc: Int, x: Int) -> Int { acc * { n + 1 - x } / x })
+      |> list.fold(1, fn(acc, x) { acc * { n + 1 - x } / x })
       |> Ok
     }
   }
@@ -215,7 +215,7 @@ pub fn factorial(n) -> Result(Int, String) {
       |> Ok
     _ ->
       list.range(1, n)
-      |> list.fold(1, fn(acc: Int, x: Int) -> Int { acc * x })
+      |> list.fold(1, fn(acc, x) { acc * x })
       |> Ok
   }
 }
@@ -227,50 +227,50 @@ pub fn factorial(n) -> Result(Int, String) {
 /// </div>
 ///
 /// A combinatorial function for computing the number of \\(k\\)-permutations.
-/// 
+///
 /// **Without** repetitions:
 ///
 /// \\[
 /// P(n, k) = \binom{n}{k} \cdot k! = \frac{n!}{(n - k)!}
 /// \\]
-/// 
+///
 /// **With** repetitions:
-/// 
+///
 /// \\[
 /// P^*(n, k) = n^k
 /// \\]
-/// 
+///
 /// The implementation uses an efficient iterative multiplicative formula for computing the result.
-/// 
+///
 /// <details>
 /// <summary>Details</summary>
-/// 
+///
 /// A \\(k\\)-permutation (without repetitions) is a sequence of \\(k\\) elements selected from \
-/// \\(n\\) elements where the order of selection matters. For example, consider selecting 2 
+/// \\(n\\) elements where the order of selection matters. For example, consider selecting 2
 /// elements from a list of 3 elements: `["A", "B", "C"]`:
-/// 
-/// - For \\(k\\)-permutations (without repetitions), the order matters, so the possible selections 
+///
+/// - For \\(k\\)-permutations (without repetitions), the order matters, so the possible selections
 /// are:
 ///   - `["A", "B"], ["B", "A"]`
 ///   - `["A", "C"], ["C", "A"]`
 ///   - `["B", "C"], ["C", "B"]`
-/// 
-/// - For \\(k\\)-permutations (with repetitions), the order also matters, but we have repeated 
+///
+/// - For \\(k\\)-permutations (with repetitions), the order also matters, but we have repeated
 ///   selections:
 ///   - `["A", "A"], ["A", "B"], ["A", "C"]`
 ///   - `["B", "A"], ["B", "B"], ["B", "C"]`
 ///   - `["C", "A"], ["C", "B"], ["C", "C"]`
 ///
-/// - On the contrary, for \\(k\\)-combinations (without repetitions), where order does not matter, 
+/// - On the contrary, for \\(k\\)-combinations (without repetitions), where order does not matter,
 ///   the possible selections are:
 ///   - `["A", "B"]`
 ///   - `["A", "C"]`
 ///   - `["B", "C"]`
 /// </details>
-/// 
+///
 /// <details>
 ///     <summary>Example:</summary>
-/// 
+///
 ///     import gleam/option
 ///     import gleeunit/should
 ///     import gleam_community/maths/combinatorics
@@ -325,7 +325,7 @@ fn permutation_without_repetitions(n: Int, k: Int) -> Result(Int, String) {
     }
     _, _ ->
       list.range(0, k - 1)
-      |> list.fold(1, fn(acc: Int, x: Int) -> Int { acc * { n - x } })
+      |> list.fold(1, fn(acc, x) { acc * { n - x } })
       |> Ok
   }
 }
@@ -346,11 +346,11 @@ fn permutation_with_repetitions(n: Int, k: Int) -> Result(Int, String) {
 ///     </a>
 /// </div>
 ///
-/// Generates all possible combinations of \\(k\\) elements selected from a given list of size 
+/// Generates all possible combinations of \\(k\\) elements selected from a given list of size
 /// \\(n\\).
 ///
-/// The function can handle cases with and without repetitions 
-/// (see more details [here](#combination)). Also, note that repeated elements are treated as 
+/// The function can handle cases with and without repetitions
+/// (see more details [here](#combination)). Also, note that repeated elements are treated as
 /// distinct.
 ///
 /// <details>
@@ -370,7 +370,7 @@ fn permutation_with_repetitions(n: Int, k: Int) -> Result(Int, String) {
 ///           3,
 ///           option.Some(combinatorics.WithoutRepetitions),
 ///         )
-///     
+///
 ///       result
 ///       |> iterator.to_list()
 ///       |> set.from_list()
@@ -476,11 +476,11 @@ fn do_list_combination_with_repetitions(
 ///     </a>
 /// </div>
 ///
-/// Generates all possible permutations of \\(k\\) elements selected from a given list of size 
+/// Generates all possible permutations of \\(k\\) elements selected from a given list of size
 /// \\(n\\).
 ///
-/// The function can handle cases with and without repetitions 
-/// (see more details [here](#permutation)). Also, note that repeated elements are treated as 
+/// The function can handle cases with and without repetitions
+/// (see more details [here](#permutation)). Also, note that repeated elements are treated as
 /// distinct.
 ///
 /// <details>
@@ -500,7 +500,7 @@ fn do_list_combination_with_repetitions(
 ///           3,
 ///           option.Some(combinatorics.WithoutRepetitions),
 ///         )
-///     
+///
 ///       result
 ///       |> iterator.to_list()
 ///       |> set.from_list()
@@ -523,7 +523,7 @@ fn do_list_combination_with_repetitions(
 ///     </a>
 /// </div>
 ///
-/// 
+///
 pub fn list_permutation(
   arr: List(a),
   k: Int,
@@ -636,7 +636,7 @@ fn do_list_permutation_with_repetitions(
 ///       set.from_list([])
 ///       |> combinatorics.cartesian_product(set.from_list([]))
 ///       |> should.equal(set.from_list([]))
-///     
+///
 ///       // Cartesian product of two sets with numeric values
 ///       set.from_list([1.0, 10.0])
 ///       |> combinatorics.cartesian_product(set.from_list([1.0, 2.0]))
@@ -654,16 +654,9 @@ fn do_list_permutation_with_repetitions(
 ///
 pub fn cartesian_product(xset: set.Set(a), yset: set.Set(a)) -> set.Set(#(a, a)) {
   xset
-  |> set.fold(
-    set.new(),
-    fn(accumulator0: set.Set(#(a, a)), member0: a) -> set.Set(#(a, a)) {
-      set.fold(
-        yset,
-        accumulator0,
-        fn(accumulator1: set.Set(#(a, a)), member1: a) -> set.Set(#(a, a)) {
-          set.insert(accumulator1, #(member0, member1))
-        },
-      )
-    },
-  )
+  |> set.fold(set.new(), fn(accumulator0: set.Set(#(a, a)), member0: a) {
+    set.fold(yset, accumulator0, fn(accumulator1: set.Set(#(a, a)), member1: a) {
+      set.insert(accumulator1, #(member0, member1))
+    })
+  })
 }

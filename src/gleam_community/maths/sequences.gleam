@@ -20,18 +20,18 @@
 ////<style>
 ////    .katex { font-size: 1.1em; }
 ////</style>
-//// 
+////
 //// ---
-//// 
-//// Sequences: A module containing functions for generating various types of 
+////
+//// Sequences: A module containing functions for generating various types of
 //// sequences, ranges and intervals.
-//// 
+////
 //// * **Ranges and intervals**
 ////   * [`arange`](#arange)
 ////   * [`linear_space`](#linear_space)
 ////   * [`logarithmic_space`](#logarithmic_space)
 ////   * [`geometric_space`](#geometric_space)
-//// 
+////
 
 import gleam/iterator
 import gleam_community/maths/conversion
@@ -47,7 +47,7 @@ import gleam_community/maths/piecewise
 /// The function returns an iterator generating evenly spaced values within a given interval.
 /// based on a start value but excludes the stop value. The spacing between values is determined
 /// by the step size provided. The function supports both positive and negative step values.
-/// 
+///
 /// <details>
 ///     <summary>Example:</summary>
 ///
@@ -59,13 +59,13 @@ import gleam_community/maths/piecewise
 ///       sequences.arange(1.0, 5.0, 1.0)
 ///       |> iterator.to_list()
 ///       |> should.equal([1.0, 2.0, 3.0, 4.0])
-///       
+///
 ///       // No points returned since
 ///       // start is smaller than stop and the step is positive
 ///       sequences.arange(5.0, 1.0, 1.0)
 ///       |> iterator.to_list()
 ///       |> should.equal([])
-///       
+///
 ///       // Points returned since
 ///       // start smaller than stop but negative step
 ///       sequences.arange(5.0, 1.0, -1.0)
@@ -102,7 +102,7 @@ pub fn arange(
         |> conversion.float_to_int()
 
       iterator.range(0, num - 1)
-      |> iterator.map(fn(i: Int) {
+      |> iterator.map(fn(i) {
         start +. conversion.int_to_float(i) *. step_abs *. direction
       })
     }
@@ -115,10 +115,10 @@ pub fn arange(
 ///     </a>
 /// </div>
 ///
-/// The function returns an iterator for generating linearly spaced points over a specified 
-/// interval. The endpoint of the interval can optionally be included/excluded. The number of 
+/// The function returns an iterator for generating linearly spaced points over a specified
+/// interval. The endpoint of the interval can optionally be included/excluded. The number of
 /// points and whether the endpoint is included determine the spacing between values.
-/// 
+///
 /// <details>
 ///     <summary>Example:</summary>
 ///
@@ -138,7 +138,7 @@ pub fn arange(
 ///           0.0,
 ///           tol,
 ///         )
-///     
+///
 ///       result
 ///       |> list.all(fn(x) { x == True })
 ///       |> should.be_true()
@@ -161,7 +161,7 @@ pub fn linear_space(
   num: Int,
   endpoint: Bool,
 ) -> Result(iterator.Iterator(Float), String) {
-  let direction: Float = case start <=. stop {
+  let direction = case start <=. stop {
     True -> 1.0
     False -> -1.0
   }
@@ -179,7 +179,7 @@ pub fn linear_space(
   case num > 0 {
     True -> {
       iterator.range(0, num - 1)
-      |> iterator.map(fn(i: Int) -> Float {
+      |> iterator.map(fn(i) {
         start +. conversion.int_to_float(i) *. increment *. direction
       })
       |> Ok
@@ -196,10 +196,10 @@ pub fn linear_space(
 ///     </a>
 /// </div>
 ///
-/// The function returns an iterator of logarithmically spaced points over a specified interval. 
-/// The endpoint of the interval can optionally be included/excluded. The number of points, base, 
+/// The function returns an iterator of logarithmically spaced points over a specified interval.
+/// The endpoint of the interval can optionally be included/excluded. The number of points, base,
 /// and whether the endpoint is included determine the spacing between values.
-/// 
+///
 /// <details>
 ///     <summary>Example:</summary>
 ///
@@ -246,7 +246,7 @@ pub fn logarithmic_space(
     True -> {
       let assert Ok(linspace) = linear_space(start, stop, num, endpoint)
       linspace
-      |> iterator.map(fn(i: Float) -> Float {
+      |> iterator.map(fn(i) {
         let assert Ok(result) = elementary.power(base, i)
         result
       })
@@ -264,9 +264,9 @@ pub fn logarithmic_space(
 ///     </a>
 /// </div>
 ///
-/// The function returns an iterator of numbers spaced evenly on a log scale (a geometric 
-/// progression). Each point in the list is a constant multiple of the previous. The function is 
-/// similar to the [`logarithmic_space`](#logarithmic_space) function, but with endpoints 
+/// The function returns an iterator of numbers spaced evenly on a log scale (a geometric
+/// progression). Each point in the list is a constant multiple of the previous. The function is
+/// similar to the [`logarithmic_space`](#logarithmic_space) function, but with endpoints
 /// specified directly.
 ///
 /// <details>
@@ -295,7 +295,7 @@ pub fn logarithmic_space(
 ///       // Input (start and stop can't be equal to 0.0)
 ///       sequences.geometric_space(0.0, 1000.0, 3, False)
 ///       |> should.be_error()
-///     
+///
 ///       sequences.geometric_space(-1000.0, 0.0, 3, False)
 ///       |> should.be_error()
 ///

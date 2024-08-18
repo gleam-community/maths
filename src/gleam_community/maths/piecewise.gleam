@@ -69,7 +69,7 @@ import gleam_community/maths/elementary
 /// The ceiling function rounds a given input value \\(x \in \mathbb{R}\\) to the nearest integer
 /// value (at the specified digit) that is larger than or equal to the input \\(x\\).
 ///
-/// Note: The ceiling function is used as an alias for the rounding function [`round`](#round) 
+/// Note: The ceiling function is used as an alias for the rounding function [`round`](#round)
 /// with rounding mode `RoundUp`.
 ///
 /// <details>
@@ -124,10 +124,10 @@ pub fn ceiling(x: Float, digits: option.Option(Int)) -> Float {
 ///     </a>
 /// </div>
 ///
-/// The floor function rounds input \\(x \in \mathbb{R}\\) to the nearest integer value (at the 
+/// The floor function rounds input \\(x \in \mathbb{R}\\) to the nearest integer value (at the
 /// specified digit) that is less than or equal to the input \\(x\\).
 ///
-/// Note: The floor function is used as an alias for the rounding function [`round`](#round) 
+/// Note: The floor function is used as an alias for the rounding function [`round`](#round)
 /// with rounding mode `RoundDown`.
 ///
 /// <details>
@@ -139,7 +139,7 @@ pub fn ceiling(x: Float, digits: option.Option(Int)) -> Float {
 ///   - \\(12.06\\) for 2 digits after the decimal point (`digits = 2`)
 ///   - \\(12.065\\) for 3 digits after the decimal point (`digits = 3`)
 ///
-///   It is also possible to specify a negative number of digits. In that case, the negative 
+///   It is also possible to specify a negative number of digits. In that case, the negative
 ///   number refers to the digits before the decimal point.
 ///   - \\(10.0\\) for 1 digit before the decimal point (`digits = -1`)
 ///   - \\(0.0\\) for 2 digits before the decimal point (`digits = -2`)
@@ -182,11 +182,11 @@ pub fn floor(x: Float, digits: option.Option(Int)) -> Float {
 ///     </a>
 /// </div>
 ///
-/// The truncate function rounds a given input \\(x \in \mathbb{R}\\) to the nearest integer 
-/// value (at the specified digit) that is less than or equal to the absolute value of the 
+/// The truncate function rounds a given input \\(x \in \mathbb{R}\\) to the nearest integer
+/// value (at the specified digit) that is less than or equal to the absolute value of the
 /// input \\(x\\).
 ///
-/// Note: The truncate function is used as an alias for the rounding function [`round`](#round) 
+/// Note: The truncate function is used as an alias for the rounding function [`round`](#round)
 /// with rounding mode `RoundToZero`.
 ///
 /// <details>
@@ -198,7 +198,7 @@ pub fn floor(x: Float, digits: option.Option(Int)) -> Float {
 ///   - \\(12.06\\) for 2 digits after the decimal point (`digits = 2`)
 ///   - \\(12.065\\) for 3 digits after the decimal point (`digits = 3`)
 ///
-///   It is also possible to specify a negative number of digits. In that case, the negative 
+///   It is also possible to specify a negative number of digits. In that case, the negative
 ///   number refers to the digits before the decimal point.
 ///   - \\(10.0\\) for 1 digit before the decimal point (`digits = -1`)
 ///   - \\(0.0\\) for 2 digits before the decimal point (`digits = -2`)
@@ -241,18 +241,18 @@ pub fn truncate(x: Float, digits: option.Option(Int)) -> Float {
 ///     </a>
 /// </div>
 ///
-/// The function rounds a float to a specific number of digits (after the decimal place or before 
+/// The function rounds a float to a specific number of digits (after the decimal place or before
 /// if negative) using a specified rounding mode.
 ///
 /// Valid rounding modes include:
-/// - `RoundNearest` (default): The input \\(x\\) is rounded to the nearest integer value (at the 
-///   specified digit) with ties (fractional values of 0.5) being rounded to the nearest even 
+/// - `RoundNearest` (default): The input \\(x\\) is rounded to the nearest integer value (at the
+///   specified digit) with ties (fractional values of 0.5) being rounded to the nearest even
 ///   integer.
 /// - `RoundTiesAway`: The input \\(x\\) is rounded to the nearest integer value (at the
-///    specified digit) with ties (fractional values of 0.5) being rounded away from zero (C/C++ 
+///    specified digit) with ties (fractional values of 0.5) being rounded away from zero (C/C++
 ///   rounding behavior).
-/// - `RoundTiesUp`: The input \\(x\\) is rounded to the nearest integer value (at the specified 
-///   digit) with ties (fractional values of 0.5) being rounded towards \\(+\infty\\) 
+/// - `RoundTiesUp`: The input \\(x\\) is rounded to the nearest integer value (at the specified
+///   digit) with ties (fractional values of 0.5) being rounded towards \\(+\infty\\)
 ///   (Java/JavaScript rounding behaviour).
 /// - `RoundToZero`: The input \\(x\\) is rounded to the nearest integer value (at the specified
 ///    digit) that is less than or equal to the absolute value of the input \\(x\\). An alias for
@@ -260,8 +260,8 @@ pub fn truncate(x: Float, digits: option.Option(Int)) -> Float {
 /// - `RoundDown`: The input \\(x\\) is rounded to the nearest integer value (at the specified
 ///   digit) that is less than or equal to the input \\(x\\). An alias for this rounding mode is
 ///    [`floor`](#floor).
-/// - `RoundUp`: The input \\(x\\) is rounded to the nearest integer value (at the specified 
-///   digit) that is larger than or equal to the input \\(x\\). An alias for this rounding mode 
+/// - `RoundUp`: The input \\(x\\) is rounded to the nearest integer value (at the specified
+///   digit) that is larger than or equal to the input \\(x\\). An alias for this rounding mode
 ///   is [`ceiling`](#ceiling).
 ///
 /// <details>
@@ -273,7 +273,7 @@ pub fn truncate(x: Float, digits: option.Option(Int)) -> Float {
 ///   - \\(12.07\\) for 2 digits after the decimal point (`digits = 2`)
 ///   - \\(12.065\\) for 3 digits after the decimal point (`digits = 3`)
 ///
-///   It is also possible to specify a negative number of digits. In that case, the negative 
+///   It is also possible to specify a negative number of digits. In that case, the negative
 ///   number refers to the digits before the decimal point.
 ///   - \\(10.0\\) for 1 digit before the decimal point (`digits = -1`)
 ///   - \\(0.0\\) for 2 digits before the decimal point (`digits = -2`)
@@ -285,7 +285,7 @@ pub fn truncate(x: Float, digits: option.Option(Int)) -> Float {
 ///   - \\(12.07\\) for 2 digits after the decimal point (`digits = 2`)
 ///   - \\(12.065\\) for 3 digits after the decimal point (`digits = 3`)
 ///
-///   It is also possible to specify a negative number of digits. In that case, the negative 
+///   It is also possible to specify a negative number of digits. In that case, the negative
 ///   number refers to the digits before the decimal point.
 ///   - \\(10.0\\) for 1 digit before the decimal point (`digits = -1`)
 ///   - \\(0.0\\) for 2 digits before the decimal point (`digits = -2`)
@@ -309,7 +309,7 @@ pub fn truncate(x: Float, digits: option.Option(Int)) -> Float {
 ///   - \\(12.06\\) for 2 digits after the decimal point (`digits = 2`)
 ///   - \\(12.065\\) for 3 digits after the decimal point (`digits = 3`)
 ///
-///   It is also possible to specify a negative number of digits. In that case, the negative 
+///   It is also possible to specify a negative number of digits. In that case, the negative
 ///   number refers to the digits before the decimal point.
 ///   - \\(10.0\\) for 1 digit before the decimal point (`digits = -1`)
 ///   - \\(0.0\\) for 2 digits before the decimal point (`digits = -2`)
@@ -321,7 +321,7 @@ pub fn truncate(x: Float, digits: option.Option(Int)) -> Float {
 ///   - \\(12.06\\) for 2 digits after the decimal point (`digits = 2`)
 ///   - \\(12.065\\) for 3 digits after the decimal point (`digits = 3`)
 ///
-///   It is also possible to specify a negative number of digits. In that case, the negative 
+///   It is also possible to specify a negative number of digits. In that case, the negative
 ///   number refers to the digits before the decimal point.
 ///   - \\(10.0\\) for 1 digit before the decimal point (`digits = -1`)
 ///   - \\(0.0\\) for 2 digits before the decimal point (`digits = -2`)
@@ -424,9 +424,9 @@ fn do_round(p: Float, x: Float, mode: option.Option(RoundingMode)) -> Float {
 }
 
 fn round_to_nearest(p: Float, x: Float) -> Float {
-  let xabs: Float = float_absolute_value(x) *. p
-  let xabs_truncated: Float = truncate_float(xabs)
-  let remainder: Float = xabs -. xabs_truncated
+  let xabs = float_absolute_value(x) *. p
+  let xabs_truncated = truncate_float(xabs)
+  let remainder = xabs -. xabs_truncated
   case remainder {
     _ if remainder >. 0.5 -> float_sign(x) *. truncate_float(xabs +. 1.0) /. p
     _ if remainder == 0.5 -> {
@@ -441,8 +441,8 @@ fn round_to_nearest(p: Float, x: Float) -> Float {
 }
 
 fn round_ties_away(p: Float, x: Float) -> Float {
-  let xabs: Float = float_absolute_value(x) *. p
-  let remainder: Float = xabs -. truncate_float(xabs)
+  let xabs = float_absolute_value(x) *. p
+  let remainder = xabs -. truncate_float(xabs)
   case remainder {
     _ if remainder >=. 0.5 -> float_sign(x) *. truncate_float(xabs +. 1.0) /. p
     _ -> float_sign(x) *. truncate_float(xabs) /. p
@@ -450,9 +450,9 @@ fn round_ties_away(p: Float, x: Float) -> Float {
 }
 
 fn round_ties_up(p: Float, x: Float) -> Float {
-  let xabs: Float = float_absolute_value(x) *. p
-  let xabs_truncated: Float = truncate_float(xabs)
-  let remainder: Float = xabs -. xabs_truncated
+  let xabs = float_absolute_value(x) *. p
+  let xabs_truncated = truncate_float(xabs)
+  let remainder = xabs -. xabs_truncated
   case remainder {
     _ if remainder >=. 0.5 && x >=. 0.0 ->
       float_sign(x) *. truncate_float(xabs +. 1.0) /. p
@@ -500,7 +500,7 @@ fn do_ceiling(a: Float) -> Float
 /// The absolute value:
 ///
 /// \\[
-///  \forall x \in \mathbb{R}, \\; |x|  \in \mathbb{R}_{+}. 
+///  \forall x \in \mathbb{R}, \\; |x|  \in \mathbb{R}_{+}.
 /// \\]
 ///
 /// The function takes an input \\(x\\) and returns a positive float value.
@@ -529,7 +529,7 @@ pub fn float_absolute_value(x: Float) -> Float {
 /// The absolute value:
 ///
 /// \\[
-///  \forall x \in \mathbb{Z}, \\; |x|  \in \mathbb{Z}_{+}. 
+///  \forall x \in \mathbb{Z}, \\; |x|  \in \mathbb{Z}_{+}.
 /// \\]
 ///
 /// The function takes an input \\(x\\) and returns a positive integer value.
@@ -709,7 +709,7 @@ fn do_int_sign(a: Int) -> Int
 ///     </a>
 /// </div>
 ///
-/// The function takes two arguments \\(x, y \in \mathbb{R}\\) and returns \\(x\\) 
+/// The function takes two arguments \\(x, y \in \mathbb{R}\\) and returns \\(x\\)
 /// such that it has the same sign as \\(y\\).
 ///
 /// <div style="text-align: right;">
@@ -735,7 +735,7 @@ pub fn float_copy_sign(x: Float, y: Float) -> Float {
 ///     </a>
 /// </div>
 ///
-/// The function takes two arguments \\(x, y \in \mathbb{Z}\\) and returns \\(x\\) 
+/// The function takes two arguments \\(x, y \in \mathbb{Z}\\) and returns \\(x\\)
 /// such that it has the same sign as \\(y\\).
 ///
 /// <div style="text-align: right;">
@@ -823,7 +823,7 @@ pub fn int_flip_sign(x: Int) -> Int {
 ///     </a>
 /// </div>
 ///
-pub fn minimum(x: a, y: a, compare: fn(a, a) -> order.Order) -> a {
+pub fn minimum(x: a, y: a, compare: fn(a, a) -> order.Order) {
   case compare(x, y) {
     order.Lt -> x
     order.Eq -> x
@@ -869,7 +869,7 @@ pub fn minimum(x: a, y: a, compare: fn(a, a) -> order.Order) -> a {
 ///     </a>
 /// </div>
 ///
-pub fn maximum(x: a, y: a, compare: fn(a, a) -> order.Order) -> a {
+pub fn maximum(x: a, y: a, compare: fn(a, a) -> order.Order) {
   case compare(x, y) {
     order.Lt -> y
     order.Eq -> y
@@ -909,7 +909,7 @@ pub fn maximum(x: a, y: a, compare: fn(a, a) -> order.Order) -> a {
 ///     </a>
 /// </div>
 ///
-pub fn minmax(x: a, y: a, compare: fn(a, a) -> order.Order) -> #(a, a) {
+pub fn minmax(x: a, y: a, compare: fn(a, a) -> order.Order) {
   #(minimum(x, y, compare), maximum(x, y, compare))
 }
 
@@ -956,7 +956,7 @@ pub fn list_minimum(
       |> Error
     [x, ..rest] ->
       Ok(
-        list.fold(rest, x, fn(acc: a, element: a) {
+        list.fold(rest, x, fn(acc, element) {
           case compare(element, acc) {
             order.Lt -> element
             _ -> acc
@@ -1010,7 +1010,7 @@ pub fn list_maximum(
       |> Error
     [x, ..rest] ->
       Ok(
-        list.fold(rest, x, fn(acc: a, element: a) {
+        list.fold(rest, x, fn(acc, element) {
           case compare(acc, element) {
             order.Lt -> element
             _ -> acc
@@ -1073,13 +1073,13 @@ pub fn arg_minimum(
         arr
         |> list_minimum(compare)
       arr
-      |> list.index_map(fn(element: a, index: Int) -> Int {
+      |> list.index_map(fn(element, index) {
         case compare(element, min) {
           order.Eq -> index
           _ -> -1
         }
       })
-      |> list.filter(fn(index: Int) -> Bool {
+      |> list.filter(fn(index) {
         case index {
           -1 -> False
           _ -> True
@@ -1143,13 +1143,13 @@ pub fn arg_maximum(
         arr
         |> list_maximum(compare)
       arr
-      |> list.index_map(fn(element: a, index: Int) -> Int {
+      |> list.index_map(fn(element, index) {
         case compare(element, max) {
           order.Eq -> index
           _ -> -1
         }
       })
-      |> list.filter(fn(index: Int) -> Bool {
+      |> list.filter(fn(index) {
         case index {
           -1 -> False
           _ -> True
@@ -1210,9 +1210,9 @@ pub fn extrema(
       |> Error
     [x, ..rest] ->
       Ok(
-        list.fold(rest, #(x, x), fn(acc: #(a, a), element: a) {
-          let first: a = pair.first(acc)
-          let second: a = pair.second(acc)
+        list.fold(rest, #(x, x), fn(acc, element) {
+          let first = pair.first(acc)
+          let second = pair.second(acc)
           case compare(element, first), compare(second, element) {
             order.Lt, order.Lt -> #(element, element)
             order.Lt, _ -> #(element, second)

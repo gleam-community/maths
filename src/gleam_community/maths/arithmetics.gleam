@@ -20,11 +20,11 @@
 ////<style>
 ////    .katex { font-size: 1.1em; }
 ////</style>
-//// 
+////
 //// ---
-//// 
+////
 //// Arithmetics: A module containing a collection of fundamental mathematical functions relating to simple arithmetics (addition, subtraction, multiplication, etc.), but also number theory.
-//// 
+////
 //// * **Division functions**
 ////   * [`gcd`](#gcd)
 ////   * [`lcm`](#lcm)
@@ -40,7 +40,7 @@
 ////   * [`int_cumulative_sum`](#int_cumulative_sum)
 ////   * [`float_cumulative_product`](#float_cumulative_product)
 ////   * [`int_cumulative_product`](#int_cumulative_product)
-//// 
+////
 
 import gleam/int
 import gleam/list
@@ -57,7 +57,7 @@ import gleam_community/maths/piecewise
 ///     </a>
 /// </div>
 ///
-/// The function calculates the greatest common divisor of two integers 
+/// The function calculates the greatest common divisor of two integers
 /// \\(x, y \in \mathbb{Z}\\). The greatest common divisor is the largest positive
 /// integer that is divisible by both \\(x\\) and \\(y\\).
 ///
@@ -70,7 +70,7 @@ import gleam_community/maths/piecewise
 ///     pub fn example() {
 ///       arithmetics.gcd(1, 1)
 ///       |> should.equal(1)
-///   
+///
 ///       arithmetics.gcd(100, 10)
 ///       |> should.equal(10)
 ///
@@ -86,8 +86,8 @@ import gleam_community/maths/piecewise
 /// </div>
 ///
 pub fn gcd(x: Int, y: Int) -> Int {
-  let absx: Int = piecewise.int_absolute_value(x)
-  let absy: Int = piecewise.int_absolute_value(y)
+  let absx = piecewise.int_absolute_value(x)
+  let absy = piecewise.int_absolute_value(y)
   do_gcd(absx, absy)
 }
 
@@ -107,24 +107,24 @@ fn do_gcd(x: Int, y: Int) -> Int {
 ///     </a>
 /// </div>
 ///
-/// 
+///
 /// Given two integers, \\(x\\) (dividend) and \\(y\\) (divisor), the Euclidean modulo
-/// of \\(x\\) by \\(y\\), denoted as \\(x \mod y\\), is the remainder \\(r\\) of the 
+/// of \\(x\\) by \\(y\\), denoted as \\(x \mod y\\), is the remainder \\(r\\) of the
 /// division of \\(x\\) by \\(y\\), such that:
-/// 
+///
 /// \\[
 /// x = q \cdot y + r \quad \text{and} \quad 0 \leq r < |y|,
 /// \\]
-/// 
+///
 /// where \\(q\\) is an integer that represents the quotient of the division.
 ///
-/// The Euclidean modulo function of two numbers, is the remainder operation most 
-/// commonly utilized in mathematics. This differs from the standard truncating 
-/// modulo operation frequently employed in programming via the `%` operator. 
-/// Unlike the `%` operator, which may return negative results depending on the 
-/// divisor's sign, the Euclidean modulo function is designed to always yield a 
+/// The Euclidean modulo function of two numbers, is the remainder operation most
+/// commonly utilized in mathematics. This differs from the standard truncating
+/// modulo operation frequently employed in programming via the `%` operator.
+/// Unlike the `%` operator, which may return negative results depending on the
+/// divisor's sign, the Euclidean modulo function is designed to always yield a
 /// positive outcome, ensuring consistency with mathematical conventions.
-/// 
+///
 /// Note that like the Gleam division operator `/` this will return `0` if one of
 /// the arguments is `0`.
 ///
@@ -138,7 +138,7 @@ fn do_gcd(x: Int, y: Int) -> Int {
 ///     pub fn example() {
 ///       arithmetics.euclidean_modulo(15, 4)
 ///       |> should.equal(3)
-///   
+///
 ///       arithmetics.euclidean_modulo(-3, -2)
 ///       |> should.equal(1)
 ///
@@ -168,7 +168,7 @@ pub fn int_euclidean_modulo(x: Int, y: Int) -> Int {
 ///     </a>
 /// </div>
 ///
-/// The function calculates the least common multiple of two integers 
+/// The function calculates the least common multiple of two integers
 /// \\(x, y \in \mathbb{Z}\\). The least common multiple is the smallest positive
 /// integer that has both \\(x\\) and \\(y\\) as factors.
 ///
@@ -181,7 +181,7 @@ pub fn int_euclidean_modulo(x: Int, y: Int) -> Int {
 ///     pub fn example() {
 ///       arithmetics.lcm(1, 1)
 ///       |> should.equal(1)
-///   
+///
 ///       arithmetics.lcm(100, 10)
 ///       |> should.equal(100)
 ///
@@ -197,8 +197,8 @@ pub fn int_euclidean_modulo(x: Int, y: Int) -> Int {
 /// </div>
 ///
 pub fn lcm(x: Int, y: Int) -> Int {
-  let absx: Int = piecewise.int_absolute_value(x)
-  let absy: Int = piecewise.int_absolute_value(y)
+  let absx = piecewise.int_absolute_value(x)
+  let absy = piecewise.int_absolute_value(y)
   absx * absy / do_gcd(absx, absy)
 }
 
@@ -208,7 +208,7 @@ pub fn lcm(x: Int, y: Int) -> Int {
 ///     </a>
 /// </div>
 ///
-/// The function returns all the positive divisors of an integer, including the 
+/// The function returns all the positive divisors of an integer, including the
 /// number itself.
 ///
 /// <details>
@@ -240,11 +240,11 @@ pub fn divisors(n: Int) -> List(Int) {
 }
 
 fn find_divisors(n: Int) -> List(Int) {
-  let nabs: Float = piecewise.float_absolute_value(conversion.int_to_float(n))
+  let nabs = piecewise.float_absolute_value(conversion.int_to_float(n))
   let assert Ok(sqrt_result) = elementary.square_root(nabs)
-  let max: Int = conversion.float_to_int(sqrt_result) + 1
+  let max = conversion.float_to_int(sqrt_result) + 1
   list.range(2, max)
-  |> list.fold([1, n], fn(acc: List(Int), i: Int) -> List(Int) {
+  |> list.fold([1, n], fn(acc, i) {
     case n % i == 0 {
       True -> [i, n / i, ..acc]
       False -> acc
@@ -260,7 +260,7 @@ fn find_divisors(n: Int) -> List(Int) {
 ///     </a>
 /// </div>
 ///
-/// The function returns all the positive divisors of an integer, excluding the 
+/// The function returns all the positive divisors of an integer, excluding the
 /// number iteself.
 ///
 /// <details>
@@ -288,7 +288,7 @@ fn find_divisors(n: Int) -> List(Int) {
 /// </div>
 ///
 pub fn proper_divisors(n: Int) -> List(Int) {
-  let divisors: List(Int) = find_divisors(n)
+  let divisors = find_divisors(n)
   divisors
   |> list.take(list.length(divisors) - 1)
 }
@@ -340,12 +340,10 @@ pub fn float_sum(arr: List(Float), weights: option.Option(List(Float))) -> Float
     [], _ -> 0.0
     _, option.None ->
       arr
-      |> list.fold(0.0, fn(acc: Float, a: Float) -> Float { a +. acc })
+      |> list.fold(0.0, fn(acc, a) { a +. acc })
     _, option.Some(warr) -> {
       list.zip(arr, warr)
-      |> list.fold(0.0, fn(acc: Float, a: #(Float, Float)) -> Float {
-        pair.first(a) *. pair.second(a) +. acc
-      })
+      |> list.fold(0.0, fn(acc, a) { pair.first(a) *. pair.second(a) +. acc })
     }
   }
 }
@@ -362,7 +360,7 @@ pub fn float_sum(arr: List(Float), weights: option.Option(List(Float))) -> Float
 /// \sum_{i=1}^n x_i
 /// \\]
 ///
-/// In the formula, \\(n\\) is the length of the list and \\(x_i \in \mathbb{Z}\\) is 
+/// In the formula, \\(n\\) is the length of the list and \\(x_i \in \mathbb{Z}\\) is
 /// the value in the input list indexed by \\(i\\).
 ///
 /// <details>
@@ -395,7 +393,7 @@ pub fn int_sum(arr: List(Int)) -> Int {
     [] -> 0
     _ ->
       arr
-      |> list.fold(0, fn(acc: Int, a: Int) -> Int { a + acc })
+      |> list.fold(0, fn(acc, a) { a + acc })
   }
 }
 
@@ -414,7 +412,7 @@ pub fn int_sum(arr: List(Int)) -> Int {
 /// In the formula, \\(n\\) is the length of the list and \\(x_i \in \mathbb{R}\\) is
 /// the value in the input list indexed by \\(i\\), while the \\(w_i \in \mathbb{R}\\)
 /// are corresponding weights (\\(w_i = 1.0\\;\forall i=1...n\\) by default).
-/// 
+///
 /// <details>
 ///     <summary>Example:</summary>
 ///
@@ -451,12 +449,12 @@ pub fn float_product(
       |> Ok
     _, option.None ->
       arr
-      |> list.fold(1.0, fn(acc: Float, a: Float) -> Float { a *. acc })
+      |> list.fold(1.0, fn(acc, a) { a *. acc })
       |> Ok
     _, option.Some(warr) -> {
       let results =
         list.zip(arr, warr)
-        |> list.map(fn(a: #(Float, Float)) -> Result(Float, String) {
+        |> list.map(fn(a) {
           pair.first(a)
           |> elementary.power(pair.second(a))
         })
@@ -464,7 +462,7 @@ pub fn float_product(
       case results {
         Ok(prods) ->
           prods
-          |> list.fold(1.0, fn(acc: Float, a: Float) -> Float { a *. acc })
+          |> list.fold(1.0, fn(acc, a) { a *. acc })
           |> Ok
         Error(msg) ->
           msg
@@ -486,7 +484,7 @@ pub fn float_product(
 /// \prod_{i=1}^n x_i
 /// \\]
 ///
-/// In the formula, \\(n\\) is the length of the list and \\(x_i \in \mathbb{Z}\\) is 
+/// In the formula, \\(n\\) is the length of the list and \\(x_i \in \mathbb{Z}\\) is
 /// the value in the input list indexed by \\(i\\).
 ///
 /// <details>
@@ -519,7 +517,7 @@ pub fn int_product(arr: List(Int)) -> Int {
     [] -> 1
     _ ->
       arr
-      |> list.fold(1, fn(acc: Int, a: Int) -> Int { a * acc })
+      |> list.fold(1, fn(acc, a) { a * acc })
   }
 }
 
@@ -536,7 +534,7 @@ pub fn int_product(arr: List(Int)) -> Int {
 /// \\]
 ///
 /// In the formula, \\(v_j\\) is the \\(j\\)'th element in the cumulative sum of \\(n\\)
-/// elements. That is, \\(n\\) is the length of the list and \\(x_i \in \mathbb{R}\\) 
+/// elements. That is, \\(n\\) is the length of the list and \\(x_i \in \mathbb{R}\\)
 /// is the value in the input list indexed by \\(i\\). The value \\(v_j\\) is thus the
 /// sum of the \\(1\\) to \\(j\\) first elements in the given list.
 ///
@@ -569,7 +567,7 @@ pub fn float_cumulative_sum(arr: List(Float)) -> List(Float) {
     [] -> []
     _ ->
       arr
-      |> list.scan(0.0, fn(acc: Float, a: Float) -> Float { a +. acc })
+      |> list.scan(0.0, fn(acc, a) { a +. acc })
   }
 }
 
@@ -586,7 +584,7 @@ pub fn float_cumulative_sum(arr: List(Float)) -> List(Float) {
 /// \\]
 ///
 /// In the formula, \\(v_j\\) is the \\(j\\)'th element in the cumulative sum of \\(n\\)
-/// elements. That is, \\(n\\) is the length of the list and \\(x_i \in \mathbb{Z}\\) 
+/// elements. That is, \\(n\\) is the length of the list and \\(x_i \in \mathbb{Z}\\)
 /// is the value in the input list indexed by \\(i\\). The value \\(v_j\\) is thus the
 /// sum of the \\(1\\) to \\(j\\) first elements in the given list.
 ///
@@ -619,7 +617,7 @@ pub fn int_cumulative_sum(arr: List(Int)) -> List(Int) {
     [] -> []
     _ ->
       arr
-      |> list.scan(0, fn(acc: Int, a: Int) -> Int { a + acc })
+      |> list.scan(0, fn(acc, a) { a + acc })
   }
 }
 
@@ -635,10 +633,10 @@ pub fn int_cumulative_sum(arr: List(Int)) -> List(Int) {
 /// v_j = \prod_{i=1}^j x_i \\;\\; \forall j = 1,\dots, n
 /// \\]
 ///
-/// In the formula, \\(v_j\\) is the \\(j\\)'th element in the cumulative product of 
-/// \\(n\\) elements. That is, \\(n\\) is the length of the list and 
-/// \\(x_i \in \mathbb{R}\\) is the value in the input list indexed by \\(i\\). The 
-/// value \\(v_j\\) is thus the sum of the \\(1\\) to \\(j\\) first elements in the 
+/// In the formula, \\(v_j\\) is the \\(j\\)'th element in the cumulative product of
+/// \\(n\\) elements. That is, \\(n\\) is the length of the list and
+/// \\(x_i \in \mathbb{R}\\) is the value in the input list indexed by \\(i\\). The
+/// value \\(v_j\\) is thus the sum of the \\(1\\) to \\(j\\) first elements in the
 /// given list.
 ///
 /// <details>
@@ -671,7 +669,7 @@ pub fn float_cumulative_product(arr: List(Float)) -> List(Float) {
     [] -> []
     _ ->
       arr
-      |> list.scan(1.0, fn(acc: Float, a: Float) -> Float { a *. acc })
+      |> list.scan(1.0, fn(acc, a) { a *. acc })
   }
 }
 
@@ -687,9 +685,9 @@ pub fn float_cumulative_product(arr: List(Float)) -> List(Float) {
 /// v_j = \prod_{i=1}^j x_i \\;\\; \forall j = 1,\dots, n
 /// \\]
 ///
-/// In the formula, \\(v_j\\) is the \\(j\\)'th element in the cumulative product of 
-/// \\(n\\) elements. That is, \\(n\\) is the length of the list and 
-/// \\(x_i \in \mathbb{Z}\\) is the value in the input list indexed by \\(i\\). The 
+/// In the formula, \\(v_j\\) is the \\(j\\)'th element in the cumulative product of
+/// \\(n\\) elements. That is, \\(n\\) is the length of the list and
+/// \\(x_i \in \mathbb{Z}\\) is the value in the input list indexed by \\(i\\). The
 /// value \\(v_j\\) is thus the product of the \\(1\\) to \\(j\\) first elements in the
 /// given list.
 ///
@@ -723,6 +721,6 @@ pub fn int_cumulative_product(arr: List(Int)) -> List(Int) {
     [] -> []
     _ ->
       arr
-      |> list.scan(1, fn(acc: Int, a: Int) -> Int { a * acc })
+      |> list.scan(1, fn(acc, a) { a * acc })
   }
 }
