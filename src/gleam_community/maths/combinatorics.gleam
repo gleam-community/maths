@@ -652,10 +652,10 @@ fn do_list_permutation_with_repetitions(
 ///     </a>
 /// </div>
 ///
-pub fn cartesian_product(xset: set.Set(a), yset: set.Set(a)) -> set.Set(#(a, a)) {
+pub fn cartesian_product(xset: set.Set(a), yset: set.Set(b)) -> set.Set(#(a, b)) {
   xset
-  |> set.fold(set.new(), fn(accumulator0: set.Set(#(a, a)), member0: a) {
-    set.fold(yset, accumulator0, fn(accumulator1: set.Set(#(a, a)), member1: a) {
+  |> set.fold(set.new(), fn(accumulator0: set.Set(#(a, b)), member0: a) {
+    set.fold(yset, accumulator0, fn(accumulator1: set.Set(#(a, b)), member1: b) {
       set.insert(accumulator1, #(member0, member1))
     })
   })
