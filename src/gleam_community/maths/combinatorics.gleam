@@ -130,12 +130,10 @@ pub fn combination(
   n: Int,
   k: Int,
   mode: option.Option(CombinatoricsMode),
-) -> Result(Int, String) {
+) -> Result(Int, Nil) {
   case n, k {
-    _, _ if n < 0 ->
-      "Invalid input argument: n < 0. Valid input is n >= 0." |> Error
-    _, _ if k < 0 ->
-      "Invalid input argument: k < 0. Valid input is k >= 0." |> Error
+    _, _ if n < 0 -> Error(Nil)
+    _, _ if k < 0 -> Error(Nil)
     _, _ -> {
       case mode {
         option.Some(WithRepetitions) -> combination_with_repetitions(n, k)
@@ -145,12 +143,11 @@ pub fn combination(
   }
 }
 
-fn combination_with_repetitions(n: Int, k: Int) -> Result(Int, String) {
-  { n + k - 1 }
-  |> combination_without_repetitions(k)
+fn combination_with_repetitions(n: Int, k: Int) -> Result(Int, Nil) {
+  combination_without_repetitions(n + k - 1, k)
 }
 
-fn combination_without_repetitions(n: Int, k: Int) -> Result(Int, String) {
+fn combination_without_repetitions(n: Int, k: Int) -> Result(Int, Nil) {
   case n, k {
     _, _ if k == 0 || k == n -> {
       1 |> Ok
@@ -202,17 +199,11 @@ fn combination_without_repetitions(n: Int, k: Int) -> Result(Int, String) {
 ///     </a>
 /// </div>
 ///
-pub fn factorial(n) -> Result(Int, String) {
+pub fn factorial(n) -> Result(Int, Nil) {
   case n {
-    _ if n < 0 ->
-      "Invalid input argument: n < 0. Valid input is n >= 0."
-      |> Error
-    0 ->
-      1
-      |> Ok
-    1 ->
-      1
-      |> Ok
+    _ if n < 0 -> Error(Nil)
+    0 -> Ok(1)
+    1 -> Ok(1)
     _ ->
       list.range(1, n)
       |> list.fold(1, fn(acc, x) { acc * x })
@@ -300,22 +291,16 @@ pub fn permutation(
   n: Int,
   k: Int,
   mode: option.Option(CombinatoricsMode),
-) -> Result(Int, String) {
-  case n, k {
-    _, _ if n < 0 ->
-      "Invalid input argument: n < 0. Valid input is n >= 0." |> Error
-    _, _ if k < 0 ->
-      "Invalid input argument: k < 0. Valid input is k >= 0." |> Error
-    _, _ -> {
-      case mode {
-        option.Some(WithRepetitions) -> permutation_with_repetitions(n, k)
-        _ -> permutation_without_repetitions(n, k)
-      }
-    }
+) -> Result(Int, Nil) {
+  case n, k, mode {
+    _, _, _ if n < 0 -> Error(Nil)
+    _, _, _ if k < 0 -> Error(Nil)
+    _, _, option.Some(WithRepetitions) -> permutation_with_repetitions(n, k)
+    _, _, _ -> permutation_without_repetitions(n, k)
   }
 }
 
-fn permutation_without_repetitions(n: Int, k: Int) -> Result(Int, String) {
+fn permutation_without_repetitions(n: Int, k: Int) -> Result(Int, Nil) {
   case n, k {
     _, _ if k < 0 || k > n -> {
       0 |> Ok
@@ -330,7 +315,7 @@ fn permutation_without_repetitions(n: Int, k: Int) -> Result(Int, String) {
   }
 }
 
-fn permutation_with_repetitions(n: Int, k: Int) -> Result(Int, String) {
+fn permutation_with_repetitions(n: Int, k: Int) -> Result(Int, Nil) {
   let n_float = conversion.int_to_float(n)
   let k_float = conversion.int_to_float(k)
   // 'n' ank 'k' are positive integers, so no errors here...
@@ -388,29 +373,20 @@ pub fn list_combination(
   arr: List(a),
   k: Int,
   mode: option.Option(CombinatoricsMode),
-) -> Result(iterator.Iterator(List(a)), String) {
-  case k {
-    _ if k < 0 ->
-      "Invalid input argument: k < 0. Valid input is k >= 0."
-      |> Error
-    _ ->
-      case mode {
-        option.Some(WithRepetitions) ->
-          list_combination_with_repetitions(arr, k)
-        _ -> list_combination_without_repetitions(arr, k)
-      }
+) -> Result(iterator.Iterator(List(a)), Nil) {
+  case k, mode {
+    _, _ if k < 0 -> Error(Nil)
+    _, option.Some(WithRepetitions) -> list_combination_with_repetitions(arr, k)
+    _, _ -> list_combination_without_repetitions(arr, k)
   }
 }
 
 fn list_combination_without_repetitions(
   arr: List(a),
   k: Int,
-) -> Result(iterator.Iterator(List(a)), String) {
+) -> Result(iterator.Iterator(List(a)), Nil) {
   case k, list.length(arr) {
-    _, arr_length if k > arr_length -> {
-      "Invalid input argument: k > length(arr). Valid input is 0 <= k <= length(arr)."
-      |> Error
-    }
+    _, arr_length if k > arr_length -> Error(Nil)
     // Special case: When k = n, then the entire list is the only valid combination
     _, arr_length if k == arr_length -> {
       iterator.single(arr) |> Ok
@@ -446,7 +422,7 @@ fn do_list_combination_without_repetitions(
 fn list_combination_with_repetitions(
   arr: List(a),
   k: Int,
-) -> Result(iterator.Iterator(List(a)), String) {
+) -> Result(iterator.Iterator(List(a)), Nil) {
   Ok(do_list_combination_with_repetitions(iterator.from_list(arr), k, []))
 }
 
@@ -528,17 +504,12 @@ pub fn list_permutation(
   arr: List(a),
   k: Int,
   mode: option.Option(CombinatoricsMode),
-) -> Result(iterator.Iterator(List(a)), String) {
-  case k {
-    _ if k < 0 ->
-      "Invalid input argument: k < 0. Valid input is k >= 0."
-      |> Error
-    _ ->
-      case mode {
-        option.Some(WithRepetitions) ->
-          list_permutation_with_repetitions(arr, k)
-        _ -> list_permutation_without_repetitions(arr, k)
-      }
+) -> Result(iterator.Iterator(List(a)), Nil) {
+  case k, mode {
+    _, _ if k < 0 -> Error(Nil)
+    _, option.Some(WithRepetitions) ->
+      Ok(list_permutation_with_repetitions(arr, k))
+    _, _ -> list_permutation_without_repetitions(arr, k)
   }
 }
 
@@ -558,12 +529,9 @@ fn remove_first_by_index(
 fn list_permutation_without_repetitions(
   arr: List(a),
   k: Int,
-) -> Result(iterator.Iterator(List(a)), String) {
+) -> Result(iterator.Iterator(List(a)), Nil) {
   case k, list.length(arr) {
-    _, arr_length if k > arr_length -> {
-      "Invalid input argument: k > length(arr). Valid input is 0 <= k <= length(arr)."
-      |> Error
-    }
+    _, arr_length if k > arr_length -> Error(Nil)
     _, _ -> {
       let indexed_arr = list.index_map(arr, fn(x, i) { #(i, x) })
       Ok(do_list_permutation_without_repetitions(
@@ -594,9 +562,9 @@ fn do_list_permutation_without_repetitions(
 fn list_permutation_with_repetitions(
   arr: List(a),
   k: Int,
-) -> Result(iterator.Iterator(List(a)), String) {
+) -> iterator.Iterator(List(a)) {
   let indexed_arr = list.index_map(arr, fn(x, i) { #(i, x) })
-  Ok(do_list_permutation_with_repetitions(indexed_arr, k))
+  do_list_permutation_with_repetitions(indexed_arr, k)
 }
 
 fn do_list_permutation_with_repetitions(

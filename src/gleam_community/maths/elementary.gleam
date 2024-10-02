@@ -98,14 +98,10 @@ import gleam/option
 ///     </a>
 /// </div>
 ///
-pub fn acos(x: Float) -> Result(Float, String) {
+pub fn acos(x: Float) -> Result(Float, Nil) {
   case x >=. -1.0 && x <=. 1.0 {
-    True ->
-      do_acos(x)
-      |> Ok
-    False ->
-      "Invalid input argument: x >= -1 or x <= 1. Valid input is -1. <= x <= 1."
-      |> Error
+    True -> Ok(do_acos(x))
+    False -> Error(Nil)
   }
 }
 
@@ -150,14 +146,10 @@ fn do_acos(a: Float) -> Float
 ///     </a>
 /// </div>
 ///
-pub fn acosh(x: Float) -> Result(Float, String) {
+pub fn acosh(x: Float) -> Result(Float, Nil) {
   case x >=. 1.0 {
-    True ->
-      do_acosh(x)
-      |> Ok
-    False ->
-      "Invalid input argument: x < 1. Valid input is x >= 1."
-      |> Error
+    True -> Ok(do_acosh(x))
+    False -> Error(Nil)
   }
 }
 
@@ -205,14 +197,10 @@ fn do_acosh(a: Float) -> Float
 ///     </a>
 /// </div>
 ///
-pub fn asin(x: Float) -> Result(Float, String) {
+pub fn asin(x: Float) -> Result(Float, Nil) {
   case x >=. -1.0 && x <=. 1.0 {
-    True ->
-      do_asin(x)
-      |> Ok
-    False ->
-      "Invalid input argument: x >= -1 or x <= 1. Valid input is -1. <= x <= 1."
-      |> Error
+    True -> Ok(do_asin(x))
+    False -> Error(Nil)
   }
 }
 
@@ -394,14 +382,10 @@ fn do_atan2(a: Float, b: Float) -> Float
 ///     </a>
 /// </div>
 ///
-pub fn atanh(x: Float) -> Result(Float, String) {
+pub fn atanh(x: Float) -> Result(Float, Nil) {
   case x >. -1.0 && x <. 1.0 {
-    True ->
-      do_atanh(x)
-      |> Ok
-    False ->
-      "Invalid input argument: x > -1 or x < 1. Valid input is -1. < x < 1."
-      |> Error
+    True -> Ok(do_atanh(x))
+    False -> Error(Nil)
   }
 }
 
@@ -753,14 +737,10 @@ fn do_exponential(a: Float) -> Float
 ///     </a>
 /// </div>
 ///
-pub fn natural_logarithm(x: Float) -> Result(Float, String) {
+pub fn natural_logarithm(x: Float) -> Result(Float, Nil) {
   case x >. 0.0 {
-    True ->
-      do_natural_logarithm(x)
-      |> Ok
-    False ->
-      "Invalid input argument: x <= 0. Valid input is x > 0."
-      |> Error
+    True -> Ok(do_natural_logarithm(x))
+    False -> Error(Nil)
   }
 }
 
@@ -810,30 +790,19 @@ fn do_natural_logarithm(a: Float) -> Float
 ///     </a>
 /// </div>
 ///
-pub fn logarithm(x: Float, base: option.Option(Float)) -> Result(Float, String) {
-  case x >. 0.0 {
-    True ->
-      case base {
-        option.Some(a) ->
-          case a >. 0.0 && a != 1.0 {
-            True -> {
-              // Apply the "change of base formula"
-              let assert Ok(numerator) = logarithm_10(x)
-              let assert Ok(denominator) = logarithm_10(a)
-              numerator /. denominator
-              |> Ok
-            }
-            False ->
-              "Invalid input argument: base <= 0 or base == 1. Valid input is base > 0 and base != 1."
-              |> Error
-          }
-        _ ->
-          "Invalid input argument: base <= 0 or base == 1. Valid input is base > 0 and base != 1."
-          |> Error
+pub fn logarithm(x: Float, base: option.Option(Float)) -> Result(Float, Nil) {
+  case x >. 0.0, base {
+    True, option.Some(a) ->
+      case a >. 0.0 && a != 1.0 {
+        False -> Error(Nil)
+        True -> {
+          // Apply the "change of base formula"
+          let assert Ok(numerator) = logarithm_10(x)
+          let assert Ok(denominator) = logarithm_10(a)
+          Ok(numerator /. denominator)
+        }
       }
-    _ ->
-      "Invalid input argument: x <= 0. Valid input is x > 0."
-      |> Error
+    _, _ -> Error(Nil)
   }
 }
 
@@ -877,14 +846,10 @@ pub fn logarithm(x: Float, base: option.Option(Float)) -> Result(Float, String) 
 ///     </a>
 /// </div>
 ///
-pub fn logarithm_2(x: Float) -> Result(Float, String) {
+pub fn logarithm_2(x: Float) -> Result(Float, Nil) {
   case x >. 0.0 {
-    True ->
-      do_logarithm_2(x)
-      |> Ok
-    False ->
-      "Invalid input argument: x <= 0. Valid input is x > 0."
-      |> Error
+    True -> Ok(do_logarithm_2(x))
+    False -> Error(Nil)
   }
 }
 
@@ -932,14 +897,10 @@ fn do_logarithm_2(a: Float) -> Float
 ///     </a>
 /// </div>
 ///
-pub fn logarithm_10(x: Float) -> Result(Float, String) {
+pub fn logarithm_10(x: Float) -> Result(Float, Nil) {
   case x >. 0.0 {
-    True ->
-      do_logarithm_10(x)
-      |> Ok
-    False ->
-      "Invalid input argument: x <= 0. Valid input is x > 0."
-      |> Error
+    True -> Ok(do_logarithm_10(x))
+    False -> Error(Nil)
   }
 }
 
@@ -993,7 +954,7 @@ fn do_logarithm_10(a: Float) -> Float
 ///     </a>
 /// </div>
 ///
-pub fn power(x: Float, y: Float) -> Result(Float, String) {
+pub fn power(x: Float, y: Float) -> Result(Float, Nil) {
   let fractional = do_ceiling(y) -. y >. 0.0
   // In the following check:
   // 1. If the base (x) is negative and the exponent (y) is fractional
@@ -1002,9 +963,7 @@ pub fn power(x: Float, y: Float) -> Result(Float, String) {
   //    expression is equivalent to the exponent (y) divided by 0 and an
   //    error should be returned
   case { x <. 0.0 && fractional } || { x == 0.0 && y <. 0.0 } {
-    True ->
-      "Invalid input argument: x < 0 and y is fractional or x = 0 and y < 0."
-      |> Error
+    True -> Error(Nil)
     False ->
       do_power(x, y)
       |> Ok
@@ -1055,19 +1014,13 @@ fn do_ceiling(a: Float) -> Float
 ///     </a>
 /// </div>
 ///
-pub fn square_root(x: Float) -> Result(Float, String) {
+pub fn square_root(x: Float) -> Result(Float, Nil) {
   // In the following check:
   // 1. If x is negative then return an error as it will otherwise be an
   // imaginary number
   case x <. 0.0 {
-    True ->
-      "Invalid input argument: x < 0."
-      |> Error
-    False -> {
-      let assert Ok(result) = power(x, 1.0 /. 2.0)
-      result
-      |> Ok
-    }
+    True -> Error(Nil)
+    False -> power(x, 1.0 /. 2.0)
   }
 }
 
@@ -1107,19 +1060,13 @@ pub fn square_root(x: Float) -> Result(Float, String) {
 ///     </a>
 /// </div>
 ///
-pub fn cube_root(x: Float) -> Result(Float, String) {
+pub fn cube_root(x: Float) -> Result(Float, Nil) {
   // In the following check:
   // 1. If x is negative then return an error as it will otherwise be an
   // imaginary number
   case x <. 0.0 {
-    True ->
-      "Invalid input argument: x < 0."
-      |> Error
-    False -> {
-      let assert Ok(result) = power(x, 1.0 /. 3.0)
-      result
-      |> Ok
-    }
+    True -> Error(Nil)
+    False -> power(x, 1.0 /. 3.0)
   }
 }
 
@@ -1162,25 +1109,13 @@ pub fn cube_root(x: Float) -> Result(Float, String) {
 ///     </a>
 /// </div>
 ///
-pub fn nth_root(x: Float, n: Int) -> Result(Float, String) {
+pub fn nth_root(x: Float, n: Int) -> Result(Float, Nil) {
   // In the following check:
   // 1. If x is negative then return an error as it will otherwise be an
   // imaginary number
-  case x <. 0.0 {
-    True ->
-      "Invalid input argument: x < 0. Valid input is x > 0"
-      |> Error
-    False ->
-      case n >= 1 {
-        True -> {
-          let assert Ok(result) = power(x, 1.0 /. int.to_float(n))
-          result
-          |> Ok
-        }
-        False ->
-          "Invalid input argument: n < 1. Valid input is n >= 2."
-          |> Error
-      }
+  case x >=. 0.0 && n >= 1 {
+    True -> power(x, 1.0 /. int.to_float(n))
+    False -> Error(Nil)
   }
 }
 

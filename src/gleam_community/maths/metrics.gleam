@@ -59,6 +59,7 @@ import gleam/int
 import gleam/list
 import gleam/option
 import gleam/pair
+import gleam/result
 import gleam/set
 import gleam_community/maths/arithmetics
 import gleam_community/maths/conversion
@@ -72,21 +73,15 @@ fn validate_lists(
   xarr: List(Float),
   yarr: List(Float),
   weights: option.Option(List(Float)),
-) -> Result(Bool, String) {
+) -> Result(Bool, Nil) {
   case xarr, yarr {
-    [], _ ->
-      "Invalid input argument: The list xarr is empty."
-      |> Error
-    _, [] ->
-      "Invalid input argument: The list yarr is empty."
-      |> Error
+    [], _ -> Error(Nil)
+    _, [] -> Error(Nil)
     _, _ -> {
       let xarr_length = list.length(xarr)
       let yarr_length = list.length(yarr)
       case xarr_length == yarr_length, weights {
-        False, _ ->
-          "Invalid input argument: length(xarr) != length(yarr). Valid input is when length(xarr) == length(yarr)."
-          |> Error
+        False, _ -> Error(Nil)
         True, option.None -> {
           True
           |> Ok
@@ -97,9 +92,7 @@ fn validate_lists(
             True -> {
               validate_weights(warr)
             }
-            False ->
-              "Invalid input argument: length(weights) != length(xarr) and length(weights) != length(yarr). Valid input is when length(weights) == length(xarr) == length(yarr)."
-              |> Error
+            False -> Error(Nil)
           }
         }
       }
@@ -107,16 +100,12 @@ fn validate_lists(
   }
 }
 
-fn validate_weights(warr: List(Float)) -> Result(Bool, String) {
+fn validate_weights(warr: List(Float)) -> Result(Bool, Nil) {
   // Check that all the given weights are positive
   let assert Ok(minimum) = piecewise.list_minimum(warr, float.compare)
   case minimum >=. 0.0 {
-    False ->
-      "Invalid input argument: One or more weights are negative. Valid input is when all weights are >= 0."
-      |> Error
-    True ->
-      True
-      |> Ok
+    False -> Error(Nil)
+    True -> Ok(True)
   }
 }
 
@@ -174,7 +163,7 @@ pub fn norm(
   arr: List(Float),
   p: Float,
   weights: option.Option(List(Float)),
-) -> Result(Float, String) {
+) -> Result(Float, Nil) {
   case arr, weights {
     [], _ ->
       0.0
@@ -221,10 +210,7 @@ pub fn norm(
               |> Error
           }
         }
-        False -> {
-          "Invalid input argument: length(weights) != length(arr). Valid input is when length(weights) == length(arr)."
-          |> Error
-        }
+        False -> Error(Nil)
       }
     }
   }
@@ -286,7 +272,7 @@ pub fn manhattan_distance(
   xarr: List(Float),
   yarr: List(Float),
   weights: option.Option(List(Float)),
-) -> Result(Float, String) {
+) -> Result(Float, Nil) {
   minkowski_distance(xarr, yarr, 1.0, weights)
 }
 
@@ -354,26 +340,17 @@ pub fn minkowski_distance(
   yarr: List(Float),
   p: Float,
   weights: option.Option(List(Float)),
-) -> Result(Float, String) {
-  case validate_lists(xarr, yarr, weights) {
-    Error(msg) ->
-      msg
-      |> Error
-    Ok(_) -> {
-      case p <. 1.0 {
-        True ->
-          "Invalid input argument: p < 1. Valid input is p >= 1."
-          |> Error
-        False -> {
-          let differences =
-            list.zip(xarr, yarr)
-            |> list.map(fn(tuple) { pair.first(tuple) -. pair.second(tuple) })
-
-          let assert Ok(result) = norm(differences, p, weights)
-          result
-          |> Ok
-        }
-      }
+) -> Result(Float, Nil) {
+  use _ <- result.try(validate_lists(xarr, yarr, weights))
+  case p <. 1.0 {
+    True -> Error(Nil)
+    False -> {
+      let differences: List(Float) =
+        list.zip(xarr, yarr)
+        |> list.map(fn(tuple: #(Float, Float)) -> Float {
+          pair.first(tuple) -. pair.second(tuple)
+        })
+      norm(differences, p, weights)
     }
   }
 }
@@ -434,7 +411,7 @@ pub fn euclidean_distance(
   xarr: List(Float),
   yarr: List(Float),
   weights: option.Option(List(Float)),
-) -> Result(Float, String) {
+) -> Result(Float, Nil) {
   minkowski_distance(xarr, yarr, 2.0, weights)
 }
 
@@ -484,7 +461,7 @@ pub fn euclidean_distance(
 pub fn chebyshev_distance(
   xarr: List(Float),
   yarr: List(Float),
-) -> Result(Float, String) {
+) -> Result(Float, Nil) {
   case validate_lists(xarr, yarr, option.None) {
     Error(msg) ->
       msg
@@ -540,11 +517,9 @@ pub fn chebyshev_distance(
 ///     </a>
 /// </div>
 ///
-pub fn mean(arr: List(Float)) -> Result(Float, String) {
+pub fn mean(arr: List(Float)) -> Result(Float, Nil) {
   case arr {
-    [] ->
-      "Invalid input argument: The list is empty."
-      |> Error
+    [] -> Error(Nil)
     _ ->
       arr
       |> arithmetics.float_sum(option.None)
@@ -664,34 +639,27 @@ fn do_median(
 ///     </a>
 /// </div>
 ///
-pub fn variance(arr: List(Float), ddof: Int) -> Result(Float, String) {
-  case arr {
-    [] ->
-      "Invalid input argument: The list is empty."
-      |> Error
-    _ ->
-      case ddof < 0 {
-        True ->
-          "Invalid input argument: ddof < 0. Valid input is ddof >= 0."
-          |> Error
-        False -> {
-          let assert Ok(mean) = mean(arr)
-          arr
-          |> list.map(fn(a) {
-            let assert Ok(result) = elementary.power(a -. mean, 2.0)
-            result
-          })
-          |> arithmetics.float_sum(option.None)
-          |> fn(a) {
-            a
-            /. {
-              conversion.int_to_float(list.length(arr))
-              -. conversion.int_to_float(ddof)
-            }
-          }
-          |> Ok
+pub fn variance(arr: List(Float), ddof: Int) -> Result(Float, Nil) {
+  case arr, ddof {
+    [], _ -> Error(Nil)
+    _, _ if ddof < 0 -> Error(Nil)
+    _, _ -> {
+      let assert Ok(mean) = mean(arr)
+      arr
+      |> list.map(fn(a: Float) -> Float {
+        let assert Ok(result) = elementary.power(a -. mean, 2.0)
+        result
+      })
+      |> arithmetics.float_sum(option.None)
+      |> fn(a: Float) -> Float {
+        a
+        /. {
+          conversion.int_to_float(list.length(arr))
+          -. conversion.int_to_float(ddof)
         }
       }
+      |> Ok
+    }
   }
 }
 
@@ -741,25 +709,18 @@ pub fn variance(arr: List(Float), ddof: Int) -> Result(Float, String) {
 ///     </a>
 /// </div>
 ///
-pub fn standard_deviation(arr: List(Float), ddof: Int) -> Result(Float, String) {
-  case arr {
-    [] ->
-      "Invalid input argument: The list is empty."
-      |> Error
-    _ ->
-      case ddof < 0 {
-        True ->
-          "Invalid input argument: ddof < 0. Valid input is ddof >= 0."
-          |> Error
-        False -> {
-          let assert Ok(variance) = variance(arr, ddof)
-          // The computed variance will always be positive
-          // So an error should never be returned
-          let assert Ok(stdev) = elementary.square_root(variance)
-          stdev
-          |> Ok
-        }
-      }
+pub fn standard_deviation(arr: List(Float), ddof: Int) -> Result(Float, Nil) {
+  case arr, ddof {
+    [], _ -> Error(Nil)
+    _, _ if ddof < 0 -> Error(Nil)
+    _, _ -> {
+      let assert Ok(variance) = variance(arr, ddof)
+      // The computed variance will always be positive
+      // So an error should never be returned
+      let assert Ok(stdev) = elementary.square_root(variance)
+      stdev
+      |> Ok
+    }
   }
 }
 
@@ -924,7 +885,7 @@ pub fn tversky_index(
   yset: set.Set(a),
   alpha: Float,
   beta: Float,
-) -> Result(Float, String) {
+) -> Result(Float, Nil) {
   case alpha >=. 0.0, beta >=. 0.0 {
     True, True -> {
       let intersection =
@@ -943,18 +904,7 @@ pub fn tversky_index(
       /. { intersection +. alpha *. difference1 +. beta *. difference2 }
       |> Ok
     }
-    False, True -> {
-      "Invalid input argument: alpha < 0. Valid input is alpha >= 0."
-      |> Error
-    }
-    True, False -> {
-      "Invalid input argument: beta < 0. Valid input is beta >= 0."
-      |> Error
-    }
-    _, _ -> {
-      "Invalid input argument: alpha < 0 and beta < 0. Valid input is alpha >= 0 and beta >= 0."
-      |> Error
-    }
+    _, _ -> Error(Nil)
   }
 }
 
@@ -1077,7 +1027,7 @@ pub fn cosine_similarity(
   xarr: List(Float),
   yarr: List(Float),
   weights: option.Option(List(Float)),
-) -> Result(Float, String) {
+) -> Result(Float, Nil) {
   case validate_lists(xarr, yarr, weights) {
     Error(msg) ->
       msg
@@ -1173,7 +1123,7 @@ pub fn canberra_distance(
   xarr: List(Float),
   yarr: List(Float),
   weights: option.Option(List(Float)),
-) -> Result(Float, String) {
+) -> Result(Float, Nil) {
   case validate_lists(xarr, yarr, weights) {
     Error(msg) ->
       msg
@@ -1266,7 +1216,7 @@ pub fn braycurtis_distance(
   xarr: List(Float),
   yarr: List(Float),
   weights: option.Option(List(Float)),
-) -> Result(Float, String) {
+) -> Result(Float, Nil) {
   case validate_lists(xarr, yarr, weights) {
     Error(msg) ->
       msg

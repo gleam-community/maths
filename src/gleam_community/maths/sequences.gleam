@@ -160,7 +160,7 @@ pub fn linear_space(
   stop: Float,
   num: Int,
   endpoint: Bool,
-) -> Result(iterator.Iterator(Float), String) {
+) -> Result(iterator.Iterator(Float), Nil) {
   let direction = case start <=. stop {
     True -> 1.0
     False -> -1.0
@@ -184,9 +184,7 @@ pub fn linear_space(
       })
       |> Ok
     }
-    False ->
-      "Invalid input: num < 1. Valid input is num >= 1."
-      |> Error
+    False -> Error(Nil)
   }
 }
 
@@ -241,7 +239,7 @@ pub fn logarithmic_space(
   num: Int,
   endpoint: Bool,
   base: Float,
-) -> Result(iterator.Iterator(Float), String) {
+) -> Result(iterator.Iterator(Float), Nil) {
   case num > 0 {
     True -> {
       let assert Ok(linspace) = linear_space(start, stop, num, endpoint)
@@ -252,9 +250,7 @@ pub fn logarithmic_space(
       })
       |> Ok
     }
-    False ->
-      "Invalid input: num < 1. Valid input is num >= 1."
-      |> Error
+    False -> Error(Nil)
   }
 }
 
@@ -316,11 +312,9 @@ pub fn geometric_space(
   stop: Float,
   num: Int,
   endpoint: Bool,
-) -> Result(iterator.Iterator(Float), String) {
+) -> Result(iterator.Iterator(Float), Nil) {
   case start == 0.0 || stop == 0.0 {
-    True ->
-      "Invalid input: Neither 'start' nor 'stop' can be zero, as they must be non-zero for logarithmic calculations."
-      |> Error
+    True -> Error(Nil)
     False ->
       case num > 0 {
         True -> {
@@ -328,9 +322,7 @@ pub fn geometric_space(
           let assert Ok(log_stop) = elementary.logarithm_10(stop)
           logarithmic_space(log_start, log_stop, num, endpoint, 10.0)
         }
-        False ->
-          "Invalid input: num < 1. Valid input is num >= 1."
-          |> Error
+        False -> Error(Nil)
       }
   }
 }

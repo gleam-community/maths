@@ -135,7 +135,7 @@ fn float_absolute_difference(a: Float, b: Float) -> Float {
 ///       let rtol = 0.01
 ///       let atol = 0.10
 ///       predicates.all_close(xarr, yarr, rtol, atol)
-///       |> fn(zarr), String)) {
+///       |> fn(zarr: Result(List(Bool), Nil)) -> Result(Bool, Nil) {
 ///         case zarr {
 ///           Ok(arr) ->
 ///             arr
@@ -159,13 +159,11 @@ pub fn all_close(
   yarr: List(Float),
   rtol: Float,
   atol: Float,
-) -> Result(List(Bool), String) {
+) -> Result(List(Bool), Nil) {
   let xlen = list.length(xarr)
   let ylen = list.length(yarr)
   case xlen == ylen {
-    False ->
-      "Invalid input argument: length(xarr) != length(yarr). Valid input is when length(xarr) == length(yarr)."
-      |> Error
+    False -> Error(Nil)
     True ->
       list.zip(xarr, yarr)
       |> list.map(fn(z) { is_close(pair.first(z), pair.second(z), rtol, atol) })

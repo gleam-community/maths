@@ -442,7 +442,7 @@ pub fn int_sum(arr: List(Int)) -> Int {
 pub fn float_product(
   arr: List(Float),
   weights: option.Option(List(Float)),
-) -> Result(Float, String) {
+) -> Result(Float, Nil) {
   case arr, weights {
     [], _ ->
       1.0
@@ -452,22 +452,16 @@ pub fn float_product(
       |> list.fold(1.0, fn(acc, a) { a *. acc })
       |> Ok
     _, option.Some(warr) -> {
-      let results =
-        list.zip(arr, warr)
-        |> list.map(fn(a) {
-          pair.first(a)
-          |> elementary.power(pair.second(a))
-        })
-        |> result.all
-      case results {
-        Ok(prods) ->
-          prods
-          |> list.fold(1.0, fn(acc, a) { a *. acc })
-          |> Ok
-        Error(msg) ->
-          msg
-          |> Error
-      }
+      list.zip(arr, warr)
+      |> list.map(fn(a: #(Float, Float)) -> Result(Float, Nil) {
+        pair.first(a)
+        |> elementary.power(pair.second(a))
+      })
+      |> result.all
+      |> result.map(fn(prods) {
+        prods
+        |> list.fold(1.0, fn(acc: Float, a: Float) -> Float { a *. acc })
+      })
     }
   }
 }

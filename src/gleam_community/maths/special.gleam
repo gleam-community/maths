@@ -163,7 +163,7 @@ fn gamma_lanczos(x: Float) -> Float {
 ///     </a>
 /// </div>
 ///
-pub fn incomplete_gamma(a: Float, x: Float) -> Result(Float, String) {
+pub fn incomplete_gamma(a: Float, x: Float) -> Result(Float, Nil) {
   case a >. 0.0 && x >=. 0.0 {
     True -> {
       let assert Ok(v) = elementary.power(x, a)
@@ -173,9 +173,7 @@ pub fn incomplete_gamma(a: Float, x: Float) -> Result(Float, String) {
       |> Ok
     }
 
-    False ->
-      "Invalid input argument: a <= 0 or x < 0. Valid input is a > 0 and x >= 0."
-      |> Error
+    False -> Error(Nil)
   }
 }
 

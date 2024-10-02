@@ -949,11 +949,9 @@ pub fn minmax(x: a, y: a, compare: fn(a, a) -> order.Order) {
 pub fn list_minimum(
   arr: List(a),
   compare: fn(a, a) -> order.Order,
-) -> Result(a, String) {
+) -> Result(a, Nil) {
   case arr {
-    [] ->
-      "Invalid input argument: The list is empty."
-      |> Error
+    [] -> Error(Nil)
     [x, ..rest] ->
       Ok(
         list.fold(rest, x, fn(acc, element) {
@@ -1003,11 +1001,9 @@ pub fn list_minimum(
 pub fn list_maximum(
   arr: List(a),
   compare: fn(a, a) -> order.Order,
-) -> Result(a, String) {
+) -> Result(a, Nil) {
   case arr {
-    [] ->
-      "Invalid input argument: The list is empty."
-      |> Error
+    [] -> Error(Nil)
     [x, ..rest] ->
       Ok(
         list.fold(rest, x, fn(acc, element) {
@@ -1063,11 +1059,9 @@ pub fn list_maximum(
 pub fn arg_minimum(
   arr: List(a),
   compare: fn(a, a) -> order.Order,
-) -> Result(List(Int), String) {
+) -> Result(List(Int), Nil) {
   case arr {
-    [] ->
-      "Invalid input argument: The list is empty."
-      |> Error
+    [] -> Error(Nil)
     _ -> {
       let assert Ok(min) =
         arr
@@ -1133,11 +1127,9 @@ pub fn arg_minimum(
 pub fn arg_maximum(
   arr: List(a),
   compare: fn(a, a) -> order.Order,
-) -> Result(List(Int), String) {
+) -> Result(List(Int), Nil) {
   case arr {
-    [] ->
-      "Invalid input argument: The list is empty."
-      |> Error
+    [] -> Error(Nil)
     _ -> {
       let assert Ok(max) =
         arr
@@ -1203,11 +1195,9 @@ pub fn arg_maximum(
 pub fn extrema(
   arr: List(a),
   compare: fn(a, a) -> order.Order,
-) -> Result(#(a, a), String) {
+) -> Result(#(a, a), Nil) {
   case arr {
-    [] ->
-      "Invalid input argument: The list is empty."
-      |> Error
+    [] -> Error(Nil)
     [x, ..rest] ->
       Ok(
         list.fold(rest, #(x, x), fn(acc, element) {
