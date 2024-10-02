@@ -71,12 +71,12 @@ import gleam_community/maths/piecewise
 ///     import gleam_community/maths/predicates
 ///
 ///     pub fn example () {
-///       let val: Float = 99.
-///       let ref_val: Float = 100.
+///       let val = 99.
+///       let ref_val = 100.
 ///       // We set 'atol' and 'rtol' such that the values are equivalent
 ///       // if 'val' is within 1 percent of 'ref_val' +/- 0.1
-///       let rtol: Float = 0.01
-///       let atol: Float = 0.10
+///       let rtol = 0.01
+///       let atol = 0.10
 ///       floatx.is_close(val, ref_val, rtol, atol)
 ///       |> should.be_true()
 ///     }
@@ -89,8 +89,8 @@ import gleam_community/maths/piecewise
 /// </div>
 ///
 pub fn is_close(a: Float, b: Float, rtol: Float, atol: Float) -> Bool {
-  let x: Float = float_absolute_difference(a, b)
-  let y: Float = atol +. rtol *. float_absolute_value(b)
+  let x = float_absolute_difference(a, b)
+  let y = atol +. rtol *. float_absolute_value(b)
   case x <=. y {
     True -> True
     False -> False
@@ -126,20 +126,20 @@ fn float_absolute_difference(a: Float, b: Float) -> Float {
 ///     import gleam_community/maths/predicates
 ///
 ///     pub fn example () {
-///       let val: Float = 99.
-///       let ref_val: Float = 100.
-///       let xarr: List(Float) = list.repeat(val, 42)
-///       let yarr: List(Float) = list.repeat(ref_val, 42)
+///       let val = 99.
+///       let ref_val = 100.
+///       let xarr = list.repeat(val, 42)
+///       let yarr = list.repeat(ref_val, 42)
 ///       // We set 'atol' and 'rtol' such that the values are equivalent
 ///       // if 'val' is within 1 percent of 'ref_val' +/- 0.1
-///       let rtol: Float = 0.01
-///       let atol: Float = 0.10
+///       let rtol = 0.01
+///       let atol = 0.10
 ///       predicates.all_close(xarr, yarr, rtol, atol)
 ///       |> fn(zarr: Result(List(Bool), Nil)) -> Result(Bool, Nil) {
 ///         case zarr {
 ///           Ok(arr) ->
 ///             arr
-///             |> list.all(fn(a: Bool) -> Bool { a })
+///             |> list.all(fn(a) { a })
 ///             |> Ok
 ///           _ -> Nil |> Error
 ///         }
@@ -160,15 +160,13 @@ pub fn all_close(
   rtol: Float,
   atol: Float,
 ) -> Result(List(Bool), Nil) {
-  let xlen: Int = list.length(xarr)
-  let ylen: Int = list.length(yarr)
+  let xlen = list.length(xarr)
+  let ylen = list.length(yarr)
   case xlen == ylen {
     False -> Error(Nil)
     True ->
       list.zip(xarr, yarr)
-      |> list.map(fn(z: #(Float, Float)) -> Bool {
-        is_close(pair.first(z), pair.second(z), rtol, atol)
-      })
+      |> list.map(fn(z) { is_close(pair.first(z), pair.second(z), rtol, atol) })
       |> Ok
   }
 }
@@ -302,7 +300,7 @@ fn do_sum(arr: List(Int)) -> Int {
     [] -> 0
     _ ->
       arr
-      |> list.fold(0, fn(acc: Int, a: Int) -> Int { a + acc })
+      |> list.fold(0, fn(acc, a) { a + acc })
   }
 }
 
@@ -444,7 +442,7 @@ fn miller_rabin_test(n: Int, k: Int) -> Bool {
     _, 0 -> True
     _, _ -> {
       // Generate a random int in the range [2, n]
-      let random_candidate: Int = 2 + int.random(n - 2)
+      let random_candidate = 2 + int.random(n - 2)
       case powmod_with_check(random_candidate, n - 1, n) == 1 {
         True -> miller_rabin_test(n, k - 1)
         False -> False
@@ -457,7 +455,7 @@ fn powmod_with_check(base: Int, exponent: Int, modulus: Int) -> Int {
   case exponent, { exponent % 2 } == 0 {
     0, _ -> 1
     _, True -> {
-      let x: Int = powmod_with_check(base, exponent / 2, modulus)
+      let x = powmod_with_check(base, exponent / 2, modulus)
       case { x * x } % modulus, x != 1 && x != { modulus - 1 } {
         1, True -> 0
         _, _ -> { x * x } % modulus

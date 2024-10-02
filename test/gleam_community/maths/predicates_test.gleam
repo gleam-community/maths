@@ -3,31 +3,31 @@ import gleam_community/maths/predicates
 import gleeunit/should
 
 pub fn float_is_close_test() {
-  let val: Float = 99.0
-  let ref_val: Float = 100.0
+  let val = 99.0
+  let ref_val = 100.0
   // We set 'atol' and 'rtol' such that the values are equivalent
   // if 'val' is within 1 percent of 'ref_val' +/- 0.1
-  let rtol: Float = 0.01
-  let atol: Float = 0.1
+  let rtol = 0.01
+  let atol = 0.1
   predicates.is_close(val, ref_val, rtol, atol)
   |> should.be_true()
 }
 
 pub fn float_list_all_close_test() {
-  let val: Float = 99.0
-  let ref_val: Float = 100.0
-  let xarr: List(Float) = list.repeat(val, 42)
-  let yarr: List(Float) = list.repeat(ref_val, 42)
+  let val = 99.0
+  let ref_val = 100.0
+  let xarr = list.repeat(val, 42)
+  let yarr = list.repeat(ref_val, 42)
   // We set 'atol' and 'rtol' such that the values are equivalent
   // if 'val' is within 1 percent of 'ref_val' +/- 0.1
-  let rtol: Float = 0.01
-  let atol: Float = 0.1
+  let rtol = 0.01
+  let atol = 0.1
   predicates.all_close(xarr, yarr, rtol, atol)
   |> fn(zarr: Result(List(Bool), Nil)) -> Result(Bool, Nil) {
     case zarr {
       Ok(arr) ->
         arr
-        |> list.all(fn(a: Bool) -> Bool { a })
+        |> list.all(fn(a) { a })
         |> Ok
       _ ->
         Nil

@@ -72,7 +72,7 @@ pub fn int_combination_test() {
 
   combinatorics.combination(7, 5, option.Some(combinatorics.WithRepetitions))
   |> should.equal(Ok(462))
-  // NOTE: Tests with the 'combination' function that produce values that exceed 
+  // NOTE: Tests with the 'combination' function that produce values that exceed
   // precision of the JavaScript 'Number' primitive will result in errors
 }
 
@@ -696,5 +696,12 @@ pub fn example_test() {
   |> combinatorics.cartesian_product(set.from_list([1.0, 2.0]))
   |> should.equal(
     set.from_list([#(1.0, 1.0), #(1.0, 2.0), #(10.0, 1.0), #(10.0, 2.0)]),
+  )
+
+  // Cartesian product of two sets with different types
+  set.from_list(["1", "10"])
+  |> combinatorics.cartesian_product(set.from_list([1.0, 2.0]))
+  |> should.equal(
+    set.from_list([#("1", 1.0), #("1", 2.0), #("10", 1.0), #("10", 2.0)]),
   )
 }

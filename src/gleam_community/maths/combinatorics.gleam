@@ -158,7 +158,7 @@ fn combination_without_repetitions(n: Int, k: Int) -> Result(Int, Nil) {
         False -> n - k
       }
       list.range(1, min)
-      |> list.fold(1, fn(acc: Int, x: Int) -> Int { acc * { n + 1 - x } / x })
+      |> list.fold(1, fn(acc, x) { acc * { n + 1 - x } / x })
       |> Ok
     }
   }
@@ -206,7 +206,7 @@ pub fn factorial(n) -> Result(Int, Nil) {
     1 -> Ok(1)
     _ ->
       list.range(1, n)
-      |> list.fold(1, fn(acc: Int, x: Int) -> Int { acc * x })
+      |> list.fold(1, fn(acc, x) { acc * x })
       |> Ok
   }
 }
@@ -310,7 +310,7 @@ fn permutation_without_repetitions(n: Int, k: Int) -> Result(Int, Nil) {
     }
     _, _ ->
       list.range(0, k - 1)
-      |> list.fold(1, fn(acc: Int, x: Int) -> Int { acc * { n - x } })
+      |> list.fold(1, fn(acc, x) { acc * { n - x } })
       |> Ok
   }
 }
@@ -620,18 +620,11 @@ fn do_list_permutation_with_repetitions(
 ///     </a>
 /// </div>
 ///
-pub fn cartesian_product(xset: set.Set(a), yset: set.Set(a)) -> set.Set(#(a, a)) {
+pub fn cartesian_product(xset: set.Set(a), yset: set.Set(b)) -> set.Set(#(a, b)) {
   xset
-  |> set.fold(
-    set.new(),
-    fn(accumulator0: set.Set(#(a, a)), member0: a) -> set.Set(#(a, a)) {
-      set.fold(
-        yset,
-        accumulator0,
-        fn(accumulator1: set.Set(#(a, a)), member1: a) -> set.Set(#(a, a)) {
-          set.insert(accumulator1, #(member0, member1))
-        },
-      )
-    },
-  )
+  |> set.fold(set.new(), fn(accumulator0: set.Set(#(a, b)), member0: a) {
+    set.fold(yset, accumulator0, fn(accumulator1: set.Set(#(a, b)), member1: b) {
+      set.insert(accumulator1, #(member0, member1))
+    })
+  })
 }

@@ -317,7 +317,7 @@ pub fn median_test() {
 
 pub fn variance_test() {
   // Degrees of freedom
-  let ddof: Int = 1
+  let ddof = 1
 
   // An empty list returns an error
   []
@@ -332,7 +332,7 @@ pub fn variance_test() {
 
 pub fn standard_deviation_test() {
   // Degrees of freedom
-  let ddof: Int = 1
+  let ddof = 1
 
   // An empty list returns an error
   []
@@ -349,19 +349,18 @@ pub fn jaccard_index_test() {
   metrics.jaccard_index(set.from_list([]), set.from_list([]))
   |> should.equal(0.0)
 
-  let set_a: set.Set(Int) = set.from_list([0, 1, 2, 5, 6, 8, 9])
-  let set_b: set.Set(Int) = set.from_list([0, 2, 3, 4, 5, 7, 9])
+  let set_a = set.from_list([0, 1, 2, 5, 6, 8, 9])
+  let set_b = set.from_list([0, 2, 3, 4, 5, 7, 9])
   metrics.jaccard_index(set_a, set_b)
   |> should.equal(4.0 /. 10.0)
 
-  let set_c: set.Set(Int) = set.from_list([0, 1, 2, 3, 4, 5])
-  let set_d: set.Set(Int) = set.from_list([6, 7, 8, 9, 10])
+  let set_c = set.from_list([0, 1, 2, 3, 4, 5])
+  let set_d = set.from_list([6, 7, 8, 9, 10])
   metrics.jaccard_index(set_c, set_d)
   |> should.equal(0.0 /. 11.0)
 
-  let set_e: set.Set(String) = set.from_list(["cat", "dog", "hippo", "monkey"])
-  let set_f: set.Set(String) =
-    set.from_list(["monkey", "rhino", "ostrich", "salmon"])
+  let set_e = set.from_list(["cat", "dog", "hippo", "monkey"])
+  let set_f = set.from_list(["monkey", "rhino", "ostrich", "salmon"])
   metrics.jaccard_index(set_e, set_f)
   |> should.equal(1.0 /. 7.0)
 }
@@ -370,19 +369,18 @@ pub fn sorensen_dice_coefficient_test() {
   metrics.sorensen_dice_coefficient(set.from_list([]), set.from_list([]))
   |> should.equal(0.0)
 
-  let set_a: set.Set(Int) = set.from_list([0, 1, 2, 5, 6, 8, 9])
-  let set_b: set.Set(Int) = set.from_list([0, 2, 3, 4, 5, 7, 9])
+  let set_a = set.from_list([0, 1, 2, 5, 6, 8, 9])
+  let set_b = set.from_list([0, 2, 3, 4, 5, 7, 9])
   metrics.sorensen_dice_coefficient(set_a, set_b)
   |> should.equal(2.0 *. 4.0 /. { 7.0 +. 7.0 })
 
-  let set_c: set.Set(Int) = set.from_list([0, 1, 2, 3, 4, 5])
-  let set_d: set.Set(Int) = set.from_list([6, 7, 8, 9, 10])
+  let set_c = set.from_list([0, 1, 2, 3, 4, 5])
+  let set_d = set.from_list([6, 7, 8, 9, 10])
   metrics.sorensen_dice_coefficient(set_c, set_d)
   |> should.equal(2.0 *. 0.0 /. { 6.0 +. 5.0 })
 
-  let set_e: set.Set(String) = set.from_list(["cat", "dog", "hippo", "monkey"])
-  let set_f: set.Set(String) =
-    set.from_list(["monkey", "rhino", "ostrich", "salmon", "spider"])
+  let set_e = set.from_list(["cat", "dog", "hippo", "monkey"])
+  let set_f = set.from_list(["monkey", "rhino", "ostrich", "salmon", "spider"])
   metrics.sorensen_dice_coefficient(set_e, set_f)
   |> should.equal(2.0 *. 1.0 /. { 4.0 +. 5.0 })
 }
@@ -391,20 +389,18 @@ pub fn overlap_coefficient_test() {
   metrics.overlap_coefficient(set.from_list([]), set.from_list([]))
   |> should.equal(0.0)
 
-  let set_a: set.Set(Int) = set.from_list([0, 1, 2, 5, 6, 8, 9])
-  let set_b: set.Set(Int) = set.from_list([0, 2, 3, 4, 5, 7, 9])
+  let set_a = set.from_list([0, 1, 2, 5, 6, 8, 9])
+  let set_b = set.from_list([0, 2, 3, 4, 5, 7, 9])
   metrics.overlap_coefficient(set_a, set_b)
   |> should.equal(4.0 /. 7.0)
 
-  let set_c: set.Set(Int) = set.from_list([0, 1, 2, 3, 4, 5])
-  let set_d: set.Set(Int) = set.from_list([6, 7, 8, 9, 10])
+  let set_c = set.from_list([0, 1, 2, 3, 4, 5])
+  let set_d = set.from_list([6, 7, 8, 9, 10])
   metrics.overlap_coefficient(set_c, set_d)
   |> should.equal(0.0 /. 5.0)
 
-  let set_e: set.Set(String) =
-    set.from_list(["horse", "dog", "hippo", "monkey", "bird"])
-  let set_f: set.Set(String) =
-    set.from_list(["monkey", "bird", "ostrich", "salmon"])
+  let set_e = set.from_list(["horse", "dog", "hippo", "monkey", "bird"])
+  let set_f = set.from_list(["monkey", "bird", "ostrich", "salmon"])
   metrics.overlap_coefficient(set_e, set_f)
   |> should.equal(2.0 /. 4.0)
 }
@@ -440,7 +436,7 @@ pub fn cosine_similarity_test() {
   metrics.cosine_similarity([-1.0, -2.0, -3.0], [1.0, 2.0, 3.0], option.None)
   |> should.equal(Ok(-1.0))
 
-  // Try with arbitrary valid input 
+  // Try with arbitrary valid input
   let assert Ok(result) =
     metrics.cosine_similarity([1.0, 2.0, 3.0], [4.0, 5.0, 6.0], option.None)
   result

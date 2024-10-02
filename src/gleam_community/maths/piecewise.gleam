@@ -424,9 +424,9 @@ fn do_round(p: Float, x: Float, mode: option.Option(RoundingMode)) -> Float {
 }
 
 fn round_to_nearest(p: Float, x: Float) -> Float {
-  let xabs: Float = float_absolute_value(x) *. p
-  let xabs_truncated: Float = truncate_float(xabs)
-  let remainder: Float = xabs -. xabs_truncated
+  let xabs = float_absolute_value(x) *. p
+  let xabs_truncated = truncate_float(xabs)
+  let remainder = xabs -. xabs_truncated
   case remainder {
     _ if remainder >. 0.5 -> float_sign(x) *. truncate_float(xabs +. 1.0) /. p
     _ if remainder == 0.5 -> {
@@ -441,8 +441,8 @@ fn round_to_nearest(p: Float, x: Float) -> Float {
 }
 
 fn round_ties_away(p: Float, x: Float) -> Float {
-  let xabs: Float = float_absolute_value(x) *. p
-  let remainder: Float = xabs -. truncate_float(xabs)
+  let xabs = float_absolute_value(x) *. p
+  let remainder = xabs -. truncate_float(xabs)
   case remainder {
     _ if remainder >=. 0.5 -> float_sign(x) *. truncate_float(xabs +. 1.0) /. p
     _ -> float_sign(x) *. truncate_float(xabs) /. p
@@ -450,9 +450,9 @@ fn round_ties_away(p: Float, x: Float) -> Float {
 }
 
 fn round_ties_up(p: Float, x: Float) -> Float {
-  let xabs: Float = float_absolute_value(x) *. p
-  let xabs_truncated: Float = truncate_float(xabs)
-  let remainder: Float = xabs -. xabs_truncated
+  let xabs = float_absolute_value(x) *. p
+  let xabs_truncated = truncate_float(xabs)
+  let remainder = xabs -. xabs_truncated
   case remainder {
     _ if remainder >=. 0.5 && x >=. 0.0 ->
       float_sign(x) *. truncate_float(xabs +. 1.0) /. p
@@ -823,7 +823,7 @@ pub fn int_flip_sign(x: Int) -> Int {
 ///     </a>
 /// </div>
 ///
-pub fn minimum(x: a, y: a, compare: fn(a, a) -> order.Order) -> a {
+pub fn minimum(x: a, y: a, compare: fn(a, a) -> order.Order) {
   case compare(x, y) {
     order.Lt -> x
     order.Eq -> x
@@ -869,7 +869,7 @@ pub fn minimum(x: a, y: a, compare: fn(a, a) -> order.Order) -> a {
 ///     </a>
 /// </div>
 ///
-pub fn maximum(x: a, y: a, compare: fn(a, a) -> order.Order) -> a {
+pub fn maximum(x: a, y: a, compare: fn(a, a) -> order.Order) {
   case compare(x, y) {
     order.Lt -> y
     order.Eq -> y
@@ -909,7 +909,7 @@ pub fn maximum(x: a, y: a, compare: fn(a, a) -> order.Order) -> a {
 ///     </a>
 /// </div>
 ///
-pub fn minmax(x: a, y: a, compare: fn(a, a) -> order.Order) -> #(a, a) {
+pub fn minmax(x: a, y: a, compare: fn(a, a) -> order.Order) {
   #(minimum(x, y, compare), maximum(x, y, compare))
 }
 
@@ -954,7 +954,7 @@ pub fn list_minimum(
     [] -> Error(Nil)
     [x, ..rest] ->
       Ok(
-        list.fold(rest, x, fn(acc: a, element: a) {
+        list.fold(rest, x, fn(acc, element) {
           case compare(element, acc) {
             order.Lt -> element
             _ -> acc
@@ -1006,7 +1006,7 @@ pub fn list_maximum(
     [] -> Error(Nil)
     [x, ..rest] ->
       Ok(
-        list.fold(rest, x, fn(acc: a, element: a) {
+        list.fold(rest, x, fn(acc, element) {
           case compare(acc, element) {
             order.Lt -> element
             _ -> acc
@@ -1067,13 +1067,13 @@ pub fn arg_minimum(
         arr
         |> list_minimum(compare)
       arr
-      |> list.index_map(fn(element: a, index: Int) -> Int {
+      |> list.index_map(fn(element, index) {
         case compare(element, min) {
           order.Eq -> index
           _ -> -1
         }
       })
-      |> list.filter(fn(index: Int) -> Bool {
+      |> list.filter(fn(index) {
         case index {
           -1 -> False
           _ -> True
@@ -1135,13 +1135,13 @@ pub fn arg_maximum(
         arr
         |> list_maximum(compare)
       arr
-      |> list.index_map(fn(element: a, index: Int) -> Int {
+      |> list.index_map(fn(element, index) {
         case compare(element, max) {
           order.Eq -> index
           _ -> -1
         }
       })
-      |> list.filter(fn(index: Int) -> Bool {
+      |> list.filter(fn(index) {
         case index {
           -1 -> False
           _ -> True
@@ -1200,9 +1200,9 @@ pub fn extrema(
     [] -> Error(Nil)
     [x, ..rest] ->
       Ok(
-        list.fold(rest, #(x, x), fn(acc: #(a, a), element: a) {
-          let first: a = pair.first(acc)
-          let second: a = pair.second(acc)
+        list.fold(rest, #(x, x), fn(acc, element) {
+          let first = pair.first(acc)
+          let second = pair.second(acc)
           case compare(element, first), compare(second, element) {
             order.Lt, order.Lt -> #(element, element)
             order.Lt, _ -> #(element, second)

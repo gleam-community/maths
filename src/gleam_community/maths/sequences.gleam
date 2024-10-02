@@ -102,7 +102,7 @@ pub fn arange(
         |> conversion.float_to_int()
 
       iterator.range(0, num - 1)
-      |> iterator.map(fn(i: Int) {
+      |> iterator.map(fn(i) {
         start +. conversion.int_to_float(i) *. step_abs *. direction
       })
     }
@@ -161,7 +161,7 @@ pub fn linear_space(
   num: Int,
   endpoint: Bool,
 ) -> Result(iterator.Iterator(Float), Nil) {
-  let direction: Float = case start <=. stop {
+  let direction = case start <=. stop {
     True -> 1.0
     False -> -1.0
   }
@@ -179,7 +179,7 @@ pub fn linear_space(
   case num > 0 {
     True -> {
       iterator.range(0, num - 1)
-      |> iterator.map(fn(i: Int) -> Float {
+      |> iterator.map(fn(i) {
         start +. conversion.int_to_float(i) *. increment *. direction
       })
       |> Ok
@@ -244,7 +244,7 @@ pub fn logarithmic_space(
     True -> {
       let assert Ok(linspace) = linear_space(start, stop, num, endpoint)
       linspace
-      |> iterator.map(fn(i: Float) -> Float {
+      |> iterator.map(fn(i) {
         let assert Ok(result) = elementary.power(base, i)
         result
       })

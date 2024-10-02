@@ -955,7 +955,7 @@ fn do_logarithm_10(a: Float) -> Float
 /// </div>
 ///
 pub fn power(x: Float, y: Float) -> Result(Float, Nil) {
-  let fractional: Bool = do_ceiling(y) -. y >. 0.0
+  let fractional = do_ceiling(y) -. y >. 0.0
   // In the following check:
   // 1. If the base (x) is negative and the exponent (y) is fractional
   //    then return an error as it will otherwise be an imaginary number

@@ -86,8 +86,8 @@ import gleam_community/maths/piecewise
 /// </div>
 ///
 pub fn gcd(x: Int, y: Int) -> Int {
-  let absx: Int = piecewise.int_absolute_value(x)
-  let absy: Int = piecewise.int_absolute_value(y)
+  let absx = piecewise.int_absolute_value(x)
+  let absy = piecewise.int_absolute_value(y)
   do_gcd(absx, absy)
 }
 
@@ -197,8 +197,8 @@ pub fn int_euclidean_modulo(x: Int, y: Int) -> Int {
 /// </div>
 ///
 pub fn lcm(x: Int, y: Int) -> Int {
-  let absx: Int = piecewise.int_absolute_value(x)
-  let absy: Int = piecewise.int_absolute_value(y)
+  let absx = piecewise.int_absolute_value(x)
+  let absy = piecewise.int_absolute_value(y)
   absx * absy / do_gcd(absx, absy)
 }
 
@@ -240,11 +240,11 @@ pub fn divisors(n: Int) -> List(Int) {
 }
 
 fn find_divisors(n: Int) -> List(Int) {
-  let nabs: Float = piecewise.float_absolute_value(conversion.int_to_float(n))
+  let nabs = piecewise.float_absolute_value(conversion.int_to_float(n))
   let assert Ok(sqrt_result) = elementary.square_root(nabs)
-  let max: Int = conversion.float_to_int(sqrt_result) + 1
+  let max = conversion.float_to_int(sqrt_result) + 1
   list.range(2, max)
-  |> list.fold([1, n], fn(acc: List(Int), i: Int) -> List(Int) {
+  |> list.fold([1, n], fn(acc, i) {
     case n % i == 0 {
       True -> [i, n / i, ..acc]
       False -> acc
@@ -288,7 +288,7 @@ fn find_divisors(n: Int) -> List(Int) {
 /// </div>
 ///
 pub fn proper_divisors(n: Int) -> List(Int) {
-  let divisors: List(Int) = find_divisors(n)
+  let divisors = find_divisors(n)
   divisors
   |> list.take(list.length(divisors) - 1)
 }
@@ -340,12 +340,10 @@ pub fn float_sum(arr: List(Float), weights: option.Option(List(Float))) -> Float
     [], _ -> 0.0
     _, option.None ->
       arr
-      |> list.fold(0.0, fn(acc: Float, a: Float) -> Float { a +. acc })
+      |> list.fold(0.0, fn(acc, a) { a +. acc })
     _, option.Some(warr) -> {
       list.zip(arr, warr)
-      |> list.fold(0.0, fn(acc: Float, a: #(Float, Float)) -> Float {
-        pair.first(a) *. pair.second(a) +. acc
-      })
+      |> list.fold(0.0, fn(acc, a) { pair.first(a) *. pair.second(a) +. acc })
     }
   }
 }
@@ -395,7 +393,7 @@ pub fn int_sum(arr: List(Int)) -> Int {
     [] -> 0
     _ ->
       arr
-      |> list.fold(0, fn(acc: Int, a: Int) -> Int { a + acc })
+      |> list.fold(0, fn(acc, a) { a + acc })
   }
 }
 
@@ -451,7 +449,7 @@ pub fn float_product(
       |> Ok
     _, option.None ->
       arr
-      |> list.fold(1.0, fn(acc: Float, a: Float) -> Float { a *. acc })
+      |> list.fold(1.0, fn(acc, a) { a *. acc })
       |> Ok
     _, option.Some(warr) -> {
       list.zip(arr, warr)
@@ -513,7 +511,7 @@ pub fn int_product(arr: List(Int)) -> Int {
     [] -> 1
     _ ->
       arr
-      |> list.fold(1, fn(acc: Int, a: Int) -> Int { a * acc })
+      |> list.fold(1, fn(acc, a) { a * acc })
   }
 }
 
@@ -563,7 +561,7 @@ pub fn float_cumulative_sum(arr: List(Float)) -> List(Float) {
     [] -> []
     _ ->
       arr
-      |> list.scan(0.0, fn(acc: Float, a: Float) -> Float { a +. acc })
+      |> list.scan(0.0, fn(acc, a) { a +. acc })
   }
 }
 
@@ -613,7 +611,7 @@ pub fn int_cumulative_sum(arr: List(Int)) -> List(Int) {
     [] -> []
     _ ->
       arr
-      |> list.scan(0, fn(acc: Int, a: Int) -> Int { a + acc })
+      |> list.scan(0, fn(acc, a) { a + acc })
   }
 }
 
@@ -665,7 +663,7 @@ pub fn float_cumulative_product(arr: List(Float)) -> List(Float) {
     [] -> []
     _ ->
       arr
-      |> list.scan(1.0, fn(acc: Float, a: Float) -> Float { a *. acc })
+      |> list.scan(1.0, fn(acc, a) { a *. acc })
   }
 }
 
@@ -717,6 +715,6 @@ pub fn int_cumulative_product(arr: List(Int)) -> List(Int) {
     [] -> []
     _ ->
       arr
-      |> list.scan(1, fn(acc: Int, a: Int) -> Int { a * acc })
+      |> list.scan(1, fn(acc, a) { a * acc })
   }
 }

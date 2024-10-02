@@ -78,8 +78,8 @@ fn validate_lists(
     [], _ -> Error(Nil)
     _, [] -> Error(Nil)
     _, _ -> {
-      let xarr_length: Int = list.length(xarr)
-      let yarr_length: Int = list.length(yarr)
+      let xarr_length = list.length(xarr)
+      let yarr_length = list.length(yarr)
       case xarr_length == yarr_length, weights {
         False, _ -> Error(Nil)
         True, option.None -> {
@@ -87,7 +87,7 @@ fn validate_lists(
           |> Ok
         }
         True, option.Some(warr) -> {
-          let warr_length: Int = list.length(warr)
+          let warr_length = list.length(warr)
           case xarr_length == warr_length {
             True -> {
               validate_weights(warr)
@@ -169,9 +169,9 @@ pub fn norm(
       0.0
       |> Ok
     _, option.None -> {
-      let aggregate: Float =
+      let aggregate =
         arr
-        |> list.fold(0.0, fn(accumulator: Float, element: Float) -> Float {
+        |> list.fold(0.0, fn(accumulator, element) {
           let assert Ok(result) =
             piecewise.float_absolute_value(element)
             |> elementary.power(p)
@@ -182,28 +182,25 @@ pub fn norm(
       |> Ok
     }
     _, option.Some(warr) -> {
-      let arr_length: Int = list.length(arr)
-      let warr_length: Int = list.length(warr)
+      let arr_length = list.length(arr)
+      let warr_length = list.length(warr)
       case arr_length == warr_length {
         True -> {
           case validate_weights(warr) {
             Ok(_) -> {
-              let tuples: List(#(Float, Float)) = list.zip(arr, warr)
-              let aggregate: Float =
+              let tuples = list.zip(arr, warr)
+              let aggregate =
                 tuples
-                |> list.fold(
-                  0.0,
-                  fn(accumulator: Float, tuple: #(Float, Float)) -> Float {
-                    let first_element: Float = pair.first(tuple)
-                    let second_element: Float = pair.second(tuple)
-                    let assert Ok(result) =
-                      elementary.power(
-                        piecewise.float_absolute_value(first_element),
-                        p,
-                      )
-                    second_element *. result +. accumulator
-                  },
-                )
+                |> list.fold(0.0, fn(accumulator, tuple) {
+                  let first_element = pair.first(tuple)
+                  let second_element = pair.second(tuple)
+                  let assert Ok(result) =
+                    elementary.power(
+                      piecewise.float_absolute_value(first_element),
+                      p,
+                    )
+                  second_element *. result +. accumulator
+                })
               let assert Ok(result) = elementary.power(aggregate, 1.0 /. p)
               result
               |> Ok
@@ -353,7 +350,6 @@ pub fn minkowski_distance(
         |> list.map(fn(tuple: #(Float, Float)) -> Float {
           pair.first(tuple) -. pair.second(tuple)
         })
-
       norm(differences, p, weights)
     }
   }
@@ -472,7 +468,7 @@ pub fn chebyshev_distance(
       |> Error
     Ok(_) -> {
       list.zip(xarr, yarr)
-      |> list.map(fn(tuple: #(Float, Float)) -> Float {
+      |> list.map(fn(tuple) {
         { pair.first(tuple) -. pair.second(tuple) }
         |> piecewise.float_absolute_value()
       })
@@ -527,9 +523,7 @@ pub fn mean(arr: List(Float)) -> Result(Float, Nil) {
     _ ->
       arr
       |> arithmetics.float_sum(option.None)
-      |> fn(a: Float) -> Float {
-        a /. conversion.int_to_float(list.length(arr))
-      }
+      |> fn(a) { a /. conversion.int_to_float(list.length(arr)) }
       |> Ok
   }
 }
@@ -625,7 +619,7 @@ fn do_median(
 ///
 ///     pub fn example () {
 ///       // Degrees of freedom
-///       let ddof: Int = 1
+///       let ddof = 1
 ///
 ///       // An empty list returns an error
 ///       []
@@ -695,7 +689,7 @@ pub fn variance(arr: List(Float), ddof: Int) -> Result(Float, Nil) {
 ///
 ///     pub fn example () {
 ///       // Degrees of freedom
-///       let ddof: Int = 1
+///       let ddof = 1
 ///
 ///       // An empty list returns an error
 ///       []
@@ -762,8 +756,8 @@ pub fn standard_deviation(arr: List(Float), ddof: Int) -> Result(Float, Nil) {
 ///     import gleam/set
 ///
 ///     pub fn example () {
-///       let xset: set.Set(String) = set.from_list(["cat", "dog", "hippo", "monkey"])
-///       let yset: set.Set(String) =
+///       let xset = set.from_list(["cat", "dog", "hippo", "monkey"])
+///       let yset =
 ///         set.from_list(["monkey", "rhino", "ostrich", "salmon"])
 ///       metrics.jaccard_index(xset, yset)
 ///       |> should.equal(1.0 /. 7.0)
@@ -814,8 +808,8 @@ pub fn jaccard_index(xset: set.Set(a), yset: set.Set(a)) -> Float {
 ///     import gleam/set
 ///
 ///     pub fn example () {
-///       let xset: set.Set(String) = set.from_list(["cat", "dog", "hippo", "monkey"])
-///       let yset: set.Set(String) =
+///       let xset = set.from_list(["cat", "dog", "hippo", "monkey"])
+///       let yset =
 ///         set.from_list(["monkey", "rhino", "ostrich", "salmon", "spider"])
 ///       metrics.sorensen_dice_coefficient(xset, yset)
 ///       |> should.equal(2.0 *. 1.0 /. { 4.0 +. 5.0 })
@@ -871,8 +865,8 @@ pub fn sorensen_dice_coefficient(xset: set.Set(a), yset: set.Set(a)) -> Float {
 ///     import gleam/set
 ///
 ///     pub fn example () {
-///       let yset: set.Set(String) = set.from_list(["cat", "dog", "hippo", "monkey"])
-///       let xset: set.Set(String) =
+///       let yset = set.from_list(["cat", "dog", "hippo", "monkey"])
+///       let xset =
 ///         set.from_list(["monkey", "rhino", "ostrich", "salmon"])
 ///       // Test Jaccard index (alpha = beta = 1)
 ///       metrics.tversky_index(xset, yset, 1.0, 1.0)
@@ -894,15 +888,15 @@ pub fn tversky_index(
 ) -> Result(Float, Nil) {
   case alpha >=. 0.0, beta >=. 0.0 {
     True, True -> {
-      let intersection: Float =
+      let intersection =
         set.intersection(xset, yset)
         |> set.size()
         |> conversion.int_to_float()
-      let difference1: Float =
+      let difference1 =
         set.difference(xset, yset)
         |> set.size()
         |> conversion.int_to_float()
-      let difference2: Float =
+      let difference2 =
         set.difference(yset, xset)
         |> set.size()
         |> conversion.int_to_float()
@@ -949,9 +943,9 @@ pub fn tversky_index(
 ///     import gleam/set
 ///
 ///     pub fn example () {
-///       let set_a: set.Set(String) =
+///       let set_a =
 ///         set.from_list(["horse", "dog", "hippo", "monkey", "bird"])
-///       let set_b: set.Set(String) =
+///       let set_b =
 ///         set.from_list(["monkey", "bird", "ostrich", "salmon"])
 ///       metrics.overlap_coefficient(set_a, set_b)
 ///       |> should.equal(2.0 /. 4.0)
@@ -965,11 +959,11 @@ pub fn tversky_index(
 /// </div>
 ///
 pub fn overlap_coefficient(xset: set.Set(a), yset: set.Set(a)) -> Float {
-  let intersection: Float =
+  let intersection =
     set.intersection(xset, yset)
     |> set.size()
     |> conversion.int_to_float()
-  let minsize: Float =
+  let minsize =
     piecewise.minimum(set.size(xset), set.size(yset), int.compare)
     |> conversion.int_to_float()
   intersection /. minsize
@@ -1039,36 +1033,34 @@ pub fn cosine_similarity(
       msg
       |> Error
     Ok(_) -> {
-      let zipped_arr: List(#(Float, Float)) = list.zip(xarr, yarr)
+      let zipped_arr = list.zip(xarr, yarr)
 
-      let numerator_elements: List(Float) =
+      let numerator_elements =
         zipped_arr
-        |> list.map(fn(tuple: #(Float, Float)) -> Float {
-          pair.first(tuple) *. pair.second(tuple)
-        })
+        |> list.map(fn(tuple) { pair.first(tuple) *. pair.second(tuple) })
 
       case weights {
         option.None -> {
-          let numerator: Float =
+          let numerator =
             numerator_elements
             |> arithmetics.float_sum(option.None)
 
           let assert Ok(xarr_norm) = norm(xarr, 2.0, option.None)
           let assert Ok(yarr_norm) = norm(yarr, 2.0, option.None)
-          let denominator: Float = {
+          let denominator = {
             xarr_norm *. yarr_norm
           }
           numerator /. denominator
           |> Ok
         }
         _ -> {
-          let numerator: Float =
+          let numerator =
             numerator_elements
             |> arithmetics.float_sum(weights)
 
           let assert Ok(xarr_norm) = norm(xarr, 2.0, weights)
           let assert Ok(yarr_norm) = norm(yarr, 2.0, weights)
-          let denominator: Float = {
+          let denominator = {
             xarr_norm *. yarr_norm
           }
           numerator /. denominator
@@ -1137,7 +1129,7 @@ pub fn canberra_distance(
       msg
       |> Error
     Ok(_) -> {
-      let arr: List(Float) =
+      let arr =
         list.zip(xarr, yarr)
         |> list.map(canberra_distance_helper)
 
@@ -1158,9 +1150,9 @@ pub fn canberra_distance(
 }
 
 fn canberra_distance_helper(tuple: #(Float, Float)) -> Float {
-  let numerator: Float =
+  let numerator =
     piecewise.float_absolute_value({ pair.first(tuple) -. pair.second(tuple) })
-  let denominator: Float = {
+  let denominator = {
     piecewise.float_absolute_value(pair.first(tuple))
     +. piecewise.float_absolute_value(pair.second(tuple))
   }
@@ -1230,17 +1222,17 @@ pub fn braycurtis_distance(
       msg
       |> Error
     Ok(_) -> {
-      let zipped_arr: List(#(Float, Float)) = list.zip(xarr, yarr)
-      let numerator_elements: List(Float) =
+      let zipped_arr = list.zip(xarr, yarr)
+      let numerator_elements =
         zipped_arr
-        |> list.map(fn(tuple: #(Float, Float)) -> Float {
+        |> list.map(fn(tuple) {
           piecewise.float_absolute_value({
             pair.first(tuple) -. pair.second(tuple)
           })
         })
-      let denominator_elements: List(Float) =
+      let denominator_elements =
         zipped_arr
-        |> list.map(fn(tuple: #(Float, Float)) -> Float {
+        |> list.map(fn(tuple) {
           piecewise.float_absolute_value({
             pair.first(tuple) +. pair.second(tuple)
           })
