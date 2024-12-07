@@ -11,46 +11,44 @@ The library supports both targets: Erlang and JavaScript.
 
 ```gleam
 import gleam/float
-import gleam/iterator
-import gleam/option.{Some}
-import gleam_community/maths/arithmetics
-import gleam_community/maths/combinatorics.{WithoutRepetitions}
-import gleam_community/maths/elementary
-import gleam_community/maths/piecewise
-import gleam_community/maths/predicates
+import gleam/yielder
+import gleam_community/maths
 import gleeunit/should
 
 pub fn example() {
   // Evaluate the sine function
-  let result = elementary.sin(elementary.pi())
+  let result = maths.sin(maths.pi())
 
   // Set the relative and absolute tolerance
-  let assert Ok(absolute_tol) = elementary.power(10.0, -6.0)
+  let assert Ok(absolute_tol) = float.power(10.0, -6.0)
   let relative_tol = 0.0
 
   // Check that the value is very close to 0.0
   // That is, if 'result' is within +/- 10^(-6)
-  predicates.is_close(result, 0.0, relative_tol, absolute_tol)
+  maths.is_close(result, 0.0, relative_tol, absolute_tol)
   |> should.be_true()
 
   // Find the greatest common divisor
-  arithmetics.gcd(54, 24)
+  maths.gcd(54, 24)
   |> should.equal(6)
 
   // Find the minimum and maximum of a list
-  piecewise.extrema([10.0, 3.0, 50.0, 20.0, 3.0], float.compare)
+  maths.extrema([10.0, 3.0, 50.0, 20.0, 3.0], float.compare)
   |> should.equal(Ok(#(3.0, 50.0)))
 
   // Determine if a number is fractional
-  predicates.is_fractional(0.3333)
+  maths.is_fractional(0.3333)
   |> should.equal(True)
 
   // Generate all k = 2 combinations of [1, 2, 3]
-  let assert Ok(combinations) =
-    combinatorics.list_combination([1, 2, 3], 2, Some(WithoutRepetitions))
+  let assert Ok(combinations) = maths.list_combination([1, 2, 3], 2)
   combinations
-  |> iterator.to_list()
+  |> yielder.to_list()
   |> should.equal([[1, 2], [1, 3], [2, 3]])
+
+  // Compute the Cosine Similarity between two (orthogonal) vectors
+  maths.cosine_similarity([#(-1.0, 1.0), #(1.0, 1.0), #(0.0, -1.0)])
+  |> should.equal(Ok(0.0))
 }
 
 ```
