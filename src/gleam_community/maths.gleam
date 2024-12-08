@@ -325,8 +325,7 @@ pub fn weighted_sum(arr: List(#(Float, Float))) -> Result(Float, Nil) {
   case arr {
     [] -> Ok(0.0)
     _ -> {
-      let weight_is_negative =
-        list.any(arr, fn(tuple: #(Float, Float)) { tuple.1 <. 0.0 })
+      let weight_is_negative = list.any(arr, fn(tuple) { tuple.1 <. 0.0 })
       case weight_is_negative {
         True -> Error(Nil)
         False -> {
@@ -391,18 +390,14 @@ pub fn weighted_product(arr: List(#(Float, Float))) -> Result(Float, Nil) {
   case arr {
     [] -> Ok(1.0)
     _ -> {
-      let weight_is_negative =
-        list.any(arr, fn(tuple: #(Float, Float)) { tuple.1 <. 0.0 })
+      let weight_is_negative = list.any(arr, fn(tuple) { tuple.1 <. 0.0 })
       case weight_is_negative {
         True -> Error(Nil)
         False -> {
-          list.map(arr, fn(a: #(Float, Float)) -> Result(Float, Nil) {
-            float.power(a.0, a.1)
-          })
-          |> result.all
-          |> result.map(fn(prods) {
-            prods
-            |> list.fold(1.0, fn(acc: Float, a: Float) -> Float { a *. acc })
+          list.map(arr, fn(tuple) { float.power(tuple.0, tuple.1) })
+          |> result.all()
+          |> result.map(fn(products) {
+            list.fold(products, 1.0, fn(acc, element) { element *. acc })
           })
         }
       }
@@ -453,7 +448,7 @@ pub fn weighted_product(arr: List(#(Float, Float))) -> Result(Float, Nil) {
 pub fn cumulative_sum(arr: List(Float)) -> List(Float) {
   case arr {
     [] -> []
-    _ -> list.scan(arr, 0.0, fn(acc, a) { a +. acc })
+    _ -> list.scan(arr, 0.0, fn(acc, element) { element +. acc })
   }
 }
 
@@ -500,7 +495,7 @@ pub fn cumulative_sum(arr: List(Float)) -> List(Float) {
 pub fn int_cumulative_sum(arr: List(Int)) -> List(Int) {
   case arr {
     [] -> []
-    _ -> list.scan(arr, 0, fn(acc, a) { a + acc })
+    _ -> list.scan(arr, 0, fn(acc, element) { element + acc })
   }
 }
 
@@ -548,7 +543,7 @@ pub fn int_cumulative_sum(arr: List(Int)) -> List(Int) {
 pub fn cumulative_product(arr: List(Float)) -> List(Float) {
   case arr {
     [] -> []
-    _ -> list.scan(arr, 1.0, fn(acc, a) { a *. acc })
+    _ -> list.scan(arr, 1.0, fn(acc, element) { element *. acc })
   }
 }
 
@@ -596,7 +591,7 @@ pub fn cumulative_product(arr: List(Float)) -> List(Float) {
 pub fn int_cumulative_product(arr: List(Int)) -> List(Int) {
   case arr {
     [] -> []
-    _ -> list.scan(arr, 1, fn(acc, a) { a * acc })
+    _ -> list.scan(arr, 1, fn(acc, element) { element * acc })
   }
 }
 
@@ -2762,7 +2757,9 @@ pub fn combination(n: Int, k: Int) -> Result(Int, Nil) {
         False -> n - k
       }
       Ok(
-        list.fold(list.range(1, min), 1, fn(acc, x) { acc * { n + 1 - x } / x }),
+        list.fold(list.range(1, min), 1, fn(acc, element) {
+          acc * { n + 1 - element } / element
+        }),
       )
     }
   }
@@ -3091,8 +3088,8 @@ fn remove_first_by_index(
   arr: Yielder(#(Int, a)),
   index_to_remove: Int,
 ) -> Yielder(#(Int, a)) {
-  yielder.flat_map(arr, fn(arg) {
-    let #(index, element) = arg
+  yielder.flat_map(arr, fn(tuple) {
+    let #(index, element) = tuple
     case index == index_to_remove {
       True -> yielder.empty()
       False -> yielder.single(#(index, element))
@@ -3139,7 +3136,8 @@ pub fn list_permutation(arr: List(a), k: Int) -> Result(Yielder(List(a)), Nil) {
     _, _ if k < 0 -> Error(Nil)
     _, arr_length if k > arr_length -> Error(Nil)
     _, _ -> {
-      let indexed_arr = list.index_map(arr, fn(x, i) { #(i, x) })
+      let indexed_arr =
+        list.index_map(arr, fn(element, index) { #(index, element) })
       Ok(do_list_permutation_without_repetitions(
         yielder.from_list(indexed_arr),
         k,
@@ -3155,8 +3153,8 @@ fn do_list_permutation_without_repetitions(
   case k {
     0 -> yielder.single([])
     _ ->
-      yielder.flat_map(arr, fn(arg) {
-        let #(index, element) = arg
+      yielder.flat_map(arr, fn(tuple) {
+        let #(index, element) = tuple
         let remaining = remove_first_by_index(arr, index)
         let permutations =
           do_list_permutation_without_repetitions(remaining, k - 1)
@@ -3207,21 +3205,22 @@ pub fn list_permutation_with_repetitions(
   case k {
     _ if k < 0 -> Error(Nil)
     _ -> {
-      let indexed_arr = list.index_map(arr, fn(x, i) { #(i, x) })
-      Ok(do_list_permutation_with_repetitions(indexed_arr, k))
+      let indexed_arr =
+        list.index_map(arr, fn(element, index) { #(index, element) })
+      Ok(do_list_permutation_with_repetitions(yielder.from_list(indexed_arr), k))
     }
   }
 }
 
 fn do_list_permutation_with_repetitions(
-  arr: List(#(Int, a)),
+  arr: Yielder(#(Int, a)),
   k: Int,
 ) -> Yielder(List(a)) {
   case k {
     0 -> yielder.single([])
     _ ->
-      yielder.flat_map(arr |> yielder.from_list, fn(arg) {
-        let #(_, element) = arg
+      yielder.flat_map(arr, fn(tuple) {
+        let #(_, element) = tuple
         // Allow the same element (by index) to be reused in future recursive calls
         let permutations = do_list_permutation_with_repetitions(arr, k - 1)
         // Prepend the current element to each generated permutation
@@ -3265,9 +3264,9 @@ fn do_list_permutation_with_repetitions(
 /// </div>
 ///
 pub fn cartesian_product(xset: set.Set(a), yset: set.Set(b)) -> set.Set(#(a, b)) {
-  set.fold(xset, set.new(), fn(accumulator0: set.Set(#(a, b)), member0: a) {
-    set.fold(yset, accumulator0, fn(accumulator1: set.Set(#(a, b)), member1: b) {
-      set.insert(accumulator1, #(member0, member1))
+  set.fold(xset, set.new(), fn(acc0, element0) {
+    set.fold(yset, acc0, fn(acc1, element1) {
+      set.insert(acc1, #(element0, element1))
     })
   })
 }
@@ -3319,9 +3318,9 @@ pub fn norm(arr: List(Float), p: Float) -> Result(Float, Nil) {
     [] -> Ok(0.0)
     _ -> {
       let aggregate =
-        list.fold(arr, 0.0, fn(accumulator, element) {
+        list.fold(arr, 0.0, fn(acc, element) {
           let assert Ok(result) = float.power(float.absolute_value(element), p)
-          result +. accumulator
+          result +. acc
         })
       float.power(aggregate, 1.0 /. p)
     }
@@ -3378,15 +3377,14 @@ pub fn norm_with_weights(
   case arr {
     [] -> Ok(0.0)
     _ -> {
-      let weight_is_negative =
-        list.any(arr, fn(tuple: #(Float, Float)) { tuple.1 <. 0.0 })
+      let weight_is_negative = list.any(arr, fn(tuple) { tuple.1 <. 0.0 })
       case weight_is_negative {
         False -> {
           let aggregate =
-            list.fold(arr, 0.0, fn(accumulator, tuple) {
+            list.fold(arr, 0.0, fn(acc, tuple) {
               let assert Ok(result) =
                 float.power(float.absolute_value(tuple.0), p)
-              tuple.1 *. result +. accumulator
+              tuple.1 *. result +. acc
             })
           float.power(aggregate, 1.0 /. p)
         }
@@ -3527,10 +3525,7 @@ pub fn minkowski_distance(
       case p <. 1.0 {
         True -> Error(Nil)
         False -> {
-          let differences =
-            list.map(arr, fn(tuple: #(Float, Float)) -> Float {
-              tuple.0 -. tuple.1
-            })
+          let differences = list.map(arr, fn(tuple) { tuple.0 -. tuple.1 })
           norm(differences, p)
         }
       }
@@ -3591,15 +3586,12 @@ pub fn minkowski_distance_with_weights(
   case arr {
     [] -> Error(Nil)
     _ -> {
-      let weight_is_negative =
-        list.any(arr, fn(tuple: #(Float, Float, Float)) { tuple.2 <. 0.0 })
+      let weight_is_negative = list.any(arr, fn(tuple) { tuple.2 <. 0.0 })
 
       case p <. 1.0, weight_is_negative {
         False, False -> {
           let differences =
-            list.map(arr, fn(tuple: #(Float, Float, Float)) -> #(Float, Float) {
-              #(tuple.0 -. tuple.1, tuple.2)
-            })
+            list.map(arr, fn(tuple) { #(tuple.0 -. tuple.1, tuple.2) })
           norm_with_weights(differences, p)
         }
         _, _ -> Error(Nil)
@@ -3783,8 +3775,7 @@ pub fn chebyshev_distance_with_weights(
   case arr {
     [] -> Error(Nil)
     _ -> {
-      let weight_is_negative =
-        list.any(arr, fn(tuple: #(Float, Float, Float)) { tuple.2 <. 0.0 })
+      let weight_is_negative = list.any(arr, fn(tuple) { tuple.2 <. 0.0 })
 
       case weight_is_negative {
         True -> Error(Nil)
@@ -3949,7 +3940,7 @@ fn do_median(
 ///         <small>Back to top ↑</small>
 ///     </a>
 /// </div>
-///
+/// 
 pub fn variance(arr: List(Float), ddof: Int) -> Result(Float, Nil) {
   case arr, ddof {
     [], _ -> Error(Nil)
@@ -3957,13 +3948,13 @@ pub fn variance(arr: List(Float), ddof: Int) -> Result(Float, Nil) {
     _, _ -> {
       let assert Ok(mean) = mean(arr)
       Ok(
-        list.map(arr, fn(a: Float) -> Float {
-          let assert Ok(result) = float.power(a -. mean, 2.0)
+        list.map(arr, fn(element) {
+          let assert Ok(result) = float.power(element -. mean, 2.0)
           result
         })
         |> float.sum()
-        |> fn(a: Float) -> Float {
-          a /. { int.to_float(list.length(arr)) -. int.to_float(ddof) }
+        |> fn(element) {
+          element /. { int.to_float(list.length(arr)) -. int.to_float(ddof) }
         },
       )
     }
@@ -4318,13 +4309,10 @@ pub fn overlap_coefficient(xset: set.Set(a), yset: set.Set(a)) -> Float {
 ///
 pub fn cosine_similarity(arr: List(#(Float, Float))) -> Result(Float, Nil) {
   let numerator =
-    arr
-    |> list.fold(0.0, fn(accumulator, tuple) {
-      accumulator +. tuple.0 *. tuple.1
-    })
+    list.fold(arr, 0.0, fn(acc, tuple) { acc +. tuple.0 *. tuple.1 })
 
-  let xarr = arr |> list.map(fn(tuple: #(Float, Float)) { tuple.0 })
-  let yarr = arr |> list.map(fn(tuple: #(Float, Float)) { tuple.1 })
+  let xarr = list.map(arr, fn(tuple) { tuple.0 })
+  let yarr = list.map(arr, fn(tuple) { tuple.1 })
 
   let assert Ok(xarr_norm) = norm(xarr, 2.0)
   let assert Ok(yarr_norm) = norm(yarr, 2.0)
@@ -4401,26 +4389,21 @@ pub fn cosine_similarity(arr: List(#(Float, Float))) -> Result(Float, Nil) {
 pub fn cosine_similarity_with_weights(
   arr: List(#(Float, Float, Float)),
 ) -> Result(Float, Nil) {
-  let weight_is_negative =
-    list.any(arr, fn(tuple: #(Float, Float, Float)) { tuple.2 <. 0.0 })
+  let weight_is_negative = list.any(arr, fn(tuple) { tuple.2 <. 0.0 })
 
   case weight_is_negative {
     False -> {
       let numerator =
-        arr
-        |> list.fold(0.0, fn(accumulator, tuple) {
-          accumulator +. tuple.0 *. tuple.1 *. tuple.2
+        list.fold(arr, 0.0, fn(acc, tuple) {
+          acc +. tuple.0 *. tuple.1 *. tuple.2
         })
 
-      let xarr =
-        arr
-        |> list.map(fn(tuple: #(Float, Float, Float)) { #(tuple.0, tuple.2) })
-      let yarr =
-        arr
-        |> list.map(fn(tuple: #(Float, Float, Float)) { #(tuple.1, tuple.2) })
+      let xarr = list.map(arr, fn(tuple) { #(tuple.0, tuple.2) })
+      let yarr = list.map(arr, fn(tuple) { #(tuple.1, tuple.2) })
 
       let assert Ok(xarr_norm) = norm_with_weights(xarr, 2.0)
       let assert Ok(yarr_norm) = norm_with_weights(yarr, 2.0)
+
       let denominator = {
         xarr_norm *. yarr_norm
       }
@@ -4472,12 +4455,12 @@ pub fn canberra_distance(arr: List(#(Float, Float))) -> Result(Float, Nil) {
     [] -> Error(Nil)
     _ -> {
       Ok(
-        list.fold(arr, 0.0, fn(accumulator, tuple) {
+        list.fold(arr, 0.0, fn(acc, tuple) {
           let numerator = float.absolute_value({ tuple.0 -. tuple.1 })
           let denominator = {
             float.absolute_value(tuple.0) +. float.absolute_value(tuple.1)
           }
-          accumulator +. numerator /. denominator
+          acc +. numerator /. denominator
         }),
       )
     }
@@ -4528,19 +4511,18 @@ pub fn canberra_distance_with_weights(
   case arr {
     [] -> Error(Nil)
     _ -> {
-      let weight_is_negative =
-        list.any(arr, fn(tuple: #(Float, Float, Float)) { tuple.2 <. 0.0 })
+      let weight_is_negative = list.any(arr, fn(tuple) { tuple.2 <. 0.0 })
 
       case weight_is_negative {
         True -> Error(Nil)
         False -> {
           Ok(
-            list.fold(arr, 0.0, fn(accumulator, tuple) {
+            list.fold(arr, 0.0, fn(acc, tuple) {
               let numerator = float.absolute_value({ tuple.0 -. tuple.1 })
               let denominator = {
                 float.absolute_value(tuple.0) +. float.absolute_value(tuple.1)
               }
-              accumulator +. tuple.2 *. numerator /. denominator
+              acc +. tuple.2 *. numerator /. denominator
             }),
           )
         }
@@ -4595,13 +4577,13 @@ pub fn braycurtis_distance(arr: List(#(Float, Float))) -> Result(Float, Nil) {
     [] -> Error(Nil)
     _ -> {
       let numerator =
-        list.fold(arr, 0.0, fn(accumulator, tuple) {
-          accumulator +. float.absolute_value({ tuple.0 -. tuple.1 })
+        list.fold(arr, 0.0, fn(acc, tuple) {
+          acc +. float.absolute_value({ tuple.0 -. tuple.1 })
         })
 
       let denominator =
-        list.fold(arr, 0.0, fn(accumulator, tuple) {
-          accumulator +. float.absolute_value({ tuple.0 +. tuple.1 })
+        list.fold(arr, 0.0, fn(acc, tuple) {
+          acc +. float.absolute_value({ tuple.0 +. tuple.1 })
         })
 
       Ok({ numerator /. denominator })
@@ -4656,24 +4638,19 @@ pub fn braycurtis_distance_with_weights(
   case arr {
     [] -> Error(Nil)
     _ -> {
-      let weight_is_negative =
-        list.any(arr, fn(tuple: #(Float, Float, Float)) { tuple.2 <. 0.0 })
+      let weight_is_negative = list.any(arr, fn(tuple) { tuple.2 <. 0.0 })
 
       case weight_is_negative {
         True -> Error(Nil)
         False -> {
           let numerator =
-            list.fold(arr, 0.0, fn(accumulator, tuple) {
-              accumulator
-              +. tuple.2
-              *. float.absolute_value({ tuple.0 -. tuple.1 })
+            list.fold(arr, 0.0, fn(acc, tuple) {
+              acc +. tuple.2 *. float.absolute_value({ tuple.0 -. tuple.1 })
             })
 
           let denominator =
-            list.fold(arr, 0.0, fn(accumulator, tuple) {
-              accumulator
-              +. tuple.2
-              *. float.absolute_value({ tuple.0 +. tuple.1 })
+            list.fold(arr, 0.0, fn(acc, tuple) {
+              acc +. tuple.2 *. float.absolute_value({ tuple.0 +. tuple.1 })
             })
 
           Ok({ numerator /. denominator })
@@ -5355,8 +5332,8 @@ pub fn arange(start: Float, stop: Float, increment: Float) -> Yielder(Float) {
       let distance = float.absolute_value(start -. stop)
       let num = float.round(distance /. increment_abs)
 
-      yielder.map(yielder.range(0, num - 1), fn(i) {
-        start +. int.to_float(i) *. increment_abs *. direction
+      yielder.map(yielder.range(0, num - 1), fn(index) {
+        start +. int.to_float(index) *. increment_abs *. direction
       })
     }
   }
@@ -5423,8 +5400,8 @@ pub fn linear_space(
   case steps > 0 {
     True -> {
       Ok(
-        yielder.map(yielder.range(0, steps - 1), fn(i) {
-          start +. int.to_float(i) *. increment *. direction
+        yielder.map(yielder.range(0, steps - 1), fn(index) {
+          start +. int.to_float(index) *. increment *. direction
         }),
       )
     }
@@ -5469,7 +5446,7 @@ pub fn linear_space(
 ///         <small>Back to top ↑</small>
 ///     </a>
 /// </div>
-///
+/// 
 pub fn logarithmic_space(
   start: Float,
   stop: Float,
@@ -5482,8 +5459,8 @@ pub fn logarithmic_space(
       let assert Ok(linspace) = linear_space(start, stop, steps, endpoint)
 
       Ok(
-        yielder.map(linspace, fn(i) {
-          let assert Ok(result) = float.power(base, i)
+        yielder.map(linspace, fn(value) {
+          let assert Ok(result) = float.power(base, value)
           result
         }),
       )
@@ -5592,7 +5569,7 @@ pub fn geometric_space(
 ///         <small>Back to top ↑</small>
 ///     </a>
 /// </div>
-///
+/// 
 pub fn exponential_space(
   start: Float,
   stop: Float,
@@ -5606,8 +5583,8 @@ pub fn exponential_space(
       let assert Ok(log_space) =
         linear_space(log_start, log_stop, steps, endpoint)
       Ok(
-        yielder.map(log_space, fn(log_value) {
-          let assert Ok(exp_value) = float.power(10.0, log_value)
+        yielder.map(log_space, fn(value) {
+          let assert Ok(exp_value) = float.power(10.0, value)
           exp_value
         }),
       )
