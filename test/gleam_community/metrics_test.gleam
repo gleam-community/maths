@@ -3,7 +3,7 @@ import gleam/set
 import gleam_community/maths
 import gleeunit/should
 
-pub fn float_list_norm_test() {
+pub fn list_norm_test() {
   let assert Ok(tol) = float.power(10.0, -6.0)
 
   // An empty lists returns 0.0
@@ -63,7 +63,7 @@ pub fn float_list_norm_test() {
   |> should.be_true()
 }
 
-pub fn float_list_norm_with_weights_test() {
+pub fn list_norm_with_weights_test() {
   let assert Ok(tol) = float.power(10.0, -6.0)
 
   // An empty lists returns 0.0
@@ -95,7 +95,7 @@ pub fn float_list_norm_with_weights_test() {
   |> should.be_true()
 }
 
-pub fn float_list_manhattan_test() {
+pub fn list_manhattan_test() {
   let assert Ok(tol) = float.power(10.0, -6.0)
 
   // Try with valid input (same as Minkowski distance with p = 1)
@@ -135,7 +135,7 @@ pub fn float_list_manhattan_test() {
   |> should.be_error()
 }
 
-pub fn float_list_minkowski_test() {
+pub fn list_minkowski_test() {
   let assert Ok(tol) = float.power(10.0, -6.0)
 
   // Test order < 1
@@ -209,7 +209,7 @@ pub fn float_list_minkowski_test() {
   |> should.be_error()
 }
 
-pub fn float_list_euclidean_test() {
+pub fn list_euclidean_test() {
   let assert Ok(tol) = float.power(10.0, -6.0)
 
   // Empty lists returns an error
@@ -268,6 +268,10 @@ pub fn mean_test() {
   [1.0, 2.0, 3.0]
   |> maths.mean()
   |> should.equal(Ok(2.0))
+
+  [-1.0, -2.0, -3.0]
+  |> maths.mean()
+  |> should.equal(Ok(-2.0))
 }
 
 pub fn median_test() {

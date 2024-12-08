@@ -2,7 +2,7 @@ import gleam/float
 import gleam_community/maths
 import gleeunit/should
 
-pub fn float_acos_test() {
+pub fn acos_test() {
   let assert Ok(tol) = float.power(10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
@@ -25,7 +25,7 @@ pub fn float_acos_test() {
   |> should.be_error()
 }
 
-pub fn float_acosh_test() {
+pub fn acosh_test() {
   let assert Ok(tol) = float.power(10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
@@ -40,7 +40,7 @@ pub fn float_acosh_test() {
   |> should.be_error()
 }
 
-pub fn float_asin_test() {
+pub fn asin_test() {
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   maths.asin(0.0)
@@ -61,7 +61,7 @@ pub fn float_asin_test() {
   |> should.be_error()
 }
 
-pub fn float_asinh_test() {
+pub fn asinh_test() {
   let assert Ok(tol) = float.power(10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
@@ -74,7 +74,7 @@ pub fn float_asinh_test() {
   |> should.be_true()
 }
 
-pub fn float_atan_test() {
+pub fn atan_test() {
   let assert Ok(tol) = float.power(10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
@@ -135,7 +135,7 @@ pub fn math_atan2_test() {
   |> should.be_true()
 }
 
-pub fn float_atanh_test() {
+pub fn atanh_test() {
   let assert Ok(tol) = float.power(10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
@@ -164,7 +164,7 @@ pub fn float_atanh_test() {
   |> should.be_error()
 }
 
-pub fn float_cos_test() {
+pub fn cos_test() {
   let assert Ok(tol) = float.power(10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
@@ -181,7 +181,7 @@ pub fn float_cos_test() {
   |> should.be_true()
 }
 
-pub fn float_cosh_test() {
+pub fn cosh_test() {
   let assert Ok(tol) = float.power(10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
@@ -198,7 +198,7 @@ pub fn float_cosh_test() {
   // runtime.
 }
 
-pub fn float_sin_test() {
+pub fn sin_test() {
   let assert Ok(tol) = float.power(10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
@@ -215,7 +215,7 @@ pub fn float_sin_test() {
   |> should.be_true()
 }
 
-pub fn float_sinh_test() {
+pub fn sinh_test() {
   let assert Ok(tol) = float.power(10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
@@ -266,7 +266,7 @@ pub fn math_tanh_test() {
   |> should.be_true()
 }
 
-pub fn float_exponential_test() {
+pub fn exponential_test() {
   let assert Ok(tol) = float.power(10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
@@ -283,7 +283,7 @@ pub fn float_exponential_test() {
   // runtime.
 }
 
-pub fn float_natural_logarithm_test() {
+pub fn natural_logarithm_test() {
   let assert Ok(tol) = float.power(10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
@@ -301,7 +301,7 @@ pub fn float_natural_logarithm_test() {
   |> should.be_error()
 }
 
-pub fn float_logarithm_test() {
+pub fn logarithm_test() {
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   maths.logarithm(10.0, 10.0)
@@ -334,7 +334,7 @@ pub fn float_logarithm_test() {
   |> should.be_error()
 }
 
-pub fn float_logarithm_2_test() {
+pub fn logarithm_2_test() {
   let assert Ok(tol) = float.power(10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
@@ -355,7 +355,7 @@ pub fn float_logarithm_2_test() {
   |> should.be_error()
 }
 
-pub fn float_logarithm_10_test() {
+pub fn logarithm_10_test() {
   let assert Ok(tol) = float.power(10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
@@ -380,7 +380,7 @@ pub fn float_logarithm_10_test() {
   |> should.be_error()
 }
 
-pub fn float_nth_root_test() {
+pub fn nth_root_test() {
   maths.nth_root(9.0, 2)
   |> should.equal(Ok(3.0))
 
@@ -399,7 +399,7 @@ pub fn float_nth_root_test() {
   |> should.be_error()
 }
 
-pub fn float_constants_test() {
+pub fn constants_test() {
   let assert Ok(tolerance) = float.power(10.0, -12.0)
 
   // Test that the constant is approximately equal to 2.7128...
