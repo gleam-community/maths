@@ -2,7 +2,7 @@ import gleam/float
 import gleam_community/maths
 import gleeunit/should
 
-pub fn float_to_degree_test() {
+pub fn to_degree_test() {
   let assert Ok(tol) = float.power(10.0, -6.0)
   maths.radians_to_degrees(0.0)
   |> maths.is_close(0.0, 0.0, tol)
@@ -13,7 +13,7 @@ pub fn float_to_degree_test() {
   |> should.be_true()
 }
 
-pub fn float_to_radian_test() {
+pub fn to_radian_test() {
   let assert Ok(tol) = float.power(10.0, -6.0)
   maths.degrees_to_radians(0.0)
   |> maths.is_close(0.0, 0.0, tol)
@@ -24,7 +24,7 @@ pub fn float_to_radian_test() {
   |> should.be_true()
 }
 
-pub fn float_cartesian_to_polar_test() {
+pub fn cartesian_to_polar_test() {
   let assert Ok(tol) = float.power(10.0, -6.0)
 
   // Test: Cartesian (1, 0) -> Polar (1, 0)
@@ -68,7 +68,7 @@ pub fn float_cartesian_to_polar_test() {
   |> should.be_true()
 }
 
-pub fn float_polar_to_cartesian_test() {
+pub fn polar_to_cartesian_test() {
   let assert Ok(tol) = float.power(10.0, -6.0)
 
   // Test: Polar (1, 0) -> Cartesian (1, 0)

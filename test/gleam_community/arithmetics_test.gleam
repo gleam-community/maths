@@ -22,35 +22,35 @@ pub fn int_gcd_test() {
   |> should.equal(6)
 }
 
-pub fn int_euclidean_modulo_test() {
+pub fn euclidean_modulo_test() {
   // Base Case: Positive x, Positive y
   // Note that the truncated, floored, and euclidean 
   // definitions should agree for this base case
-  maths.int_euclidean_modulo(15, 4)
+  maths.euclidean_modulo(15, 4)
   |> should.equal(3)
 
   // Case: Positive x, Negative y
-  maths.int_euclidean_modulo(15, -4)
+  maths.euclidean_modulo(15, -4)
   |> should.equal(3)
 
   // Case: Negative x, Positive y
-  maths.int_euclidean_modulo(-15, 4)
+  maths.euclidean_modulo(-15, 4)
   |> should.equal(1)
 
   // Case: Negative x, Negative y
-  maths.int_euclidean_modulo(-15, -4)
+  maths.euclidean_modulo(-15, -4)
   |> should.equal(1)
 
   // Case: Positive x, Zero y
-  maths.int_euclidean_modulo(5, 0)
+  maths.euclidean_modulo(5, 0)
   |> should.equal(0)
 
   // Case: Zero x, Negative y
-  maths.int_euclidean_modulo(0, 5)
+  maths.euclidean_modulo(0, 5)
   |> should.equal(0)
 }
 
-pub fn int_lcm_test() {
+pub fn lcm_test() {
   maths.lcm(1, 1)
   |> should.equal(1)
 
@@ -70,7 +70,7 @@ pub fn int_lcm_test() {
   |> should.equal(210)
 }
 
-pub fn int_proper_divisors_test() {
+pub fn proper_divisors_test() {
   maths.proper_divisors(2)
   |> should.equal([1])
 
@@ -84,7 +84,7 @@ pub fn int_proper_divisors_test() {
   |> should.equal([1, 2, 3, 6, 9])
 }
 
-pub fn int_divisors_test() {
+pub fn divisors_test() {
   maths.divisors(2)
   |> should.equal([1, 2])
 
@@ -98,19 +98,19 @@ pub fn int_divisors_test() {
   |> should.equal([1, 2, 3, 6, 9, 18])
 }
 
-pub fn float_list_cumulative_sum_test() {
+pub fn list_cumulative_sum_test() {
   // An empty lists returns an empty list
   []
-  |> maths.float_cumulative_sum()
+  |> maths.cumulative_sum()
   |> should.equal([])
 
   // Valid input returns a result
   [1.0, 2.0, 3.0]
-  |> maths.float_cumulative_sum()
+  |> maths.cumulative_sum()
   |> should.equal([1.0, 3.0, 6.0])
 
   [-2.0, 4.0, 6.0]
-  |> maths.float_cumulative_sum()
+  |> maths.cumulative_sum()
   |> should.equal([-2.0, 2.0, 8.0])
 }
 
@@ -130,19 +130,19 @@ pub fn int_list_cumulative_sum_test() {
   |> should.equal([-2, 2, 8])
 }
 
-pub fn float_list_cumulative_product_test() {
+pub fn list_cumulative_product_test() {
   // An empty lists returns an empty list
   []
-  |> maths.float_cumulative_product()
+  |> maths.cumulative_product()
   |> should.equal([])
 
   // Valid input returns a result
   [1.0, 2.0, 3.0]
-  |> maths.float_cumulative_product()
+  |> maths.cumulative_product()
   |> should.equal([1.0, 2.0, 6.0])
 
   [-2.0, 4.0, 6.0]
-  |> maths.float_cumulative_product()
+  |> maths.cumulative_product()
   |> should.equal([-2.0, -8.0, -48.0])
 }
 
@@ -162,42 +162,42 @@ pub fn int_list_cumulative_product_test() {
   |> should.equal([-2, -8, -48])
 }
 
-pub fn float_weighted_product_test() {
+pub fn weighted_product_test() {
   []
-  |> maths.float_weighted_product()
+  |> maths.weighted_product()
   |> should.equal(Ok(1.0))
 
   [#(1.0, 0.0), #(2.0, 0.0), #(3.0, 0.0)]
-  |> maths.float_weighted_product()
+  |> maths.weighted_product()
   |> should.equal(Ok(1.0))
 
   [#(1.0, 1.0), #(2.0, 1.0), #(3.0, 1.0)]
-  |> maths.float_weighted_product()
+  |> maths.weighted_product()
   |> should.equal(Ok(6.0))
 
   let assert Ok(tolerance) = float.power(10.0, -6.0)
   let assert Ok(result) =
     [#(9.0, 0.5), #(10.0, 0.5), #(10.0, 0.5)]
-    |> maths.float_weighted_product()
+    |> maths.weighted_product()
   result
   |> maths.is_close(30.0, 0.0, tolerance)
   |> should.be_true()
 }
 
-pub fn float_weighted_sum_test() {
+pub fn weighted_sum_test() {
   []
-  |> maths.float_weighted_sum()
+  |> maths.weighted_sum()
   |> should.equal(Ok(0.0))
 
   [#(1.0, 0.0), #(2.0, 0.0), #(3.0, 0.0)]
-  |> maths.float_weighted_sum()
+  |> maths.weighted_sum()
   |> should.equal(Ok(0.0))
 
   [#(1.0, 1.0), #(2.0, 1.0), #(3.0, 1.0)]
-  |> maths.float_weighted_sum()
+  |> maths.weighted_sum()
   |> should.equal(Ok(6.0))
 
   [#(9.0, 0.5), #(10.0, 0.5), #(10.0, 0.5)]
-  |> maths.float_weighted_sum()
+  |> maths.weighted_sum()
   |> should.equal(Ok(14.5))
 }

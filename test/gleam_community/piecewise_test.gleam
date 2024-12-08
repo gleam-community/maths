@@ -3,7 +3,7 @@ import gleam/int
 import gleam_community/maths
 import gleeunit/should
 
-pub fn float_ceiling_test() {
+pub fn ceiling_test() {
   // Round 3. digit AFTER decimal point 
   maths.round_up(12.0654, 3)
   |> should.equal(12.066)
@@ -33,7 +33,7 @@ pub fn float_ceiling_test() {
   |> should.equal(1000.0)
 }
 
-pub fn float_floor_test() {
+pub fn floor_test() {
   // Round 3. digit AFTER decimal point 
   maths.round_down(12.0654, 3)
   |> should.equal(12.065)
@@ -63,7 +63,7 @@ pub fn float_floor_test() {
   |> should.equal(0.0)
 }
 
-pub fn float_truncate_test() {
+pub fn truncate_test() {
   // Round 3. digit AFTER decimal point 
   maths.round_to_zero(12.0654, 3)
   |> should.equal(12.065)
@@ -373,41 +373,41 @@ pub fn math_round_ties_up_test() {
   |> should.equal(0.0)
 }
 
-pub fn float_absolute_difference_test() {
-  maths.float_absolute_difference(20.0, 15.0)
+pub fn absolute_difference_test() {
+  maths.absolute_difference(20.0, 15.0)
   |> should.equal(5.0)
 
-  maths.float_absolute_difference(-20.0, -15.0)
+  maths.absolute_difference(-20.0, -15.0)
   |> should.equal(5.0)
 
-  maths.float_absolute_difference(20.0, -15.0)
+  maths.absolute_difference(20.0, -15.0)
   |> should.equal(35.0)
 
-  maths.float_absolute_difference(-20.0, 15.0)
+  maths.absolute_difference(-20.0, 15.0)
   |> should.equal(35.0)
 
-  maths.float_absolute_difference(0.0, 0.0)
+  maths.absolute_difference(0.0, 0.0)
   |> should.equal(0.0)
 
-  maths.float_absolute_difference(1.0, 2.0)
+  maths.absolute_difference(1.0, 2.0)
   |> should.equal(1.0)
 
-  maths.float_absolute_difference(2.0, 1.0)
+  maths.absolute_difference(2.0, 1.0)
   |> should.equal(1.0)
 
-  maths.float_absolute_difference(-1.0, 0.0)
+  maths.absolute_difference(-1.0, 0.0)
   |> should.equal(1.0)
 
-  maths.float_absolute_difference(0.0, -1.0)
+  maths.absolute_difference(0.0, -1.0)
   |> should.equal(1.0)
 
-  maths.float_absolute_difference(10.0, 20.0)
+  maths.absolute_difference(10.0, 20.0)
   |> should.equal(10.0)
 
-  maths.float_absolute_difference(-10.0, -20.0)
+  maths.absolute_difference(-10.0, -20.0)
   |> should.equal(10.0)
 
-  maths.float_absolute_difference(-10.5, 10.5)
+  maths.absolute_difference(-10.5, 10.5)
   |> should.equal(21.0)
 }
 
@@ -425,39 +425,39 @@ pub fn int_absolute_difference_test() {
   |> should.equal(35)
 }
 
-pub fn float_sign_test() {
-  maths.float_sign(100.0)
+pub fn sign_test() {
+  maths.sign(100.0)
   |> should.equal(1.0)
 
-  maths.float_sign(0.0)
+  maths.sign(0.0)
   |> should.equal(0.0)
 
-  maths.float_sign(-100.0)
+  maths.sign(-100.0)
   |> should.equal(-1.0)
 }
 
-pub fn float_flip_sign_test() {
-  maths.float_flip_sign(100.0)
+pub fn flip_sign_test() {
+  maths.flip_sign(100.0)
   |> should.equal(-100.0)
 
-  maths.float_flip_sign(0.0)
+  maths.flip_sign(0.0)
   |> should.equal(-0.0)
 
-  maths.float_flip_sign(-100.0)
+  maths.flip_sign(-100.0)
   |> should.equal(100.0)
 }
 
-pub fn float_copy_sign_test() {
-  maths.float_copy_sign(100.0, 10.0)
+pub fn copy_sign_test() {
+  maths.copy_sign(100.0, 10.0)
   |> should.equal(100.0)
 
-  maths.float_copy_sign(-100.0, 10.0)
+  maths.copy_sign(-100.0, 10.0)
   |> should.equal(100.0)
 
-  maths.float_copy_sign(100.0, -10.0)
+  maths.copy_sign(100.0, -10.0)
   |> should.equal(-100.0)
 
-  maths.float_copy_sign(-100.0, -10.0)
+  maths.copy_sign(-100.0, -10.0)
   |> should.equal(-100.0)
 }
 
@@ -497,7 +497,7 @@ pub fn int_copy_sign_test() {
   |> should.equal(-100)
 }
 
-pub fn float_minmax_test() {
+pub fn minmax_test() {
   maths.minmax(0.75, 0.5, float.compare)
   |> should.equal(#(0.5, 0.75))
 
@@ -525,7 +525,7 @@ pub fn int_minmax_test() {
   |> should.equal(#(-75, 50))
 }
 
-pub fn float_list_minimum_test() {
+pub fn list_minimum_test() {
   // An empty lists returns an error
   []
   |> maths.list_minimum(float.compare)
@@ -549,7 +549,7 @@ pub fn int_list_minimum_test() {
   |> should.equal(Ok(1))
 }
 
-pub fn float_list_maximum_test() {
+pub fn list_maximum_test() {
   // An empty lists returns an error
   []
   |> maths.list_maximum(float.compare)
@@ -573,7 +573,7 @@ pub fn int_list_maximum_test() {
   |> should.equal(Ok(4))
 }
 
-pub fn float_list_arg_maximum_test() {
+pub fn list_arg_maximum_test() {
   // An empty lists returns an error
   []
   |> maths.arg_maximum(float.compare)
@@ -597,7 +597,7 @@ pub fn int_list_arg_maximum_test() {
   |> should.equal(Ok([0, 1]))
 }
 
-pub fn float_list_arg_minimum_test() {
+pub fn list_arg_minimum_test() {
   // An empty lists returns an error
   []
   |> maths.arg_minimum(float.compare)
@@ -621,7 +621,7 @@ pub fn int_list_arg_minimum_test() {
   |> should.equal(Ok([4]))
 }
 
-pub fn float_list_extrema_test() {
+pub fn list_extrema_test() {
   // An empty lists returns an error
   []
   |> maths.extrema(float.compare)

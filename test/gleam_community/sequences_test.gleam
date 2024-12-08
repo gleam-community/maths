@@ -4,7 +4,7 @@ import gleam/yielder
 import gleam_community/maths
 import gleeunit/should
 
-pub fn float_list_linear_space_test() {
+pub fn list_linear_space_test() {
   let assert Ok(tol) = float.power(10.0, -6.0)
 
   // Check that the function agrees, at some arbitrary input
@@ -118,7 +118,7 @@ pub fn float_list_linear_space_test() {
   |> should.be_error()
 }
 
-pub fn float_list_logarithmic_space_test() {
+pub fn list_logarithmic_space_test() {
   let assert Ok(tol) = float.power(10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
@@ -203,7 +203,7 @@ pub fn float_list_logarithmic_space_test() {
   |> should.be_error()
 }
 
-pub fn float_list_geometric_space_test() {
+pub fn list_geometric_space_test() {
   let assert Ok(tol) = float.power(10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
@@ -271,7 +271,7 @@ pub fn float_list_geometric_space_test() {
   |> should.be_error()
 }
 
-pub fn float_list_arange_test() {
+pub fn list_arange_test() {
   // Positive start, stop, step
   maths.arange(1.0, 5.0, 1.0)
   |> yielder.to_list()
@@ -311,7 +311,7 @@ pub fn float_list_arange_test() {
   |> should.equal([-5.0, -4.0, -3.0, -2.0])
 }
 
-pub fn float_list_exponential_space_test() {
+pub fn list_exponential_space_test() {
   let assert Ok(tolerance) = float.power(10.0, -6.0)
 
   // Check that the function agrees, at some arbitrary input
@@ -349,7 +349,7 @@ pub fn float_list_exponential_space_test() {
   |> should.be_error()
 }
 
-pub fn float_list_symmetric_space_test() {
+pub fn list_symmetric_space_test() {
   let assert Ok(tolerance) = float.power(10.0, -6.0)
 
   // Check that the function agrees, at some arbitrary input

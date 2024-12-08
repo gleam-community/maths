@@ -110,13 +110,13 @@ fn do_gcd(x: Int, y: Int) -> Int {
 ///     import gleam_community/maths
 ///
 ///     pub fn example() {
-///       maths.int_euclidean_modulo(15, 4)
+///       maths.euclidean_modulo(15, 4)
 ///       |> should.equal(3)
 ///
-///       maths.int_euclidean_modulo(-3, -2)
+///       maths.euclidean_modulo(-3, -2)
 ///       |> should.equal(1)
 ///
-///       maths.int_euclidean_modulo(5, 0)
+///       maths.euclidean_modulo(5, 0)
 ///       |> should.equal(0)
 ///     }
 /// </details>
@@ -127,7 +127,7 @@ fn do_gcd(x: Int, y: Int) -> Int {
 ///     </a>
 /// </div>
 ///
-pub fn int_euclidean_modulo(x: Int, y: Int) -> Int {
+pub fn euclidean_modulo(x: Int, y: Int) -> Int {
   case x % y, x, y {
     _, 0, _ -> 0
     _, _, 0 -> 0
@@ -302,15 +302,15 @@ pub fn proper_divisors(n: Int) -> List(Int) {
 ///
 ///     pub fn example () {
 ///       []
-///       |> maths.float_weighted_sum()
+///       |> maths.weighted_sum()
 ///       |> should.equal(Ok(0.0))
 ///   
 ///       [#(1.0, 1.0), #(2.0, 1.0), #(3.0, 1.0)]
-///       |> maths.float_weighted_sum()
+///       |> maths.weighted_sum()
 ///       |> should.equal(Ok(6.0))
 ///   
 ///       [#(9.0, 0.5), #(10.0, 0.5), #(10.0, 0.5)]
-///       |> maths.float_weighted_sum()
+///       |> maths.weighted_sum()
 ///       |> should.equal(Ok(14.5))
 ///     }
 /// </details>
@@ -321,7 +321,7 @@ pub fn proper_divisors(n: Int) -> List(Int) {
 ///     </a>
 /// </div>
 ///
-pub fn float_weighted_sum(arr: List(#(Float, Float))) -> Result(Float, Nil) {
+pub fn weighted_sum(arr: List(#(Float, Float))) -> Result(Float, Nil) {
   case arr {
     [] -> Ok(0.0)
     _ -> {
@@ -364,17 +364,17 @@ pub fn float_weighted_sum(arr: List(#(Float, Float))) -> Result(Float, Nil) {
 ///
 ///     pub fn example () {
 ///       []
-///       |> maths.float_weighted_product()
+///       |> maths.weighted_product()
 ///       |> should.equal(Ok(1.0))
 ///   
 ///       [#(1.0, 1.0), #(2.0, 1.0), #(3.0, 1.0)]
-///       |> maths.float_weighted_product()
+///       |> maths.weighted_product()
 ///       |> should.equal(Ok(6.0))
 ///       
 ///       let assert Ok(tolerance) = float.power(10.0, -6.0)
 ///       let assert Ok(result) =
 ///         [#(9.0, 0.5), #(10.0, 0.5), #(10.0, 0.5)]
-///         |> maths.float_weighted_product()
+///         |> maths.weighted_product()
 ///       result
 ///       |> maths.is_close(30.0, 0.0, tolerance)
 ///       |> should.be_true()
@@ -387,7 +387,7 @@ pub fn float_weighted_sum(arr: List(#(Float, Float))) -> Result(Float, Nil) {
 ///     </a>
 /// </div>
 ///
-pub fn float_weighted_product(arr: List(#(Float, Float))) -> Result(Float, Nil) {
+pub fn weighted_product(arr: List(#(Float, Float))) -> Result(Float, Nil) {
   case arr {
     [] -> Ok(1.0)
     _ -> {
@@ -435,11 +435,11 @@ pub fn float_weighted_product(arr: List(#(Float, Float))) -> Result(Float, Nil) 
 ///
 ///     pub fn example () {
 ///       []
-///       |> maths.float_cumulative_sum()
+///       |> maths.cumulative_sum()
 ///       |> should.equal([])
 ///
 ///       [1.0, 2.0, 3.0]
-///       |> maths.float_cumulative_sum()
+///       |> maths.cumulative_sum()
 ///       |> should.equal([1.0, 3.0, 6.0])
 ///     }
 /// </details>
@@ -450,7 +450,7 @@ pub fn float_weighted_product(arr: List(#(Float, Float))) -> Result(Float, Nil) 
 ///     </a>
 /// </div>
 ///
-pub fn float_cumulative_sum(arr: List(Float)) -> List(Float) {
+pub fn cumulative_sum(arr: List(Float)) -> List(Float) {
   case arr {
     [] -> []
     _ -> list.scan(arr, 0.0, fn(acc, a) { a +. acc })
@@ -530,11 +530,11 @@ pub fn int_cumulative_sum(arr: List(Int)) -> List(Int) {
 ///
 ///     pub fn example () {
 ///       []
-///       |> maths.float_cumulative_product()
+///       |> maths.cumulative_product()
 ///       |> should.equal([])
 ///
 ///       [1.0, 2.0, 3.0]
-///       |> maths.float_cumulative_product()
+///       |> maths.cumulative_product()
 ///       |> should.equal([1.0, 2.0, 6.0])
 ///     }
 /// </details>
@@ -545,7 +545,7 @@ pub fn int_cumulative_sum(arr: List(Int)) -> List(Int) {
 ///     </a>
 /// </div>
 ///
-pub fn float_cumulative_product(arr: List(Float)) -> List(Float) {
+pub fn cumulative_product(arr: List(Float)) -> List(Float) {
   case arr {
     [] -> []
     _ -> list.scan(arr, 1.0, fn(acc, a) { a *. acc })
@@ -1792,15 +1792,15 @@ pub fn round_to_nearest(x: Float, p: Int) -> Float {
   let xabs_truncated = truncate_float(xabs)
   let remainder = xabs -. xabs_truncated
   case remainder {
-    _ if remainder >. 0.5 -> float_sign(x) *. truncate_float(xabs +. 1.0) /. p
+    _ if remainder >. 0.5 -> sign(x) *. truncate_float(xabs +. 1.0) /. p
     _ if remainder == 0.5 -> {
       let assert Ok(is_even) = int.modulo(float.truncate(xabs), 2)
       case is_even == 0 {
-        True -> float_sign(x) *. xabs_truncated /. p
-        False -> float_sign(x) *. truncate_float(xabs +. 1.0) /. p
+        True -> sign(x) *. xabs_truncated /. p
+        False -> sign(x) *. truncate_float(xabs +. 1.0) /. p
       }
     }
-    _ -> float_sign(x) *. xabs_truncated /. p
+    _ -> sign(x) *. xabs_truncated /. p
   }
 }
 
@@ -1855,8 +1855,8 @@ pub fn round_ties_away(x: Float, p: Int) -> Float {
   let xabs = float.absolute_value(x) *. p
   let remainder = xabs -. truncate_float(xabs)
   case remainder {
-    _ if remainder >=. 0.5 -> float_sign(x) *. truncate_float(xabs +. 1.0) /. p
-    _ -> float_sign(x) *. truncate_float(xabs) /. p
+    _ if remainder >=. 0.5 -> sign(x) *. truncate_float(xabs +. 1.0) /. p
+    _ -> sign(x) *. truncate_float(xabs) /. p
   }
 }
 
@@ -1913,8 +1913,8 @@ pub fn round_ties_up(x: Float, p: Int) -> Float {
   let remainder = xabs -. xabs_truncated
   case remainder {
     _ if remainder >=. 0.5 && x >=. 0.0 ->
-      float_sign(x) *. truncate_float(xabs +. 1.0) /. p
-    _ -> float_sign(x) *. xabs_truncated /. p
+      sign(x) *. truncate_float(xabs +. 1.0) /. p
+    _ -> sign(x) *. xabs_truncated /. p
   }
 }
 
@@ -2109,10 +2109,10 @@ fn do_ceiling(a: Float) -> Float
 ///     import gleam_community/maths
 ///
 ///     pub fn example() {
-///       maths.float_absolute_difference(-10.0, 10.0)
+///       maths.absolute_difference(-10.0, 10.0)
 ///       |> should.equal(20.0)
 ///
-///       maths.float_absolute_difference(0.0, -2.0)
+///       maths.absolute_difference(0.0, -2.0)
 ///       |> should.equal(2.0)
 ///     }
 /// </details>
@@ -2123,9 +2123,8 @@ fn do_ceiling(a: Float) -> Float
 ///     </a>
 /// </div>
 ///
-pub fn float_absolute_difference(a: Float, b: Float) -> Float {
-  a -. b
-  |> float.absolute_value()
+pub fn absolute_difference(a: Float, b: Float) -> Float {
+  float.absolute_value(a -. b)
 }
 
 /// <div style="text-align: right;">
@@ -2165,8 +2164,7 @@ pub fn float_absolute_difference(a: Float, b: Float) -> Float {
 /// </div>
 ///
 pub fn int_absolute_difference(a: Int, b: Int) -> Int {
-  a - b
-  |> int.absolute_value()
+  int.absolute_value(a - b)
 }
 
 /// <div style="text-align: right;">
@@ -2185,22 +2183,18 @@ pub fn int_absolute_difference(a: Int, b: Int) -> Int {
 ///     </a>
 /// </div>
 ///
-pub fn float_sign(x: Float) -> Float {
-  do_float_sign(x)
+pub fn sign(x: Float) -> Float {
+  do_sign(x)
 }
 
-@target(erlang)
-fn do_float_sign(x: Float) -> Float {
+@external(javascript, "../maths.mjs", "sign")
+fn do_sign(x: Float) -> Float {
   case x {
     _ if x <. 0.0 -> -1.0
     _ if x >. 0.0 -> 1.0
     _ -> 0.0
   }
 }
-
-@target(javascript)
-@external(javascript, "../maths.mjs", "sign")
-fn do_float_sign(a: Float) -> Float
 
 /// <div style="text-align: right;">
 ///     <a href="https://github.com/gleam-community/maths/issues">
@@ -2222,7 +2216,7 @@ pub fn int_sign(x: Int) -> Int {
   do_int_sign(x)
 }
 
-@target(erlang)
+@external(javascript, "../maths.mjs", "sign")
 fn do_int_sign(x: Int) -> Int {
   case x {
     _ if x < 0 -> -1
@@ -2230,10 +2224,6 @@ fn do_int_sign(x: Int) -> Int {
     _ -> 0
   }
 }
-
-@target(javascript)
-@external(javascript, "../maths.mjs", "sign")
-fn do_int_sign(a: Int) -> Int
 
 /// <div style="text-align: right;">
 ///     <a href="https://github.com/gleam-community/maths/issues">
@@ -2250,14 +2240,14 @@ fn do_int_sign(a: Int) -> Int
 ///     </a>
 /// </div>
 ///
-pub fn float_copy_sign(x: Float, y: Float) -> Float {
-  case float_sign(x) == float_sign(y) {
+pub fn copy_sign(x: Float, y: Float) -> Float {
+  case sign(x) == sign(y) {
     // x and y have the same sign, just return x
     True -> x
     // x and y have different signs:
     // - x is positive and y is negative, then flip sign of x
     // - x is negative and y is positive, then flip sign of x
-    False -> float_flip_sign(x)
+    False -> flip_sign(x)
   }
 }
 
@@ -2301,7 +2291,7 @@ pub fn int_copy_sign(x: Int, y: Int) -> Int {
 ///     </a>
 /// </div>
 ///
-pub fn float_flip_sign(x: Float) -> Float {
+pub fn flip_sign(x: Float) -> Float {
   -1.0 *. x
 }
 
@@ -4734,12 +4724,9 @@ pub fn braycurtis_distance_with_weights(
 /// </div>
 ///
 pub fn is_close(x: Float, y: Float, rtol: Float, atol: Float) -> Bool {
-  let x = float_absolute_difference(x, y)
+  let x = absolute_difference(x, y)
   let y = atol +. rtol *. float.absolute_value(y)
-  case x <=. y {
-    True -> True
-    False -> False
-  }
+  x <=. y
 }
 
 /// <div style="text-align: right;">
@@ -5196,7 +5183,7 @@ pub fn erf(x: Float) -> Float {
   ]
   let p = 0.3275911
 
-  let sign = float_sign(x)
+  let sign = sign(x)
   let x = float.absolute_value(x)
 
   // Formula 7.1.26 given in Abramowitz and Stegun.
