@@ -268,6 +268,10 @@ pub fn mean_test() {
   [1.0, 2.0, 3.0]
   |> maths.mean()
   |> should.equal(Ok(2.0))
+
+  [-1.0, -2.0, -3.0]
+  |> maths.mean()
+  |> should.equal(Ok(-2.0))
 }
 
 pub fn median_test() {
