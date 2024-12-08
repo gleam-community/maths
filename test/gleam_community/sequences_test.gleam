@@ -107,7 +107,7 @@ pub fn list_linear_space_test() {
   |> should.be_true()
 
   // Check that when start == stop and steps > 0, then 
-  // the value start/stop value is just repeated, since the
+  // the value (start/stop) is just repeated, since the
   // step increment will be 0 
   let assert Ok(linspace) = maths.linear_space(10.0, 10.0, 5, True)
   let assert Ok(result) =
@@ -193,7 +193,7 @@ pub fn list_logarithmic_space_test() {
   |> should.be_true()
 
   // Check that when start == stop and steps > 0, then 
-  // the value start/stop value is just repeated, since the
+  // the value (start/stop) is just repeated, since the
   // step increment will be 0 
   let assert Ok(logspace) = maths.logarithmic_space(5.0, 5.0, 5, True, 5.0)
   let assert Ok(result) =
@@ -286,7 +286,7 @@ pub fn list_geometric_space_test() {
   |> should.be_true()
 
   // Check that when start == stop and steps > 0, then 
-  // the value start/stop value is just repeated, since the
+  // the value (start/stop) is just repeated, since the
   // step increment will be 0
   let assert Ok(logspace) = maths.geometric_space(5.0, 5.0, 5, True)
   let assert Ok(result) =
