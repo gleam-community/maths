@@ -28,7 +28,6 @@ pub fn list_linear_space_test() {
       0.0,
       tol,
     )
-
   result
   |> list.all(fn(x) { x == True })
   |> should.be_true()
@@ -42,7 +41,6 @@ pub fn list_linear_space_test() {
       0.0,
       tol,
     )
-
   result
   |> list.all(fn(x) { x == True })
   |> should.be_true()
@@ -54,7 +52,6 @@ pub fn list_linear_space_test() {
       0.0,
       tol,
     )
-
   result
   |> list.all(fn(x) { x == True })
   |> should.be_true()
@@ -69,7 +66,6 @@ pub fn list_linear_space_test() {
       0.0,
       tol,
     )
-
   result
   |> list.all(fn(x) { x == True })
   |> should.be_true()
@@ -83,7 +79,6 @@ pub fn list_linear_space_test() {
       0.0,
       tol,
     )
-
   result
   |> list.all(fn(x) { x == True })
   |> should.be_true()
@@ -96,7 +91,6 @@ pub fn list_linear_space_test() {
       0.0,
       tol,
     )
-
   result
   |> list.all(fn(x) { x == True })
   |> should.be_true()
@@ -108,7 +102,31 @@ pub fn list_linear_space_test() {
       0.0,
       tol,
     )
+  result
+  |> list.all(fn(x) { x == True })
+  |> should.be_true()
 
+  // Check that when start == stop and steps > 0, then 
+  // the value start/stop value is just repeated, since the
+  // step increment will be 0 
+  let assert Ok(linspace) = maths.linear_space(10.0, 10.0, 5, True)
+  let assert Ok(result) =
+    maths.all_close(
+      linspace |> yielder.to_list() |> list.zip([10.0, 10.0, 10.0, 10.0, 10.0]),
+      0.0,
+      tol,
+    )
+  result
+  |> list.all(fn(x) { x == True })
+  |> should.be_true()
+
+  let assert Ok(linspace) = maths.linear_space(10.0, 10.0, 5, False)
+  let assert Ok(result) =
+    maths.all_close(
+      linspace |> yielder.to_list() |> list.zip([10.0, 10.0, 10.0, 10.0, 10.0]),
+      0.0,
+      tol,
+    )
   result
   |> list.all(fn(x) { x == True })
   |> should.be_true()
@@ -123,7 +141,7 @@ pub fn list_logarithmic_space_test() {
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   // ---> With endpoint included
-  // - Positive start, stop, base
+  // - Positive start, stop
   let assert Ok(logspace) = maths.logarithmic_space(1.0, 3.0, 3, True, 10.0)
   let assert Ok(result) =
     maths.all_close(
@@ -135,31 +153,7 @@ pub fn list_logarithmic_space_test() {
   |> list.all(fn(x) { x == True })
   |> should.be_true()
 
-  // - Positive start, stop, negative base
-  let assert Ok(logspace) = maths.logarithmic_space(1.0, 3.0, 3, True, -10.0)
-  let assert Ok(result) =
-    maths.all_close(
-      logspace |> yielder.to_list() |> list.zip([-10.0, 100.0, -1000.0]),
-      0.0,
-      tol,
-    )
-  result
-  |> list.all(fn(x) { x == True })
-  |> should.be_true()
-
-  // - Positive start, negative stop, base 
-  let assert Ok(logspace) = maths.logarithmic_space(1.0, -3.0, 3, True, -10.0)
-  let assert Ok(result) =
-    maths.all_close(
-      logspace |> yielder.to_list() |> list.zip([-10.0, -0.1, -0.001]),
-      0.0,
-      tol,
-    )
-  result
-  |> list.all(fn(x) { x == True })
-  |> should.be_true()
-
-  // - Positive start, base, negative stop  
+  // - Positive start, negative stop 
   let assert Ok(logspace) = maths.logarithmic_space(1.0, -3.0, 3, True, 10.0)
   let assert Ok(result) =
     maths.all_close(
@@ -171,7 +165,7 @@ pub fn list_logarithmic_space_test() {
   |> list.all(fn(x) { x == True })
   |> should.be_true()
 
-  // - Positive stop, base, negative start
+  // - Positive stop, negative start
   let assert Ok(logspace) = maths.logarithmic_space(-1.0, 3.0, 3, True, 10.0)
   let assert Ok(result) =
     maths.all_close(
@@ -184,7 +178,7 @@ pub fn list_logarithmic_space_test() {
   |> should.be_true()
 
   // ----> Without endpoint included
-  // - Positive start, stop, base
+  // - Positive start, stop
   let assert Ok(logspace) = maths.logarithmic_space(1.0, 3.0, 3, False, 10.0)
   let assert Ok(result) =
     maths.all_close(
@@ -198,8 +192,40 @@ pub fn list_logarithmic_space_test() {
   |> list.all(fn(x) { x == True })
   |> should.be_true()
 
+  // Check that when start == stop and steps > 0, then 
+  // the value start/stop value is just repeated, since the
+  // step increment will be 0 
+  let assert Ok(logspace) = maths.logarithmic_space(5.0, 5.0, 5, True, 5.0)
+  let assert Ok(result) =
+    maths.all_close(
+      logspace
+        |> yielder.to_list()
+        |> list.zip([3125.0, 3125.0, 3125.0, 3125.0, 3125.0]),
+      0.0,
+      tol,
+    )
+  result
+  |> list.all(fn(x) { x == True })
+  |> should.be_true()
+  let assert Ok(logspace) = maths.logarithmic_space(5.0, 5.0, 5, False, 5.0)
+  let assert Ok(result) =
+    maths.all_close(
+      logspace
+        |> yielder.to_list()
+        |> list.zip([3125.0, 3125.0, 3125.0, 3125.0, 3125.0]),
+      0.0,
+      tol,
+    )
+  result
+  |> list.all(fn(x) { x == True })
+  |> should.be_true()
+
   // A negative number of points does not work (-3)
   maths.logarithmic_space(1.0, 3.0, -3, True, 10.0)
+  |> should.be_error()
+
+  // A negative base does not work (-10)
+  maths.logarithmic_space(1.0, 3.0, 3, True, -10.0)
   |> should.be_error()
 }
 
@@ -259,7 +285,36 @@ pub fn list_geometric_space_test() {
   |> list.all(fn(x) { x == True })
   |> should.be_true()
 
-  // Test invalid input (start and stop can't be equal to 0.0)
+  // Check that when start == stop and steps > 0, then 
+  // the value start/stop value is just repeated, since the
+  // step increment will be 0
+  let assert Ok(logspace) = maths.geometric_space(5.0, 5.0, 5, True)
+  let assert Ok(result) =
+    maths.all_close(
+      logspace
+        |> yielder.to_list()
+        |> list.zip([5.0, 5.0, 5.0, 5.0, 5.0]),
+      0.0,
+      tol,
+    )
+  result
+  |> list.all(fn(x) { x == True })
+  |> should.be_true()
+
+  let assert Ok(logspace) = maths.geometric_space(5.0, 5.0, 5, False)
+  let assert Ok(result) =
+    maths.all_close(
+      logspace
+        |> yielder.to_list()
+        |> list.zip([5.0, 5.0, 5.0, 5.0, 5.0]),
+      0.0,
+      tol,
+    )
+  result
+  |> list.all(fn(x) { x == True })
+  |> should.be_true()
+
+  // Test invalid input (start and stop can't be less than or equal to 0.0)
   maths.geometric_space(0.0, 1000.0, 3, False)
   |> should.be_error()
 
@@ -311,44 +366,6 @@ pub fn list_arange_test() {
   |> should.equal([-5.0, -4.0, -3.0, -2.0])
 }
 
-pub fn list_exponential_space_test() {
-  let assert Ok(tolerance) = float.power(10.0, -6.0)
-
-  // Check that the function agrees, at some arbitrary input
-  // points, with known function values
-  // ---> With endpoint included
-  let assert Ok(exp_space) = maths.exponential_space(1.0, 1000.0, 4, True)
-  let assert Ok(result) =
-    maths.all_close(
-      exp_space |> yielder.to_list() |> list.zip([1.0, 10.0, 100.0, 1000.0]),
-      0.0,
-      tolerance,
-    )
-  result
-  |> list.all(fn(x) { x == True })
-  |> should.be_true()
-
-  // ---> Without endpoint included
-  let assert Ok(exp_space) = maths.exponential_space(1.0, 1000.0, 4, False)
-  let assert Ok(result) =
-    maths.all_close(
-      exp_space
-        |> yielder.to_list()
-        |> list.zip([
-          1.0, 5.623413251903491, 31.622776601683793, 177.82794100389228,
-        ]),
-      0.0,
-      tolerance,
-    )
-  result
-  |> list.all(fn(x) { x == True })
-  |> should.be_true()
-
-  // A negative number of points does not work (-3)
-  maths.exponential_space(1.0, 1000.0, -3, True)
-  |> should.be_error()
-}
-
 pub fn list_symmetric_space_test() {
   let assert Ok(tolerance) = float.power(10.0, -6.0)
 
@@ -370,6 +387,12 @@ pub fn list_symmetric_space_test() {
   |> yielder.to_list()
   |> should.equal([-15.0, -12.5, -10.0, -7.5, -5.0])
 
+  // Negative Radius (simply reverses the order of the values)
+  let assert Ok(sym_space) = maths.symmetric_space(0.0, -5.0, 5)
+  sym_space
+  |> yielder.to_list()
+  |> should.equal([5.0, 2.5, 0.0, -2.5, -5.0])
+
   // Uneven number of points
   let assert Ok(sym_space) = maths.symmetric_space(0.0, 2.0, 4)
   let assert Ok(result) =
@@ -383,6 +406,14 @@ pub fn list_symmetric_space_test() {
   result
   |> list.all(fn(x) { x == True })
   |> should.be_true()
+
+  // Check that when radius == 0 and steps > 0, then 
+  // the value center value is just repeated, since the
+  // step increment will be 0
+  let assert Ok(sym_space) = maths.symmetric_space(10.0, 0.0, 4)
+  sym_space
+  |> yielder.to_list()
+  |> should.equal([10.0, 10.0, 10.0, 10.0])
 
   // A negative number of points does not work (-5)
   maths.symmetric_space(0.0, 5.0, -5)
