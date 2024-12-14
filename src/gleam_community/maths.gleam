@@ -5155,9 +5155,12 @@ pub fn beta(x: Float, y: Float) -> Float {
 /// </div>
 ///
 pub fn erf(x: Float) -> Float {
-  let assert [a1, a2, a3, a4, a5] = [
-    0.254829592, -0.284496736, 1.421413741, -1.453152027, 1.061405429,
-  ]
+  let a1 = 0.254829592
+  let a2 = -0.284496736
+  let a3 = 1.421413741
+  let a4 = -1.453152027
+  let a5 = 1.061405429
+
   let p = 0.3275911
 
   let sign = sign(x)
