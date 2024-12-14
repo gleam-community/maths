@@ -22,7 +22,7 @@
 ////</style>
 ////
 //// ---
-//// 
+////
 
 import gleam/bool
 import gleam/float
@@ -52,10 +52,10 @@ import gleam/yielder.{type Yielder, Done, Next}
 ///     pub fn example() {
 ///       maths.gcd(1, 1)
 ///       |> should.equal(1)
-///       
+///
 ///       maths.gcd(100, 10)
 ///       |> should.equal(10)
-///     
+///
 ///       maths.gcd(-36, -17)
 ///       |> should.equal(1)
 ///     }
@@ -292,7 +292,7 @@ pub fn proper_divisors(n: Int) -> List(Int) {
 /// In the formula, \\(n\\) is the length of the list and \\(x_i \in \mathbb{R}\\) is
 /// the value in the input list indexed by \\(i\\), while the \\(w_i \in \mathbb{R}\\)
 /// are corresponding positive weights.
-/// 
+///
 /// <details>
 ///     <summary>Example:</summary>
 ///
@@ -304,11 +304,11 @@ pub fn proper_divisors(n: Int) -> List(Int) {
 ///       []
 ///       |> maths.weighted_sum()
 ///       |> should.equal(Ok(0.0))
-///   
+///
 ///       [#(1.0, 1.0), #(2.0, 1.0), #(3.0, 1.0)]
 ///       |> maths.weighted_sum()
 ///       |> should.equal(Ok(6.0))
-///   
+///
 ///       [#(9.0, 0.5), #(10.0, 0.5), #(10.0, 0.5)]
 ///       |> maths.weighted_sum()
 ///       |> should.equal(Ok(14.5))
@@ -353,10 +353,10 @@ pub fn weighted_sum(arr: List(#(Float, Float))) -> Result(Float, Nil) {
 /// In the formula, \\(n\\) is the length of the list and \\(x_i \in \mathbb{R}\\) is
 /// the value in the input list indexed by \\(i\\), while the \\(w_i \in \mathbb{R}\\)
 /// are corresponding positive weights.
-/// 
+///
 /// <details>
 ///     <summary>Example:</summary>
-///     
+///
 ///     import gleam/float
 ///     import gleeunit/should
 ///     import gleam_community/maths
@@ -365,11 +365,11 @@ pub fn weighted_sum(arr: List(#(Float, Float))) -> Result(Float, Nil) {
 ///       []
 ///       |> maths.weighted_product()
 ///       |> should.equal(Ok(1.0))
-///   
+///
 ///       [#(1.0, 1.0), #(2.0, 1.0), #(3.0, 1.0)]
 ///       |> maths.weighted_product()
 ///       |> should.equal(Ok(6.0))
-///       
+///
 ///       let assert Ok(tolerance) = float.power(10.0, -6.0)
 ///       let assert Ok(result) =
 ///         [#(9.0, 0.5), #(10.0, 0.5), #(10.0, 0.5)]
@@ -1447,10 +1447,10 @@ fn do_natural_logarithm(a: Float) -> Float
 ///     pub fn example () {
 ///       maths.logarithm(1.0, 10.0)
 ///       |> should.equal(Ok(0.0))
-///     
+///
 ///       maths.logarithm(maths.e(), maths.e())
 ///       |> should.equal(Ok(1.0))
-///     
+///
 ///       maths.logarithm(-1.0, 2.0)
 ///       |> should.be_error()
 ///     }
@@ -1601,7 +1601,7 @@ fn do_logarithm_10(a: Float) -> Float
 ///     pub fn example() {
 ///       maths.nth_root(-1.0, 2)
 ///       |> should.be_error()
-/// 
+///
 ///       maths.nth_root(1.0, 2)
 ///       |> should.equal(Ok(1.0))
 ///
@@ -1717,7 +1717,7 @@ pub fn golden_ratio() -> Float {
 ///
 ///     pub fn example() {
 ///       let assert Ok(tolerance) = float.power(10.0, -6.0)
-///     
+///
 ///       // Test that the constant is approximately equal to 2.7128...
 ///       maths.e()
 ///       |> maths.is_close(2.7182818284590452353602, 0.0, tolerance)
@@ -1743,7 +1743,7 @@ pub fn e() -> Float {
 ///
 /// The function rounds a float to a specific number of digits (after the decimal place or before
 /// if negative). In particular, the input \\(x\\) is rounded to the nearest integer value (at the
-/// specified digit) with ties (fractional values of 0.5) being rounded to the nearest even 
+/// specified digit) with ties (fractional values of 0.5) being rounded to the nearest even
 /// integer.
 ///
 /// <details>
@@ -1806,7 +1806,7 @@ pub fn round_to_nearest(x: Float, p: Int) -> Float {
 /// </div>
 ///
 /// The function rounds a float to a specific number of digits (after the decimal place or before
-/// if negative). In particular, the input \\(x\\) is rounded to the nearest integer value (at the 
+/// if negative). In particular, the input \\(x\\) is rounded to the nearest integer value (at the
 /// specified digit) with ties (fractional values of 0.5) being rounded away from zero (C/C++
 /// rounding behaviour).
 ///
@@ -1862,8 +1862,8 @@ pub fn round_ties_away(x: Float, p: Int) -> Float {
 /// </div>
 ///
 /// The function rounds a float to a specific number of digits (after the decimal place or before
-/// if negative). In particular, the input \\(x\\) is rounded to the nearest integer value (at the 
-/// specified digit) with ties (fractional values of 0.5) being rounded towards \\(+\infty\\) 
+/// if negative). In particular, the input \\(x\\) is rounded to the nearest integer value (at the
+/// specified digit) with ties (fractional values of 0.5) being rounded towards \\(+\infty\\)
 /// (Java/JavaScript rounding behaviour).
 ///
 /// <details>
@@ -1920,8 +1920,8 @@ pub fn round_ties_up(x: Float, p: Int) -> Float {
 /// </div>
 ///
 /// The function rounds a float to a specific number of digits (after the decimal place or before
-/// if negative). In particular, the input \\(x\\) is rounded to the nearest integer value (at the 
-/// specified digit) that is less than or equal to the absolute value of the input \\(x\\). This 
+/// if negative). In particular, the input \\(x\\) is rounded to the nearest integer value (at the
+/// specified digit) that is less than or equal to the absolute value of the input \\(x\\). This
 /// rounding behaviour is similar to behaviour of the Gleam stdlib `truncate` function.
 ///
 /// <details>
@@ -1940,7 +1940,7 @@ pub fn round_ties_up(x: Float, p: Int) -> Float {
 ///   - \\(0.0\\) for 3 digits before the decimal point (`digits = -3`)
 ///
 /// </details>
-/// 
+///
 /// <details>
 ///     <summary>Example</summary>
 ///
@@ -1979,13 +1979,13 @@ fn do_truncate_float(a: Float) -> Float
 /// </div>
 ///
 /// The function rounds a float to a specific number of digits (after the decimal place or before
-/// if negative). In particular, the input \\(x\\) is rounded to the nearest integer value (at the 
-/// specified digit) that is less than or equal to the input \\(x\\). This rounding behaviour is 
+/// if negative). In particular, the input \\(x\\) is rounded to the nearest integer value (at the
+/// specified digit) that is less than or equal to the input \\(x\\). This rounding behaviour is
 /// similar to behaviour of the Gleam stdlib `floor` function.
-/// 
+///
 /// <details>
 /// <summary>Details</summary>
-/// 
+///
 ///   The rounding mode rounds \\(12.0654\\) to:
 ///   - \\(12.0\\) for 0 digits after the decimal point (`digits = 0`)
 ///   - \\(12.0\\) for 1 digits after the decimal point (`digits = 1`)
@@ -1999,7 +1999,7 @@ fn do_truncate_float(a: Float) -> Float
 ///   - \\(0.0\\) for 3 digits before the decimal point (`digits = -3`)
 ///
 /// </details>
-/// 
+///
 /// <details>
 ///     <summary>Example</summary>
 ///
@@ -2034,13 +2034,13 @@ fn do_floor(a: Float) -> Float
 /// </div>
 ///
 /// The function rounds a float to a specific number of digits (after the decimal place or before
-/// if negative). In particular, the input \\(x\\) is rounded to the nearest integer value (at the 
-/// specified digit) that is larger than or equal to the input \\(x\\). This rounding behaviour is 
+/// if negative). In particular, the input \\(x\\) is rounded to the nearest integer value (at the
+/// specified digit) that is larger than or equal to the input \\(x\\). This rounding behaviour is
 /// similar to behaviour of the Gleam stdlib `ceiling` function.
-/// 
+///
 /// <details>
 /// <summary>Details</summary>
-/// 
+///
 ///   The rounding mode rounds \\(12.0654\\) to:
 ///   - \\(13.0\\) for 0 digits after the decimal point (`digits = 0`)
 ///   - \\(12.1\\) for 1 digit after the decimal point (`digits = 1`)
@@ -2642,21 +2642,21 @@ pub fn extrema(
 ///     </a>
 /// </div>
 ///
-/// A combinatorial function for computing the number of \\(k\\)-combinations of \\(n\\) elements 
+/// A combinatorial function for computing the number of \\(k\\)-combinations of \\(n\\) elements
 /// with repetitions:
 ///
 /// \\[
 /// C^*(n, k) = \binom{n + k - 1}{k} = \frac{(n + k - 1)!}{k! (n - 1)!}
 /// \\]
-/// 
-/// Also known as the "stars and bars" problem in maths. Furthermore, the implementation uses an 
+///
+/// Also known as the "stars and bars" problem in maths. Furthermore, the implementation uses an
 /// efficient iterative multiplicative formula for computing the result.
 ///
 /// <details>
 /// <summary>Details</summary>
 ///
-/// A \\(k\\)-combination with repetitions is a sequence of \\(k\\) elements selected from 
-/// \\(n\\) elements where the order of selection does not matter and elements are allowed to 
+/// A \\(k\\)-combination with repetitions is a sequence of \\(k\\) elements selected from
+/// \\(n\\) elements where the order of selection does not matter and elements are allowed to
 /// repeat. For example, consider selecting 2 elements from a list of 3 elements: `["A", "B", "C"]`.
 /// In this case, possible selections are:
 ///   - `["A", "A"], ["A", "B"], ["A", "C"]`
@@ -2675,7 +2675,7 @@ pub fn extrema(
 ///
 ///       maths.combination_with_repetitions(2, 3)
 ///       |> should.equal(Ok(4))
-///     
+///
 ///       maths.combination_with_repetitions(13, 5)
 ///       |> should.equal(Ok(6188))
 ///     }
@@ -2697,27 +2697,27 @@ pub fn combination_with_repetitions(n: Int, k: Int) -> Result(Int, Nil) {
 ///     </a>
 /// </div>
 ///
-/// A combinatorial function for computing the number of \\(k\\)-combinations of \\(n\\) elements 
+/// A combinatorial function for computing the number of \\(k\\)-combinations of \\(n\\) elements
 /// without repetitions:
 ///
 /// \\[
 /// C(n, k) = \binom{n}{k} = \frac{n!}{k! (n-k)!}
 /// \\]
-/// 
+///
 /// Also known as "\\(n\\) choose \\(k\\)" or the binomial coefficient.
 ///
 ///
 /// <details>
 /// <summary>Details</summary>
 ///
-/// A \\(k\\)-combination without repetition is a sequence of \\(k\\) elements selected from 
-/// \\(n\\) elements where the order of selection does not matter and elements are not allowed to 
-/// repeat. For example, consider selecting  2 elements from a list of 3 elements: 
+/// A \\(k\\)-combination without repetition is a sequence of \\(k\\) elements selected from
+/// \\(n\\) elements where the order of selection does not matter and elements are not allowed to
+/// repeat. For example, consider selecting  2 elements from a list of 3 elements:
 /// `["A", "B", "C"]`. In this case, possible selections are:
 ///   - `["A", "B"]`
 ///   - `["A", "C"]`
 ///   - `["B", "C"]`
-/// 
+///
 /// </details>
 /// <details>
 ///     <summary>Example:</summary>
@@ -2728,13 +2728,13 @@ pub fn combination_with_repetitions(n: Int, k: Int) -> Result(Int, Nil) {
 ///     pub fn example() {
 ///       maths.combination(-1, 1)
 ///       |> should.be_error()
-///     
+///
 ///       maths.combination(4, 0)
 ///       |> should.equal(Ok(1))
-///     
+///
 ///       maths.combination(4, 4)
 ///       |> should.equal(Ok(1))
-///     
+///
 ///       maths.combination(13, 5)
 ///       |> should.equal(Ok(1287))
 ///     }
@@ -2783,10 +2783,10 @@ pub fn combination(n: Int, k: Int) -> Result(Int, Nil) {
 ///     pub fn example() {
 ///       maths.factorial(-1)
 ///       |> should.be_error()
-///     
+///
 ///       maths.factorial(0)
 ///       |> should.equal(Ok(1))
-///     
+///
 ///       maths.factorial(3)
 ///       |> should.equal(Ok(6))
 ///     }
@@ -2819,7 +2819,7 @@ fn do_factorial(n: Int, acc: Int) -> Int {
 ///     </a>
 /// </div>
 ///
-/// A combinatorial function for computing the number of \\(k\\)-permutations without 
+/// A combinatorial function for computing the number of \\(k\\)-permutations without
 /// repetitions:
 ///
 /// \\[
@@ -2832,8 +2832,8 @@ fn do_factorial(n: Int, acc: Int) -> Int {
 /// <summary>Details</summary>
 ///
 /// A \\(k\\)-permutation without repetitions is a sequence of \\(k\\) elements selected from \
-/// \\(n\\) elements where the order of selection matters and elements are not allowed to repeat. 
-/// For example, consider selecting 2 elements from a list of 3 elements: `["A", "B", "C"]`. In 
+/// \\(n\\) elements where the order of selection matters and elements are not allowed to repeat.
+/// For example, consider selecting 2 elements from a list of 3 elements: `["A", "B", "C"]`. In
 /// this case, possible selections are:
 ///   - `["A", "B"], ["B", "A"]`
 ///   - `["A", "C"], ["C", "A"]`
@@ -2850,13 +2850,13 @@ fn do_factorial(n: Int, acc: Int) -> Int {
 ///     pub fn example() {
 ///       maths.permutation(-1, 1)
 ///       |> should.be_error()
-///     
+///
 ///       maths.permutation(4, 0)
 ///       |> should.equal(Ok(1))
-///     
+///
 ///       maths.permutation(4, 2)
 ///       |> should.equal(Ok(12))
-///     
+///
 ///       maths.permutation(13, 5)
 ///       |> should.equal(Ok(154_440))
 ///     }
@@ -2900,9 +2900,9 @@ fn do_permutation(n: Int, k: Int, acc: Int) -> Int {
 /// <details>
 /// <summary>Details</summary>
 ///
-/// A \\(k\\)-permutation with repetitions is a sequence of \\(k\\) elements selected from \\(n\\) 
-/// elements where the order of selection matters and elements are allowed to repeat. For example, 
-/// consider selecting 2 elements from a list of 3 elements: `["A", "B", "C"]`. In this case, 
+/// A \\(k\\)-permutation with repetitions is a sequence of \\(k\\) elements selected from \\(n\\)
+/// elements where the order of selection matters and elements are allowed to repeat. For example,
+/// consider selecting 2 elements from a list of 3 elements: `["A", "B", "C"]`. In this case,
 /// possible selections are:
 ///   - `["A", "A"], ["A", "B"], ["A", "C"]`
 ///   - `["B", "A"], ["B", "B"], ["B", "C"]`
@@ -2919,13 +2919,13 @@ fn do_permutation(n: Int, k: Int, acc: Int) -> Int {
 ///     pub fn example() {
 ///       maths.permutation_with_repetitions(1, -1)
 ///       |> should.be_error()
-///     
+///
 ///       maths.permutation_with_repetitions(2, 3)
 ///       |> should.equal(Ok(8))
-///     
+///
 ///       maths.permutation_with_repetitions(4, 4)
 ///       |> should.equal(Ok(256))
-///     
+///
 ///       maths.permutation_with_repetitions(6, 3)
 ///       |> should.equal(Ok(216))
 ///     }
@@ -2958,7 +2958,7 @@ pub fn permutation_with_repetitions(n: Int, k: Int) -> Result(Int, Nil) {
 /// </div>
 ///
 /// Generates all possible combinations of \\(k\\) elements selected from a given list of size
-/// \\(n\\). The function handles the case without repetitions, that is, repeated elements 
+/// \\(n\\). The function handles the case without repetitions, that is, repeated elements
 /// are not treated as distinct.
 ///
 /// <details>
@@ -2971,7 +2971,7 @@ pub fn permutation_with_repetitions(n: Int, k: Int) -> Result(Int, Nil) {
 ///     pub fn example () {
 ///       // All 2-combinations of [1, 2, 3] without repetition
 ///       let assert Ok(combinations) = maths.list_combination([1, 2, 3], 2)
-///     
+///
 ///       combinations
 ///       |> yielder.to_list()
 ///       |> should.equal([[1, 2], [1, 3], [2, 3]])
@@ -3025,7 +3025,7 @@ fn do_list_combination_without_repetitions(
 /// </div>
 ///
 /// Generates all possible combinations of \\(k\\) elements selected from a given list of size
-/// \\(n\\). The function handles the case when the repetition of elements is allowed, that is, 
+/// \\(n\\). The function handles the case when the repetition of elements is allowed, that is,
 /// repeated elements are treated as distinct.
 ///
 /// <details>
@@ -3039,7 +3039,7 @@ fn do_list_combination_without_repetitions(
 ///       // All 2-combinations of [1, 2, 3] with repetition
 ///       let assert Ok(combinations) =
 ///         maths.list_combination_with_repetitions([1, 2, 3], 2)
-///     
+///
 ///       combinations
 ///       |> yielder.to_list()
 ///       |> should.equal([[1, 1], [1, 2], [1, 3], [2, 2], [2, 3], [3, 3]])
@@ -3104,7 +3104,7 @@ fn remove_first_by_index(
 /// </div>
 ///
 /// Generates all possible permutations of \\(k\\) elements selected from a given list of size
-/// \\(n\\). The function handles the case without repetitions, that is, repeated elements are 
+/// \\(n\\). The function handles the case without repetitions, that is, repeated elements are
 /// not treated as distinct.
 ///
 /// <details>
@@ -3170,7 +3170,7 @@ fn do_list_permutation_without_repetitions(
 /// </div>
 ///
 /// Generates all possible permutations of \\(k\\) elements selected from a given list of size
-/// \\(n\\). The function handles the case when the repetition of elements is allowed, that is, 
+/// \\(n\\). The function handles the case when the repetition of elements is allowed, that is,
 /// repeated elements are treated as distinct.
 ///
 /// <details>
@@ -3285,7 +3285,7 @@ pub fn cartesian_product(xset: set.Set(a), yset: set.Set(b)) -> set.Set(#(a, b))
 ///
 /// In the formula, \\(n\\) is the length of the list and \\(x_i\\) is the value in
 /// the input list indexed by \\(i\\).
-/// 
+///
 /// <details>
 ///     <summary>Example:</summary>
 ///
@@ -3296,7 +3296,7 @@ pub fn cartesian_product(xset: set.Set(a), yset: set.Set(b)) -> set.Set(#(a, b))
 ///       [1.0, 1.0, 1.0]
 ///       |> maths.norm(1.0)
 ///       |> should.equal(Ok(3.0))
-///     
+///
 ///       let assert Ok(tolerance) = float.power(10.0, -6.0)
 ///       let assert Ok(result) =
 ///         [1.0, 2.0, 3.0]
@@ -3353,7 +3353,7 @@ pub fn norm(arr: List(Float), p: Float) -> Result(Float, Nil) {
 ///       [#(1.0, 0.5), #(1.0, 0.5), #(1.0, 0.5)]
 ///       |> maths.norm_with_weights(1.0)
 ///       |> should.equal(Ok(1.5))
-///     
+///
 ///       let assert Ok(tolerance) = float.power(10.0, -6.0)
 ///       let assert Ok(result) =
 ///         [#(1.0, 0.5), #(2.0, 0.5), #(3.0, 0.5)]
@@ -3500,7 +3500,7 @@ pub fn manhattan_distance_with_weights(
 ///
 ///     pub fn example() {
 ///       let assert Ok(tolerance) = float.power(10.0, -6.0)
-///     
+///
 ///       let assert Ok(result) =
 ///         maths.minkowski_distance([#(1.0, 2.0), #(3.0, 4.0), #(5.0, 6.0)], 4.0)
 ///       result
@@ -3561,7 +3561,7 @@ pub fn minkowski_distance(
 ///
 ///     pub fn example() {
 ///       let assert Ok(tolerance) = float.power(10.0, -6.0)
-///     
+///
 ///       let assert Ok(result) =
 ///         maths.minkowski_distance_with_weights(
 ///           [#(1.0, 2.0, 0.5), #(3.0, 4.0, 1.0), #(5.0, 6.0, 1.0)],
@@ -3624,7 +3624,7 @@ pub fn minkowski_distance_with_weights(
 ///
 ///     pub fn example() {
 ///       let assert Ok(tolerance) = float.power(10.0, -6.0)
-///     
+///
 ///       let assert Ok(result) = maths.euclidean_distance([#(1.0, 2.0), #(3.0, 4.0)])
 ///       result
 ///       |> maths.is_close(1.4142135623730951, 0.0, tolerance)
@@ -3667,7 +3667,7 @@ pub fn euclidean_distance(arr: List(#(Float, Float))) -> Result(Float, Nil) {
 ///
 ///     pub fn example() {
 ///       let assert Ok(tolerance) = float.power(10.0, -6.0)
-///     
+///
 ///       let assert Ok(result) =
 ///         maths.euclidean_distance_with_weights([#(1.0, 2.0, 0.5), #(3.0, 4.0, 1.0)])
 ///       result
@@ -3746,7 +3746,7 @@ pub fn chebyshev_distance(arr: List(#(Float, Float))) -> Result(Float, Nil) {
 /// In the formula, \\(n\\) is the length of the two lists and \\(x_i, y_i\\) are the
 /// values in the respective input lists indexed by \\(i\\), while the
 /// \\(w_i \in \mathbb{R}_{+}\\) are corresponding positive weights.
-/// 
+///
 /// <details>
 ///     <summary>Example:</summary>
 ///
@@ -3815,7 +3815,7 @@ pub fn chebyshev_distance_with_weights(
 ///       []
 ///       |> maths.mean()
 ///       |> should.be_error()
-///     
+///
 ///       [1.0, 2.0, 3.0]
 ///       |> maths.mean()
 ///       |> should.equal(Ok(2.0))
@@ -3940,7 +3940,7 @@ fn do_median(
 ///         <small>Back to top ↑</small>
 ///     </a>
 /// </div>
-/// 
+///
 pub fn variance(arr: List(Float), ddof: Int) -> Result(Float, Nil) {
   case arr, ddof {
     [], _ -> Error(Nil)
@@ -3986,11 +3986,11 @@ pub fn variance(arr: List(Float), ddof: Int) -> Result(Float, Nil) {
 ///     pub fn example () {
 ///       // Degrees of freedom
 ///       let ddof = 1
-///     
+///
 ///       []
 ///       |> maths.standard_deviation(ddof)
 ///       |> should.be_error()
-///     
+///
 ///       [1.0, 2.0, 3.0]
 ///       |> maths.standard_deviation(ddof)
 ///       |> should.equal(Ok(1.0))
@@ -4020,7 +4020,7 @@ pub fn standard_deviation(arr: List(Float), ddof: Int) -> Result(Float, Nil) {
 ///     </a>
 /// </div>
 ///
-/// The Jaccard index measures similarity between two sets of elements. Mathematically, the 
+/// The Jaccard index measures similarity between two sets of elements. Mathematically, the
 /// Jaccard index is defined as:
 ///
 /// \\[
@@ -4070,7 +4070,7 @@ pub fn jaccard_index(xset: set.Set(a), yset: set.Set(a)) -> Float {
 ///     </a>
 /// </div>
 ///
-/// The Sørensen-Dice coefficient measures the similarity between two sets of elements. 
+/// The Sørensen-Dice coefficient measures the similarity between two sets of elements.
 /// Mathematically, the coefficient is defined as:
 ///
 /// \\[
@@ -4078,7 +4078,7 @@ pub fn jaccard_index(xset: set.Set(a), yset: set.Set(a)) -> Float {
 /// \\]
 ///
 /// where:
-/// 
+///
 /// - \\(X\\) and \\(Y\\) are two sets being compared
 /// - \\(|X \cap Y|\\) is the size of the intersection of the two sets (i.e., the
 /// number of elements common to both sets)
@@ -4123,8 +4123,8 @@ pub fn sorensen_dice_coefficient(xset: set.Set(a), yset: set.Set(a)) -> Float {
 /// </div>
 ///
 /// The Tversky index is a generalization of the Jaccard index and Sørensen-Dice
-/// coefficient, which adds flexibility in measuring similarity between two sets using two 
-/// parameters, \\(\alpha\\) and \\(\beta\\). These parameters allow for asymmetric 
+/// coefficient, which adds flexibility in measuring similarity between two sets using two
+/// parameters, \\(\alpha\\) and \\(\beta\\). These parameters allow for asymmetric
 /// similarity measures between sets. The Tversky index is defined as:
 ///
 /// \\[
@@ -4290,11 +4290,11 @@ pub fn overlap_coefficient(xset: set.Set(a), yset: set.Set(a)) -> Float {
 ///       // Two orthogonal vectors
 ///       maths.cosine_similarity([#(-1.0, 1.0), #(1.0, 1.0), #(0.0, -1.0)])
 ///       |> should.equal(Ok(0.0))
-///     
+///
 ///       // Two identical (parallel) vectors
 ///       maths.cosine_similarity([#(1.0, 1.0), #(2.0, 2.0), #(3.0, 3.0)])
 ///       |> should.equal(Ok(1.0))
-///     
+///
 ///       // Two parallel, but oppositely oriented vectors
 ///       maths.cosine_similarity([#(-1.0, 1.0), #(-2.0, 2.0), #(-3.0, 3.0)])
 ///       |> should.equal(Ok(-1.0))
@@ -4357,7 +4357,7 @@ pub fn cosine_similarity(arr: List(#(Float, Float))) -> Result(Float, Nil) {
 ///
 ///     pub fn example() {
 ///       let assert Ok(tolerance) = float.power(10.0, -6.0)
-///     
+///
 ///       let assert Ok(result) =
 ///         maths.cosine_similarity_with_weights([
 ///           #(1.0, 1.0, 2.0),
@@ -4367,7 +4367,7 @@ pub fn cosine_similarity(arr: List(#(Float, Float))) -> Result(Float, Nil) {
 ///       result
 ///       |> maths.is_close(1.0, 0.0, tolerance)
 ///       |> should.be_true()
-///     
+///
 ///       let assert Ok(result) =
 ///         maths.cosine_similarity_with_weights([
 ///           #(-1.0, 1.0, 1.0),
@@ -4376,7 +4376,7 @@ pub fn cosine_similarity(arr: List(#(Float, Float))) -> Result(Float, Nil) {
 ///         ])
 ///       result
 ///       |> maths.is_close(-1.0, 0.0, tolerance)
-///       |> should.be_true()  
+///       |> should.be_true()
 ///     }
 /// </details>
 ///
@@ -4438,7 +4438,7 @@ pub fn cosine_similarity_with_weights(
 ///     pub fn example() {
 ///       maths.canberra_distance([])
 ///       |> should.be_error()
-///     
+///
 ///       maths.canberra_distance([#(1.0, -2.0), #(2.0, -1.0)])
 ///       |> should.equal(Ok(2.0))
 ///     }
@@ -4493,7 +4493,7 @@ pub fn canberra_distance(arr: List(#(Float, Float))) -> Result(Float, Nil) {
 ///     pub fn example() {
 ///       maths.canberra_distance([])
 ///       |> should.be_error()
-///     
+///
 ///       maths.canberra_distance_with_weights([#(1.0, -2.0, 0.5), #(2.0, -1.0, 1.0)])
 ///       |> should.equal(Ok(1.5))
 ///     }
@@ -4559,7 +4559,7 @@ pub fn canberra_distance_with_weights(
 ///     pub fn example() {
 ///       maths.canberra_distance([])
 ///       |> should.be_error()
-///     
+///
 ///       maths.canberra_distance_with_weights([#(1.0, -2.0, 0.5), #(2.0, -1.0, 1.0)])
 ///       |> should.equal(Ok(1.5))
 ///     }
@@ -4620,7 +4620,7 @@ pub fn braycurtis_distance(arr: List(#(Float, Float))) -> Result(Float, Nil) {
 ///     pub fn example() {
 ///       maths.braycurtis_distance_with_weights([])
 ///       |> should.be_error()
-///     
+///
 ///       maths.braycurtis_distance_with_weights([#(1.0, 3.0, 0.5), #(2.0, 4.0, 1.0)])
 ///       |> should.equal(Ok(0.375))
 ///     }
@@ -4685,7 +4685,7 @@ pub fn braycurtis_distance_with_weights(
 ///     pub fn example () {
 ///       let value = 99.
 ///       let reference_value = 100.
-///       // We set 'absolute_tolerance' and 'relative_tolerance' such that the values are 
+///       // We set 'absolute_tolerance' and 'relative_tolerance' such that the values are
 ///       // equivalent if 'value' is within 1 percent of 'reference_value' +/- 0.1
 ///       let relative_tolerance = 0.01
 ///       let absolute_tolerance = 0.10
@@ -4712,9 +4712,9 @@ pub fn is_close(x: Float, y: Float, rtol: Float, atol: Float) -> Bool {
 ///     </a>
 /// </div>
 ///
-/// Determine if each value \\(x_i\\) is close to or equivalent to its corresponding reference value 
-/// \\(y_i\\), in a list of value pairs \\((x_i, y_i)\\), based on supplied relative \\(r_{tol}\\) 
-/// and absolute  \\(a_{tol}\\) tolerance values. The equivalence of each pair \\((x_i, y_i)\\) is 
+/// Determine if each value \\(x_i\\) is close to or equivalent to its corresponding reference value
+/// \\(y_i\\), in a list of value pairs \\((x_i, y_i)\\), based on supplied relative \\(r_{tol}\\)
+/// and absolute  \\(a_{tol}\\) tolerance values. The equivalence of each pair \\((x_i, y_i)\\) is
 /// determined by the equation:
 ///
 /// \\[
@@ -4722,9 +4722,9 @@ pub fn is_close(x: Float, y: Float, rtol: Float, atol: Float) -> Bool {
 /// \\]
 ///
 /// A list of `Bool` values is returned, where each entry indicates if the corresponding pair
-/// satisfies the condition. If all conditions are satisfied, the list will contain only `True` 
+/// satisfies the condition. If all conditions are satisfied, the list will contain only `True`
 /// values.
-/// 
+///
 /// <details>
 ///     <summary>Example:</summary>
 ///
@@ -4739,7 +4739,7 @@ pub fn is_close(x: Float, y: Float, rtol: Float, atol: Float) -> Bool {
 ///       let yarr = list.repeat(reference_value, 42)
 ///       let arr = list.zip(xarr, yarr)
 ///       // We set 'absolute_tolerance' and 'relative_tolerance' such that
-///       // the values are equivalent if 'value' is within 1 percent of 
+///       // the values are equivalent if 'value' is within 1 percent of
 ///       // 'reference_value' +/- 0.1
 ///       let relative_tolerance = 0.01
 ///       let absolute_tolerance = 0.1
@@ -4772,11 +4772,11 @@ pub fn all_close(
 /// </div>
 ///
 /// Determine if a given value \\(x\\) is fractional, i.e., if it contains a fractional part:
-/// 
+///
 /// \\[
 ///     x - \lfloor x \rfloor > 0
 /// \\]
-/// 
+///
 /// `True` is returned if the given value is fractional (i.e., it has a non-zero decimal part),
 /// otherwise `False` is returned.
 ///
@@ -4811,16 +4811,16 @@ pub fn is_fractional(x: Float) -> Bool {
 ///     </a>
 /// </div>
 ///
-/// A function that determines if a given integer value \\(x \in \mathbb{Z}\\) is a power of 
-/// another integer value \\(y \in \mathbb{Z}\\), i.e., the function evaluates whether \\(x\\) can 
-/// be expressed as \\(y^n\\) for some integer \\(n \geq 0\\), by computing the base-\\(y\\) 
+/// A function that determines if a given integer value \\(x \in \mathbb{Z}\\) is a power of
+/// another integer value \\(y \in \mathbb{Z}\\), i.e., the function evaluates whether \\(x\\) can
+/// be expressed as \\(y^n\\) for some integer \\(n \geq 0\\), by computing the base-\\(y\\)
 /// logarithm of \\(x\\):
-/// 
+///
 /// \\[
 ///     n = \log_y(x)
 /// \\]
-/// 
-/// If \\(n\\) is an integer (i.e., it has no fractional part), then \\(x\\) is a power of \\(y\\) 
+///
+/// If \\(n\\) is an integer (i.e., it has no fractional part), then \\(x\\) is a power of \\(y\\)
 /// and `True` is returned. Otherwise `False` is returned.
 ///
 /// <details>
@@ -5278,10 +5278,10 @@ fn incomplete_gamma_sum(
 ///     </a>
 /// </div>
 ///
-/// The function returns an iterator generating evenly spaced values within a specified interval 
-/// `[start, stop)` based on a given increment size. 
-///  
-/// Note that if `increment > 0`, the sequence progresses from `start`  towards `stop`, while if 
+/// The function returns an iterator generating evenly spaced values within a specified interval
+/// `[start, stop)` based on a given increment size.
+///
+/// Note that if `increment > 0`, the sequence progresses from `start`  towards `stop`, while if
 /// `increment < 0`, the sequence progresses from `start` towards `stop` in reverse.
 ///
 /// <details>
@@ -5365,7 +5365,7 @@ pub fn arange(start: Float, stop: Float, increment: Float) -> Yielder(Float) {
 ///       result
 ///       |> list.all(fn(x) { x == True })
 ///       |> should.be_true()
-///     
+///
 ///       // A negative number of points (-5) does not work
 ///       maths.linear_space(10.0, 50.0, -5, True)
 ///       |> should.be_error()
@@ -5415,15 +5415,15 @@ pub fn linear_space(
 ///     </a>
 /// </div>
 ///
-/// The function returns an iterator for generating logarithmically spaced points over a specified 
-/// interval. The endpoint of the interval can optionally be included/excluded. The number of 
+/// The function returns an iterator for generating logarithmically spaced points over a specified
+/// interval. The endpoint of the interval can optionally be included/excluded. The number of
 /// points, base, and whether the endpoint is included determine the spacing between values.
-/// 
-/// The values in the sequence are computed as powers of the given base, where the exponents are 
-/// evenly spaced between `start` and `stop`. The `base` parameter must be positive, as negative 
-/// bases lead to undefined behavior when computing fractional exponents. Similarly, the number of 
+///
+/// The values in the sequence are computed as powers of the given base, where the exponents are
+/// evenly spaced between `start` and `stop`. The `base` parameter must be positive, as negative
+/// bases lead to undefined behavior when computing fractional exponents. Similarly, the number of
 /// points (`steps`) must be positive; specifying zero or a negative value will result in an error.
-/// 
+///
 /// <details>
 ///     <summary>Example:</summary>
 ///
@@ -5439,7 +5439,7 @@ pub fn linear_space(
 ///       result
 ///       |> list.all(fn(x) { x == True })
 ///       |> should.be_true()
-///     
+///
 ///       // A negative number of points (-3) does not work
 ///       maths.logarithmic_space(1.0, 3.0, -3, False, 10.0)
 ///       |> should.be_error()
@@ -5451,7 +5451,7 @@ pub fn linear_space(
 ///         <small>Back to top ↑</small>
 ///     </a>
 /// </div>
-/// 
+///
 pub fn logarithmic_space(
   start: Float,
   stop: Float,
@@ -5480,20 +5480,20 @@ pub fn logarithmic_space(
 ///     </a>
 /// </div>
 ///
-/// The function returns an iterator for generating a geometric progression between two specified 
-/// values, where each value is a constant multiple of the previous one. Unlike 
-/// [`logarithmic_space`](#logarithmic_space), this function allows specifying the starting 
-/// and ending values (`start` and `stop`) directly, without requiring them to be transformed 
+/// The function returns an iterator for generating a geometric progression between two specified
+/// values, where each value is a constant multiple of the previous one. Unlike
+/// [`logarithmic_space`](#logarithmic_space), this function allows specifying the starting
+/// and ending values (`start` and `stop`) directly, without requiring them to be transformed
 /// into exponents.
 ///
-/// Internally, the function computes the logarithms of `start` and `stop` and generates evenly 
-/// spaced points in the logarithmic domain (using base 10). These points are then transformed back 
-/// into their original scale to create a sequence of values that grow multiplicatively. 
-/// 
-/// The `start` and `stop` values must be positive, as logarithms are undefined for non-positive 
-/// values. The number of points (`steps`) must also be positive; specifying zero or a negative 
+/// Internally, the function computes the logarithms of `start` and `stop` and generates evenly
+/// spaced points in the logarithmic domain (using base 10). These points are then transformed back
+/// into their original scale to create a sequence of values that grow multiplicatively.
+///
+/// The `start` and `stop` values must be positive, as logarithms are undefined for non-positive
+/// values. The number of points (`steps`) must also be positive; specifying zero or a negative
 /// value will result in an error.
-/// 
+///
 /// <details>
 ///     <summary>Example:</summary>
 ///
@@ -5509,14 +5509,14 @@ pub fn logarithmic_space(
 ///       result
 ///       |> list.all(fn(x) { x == True })
 ///       |> should.be_true()
-///     
+///
 ///       // Input (start and stop can't be less than or equal to 0.0)
 ///       maths.geometric_space(0.0, 1000.0, 3, False)
 ///       |> should.be_error()
-///     
+///
 ///       maths.geometric_space(-1000.0, 0.0, 3, False)
 ///       |> should.be_error()
-///     
+///
 ///       // A negative number of points (-3) does not work
 ///       maths.geometric_space(10.0, 1000.0, -3, False)
 ///       |> should.be_error()
@@ -5551,7 +5551,7 @@ pub fn geometric_space(
 ///     </a>
 /// </div>
 ///
-/// Generates evenly spaced points around a center value. The total span (around the center value) 
+/// Generates evenly spaced points around a center value. The total span (around the center value)
 /// is determined by the `radius` argument of the function.
 ///
 /// <details>
@@ -5566,7 +5566,7 @@ pub fn geometric_space(
 ///       sym_space
 ///       |> yielder.to_list()
 ///       |> should.equal([-5.0, -2.5, 0.0, 2.5, 5.0])
-/// 
+///
 ///       // A negative radius reverses the order of the values
 ///       let assert Ok(sym_space) = maths.symmetric_space(0.0, -5.0, 5)
 ///       sym_space
