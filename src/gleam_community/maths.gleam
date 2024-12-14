@@ -4761,8 +4761,10 @@ pub fn all_close(
   arr: List(#(Float, Float)),
   rtol: Float,
   atol: Float,
-) -> Result(List(Bool), Nil) {
-  Ok(list.map(arr, fn(tuple) { is_close(tuple.0, tuple.1, rtol, atol) }))
+) -> List(Bool) {
+  use #(x, y) <- list.map(arr)
+
+  is_close(x, y, rtol, atol)
 }
 
 /// <div style="text-align: right;">
