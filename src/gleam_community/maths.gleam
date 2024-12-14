@@ -5535,13 +5535,15 @@ pub fn geometric_space(
   steps: Int,
   endpoint: Bool,
 ) -> Result(Yielder(Float), Nil) {
-  case start <=. 0.0 || stop <=. 0.0 || steps < 0 {
-    True -> Error(Nil)
-    False -> {
+  case start >. 0.0 && stop >. 0.0 && steps >= 0 {
+    True -> {
       let assert Ok(log_start) = logarithm_10(start)
       let assert Ok(log_stop) = logarithm_10(stop)
+
       logarithmic_space(log_start, log_stop, steps, endpoint, 10.0)
     }
+
+    False -> Error(Nil)
   }
 }
 
@@ -5591,6 +5593,7 @@ pub fn symmetric_space(
     True -> {
       let start = center -. radius
       let stop = center +. radius
+
       linear_space(start, stop, steps, True)
     }
   }
