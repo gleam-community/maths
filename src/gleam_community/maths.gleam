@@ -21,8 +21,6 @@
 ////    .katex { font-size: 1.10em; }
 ////</style>
 ////
-//// ---
-//// 
 
 import gleam/bool
 import gleam/float
@@ -5278,7 +5276,7 @@ fn incomplete_gamma_sum(
 ///     </a>
 /// </div>
 ///
-/// The function returns an iterator generating evenly spaced values within a specified interval 
+/// The function returns a list of evenly spaced values within a specified interval 
 /// `[start, stop)` based on a given increment size. 
 ///  
 /// Note that if `increment > 0`, the sequence progresses from `start`  towards `stop`, while if 
@@ -5287,25 +5285,21 @@ fn incomplete_gamma_sum(
 /// <details>
 ///     <summary>Example:</summary>
 ///
-///     import gleam/yielder
 ///     import gleeunit/should
 ///     import gleam_community/maths
 ///
 ///     pub fn example () {
-///       maths.arange(1.0, 5.0, 1.0)
-///       |> yielder.to_list()
+///       maths.step_range(1.0, 5.0, 1.0)
 ///       |> should.equal([1.0, 2.0, 3.0, 4.0])
-///
+///     
 ///       // No points returned since
 ///       // start is smaller than stop and the step is positive
-///       maths.arange(5.0, 1.0, 1.0)
-///       |> yielder.to_list()
+///       maths.step_range(5.0, 1.0, 1.0)
 ///       |> should.equal([])
-///
+///     
 ///       // Points returned since
 ///       // start smaller than stop but negative step
-///       maths.arange(5.0, 1.0, -1.0)
-///       |> yielder.to_list()
+///       maths.step_range(5.0, 1.0, -1.0)
 ///       |> should.equal([5.0, 4.0, 3.0, 2.0])
 ///     }
 /// </details>
@@ -5316,7 +5310,91 @@ fn incomplete_gamma_sum(
 ///     </a>
 /// </div>
 ///
-pub fn arange(start: Float, stop: Float, increment: Float) -> Yielder(Float) {
+pub fn step_range(start: Float, stop: Float, increment: Float) -> List(Float) {
+  case
+    { start >=. stop && increment >. 0.0 }
+    || { start <=. stop && increment <. 0.0 }
+  {
+    True -> []
+    False -> {
+      let direction = case start <=. stop {
+        True -> 1.0
+        False -> -1.0
+      }
+
+      let increment_abs = float.absolute_value(increment)
+      let distance = float.absolute_value(start -. stop)
+      let steps = float.round(distance /. increment_abs)
+      let adjusted_stop = stop -. increment_abs *. direction
+
+      // Generate the sequence from 'adjusted_stop' towards 'start'
+      do_step_range(adjusted_stop, increment_abs *. direction, steps, [])
+    }
+  }
+}
+
+fn do_step_range(
+  current: Float,
+  increment: Float,
+  remaining_steps: Int,
+  acc: List(Float),
+) -> List(Float) {
+  case remaining_steps {
+    0 -> acc
+    _ ->
+      do_step_range(current -. increment, increment, remaining_steps - 1, [
+        current,
+        ..acc
+      ])
+  }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// The function is similar to [`step_range`](#step_range) but instead returns a yielder  
+/// (lazily evaluated sequence of elements). This function can be used whenever there is a need 
+/// to generate a larger-than-usual sequence of elements.
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleam/yielder.{Next, Done}
+///     import gleeunit/should
+///     import gleam_community/maths
+///
+///     pub fn example () {
+///       let range = maths.yield_step_range(1.0, 2.5, 0.5)
+///     
+///       let assert Next(element, rest) = yielder.step(range)
+///       should.equal(element, 1.0)
+///     
+///       let assert Next(element, rest) = yielder.step(rest)
+///       should.equal(element, 1.5)
+///     
+///       let assert Next(element, rest) = yielder.step(rest)
+///       should.equal(element, 2.0)
+///     
+///       // We have generated 3 values over the interval [1.0, 2.5) 
+///       // in increments of 0.5, so the 4th will be 'Done' 
+///       should.equal(yielder.step(rest), Done)
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn yield_step_range(
+  start: Float,
+  stop: Float,
+  increment: Float,
+) -> Yielder(Float) {
   // Check if the range would be empty due to direction and increment
   case
     { start >=. stop && increment >. 0.0 }
@@ -5345,22 +5423,20 @@ pub fn arange(start: Float, stop: Float, increment: Float) -> Yielder(Float) {
 ///     </a>
 /// </div>
 ///
-/// The function returns an iterator for generating linearly spaced points over a specified
+/// The function returns a list of linearly spaced points over a specified
 /// interval. The endpoint of the interval can optionally be included/excluded. The number of
 /// points and whether the endpoint is included determine the spacing between values.
 ///
 /// <details>
 ///     <summary>Example:</summary>
 ///
-///     import gleam/yielder
 ///     import gleeunit/should
 ///     import gleam_community/maths
 ///
 ///     pub fn example () {
 ///       let assert Ok(tolerance) = float.power(10.0, -6.0)
 ///       let assert Ok(linspace) = maths.linear_space(10.0, 20.0, 5, True)
-///       let pairs =
-///         linspace |> yielder.to_list() |> list.zip([10.0, 12.5, 15.0, 17.5, 20.0])
+///       let pairs = linspace |> list.zip([10.0, 12.5, 15.0, 17.5, 20.0])
 ///       let assert Ok(result) = maths.all_close(pairs, 0.0, tolerance)
 ///       result
 ///       |> list.all(fn(x) { x == True })
@@ -5379,6 +5455,98 @@ pub fn arange(start: Float, stop: Float, increment: Float) -> Yielder(Float) {
 /// </div>
 ///
 pub fn linear_space(
+  start: Float,
+  stop: Float,
+  steps: Int,
+  endpoint: Bool,
+) -> Result(List(Float), Nil) {
+  let direction = case start <=. stop {
+    True -> 1.0
+    False -> -1.0
+  }
+
+  let increment_abs = case endpoint {
+    True -> float.absolute_value(start -. stop) /. int.to_float(steps - 1)
+    False -> float.absolute_value(start -. stop) /. int.to_float(steps)
+  }
+
+  let adjusted_stop = case endpoint {
+    True -> stop
+    False -> stop -. increment_abs *. direction
+  }
+
+  // Generate the sequence from 'adjusted_stop' towards 'start'
+  case steps > 0 {
+    True -> {
+      Ok(do_linear_space(adjusted_stop, increment_abs *. direction, steps, []))
+    }
+    False -> Error(Nil)
+  }
+}
+
+fn do_linear_space(
+  current: Float,
+  increment: Float,
+  remaining_steps: Int,
+  acc: List(Float),
+) -> List(Float) {
+  case remaining_steps {
+    0 -> acc
+    _ ->
+      do_linear_space(current -. increment, increment, remaining_steps - 1, [
+        current,
+        ..acc
+      ])
+  }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// The function is similar to [`linear_space`](#linear_space) but instead returns a yielder  
+/// (lazily evaluated sequence of elements). This function can be used whenever there is a need 
+/// to generate a larger-than-usual sequence of elements.
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleam/yielder.{Next, Done}
+///     import gleeunit/should
+///     import gleam_community/maths
+///
+///     pub fn example () {
+///       let assert Ok(linspace) = maths.yield_linear_space(10.0, 20.0, 5, True)
+///     
+///       let assert Next(element, rest) = yielder.step(linspace)
+///       should.equal(element, 10.0)
+///     
+///       let assert Next(element, rest) = yielder.step(rest)
+///       should.equal(element, 12.5)
+///     
+///       let assert Next(element, rest) = yielder.step(rest)
+///       should.equal(element, 15.0)
+///     
+///       let assert Next(element, rest) = yielder.step(rest)
+///       should.equal(element, 17.5)
+///     
+///       let assert Next(element, rest) = yielder.step(rest)
+///       should.equal(element, 20.0)
+///     
+///       // We have generated 5 values, so the 6th will be 'Done' 
+///       should.equal(yielder.step(rest), Done)
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn yield_linear_space(
   start: Float,
   stop: Float,
   steps: Int,
@@ -5415,7 +5583,7 @@ pub fn linear_space(
 ///     </a>
 /// </div>
 ///
-/// The function returns an iterator for generating logarithmically spaced points over a specified 
+/// The function returns a list of logarithmically spaced points over a specified 
 /// interval. The endpoint of the interval can optionally be included/excluded. The number of 
 /// points, base, and whether the endpoint is included determine the spacing between values.
 /// 
@@ -5427,14 +5595,13 @@ pub fn linear_space(
 /// <details>
 ///     <summary>Example:</summary>
 ///
-///     import gleam/yielder
 ///     import gleeunit/should
 ///     import gleam_community/maths
 ///
 ///     pub fn example () {
 ///       let assert Ok(tolerance) = float.power(10.0, -6.0)
 ///       let assert Ok(logspace) = maths.logarithmic_space(1.0, 3.0, 3, True, 10.0)
-///       let pairs = logspace |> yielder.to_list() |> list.zip([10.0, 100.0, 1000.0])
+///       let pairs = logspace |> list.zip([10.0, 100.0, 1000.0])
 ///       let assert Ok(result) = maths.all_close(pairs, 0.0, tolerance)
 ///       result
 ///       |> list.all(fn(x) { x == True })
@@ -5458,10 +5625,73 @@ pub fn logarithmic_space(
   steps: Int,
   endpoint: Bool,
   base: Float,
-) -> Result(Yielder(Float), Nil) {
+) -> Result(List(Float), Nil) {
   case steps > 0 && base >=. 0.0 {
     True -> {
       let assert Ok(linspace) = linear_space(start, stop, steps, endpoint)
+
+      Ok(
+        list.map(linspace, fn(value) {
+          let assert Ok(result) = float.power(base, value)
+          result
+        }),
+      )
+    }
+    False -> Error(Nil)
+  }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// The function is similar to [`logarithmic_space`](#logarithmic_space) but instead returns a yielder  
+/// (lazily evaluated sequence of elements). This function can be used whenever there is a need 
+/// to generate a larger-than-usual sequence of elements.
+/// 
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleam/yielder.{Next, Done}
+///     import gleeunit/should
+///     import gleam_community/maths
+///
+///     pub fn example () {
+///       let assert Ok(logspace) =
+///         maths.yield_logarithmic_space(1.0, 3.0, 3, True, 10.0)
+///     
+///       let assert Next(element, rest) = yielder.step(logspace)
+///       should.equal(element, 10.0)
+///     
+///       let assert Next(element, rest) = yielder.step(rest)
+///       should.equal(element, 100.0)
+///     
+///       let assert Next(element, rest) = yielder.step(rest)
+///       should.equal(element, 1000.0)
+///     
+///       // We have generated 3 values, so the 4th will be 'Done' 
+///       should.equal(yielder.step(rest), Done)
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+/// 
+pub fn yield_logarithmic_space(
+  start: Float,
+  stop: Float,
+  steps: Int,
+  endpoint: Bool,
+  base: Float,
+) -> Result(Yielder(Float), Nil) {
+  case steps > 0 && base >=. 0.0 {
+    True -> {
+      let assert Ok(linspace) = yield_linear_space(start, stop, steps, endpoint)
 
       Ok(
         yielder.map(linspace, fn(value) {
@@ -5480,7 +5710,7 @@ pub fn logarithmic_space(
 ///     </a>
 /// </div>
 ///
-/// The function returns an iterator for generating a geometric progression between two specified 
+/// The function returns a list of a geometric progression between two specified 
 /// values, where each value is a constant multiple of the previous one. Unlike 
 /// [`logarithmic_space`](#logarithmic_space), this function allows specifying the starting 
 /// and ending values (`start` and `stop`) directly, without requiring them to be transformed 
@@ -5504,7 +5734,7 @@ pub fn logarithmic_space(
 ///     pub fn example () {
 ///       let assert Ok(tolerance) = float.power(10.0, -6.0)
 ///       let assert Ok(logspace) = maths.geometric_space(10.0, 1000.0, 3, True)
-///       let pairs = logspace |> yielder.to_list() |> list.zip([10.0, 100.0, 1000.0])
+///       let pairs = logspace |> list.zip([10.0, 100.0, 1000.0])
 ///       let assert Ok(result) = maths.all_close(pairs, 0.0, tolerance)
 ///       result
 ///       |> list.all(fn(x) { x == True })
@@ -5534,7 +5764,7 @@ pub fn geometric_space(
   stop: Float,
   steps: Int,
   endpoint: Bool,
-) -> Result(Yielder(Float), Nil) {
+) -> Result(List(Float), Nil) {
   case start <=. 0.0 || stop <=. 0.0 || steps < 0 {
     True -> Error(Nil)
     False -> {
@@ -5551,26 +5781,79 @@ pub fn geometric_space(
 ///     </a>
 /// </div>
 ///
+/// The function is similar to [`geometric_space`](#geometric_space) but instead returns a yielder  
+/// (lazily evaluated sequence of elements). This function can be used whenever there is a need 
+/// to generate a larger-than-usual sequence of elements.
+/// 
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleam/yielder.{Next, Done}
+///     import gleeunit/should
+///     import gleam_community/maths
+///
+///     pub fn example () {
+///       let assert Ok(logspace) = maths.yield_geometric_space(10.0, 1000.0, 3, True)
+///     
+///       let assert Next(element, rest) = yielder.step(logspace)
+///       should.equal(element, 10.0)
+///     
+///       let assert Next(element, rest) = yielder.step(rest)
+///       should.equal(element, 100.0)
+///     
+///       let assert Next(element, rest) = yielder.step(rest)
+///       should.equal(element, 1000.0)
+///     
+///       // We have generated 3 values, so the 4th will be 'Done' 
+///       should.equal(yielder.step(rest), Done)
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn yield_geometric_space(
+  start: Float,
+  stop: Float,
+  steps: Int,
+  endpoint: Bool,
+) -> Result(Yielder(Float), Nil) {
+  case start <=. 0.0 || stop <=. 0.0 || steps < 0 {
+    True -> Error(Nil)
+    False -> {
+      let assert Ok(log_start) = logarithm_10(start)
+      let assert Ok(log_stop) = logarithm_10(stop)
+      yield_logarithmic_space(log_start, log_stop, steps, endpoint, 10.0)
+    }
+  }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
 /// Generates evenly spaced points around a center value. The total span (around the center value) 
 /// is determined by the `radius` argument of the function.
 ///
 /// <details>
 ///     <summary>Example:</summary>
 ///
-///     import gleam/yielder
 ///     import gleeunit/should
 ///     import gleam_community/maths
 ///
 ///     pub fn example() {
-///       let assert Ok(sym_space) = maths.symmetric_space(0.0, 5.0, 5)
-///       sym_space
-///       |> yielder.to_list()
+///       let assert Ok(symspace) = maths.symmetric_space(0.0, 5.0, 5)
+///       symspace
 ///       |> should.equal([-5.0, -2.5, 0.0, 2.5, 5.0])
-/// 
+///     
 ///       // A negative radius reverses the order of the values
-///       let assert Ok(sym_space) = maths.symmetric_space(0.0, -5.0, 5)
-///       sym_space
-///       |> yielder.to_list()
+///       let assert Ok(symspace) = maths.symmetric_space(0.0, -5.0, 5)
+///       symspace
 ///       |> should.equal([5.0, 2.5, 0.0, -2.5, -5.0])
 ///     }
 /// </details>
@@ -5585,13 +5868,74 @@ pub fn symmetric_space(
   center: Float,
   radius: Float,
   steps: Int,
-) -> Result(Yielder(Float), Nil) {
+) -> Result(List(Float), Nil) {
   case steps > 0 {
     False -> Error(Nil)
     True -> {
       let start = center -. radius
       let stop = center +. radius
       linear_space(start, stop, steps, True)
+    }
+  }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// The function is similar to [`symmetric_space`](#symmetric_space) but instead returns a yielder  
+/// (lazily evaluated sequence of elements). This function can be used whenever there is a need 
+/// to generate a larger-than-usual sequence of elements.
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleam/yielder.{Next, Done}
+///     import gleeunit/should
+///     import gleam_community/maths
+///
+///     pub fn example() {
+///       let assert Ok(symspace) = maths.yield_symmetric_space(0.0, 5.0, 5)
+///     
+///       let assert Next(element, rest) = yielder.step(symspace)
+///       should.equal(element, -5.0)
+///     
+///       let assert Next(element, rest) = yielder.step(rest)
+///       should.equal(element, -2.5)
+///     
+///       let assert Next(element, rest) = yielder.step(rest)
+///       should.equal(element, 0.0)
+///     
+///       let assert Next(element, rest) = yielder.step(rest)
+///       should.equal(element, 2.5)
+///     
+///       let assert Next(element, rest) = yielder.step(rest)
+///       should.equal(element, 5.0)
+///     
+///       // We have generated 5 values, so the 6th will be 'Done' 
+///       should.equal(yielder.step(rest), Done)
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn yield_symmetric_space(
+  center: Float,
+  radius: Float,
+  steps: Int,
+) -> Result(Yielder(Float), Nil) {
+  case steps > 0 {
+    False -> Error(Nil)
+    True -> {
+      let start = center -. radius
+      let stop = center +. radius
+      yield_linear_space(start, stop, steps, True)
     }
   }
 }
