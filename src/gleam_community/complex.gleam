@@ -1,7 +1,6 @@
 import gleam/bool
 import gleam/float
 import gleam/int
-import gleam/io
 import gleam/list
 import gleam/order.{type Order, Eq, Gt, Lt}
 import gleam/result
@@ -89,7 +88,7 @@ pub fn power(z: Complex, n: Int) -> Result(Complex, Nil) {
     // 0 ^ n -> 0
     Error(_), _ -> Ok(Complex(0.0, 0.0))
     // z ^ 0 -> 1
-    Ok(_), Eq -> Ok(multiplicative_identify())
+    Ok(_), Eq -> Ok(multiplicative_identity())
     // De Moivre's Theorem only works for positive integers
     Ok(_), Lt -> Error(Nil)
     Ok(arg), _ -> {
@@ -137,7 +136,7 @@ fn zero() -> Complex {
   Complex(0.0, 0.0)
 }
 
-fn multiplicative_identify() -> Complex {
+fn multiplicative_identity() -> Complex {
   from_float(1.0)
 }
 
@@ -146,7 +145,7 @@ pub fn sum(arr: List(Complex)) -> Complex {
 }
 
 pub fn product(arr: List(Complex)) -> Complex {
-  list.fold(arr, multiplicative_identify(), multiply)
+  list.fold(arr, multiplicative_identity(), multiply)
 }
 
 pub fn weighted_sum(arr: List(#(Complex, Float))) -> Result(Complex, Nil) {
@@ -167,7 +166,7 @@ pub fn weighted_product(arr: List(#(Complex, Int))) -> Result(Complex, Nil) {
   case weight_is_negative {
     True -> Error(Nil)
     False ->
-      list.fold(arr, Ok(multiplicative_identify()), fn(acc_result, tuple) {
+      list.fold(arr, Ok(multiplicative_identity()), fn(acc_result, tuple) {
         acc_result
         |> result.then(fn(acc) {
           power(tuple.0, tuple.1)
@@ -182,7 +181,7 @@ pub fn cumulative_sum(arr: List(Complex)) -> List(Complex) {
 }
 
 pub fn cumulative_product(arr: List(Complex)) -> List(Complex) {
-  list.scan(arr, multiplicative_identify(), multiply)
+  list.scan(arr, multiplicative_identity(), multiply)
 }
 
 pub fn absolute_difference(a: Complex, b: Complex) {

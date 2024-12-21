@@ -1,6 +1,5 @@
 import gleam/float
 import gleam/function
-import gleam/io
 import gleam/list
 import gleam/order.{Eq, Gt, Lt}
 import gleam_community/complex.{Complex}
