@@ -74,10 +74,7 @@ pub fn gcd(x: Int, y: Int) -> Int {
 fn do_gcd(x: Int, y: Int) -> Int {
   case x == 0 {
     True -> y
-    False -> {
-      let assert Ok(z) = int.modulo(y, x)
-      do_gcd(z, x)
-    }
+    False -> do_gcd(y % x, x)
   }
 }
 
