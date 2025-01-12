@@ -1,78 +1,62 @@
 import gleam/float
+import gleam/list
 import gleam/set
 import gleam_community/maths
 import gleeunit/should
 
+fn norm_test_cases() {
+  // Tuples of #(list, norm, expected result)
+  [
+    // An empty list will always return 0.0
+    #([], 1.0, 0.0),
+    #([1.0, 1.0, 1.0], 1.0, 3.0),
+    // Check the special case: 
+    // The pseudo-norm when p = 0 (we count the number of non-zero elements in the given list)
+    #([1.0, 1.0, 1.0], 0.0, 3.0),
+    #([1.0, 1.0, 1.0], -1.0, 0.3333333333333333),
+    #([-1.0, -1.0, -1.0], -1.0, 0.3333333333333333),
+    // Check if we internally correctly remember to take the absolute
+    // value of each of the list elements
+    #([-1.0, -1.0, -1.0], 1.0, 3.0),
+    #([-1.0, -1.0, -1.0], 0.5, 9.0),
+    #([0.0, 0.0, 0.0], 1.0, 0.0),
+    // Check if we internally handle division by zero appropriately 
+    #([0.0], -1.0, 0.0),
+    #([1.0, 2.0, 3.0, 0.0], -1.0, 0.0),
+    #([-1.0, -2.0, -3.0], -10.0, 0.9999007044905545),
+    #([-1.0, -2.0, -3.0], -100.0, 1.0),
+    // Test the Euclidean norm (p = 2)
+    #([-1.0, -2.0, -3.0], 2.0, 3.7416573867739413),
+  ]
+}
+
 pub fn list_norm_test() {
   let assert Ok(tol) = float.power(10.0, -6.0)
 
-  // An empty lists returns 0.0
-  []
-  |> maths.norm(1.0)
-  |> should.equal(Ok(0.0))
-
-  // Check that the function agrees, at some arbitrary input
-  // points, with known function values
-  let assert Ok(result) =
-    [1.0, 1.0, 1.0]
-    |> maths.norm(1.0)
-  result
-  |> maths.is_close(3.0, 0.0, tol)
-  |> should.be_true()
-
-  let assert Ok(result) =
-    [1.0, 1.0, 1.0]
-    |> maths.norm(-1.0)
-  result
-  |> maths.is_close(0.3333333333333333, 0.0, tol)
-  |> should.be_true()
-
-  let assert Ok(result) =
-    [-1.0, -1.0, -1.0]
-    |> maths.norm(-1.0)
-  result
-  |> maths.is_close(0.3333333333333333, 0.0, tol)
-  |> should.be_true()
-
-  let assert Ok(result) =
-    [-1.0, -1.0, -1.0]
-    |> maths.norm(1.0)
-  result
-  |> maths.is_close(3.0, 0.0, tol)
-  |> should.be_true()
-
-  let assert Ok(result) =
-    [-1.0, -2.0, -3.0]
-    |> maths.norm(-10.0)
-  result
-  |> maths.is_close(0.9999007044905545, 0.0, tol)
-  |> should.be_true()
-
-  let assert Ok(result) =
-    [-1.0, -2.0, -3.0]
-    |> maths.norm(-100.0)
-  result
-  |> maths.is_close(1.0, 0.0, tol)
-  |> should.be_true()
-
-  let assert Ok(result) =
-    [-1.0, -2.0, -3.0]
-    |> maths.norm(2.0)
-  result
-  |> maths.is_close(3.7416573867739413, 0.0, tol)
-  |> should.be_true()
+  norm_test_cases()
+  |> list.map(fn(tuple) {
+    let #(arr, p, expected) = tuple
+    let assert Ok(result) = maths.norm(arr, p)
+    result |> maths.is_close(expected, 0.0, tol) |> should.be_true()
+  })
 }
 
 pub fn list_norm_with_weights_test() {
   let assert Ok(tol) = float.power(10.0, -6.0)
 
-  // An empty lists returns 0.0
-  []
-  |> maths.norm_with_weights(1.0)
-  |> should.equal(Ok(0.0))
+  // Check that the weighted version of the norm function aligns with the
+  // non-weighted version by re-using the test cases for the non-weighted 
+  // version by associating a weight of 1.0 to each elemet of the input lists
+  norm_test_cases()
+  |> list.map(fn(tuple) {
+    let #(arr, p, expected) = tuple
+    let new_arr = list.map(arr, fn(element) { #(element, 1.0) })
+    let assert Ok(result) = maths.norm_with_weights(new_arr, p)
+    result |> maths.is_close(expected, 0.0, tol)
+  })
 
-  // Check that the function agrees, at some arbitrary input
-  // points, with known function values
+  // Check that the function agrees, at some additional arbitrary input points
+  // with known function values
   let assert Ok(result) =
     [#(1.0, 1.0), #(1.0, 1.0), #(1.0, 1.0)]
     |> maths.norm_with_weights(1.0)
@@ -383,6 +367,10 @@ pub fn overlap_coefficient_test() {
 pub fn cosine_similarity_test() {
   let assert Ok(tol) = float.power(10.0, -6.0)
 
+  // An empty list returns an error
+  maths.cosine_similarity([])
+  |> should.be_error()
+
   // Two orthogonal vectors (represented by lists)
   maths.cosine_similarity([#(-1.0, 1.0), #(1.0, 1.0), #(0.0, -1.0)])
   |> should.equal(Ok(0.0))
@@ -401,6 +389,10 @@ pub fn cosine_similarity_test() {
   result
   |> maths.is_close(0.9746318461970762, 0.0, tol)
   |> should.be_true()
+
+  // An empty list returns an error
+  maths.cosine_similarity_with_weights([])
+  |> should.be_error()
 
   // Try valid input with weights
   let assert Ok(result) =
@@ -454,7 +446,7 @@ pub fn cosine_similarity_test() {
 }
 
 pub fn chebyshev_distance_test() {
-  // Empty lists returns an error
+  // An empty list returns an error
   maths.chebyshev_distance([])
   |> should.be_error()
 
@@ -483,7 +475,7 @@ pub fn chebyshev_distance_test() {
 }
 
 pub fn canberra_distance_test() {
-  // Empty lists returns an error
+  // An empty list returns an error
   maths.canberra_distance([])
   |> should.be_error()
 
@@ -519,7 +511,7 @@ pub fn canberra_distance_test() {
 }
 
 pub fn braycurtis_distance_test() {
-  // Empty lists returns an error
+  // An empty list returns an error
   maths.braycurtis_distance([])
   |> should.be_error()
 

@@ -206,6 +206,8 @@ pub fn lcm(x: Int, y: Int) -> Int {
 ///
 pub fn divisors(n: Int) -> List(Int) {
   let nabs = float.absolute_value(int.to_float(n))
+  // Usage of let assert: 'nabs' is non-negative so no error should occur. The function
+  // 'float.squre_root' will only return an error in case a non-negative value is given as input.
   let assert Ok(sqrt_result) = float.square_root(nabs)
   let max = float.round(sqrt_result) + 1
   find_divisors(n, max, [1, n], 2)
@@ -261,6 +263,8 @@ fn find_divisors(n: Int, max: Int, acc: List(Int), i: Int) -> List(Int) {
 ///
 pub fn proper_divisors(n: Int) -> List(Int) {
   let nabs = float.absolute_value(int.to_float(n))
+  // Usage of let assert: 'nabs' is non-negative so no error should occur, i.e., the function 
+  // 'float.squre_root' will only return an error in case a non-negative value is given as input.
   let assert Ok(sqrt_result) = float.square_root(nabs)
   let max = float.round(sqrt_result) + 1
   let divisors =
@@ -721,8 +725,11 @@ pub fn polar_to_cartesian(r: Float, theta: Float) -> #(Float, Float) {
 /// </div>
 ///
 pub fn cartesian_to_polar(x: Float, y: Float) -> #(Float, Float) {
-  // Calculate r and theta
-  let assert Ok(r) = float.power(x *. x +. y *. y, 1.0 /. 2.0)
+  // Calculate 'r' and 'theta'
+  // Usage of let assert: a sum of squares is always non-negative so no error should occur, i.e., 
+  // the function 'float.squre_root' will only return an error in case a non-negative value is given
+  // as input.
+  let assert Ok(r) = float.square_root(x *. x +. y *. y)
   let theta = atan2(y, x)
   #(r, theta)
 }
@@ -1464,7 +1471,9 @@ pub fn logarithm(x: Float, base: Float) -> Result(Float, Nil) {
       case base >. 0.0 && base != 1.0 {
         False -> Error(Nil)
         True -> {
-          // Apply the "change of base formula"
+          // Apply the "change of base formula".
+          // Usage of let assert: No error will occur since 'x' and 'base' are within the 
+          // domain of the 'logarithm_10' function.
           let assert Ok(numerator) = logarithm_10(x)
           let assert Ok(denominator) = logarithm_10(base)
           Ok(numerator /. denominator)
@@ -1692,7 +1701,10 @@ pub fn tau() -> Float {
 ///
 pub fn golden_ratio() -> Float {
   // Calculate the golden ratio: (1 + sqrt(5)) / 2
-  let assert Ok(sqrt5) = float.power(5.0, 1.0 /. 2.0)
+  // Usage of let assert: A positive number '5' is given a input so no error should occur, i.e., 
+  // the function 'float.squre_root' will only return an error in case a non-negative value is 
+  // given as input.
+  let assert Ok(sqrt5) = float.square_root(5.0)
   { 1.0 +. sqrt5 } /. 2.0
 }
 
@@ -1777,6 +1789,10 @@ pub fn e() -> Float {
 /// </div>
 ///
 pub fn round_to_nearest(x: Float, p: Int) -> Float {
+  // Usage of let assert: The function 'float.power' will only return an error if:
+  // 1. The base is negative and the exponent is fractional.
+  // 2. If the base is 0 and the exponent is negative.
+  // No error will occur since the base is a positive non-zero number.
   let assert Ok(p) = float.power(10.0, int.to_float(p))
   let xabs = float.absolute_value(x) *. p
   let xabs_truncated = truncate_float(xabs)
@@ -1784,7 +1800,7 @@ pub fn round_to_nearest(x: Float, p: Int) -> Float {
   case remainder {
     _ if remainder >. 0.5 -> sign(x) *. truncate_float(xabs +. 1.0) /. p
     _ if remainder == 0.5 -> {
-      let assert Ok(is_even) = int.modulo(float.truncate(xabs), 2)
+      let is_even = float.truncate(xabs) % 2
       case is_even == 0 {
         True -> sign(x) *. xabs_truncated /. p
         False -> sign(x) *. truncate_float(xabs +. 1.0) /. p
@@ -1841,6 +1857,10 @@ pub fn round_to_nearest(x: Float, p: Int) -> Float {
 /// </div>
 ///
 pub fn round_ties_away(x: Float, p: Int) -> Float {
+  // Usage of let assert: The function 'float.power' will only return an error if:
+  // 1. The base is negative and the exponent is fractional.
+  // 2. If the base is 0 and the exponent is negative.
+  // No error will occur since the base is a positive non-zero number.
   let assert Ok(p) = float.power(10.0, int.to_float(p))
   let xabs = float.absolute_value(x) *. p
   let remainder = xabs -. truncate_float(xabs)
@@ -1897,6 +1917,10 @@ pub fn round_ties_away(x: Float, p: Int) -> Float {
 /// </div>
 ///
 pub fn round_ties_up(x: Float, p: Int) -> Float {
+  // Usage of let assert: The function 'float.power' will only return an error if:
+  // 1. The base is negative and the exponent is fractional.
+  // 2. If the base is 0 and the exponent is negative.
+  // No error will occur since the base is a positive non-zero number.
   let assert Ok(p) = float.power(10.0, int.to_float(p))
   let xabs = float.absolute_value(x) *. p
   let xabs_truncated = truncate_float(xabs)
@@ -1955,6 +1979,10 @@ pub fn round_ties_up(x: Float, p: Int) -> Float {
 /// </div>
 ///
 pub fn round_to_zero(x: Float, p: Int) -> Float {
+  // Usage of let assert: The function 'float.power' will only return an error if:
+  // 1. The base is negative and the exponent is fractional.
+  // 2. If the base is 0 and the exponent is negative.
+  // No error will occur since the base is a positive non-zero number.
   let assert Ok(p) = float.power(10.0, int.to_float(p))
   truncate_float(x *. p) /. p
 }
@@ -2014,6 +2042,10 @@ fn do_truncate_float(a: Float) -> Float
 /// </div>
 ///
 pub fn round_down(x: Float, p: Int) -> Float {
+  // Usage of let assert: The function 'float.power' will only return an error if:
+  // 1. The base is negative and the exponent is fractional.
+  // 2. If the base is 0 and the exponent is negative.
+  // No error will occur since the base is a positive non-zero number.
   let assert Ok(p) = float.power(10.0, int.to_float(p))
   do_floor(x *. p) /. p
 }
@@ -2069,6 +2101,10 @@ fn do_floor(a: Float) -> Float
 /// </div>
 ///
 pub fn round_up(x: Float, p: Int) -> Float {
+  // Usage of let assert: The function 'float.power' will only return an error if:
+  // 1. The base is negative and the exponent is fractional.
+  // 2. If the base is 0 and the exponent is negative.
+  // No error will occur since the base is a positive non-zero number.
   let assert Ok(p) = float.power(10.0, int.to_float(p))
   do_ceiling(x *. p) /. p
 }
@@ -2488,6 +2524,7 @@ pub fn arg_minimum(
   case arr {
     [] -> Error(Nil)
     _ -> {
+      // Usage of let assert: No error will occur since we know input 'arr' is non-empty 
       let assert Ok(min) = list_minimum(arr, compare)
       Ok(
         list.index_map(arr, fn(element, index) {
@@ -2552,6 +2589,7 @@ pub fn arg_maximum(
   case arr {
     [] -> Error(Nil)
     _ -> {
+      // Usage of let assert: No error will occur since we know input 'arr' is non-empty 
       let assert Ok(max) = list_maximum(arr, compare)
       Ok(
         list.index_map(arr, fn(element, index) {
@@ -2939,7 +2977,10 @@ pub fn permutation_with_repetitions(n: Int, k: Int) -> Result(Int, Nil) {
     _, _ -> {
       let n_float = int.to_float(n)
       let k_float = int.to_float(k)
-      // 'n' and 'k' are positive integers, so no errors here...
+      // Usage of let assert: The function 'float.power' will only return an error if:
+      // 1. The base is negative and the exponent is fractional.
+      // 2. If the base is 0 and the exponent is negative.
+      // No error will occur since the base and exponent are positive numbers.
       let assert Ok(result) = float.power(n_float, k_float)
       Ok(float.round(result))
     }
@@ -3312,12 +3353,56 @@ pub fn norm(arr: List(Float), p: Float) -> Result(Float, Nil) {
   case arr {
     [] -> Ok(0.0)
     _ -> {
-      let aggregate =
-        list.fold(arr, 0.0, fn(acc, element) {
-          let assert Ok(result) = float.power(float.absolute_value(element), p)
-          result +. acc
-        })
-      float.power(aggregate, 1.0 /. p)
+      case p {
+        // Handle the the special case when 'p' is equal to zero. In this case, we compute a 
+        // pseudo-norm, which is the number of non-zero elements in the given list 'arr'
+        0.0 ->
+          Ok(
+            list.fold(arr, 0.0, fn(acc, element) {
+              case element {
+                0.0 -> acc
+                _ -> acc +. 1.0
+              }
+            }),
+          )
+        // Handle the case when 'p' is negative
+        _ if p <. 0.0 -> {
+          let aggregate =
+            list.try_fold(arr, 0.0, fn(acc, element) {
+              case element {
+                // Whenever 'p' is negative and an element in the list is zero, then we should
+                // simply stop and return 0.0. Otherwise continue.
+                0.0 -> Error(0.0)
+                _ -> {
+                  // Usage of let assert below: The function 'float.power' will only return an 
+                  // error if:
+                  // 1. The base is negative and the exponent is fractional.
+                  // 2. If the base is 0 and the exponent is negative.
+                  // No error will occur below, since the base is positive and non-zero.
+                  let assert Ok(result) =
+                    float.power(float.absolute_value(element), p)
+                  Ok(result +. acc)
+                }
+              }
+            })
+          case aggregate {
+            Ok(result) -> float.power(result, 1.0 /. p)
+            Error(_) -> Ok(0.0)
+          }
+        }
+        // Handle the case when 'p' is positive
+        _ -> {
+          // Usage of let assert below: No error will occur, since both the exponent and base 
+          // are positive numbers. 
+          let aggregate =
+            list.fold(arr, 0.0, fn(acc, element) {
+              let assert Ok(result) =
+                float.power(float.absolute_value(element), p)
+              result +. acc
+            })
+          float.power(aggregate, 1.0 /. p)
+        }
+      }
     }
   }
 }
@@ -3372,18 +3457,64 @@ pub fn norm_with_weights(
   case arr {
     [] -> Ok(0.0)
     _ -> {
-      let weight_is_negative = list.any(arr, fn(tuple) { tuple.1 <. 0.0 })
-      case weight_is_negative {
-        False -> {
-          let aggregate =
-            list.fold(arr, 0.0, fn(acc, tuple) {
-              let assert Ok(result) =
-                float.power(float.absolute_value(tuple.0), p)
-              tuple.1 *. result +. acc
-            })
-          float.power(aggregate, 1.0 /. p)
-        }
+      let weight_is_invalid = list.any(arr, fn(tuple) { tuple.1 <. 0.0 })
+      case weight_is_invalid {
         True -> Error(Nil)
+        // Return an error if the weights are invalid (negative)
+        False -> {
+          case p {
+            0.0 -> {
+              // Handle the the special case when 'p' is equal to zero. In this case, we compute 
+              // a pseudo-norm, which is the number of non-zero elements in the given list 'arr'
+              Ok(
+                list.fold(arr, 0.0, fn(acc, tuple) {
+                  case tuple {
+                    #(0.0, _) -> acc
+                    _ -> acc +. 1.0
+                  }
+                }),
+              )
+            }
+            _ if p <. 0.0 -> {
+              // Handle the case when 'p' is negative
+              let aggregate =
+                list.try_fold(arr, 0.0, fn(acc, tuple) {
+                  // Whenever 'p' is negative and an element or weight in the list is zero, then
+                  // we should simply stop and return 0.0. Otherwise continue.
+                  case tuple {
+                    #(0.0, _) -> Error(0.0)
+                    #(_, 0.0) -> Error(0.0)
+                    _ -> {
+                      // Usage of let assert below: The function 'float.power' will only return an 
+                      // error if:
+                      // 1. The base is negative and the exponent is fractional.
+                      // 2. If the base is 0 and the exponent is negative.
+                      // No error will occur below, since the base is positive and non-zero.
+                      let assert Ok(result) =
+                        float.power(float.absolute_value(tuple.0), p)
+                      Ok(tuple.1 *. result +. acc)
+                    }
+                  }
+                })
+              case aggregate {
+                Ok(result) -> float.power(result, 1.0 /. p)
+                Error(_) -> Ok(0.0)
+              }
+            }
+            // Handle the case when 'p' is positive
+            _ -> {
+              // Usage of let assert below: No error will occur, since both the exponent and base 
+              // are positive numbers. 
+              let aggregate =
+                list.fold(arr, 0.0, fn(acc, tuple) {
+                  let assert Ok(result) =
+                    float.power(float.absolute_value(tuple.0), p)
+                  tuple.1 *. result +. acc
+                })
+              float.power(aggregate, 1.0 /. p)
+            }
+          }
+        }
       }
     }
   }
@@ -3941,9 +4072,14 @@ pub fn variance(arr: List(Float), ddof: Int) -> Result(Float, Nil) {
     [], _ -> Error(Nil)
     _, _ if ddof < 0 -> Error(Nil)
     _, _ -> {
+      // Usage of let assert: No error will occur since we know input 'arr' is non-empty 
       let assert Ok(mean) = mean(arr)
       Ok(
         list.map(arr, fn(element) {
+          // Usage of let assert: The function 'float.power' will only return an error if:
+          // 1. The base is negative and the exponent is fractional.
+          // 2. If the base is 0 and the exponent is negative.
+          // No error will occur since the exponent is positive and integer-valued. 
           let assert Ok(result) = float.power(element -. mean, 2.0)
           result
         })
@@ -4003,6 +4139,8 @@ pub fn standard_deviation(arr: List(Float), ddof: Int) -> Result(Float, Nil) {
     [], _ -> Error(Nil)
     _, _ if ddof < 0 -> Error(Nil)
     _, _ -> {
+      // Usage of let assert: No error will occur since we know input 'arr' is non-empty and
+      // 'ddof' is larger than or equal to zero 
       let assert Ok(variance) = variance(arr, ddof)
       float.square_root(variance)
     }
@@ -4055,6 +4193,8 @@ pub fn standard_deviation(arr: List(Float), ddof: Int) -> Result(Float, Nil) {
 /// </div>
 ///
 pub fn jaccard_index(xset: set.Set(a), yset: set.Set(a)) -> Float {
+  // Usage of let assert: No error will occur since the input parameters 'alpha' and 'beta' 
+  // are larger than or equal to zero 
   let assert Ok(result) = tversky_index(xset, yset, 1.0, 1.0)
   result
 }
@@ -4107,6 +4247,8 @@ pub fn jaccard_index(xset: set.Set(a), yset: set.Set(a)) -> Float {
 /// </div>
 ///
 pub fn sorensen_dice_coefficient(xset: set.Set(a), yset: set.Set(a)) -> Float {
+  // Usage of let assert: No error will occur since the input parameters 'alpha' and 'beta' 
+  // are larger than or equal to zero 
   let assert Ok(result) = tversky_index(xset, yset, 0.5, 0.5)
   result
 }
@@ -4303,19 +4445,26 @@ pub fn overlap_coefficient(xset: set.Set(a), yset: set.Set(a)) -> Float {
 /// </div>
 ///
 pub fn cosine_similarity(arr: List(#(Float, Float))) -> Result(Float, Nil) {
-  let numerator =
-    list.fold(arr, 0.0, fn(acc, tuple) { acc +. tuple.0 *. tuple.1 })
+  case arr {
+    [] -> Error(Nil)
+    _ -> {
+      let numerator =
+        list.fold(arr, 0.0, fn(acc, tuple) { acc +. tuple.0 *. tuple.1 })
 
-  let xarr = list.map(arr, fn(tuple) { tuple.0 })
-  let yarr = list.map(arr, fn(tuple) { tuple.1 })
+      let xarr = list.map(arr, fn(tuple) { tuple.0 })
+      let yarr = list.map(arr, fn(tuple) { tuple.1 })
 
-  let assert Ok(xarr_norm) = norm(xarr, 2.0)
-  let assert Ok(yarr_norm) = norm(yarr, 2.0)
+      // Usage of let assert: No error will occur since the input lists 'xarr' and 'yarr' 
+      // are non-empty and p = 2 is positive and integer-valued.
+      let assert Ok(xarr_norm) = norm(xarr, 2.0)
+      let assert Ok(yarr_norm) = norm(yarr, 2.0)
 
-  let denominator = {
-    xarr_norm *. yarr_norm
+      let denominator = {
+        xarr_norm *. yarr_norm
+      }
+      Ok(numerator /. denominator)
+    }
   }
-  Ok(numerator /. denominator)
 }
 
 /// <div style="text-align: right;">
@@ -4384,27 +4533,34 @@ pub fn cosine_similarity(arr: List(#(Float, Float))) -> Result(Float, Nil) {
 pub fn cosine_similarity_with_weights(
   arr: List(#(Float, Float, Float)),
 ) -> Result(Float, Nil) {
-  let weight_is_negative = list.any(arr, fn(tuple) { tuple.2 <. 0.0 })
+  case arr {
+    [] -> Error(Nil)
+    _ -> {
+      let weight_is_negative = list.any(arr, fn(tuple) { tuple.2 <. 0.0 })
 
-  case weight_is_negative {
-    False -> {
-      let numerator =
-        list.fold(arr, 0.0, fn(acc, tuple) {
-          acc +. tuple.0 *. tuple.1 *. tuple.2
-        })
+      case weight_is_negative {
+        False -> {
+          let numerator =
+            list.fold(arr, 0.0, fn(acc, tuple) {
+              acc +. tuple.0 *. tuple.1 *. tuple.2
+            })
 
-      let xarr = list.map(arr, fn(tuple) { #(tuple.0, tuple.2) })
-      let yarr = list.map(arr, fn(tuple) { #(tuple.1, tuple.2) })
+          let xarr = list.map(arr, fn(tuple) { #(tuple.0, tuple.2) })
+          let yarr = list.map(arr, fn(tuple) { #(tuple.1, tuple.2) })
 
-      let assert Ok(xarr_norm) = norm_with_weights(xarr, 2.0)
-      let assert Ok(yarr_norm) = norm_with_weights(yarr, 2.0)
+          // Usage of let assert: No error will occur since the input lists 'xarr' and 'yarr' 
+          // are non-empty and p = 2 is positive and integer valued.
+          let assert Ok(xarr_norm) = norm_with_weights(xarr, 2.0)
+          let assert Ok(yarr_norm) = norm_with_weights(yarr, 2.0)
 
-      let denominator = {
-        xarr_norm *. yarr_norm
+          let denominator = {
+            xarr_norm *. yarr_norm
+          }
+          Ok(numerator /. denominator)
+        }
+        True -> Error(Nil)
       }
-      Ok(numerator /. denominator)
     }
-    True -> Error(Nil)
   }
 }
 
@@ -4842,10 +4998,14 @@ pub fn is_fractional(x: Float) -> Bool {
 /// </div>
 ///
 pub fn is_power(x: Int, y: Int) -> Bool {
-  let assert Ok(value) = logarithm(int.to_float(x), int.to_float(y))
-  let truncated = round_to_zero(value, 0)
-  let remainder = value -. truncated
-  remainder == 0.0
+  case logarithm(int.to_float(x), int.to_float(y)) {
+    Ok(value) -> {
+      let truncated = round_to_zero(value, 0)
+      let remainder = value -. truncated
+      remainder == 0.0
+    }
+    Error(_) -> False
+  }
 }
 
 /// <div style="text-align: right;">
@@ -5190,17 +5350,25 @@ pub fn gamma(x: Float) -> Float {
   gamma_lanczos(x)
 }
 
+/// A constant used in the Lanczos approximation formula.
 const lanczos_g: Float = 7.0
 
+/// Lanczos coefficients for the approximation formula. These coefficients are part of a 
+/// polynomial approximation to the Gamma function.
 const lanczos_p: List(Float) = [
   0.99999999999980993, 676.5203681218851, -1259.1392167224028,
   771.32342877765313, -176.61502916214059, 12.507343278686905,
   -0.13857109526572012, 0.0000099843695780195716, 0.00000015056327351493116,
 ]
 
+/// Compute the Gamma function using an approximation with the same coefficients used by the GNU 
+/// Scientific Library. The function handles both the reflection formula for `x < 0.5` and the 
+/// standard Lanczos computation for `x >= 0.5`.
 fn gamma_lanczos(x: Float) -> Float {
   case x <. 0.5 {
+    // Use the reflection formula to compute Gamma for small value of x
     True -> pi() /. { sin(pi() *. x) *. gamma_lanczos(1.0 -. x) }
+    // Evaluate the polynomial approximation using the coefficients from the GNU Scientific Library
     False -> {
       let z = x -. 1.0
       let x =
@@ -5211,6 +5379,11 @@ fn gamma_lanczos(x: Float) -> Float {
           }
         })
       let t = z +. lanczos_g +. 0.5
+      // Usage of let assert: The function 'float.power' will only return an error if:
+      // 1. The base is negative and the exponent is fractional.
+      // 2. If the base is 0 and the exponent is negative.
+      // No error will occur below since the bases are/will always be non-zero and positive. The 
+      // exponents will also always be positive.
       let assert Ok(v1) = float.power(2.0 *. pi(), 0.5)
       let assert Ok(v2) = float.power(t, z +. 0.5)
       v1 *. v2 *. exponential(-1.0 *. t) *. x
@@ -5238,6 +5411,11 @@ fn gamma_lanczos(x: Float) -> Float {
 pub fn incomplete_gamma(a: Float, x: Float) -> Result(Float, Nil) {
   case a >. 0.0 && x >=. 0.0 {
     True -> {
+      // Usage of let assert: The function 'float.power' will only return an error if:
+      // 1. The base is negative and the exponent is fractional.
+      // 2. If the base is 0 and the exponent is negative.
+      // No error will occur below since the base is non-zero and positive. The exponent will
+      // always be positive.
       let assert Ok(v) = float.power(x, a)
       Ok(
         v
@@ -5623,12 +5801,18 @@ pub fn logarithmic_space(
   endpoint: Bool,
   base: Float,
 ) -> Result(List(Float), Nil) {
-  case steps > 0 && base >=. 0.0 {
+  case steps > 0 && base >. 0.0 {
     True -> {
+      // Usage of let assert: No error will occur since 'steps' > 0, i.e., a non-empty
+      // list will actually be returned.
       let assert Ok(linspace) = linear_space(start, stop, steps, endpoint)
 
       Ok(
         list.map(linspace, fn(value) {
+          // Usage of let assert: The function 'float.power' will only return an error if:
+          // 1. The base is negative and the exponent is fractional.
+          // 2. If the base is 0 and the exponent is negative. 
+          // No error will occur below since the base is non-zero and positive.
           let assert Ok(result) = float.power(base, value)
           result
         }),
@@ -5686,12 +5870,18 @@ pub fn yield_logarithmic_space(
   endpoint: Bool,
   base: Float,
 ) -> Result(Yielder(Float), Nil) {
-  case steps > 0 && base >=. 0.0 {
+  case steps > 0 && base >. 0.0 {
     True -> {
+      // Usage of let assert: No error will occur since 'steps' > 0, i.e., a non-empty
+      // list will actually be returned.
       let assert Ok(linspace) = yield_linear_space(start, stop, steps, endpoint)
 
       Ok(
         yielder.map(linspace, fn(value) {
+          // Usage of let assert: The function 'float.power' will only return an error if:
+          // 1. The base is negative and the exponent is fractional.
+          // 2. If the base is 0 and the exponent is negative. 
+          // No error will occur below since the base is non-zero and positive.
           let assert Ok(result) = float.power(base, value)
           result
         }),
@@ -5765,6 +5955,8 @@ pub fn geometric_space(
   case start <=. 0.0 || stop <=. 0.0 || steps < 0 {
     True -> Error(Nil)
     False -> {
+      // Usage of let assert: No error will occur since 'start' and 'stop' have been 
+      // checked and we can ensure they will be within the domain of the 'logarithm_10' function.
       let assert Ok(log_start) = logarithm_10(start)
       let assert Ok(log_stop) = logarithm_10(stop)
       logarithmic_space(log_start, log_stop, steps, endpoint, 10.0)
@@ -5821,6 +6013,8 @@ pub fn yield_geometric_space(
   case start <=. 0.0 || stop <=. 0.0 || steps < 0 {
     True -> Error(Nil)
     False -> {
+      // Usage of let assert: No error will occur since 'start' and 'stop' have been 
+      // checked and we can ensure they will be within the domain of the 'logarithm_10' function.
       let assert Ok(log_start) = logarithm_10(start)
       let assert Ok(log_stop) = logarithm_10(stop)
       yield_logarithmic_space(log_start, log_stop, steps, endpoint, 10.0)
