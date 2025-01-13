@@ -2783,18 +2783,23 @@ pub fn combination(n: Int, k: Int) -> Result(Int, Nil) {
   case n, k {
     _, _ if n < 0 -> Error(Nil)
     _, _ if k < 0 -> Error(Nil)
+    _, _ if k > n -> Ok(0)
     _, _ if k == 0 || k == n -> Ok(1)
     _, _ -> {
       let min = case k < n - k {
         True -> k
         False -> n - k
       }
-      Ok(
-        list.fold(list.range(1, min), 1, fn(acc, element) {
-          acc * { n + 1 - element } / element
-        }),
-      )
+      Ok(do_combination(n, min, 1, 1))
     }
+  }
+}
+
+fn do_combination(n: Int, k: Int, acc: Int, element: Int) -> Int {
+  case element > k {
+    True -> acc
+    False ->
+      do_combination(n, k, acc * { n + 1 - element } / element, element + 1)
   }
 }
 
@@ -3271,7 +3276,7 @@ fn do_list_permutation_with_repetitions(
 ///     </a>
 /// </div>
 ///
-/// Generate a list containing all combinations of pairs of elements coming from two given sets.
+/// Generate a set containing all combinations of pairs of elements coming from two given sets.
 ///
 /// <details>
 ///     <summary>Example:</summary>

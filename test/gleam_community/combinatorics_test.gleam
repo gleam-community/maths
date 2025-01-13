@@ -59,6 +59,8 @@ pub fn int_combination_without_repetitions_test() {
   // Valid input: k > n without repetition gives 0 combinations
   maths.combination(2, 3)
   |> should.equal(Ok(0))
+  maths.combination(10, 20)
+  |> should.equal(Ok(0))
 
   // Valid input: k = n without repetition gives 1 combination
   maths.combination(4, 4)
