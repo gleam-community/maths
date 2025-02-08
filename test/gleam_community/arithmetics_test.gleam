@@ -175,6 +175,10 @@ pub fn weighted_product_test() {
   |> maths.weighted_product()
   |> should.equal(Ok(1.0))
 
+  [#(1.0, -1.0), #(2.0, -1.0), #(3.0, -1.0)]
+  |> maths.weighted_product()
+  |> should.equal(Error(Nil))
+
   [#(1.0, 0.0), #(2.0, 0.0), #(3.0, 0.0)]
   |> maths.weighted_product()
   |> should.equal(Ok(1.0))
@@ -196,6 +200,10 @@ pub fn weighted_sum_test() {
   []
   |> maths.weighted_sum()
   |> should.equal(Ok(0.0))
+
+  [#(1.0, -1.0), #(2.0, -1.0), #(3.0, -1.0)]
+  |> maths.weighted_sum()
+  |> should.equal(Error(Nil))
 
   [#(1.0, 0.0), #(2.0, 0.0), #(3.0, 0.0)]
   |> maths.weighted_sum()

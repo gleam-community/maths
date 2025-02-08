@@ -324,18 +324,29 @@ pub fn weighted_sum(arr: List(#(Float, Float))) -> Result(Float, Nil) {
   case arr {
     [] -> Ok(0.0)
     _ -> {
-      let weight_is_negative = list.any(arr, fn(tuple) { tuple.1 <. 0.0 })
-      case weight_is_negative {
-        True -> Error(Nil)
-        False -> {
-          let weighted_sum =
-            list.fold(arr, 0.0, fn(acc, a) { a.0 *. a.1 +. acc })
-          Ok(weighted_sum)
+      list.try_fold(arr, 0.0, fn(acc, tuple) {
+        case tuple.1 <. 0.0 {
+          True -> Error(Nil)
+          False -> Ok(tuple.0 *. tuple.1 +. acc)
         }
-      }
+      })
     }
   }
 }
+
+// let weight_is_negative = list.any(arr, fn(tuple) { tuple.1 <. 0.0 })
+
+// case weight_is_negative {
+//   True -> Error(Nil)
+//   False -> {
+//     let weighted_sum =
+//       list.fold(arr, 0.0, fn(acc, a) { a.0 *. a.1 +. acc })
+//     Ok(weighted_sum)
+//   }
+// }
+//     }
+//   }
+// }
 
 /// <div style="text-align: right;">
 ///     <a href="https://github.com/gleam-community/maths/issues">
@@ -389,17 +400,16 @@ pub fn weighted_product(arr: List(#(Float, Float))) -> Result(Float, Nil) {
   case arr {
     [] -> Ok(1.0)
     _ -> {
-      let weight_is_negative = list.any(arr, fn(tuple) { tuple.1 <. 0.0 })
-      case weight_is_negative {
-        True -> Error(Nil)
-        False -> {
-          list.map(arr, fn(tuple) { float.power(tuple.0, tuple.1) })
-          |> result.all()
-          |> result.map(fn(products) {
-            list.fold(products, 1.0, fn(acc, element) { element *. acc })
-          })
+      list.try_fold(arr, 1.0, fn(acc, tuple) {
+        case tuple.1 <. 0.0 {
+          True -> Error(Nil)
+          False ->
+            case float.power(tuple.0, tuple.1) {
+              Error(Nil) -> Error(Nil)
+              Ok(value) -> Ok(value *. acc)
+            }
         }
-      }
+      })
     }
   }
 }
