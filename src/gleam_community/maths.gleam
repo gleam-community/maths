@@ -25,6 +25,7 @@
 import gleam/bool
 import gleam/float
 import gleam/int
+import gleam/io
 import gleam/list
 import gleam/order
 import gleam/result
@@ -205,24 +206,31 @@ pub fn lcm(x: Int, y: Int) -> Int {
 /// </div>
 ///
 pub fn divisors(n: Int) -> List(Int) {
+  find_divisors(n)
+  |> set.to_list()
+  |> list.sort(int.compare)
+}
+
+fn find_divisors(n: Int) -> set.Set(Int) {
   let nabs = float.absolute_value(int.to_float(n))
   // Usage of let assert: 'nabs' is non-negative so no error should occur. The function
   // 'float.squre_root' will only return an error in case a non-negative value is given as input.
   let assert Ok(sqrt_result) = float.square_root(nabs)
   let max = float.round(sqrt_result) + 1
-  find_divisors(n, max, [1, n], 2)
-  |> list.unique()
-  |> list.sort(int.compare)
+
+  do_find_divisors(n, max, set.new(), 1)
 }
 
-fn find_divisors(n: Int, max: Int, acc: List(Int), i: Int) -> List(Int) {
+fn do_find_divisors(n: Int, max: Int, acc: set.Set(Int), i: Int) -> set.Set(Int) {
   case i <= max {
     True -> {
-      let acc = case n % i == 0 {
-        True -> [i, n / i, ..acc]
+      let updated_acc = case n % i == 0 {
+        True -> {
+          set.insert(acc, i) |> set.insert(n / i)
+        }
         False -> acc
       }
-      find_divisors(n, max, acc, i + 1)
+      do_find_divisors(n, max, updated_acc, i + 1)
     }
     False -> acc
   }
@@ -262,18 +270,10 @@ fn find_divisors(n: Int, max: Int, acc: List(Int), i: Int) -> List(Int) {
 /// </div>
 ///
 pub fn proper_divisors(n: Int) -> List(Int) {
-  let nabs = float.absolute_value(int.to_float(n))
-  // Usage of let assert: 'nabs' is non-negative so no error should occur, i.e., the function 
-  // 'float.squre_root' will only return an error in case a non-negative value is given as input.
-  let assert Ok(sqrt_result) = float.square_root(nabs)
-  let max = float.round(sqrt_result) + 1
-  let divisors =
-    find_divisors(n, max, [1, n], 2)
-    |> list.unique()
-    |> list.sort(int.compare)
-
-  divisors
-  |> list.take(list.length(divisors) - 1)
+  find_divisors(n)
+  |> set.delete(n)
+  |> set.to_list()
+  |> list.sort(int.compare)
 }
 
 /// <div style="text-align: right;">

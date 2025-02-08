@@ -82,6 +82,9 @@ pub fn proper_divisors_test() {
 
   maths.proper_divisors(18)
   |> should.equal([1, 2, 3, 6, 9])
+
+  maths.proper_divisors(8128)
+  |> should.equal([1, 2, 4, 8, 16, 32, 64, 127, 254, 508, 1016, 2032, 4064])
 }
 
 pub fn divisors_test() {
@@ -96,6 +99,11 @@ pub fn divisors_test() {
 
   maths.divisors(18)
   |> should.equal([1, 2, 3, 6, 9, 18])
+
+  maths.divisors(8128)
+  |> should.equal([
+    1, 2, 4, 8, 16, 32, 64, 127, 254, 508, 1016, 2032, 4064, 8128,
+  ])
 }
 
 pub fn list_cumulative_sum_test() {
