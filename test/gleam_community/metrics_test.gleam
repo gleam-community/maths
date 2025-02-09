@@ -1,4 +1,5 @@
 import gleam/float
+import gleam/int
 import gleam/list
 import gleam/set
 import gleam_community/maths
@@ -717,6 +718,45 @@ pub fn iqr_test() {
   [5.0, 5.0, 5.0, 5.0, 5.0]
   |> maths.interquartile_range()
   // Q1 = 5.0, Q3 = 5.0, IQR = Q3 - Q1 = 0.0
+  |> should.equal(Ok(0.0))
+}
+
+pub fn correlation_test() {
+  // An empty list returns an error
+  maths.correlation([])
+  |> should.be_error()
+
+  // Lists with fewer than 2 elements return an error
+  maths.correlation([#(1.0, 1.0)])
+  |> should.be_error()
+
+  // Perfect positive correlation
+  let xarr =
+    list.range(0, 100)
+    |> list.map(fn(x) { int.to_float(x) })
+  let yarr =
+    list.range(0, 100)
+    |> list.map(fn(y) { int.to_float(y) })
+  list.zip(xarr, yarr)
+  |> maths.correlation()
+  |> should.equal(Ok(1.0))
+
+  // Perfect negative correlation
+  let xarr =
+    list.range(0, 100)
+    |> list.map(fn(x) { -1.0 *. int.to_float(x) })
+  let yarr =
+    list.range(0, 100)
+    |> list.map(fn(y) { int.to_float(y) })
+  list.zip(xarr, yarr)
+  |> maths.correlation()
+  |> should.equal(Ok(-1.0))
+
+  // No correlation (independent variables)
+  let xarr = [1.0, 2.0, 3.0, 4.0]
+  let yarr = [5.0, 5.0, 5.0, 5.0]
+  list.zip(xarr, yarr)
+  |> maths.correlation()
   |> should.equal(Ok(0.0))
 }
 

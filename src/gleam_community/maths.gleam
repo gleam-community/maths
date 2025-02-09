@@ -25,7 +25,6 @@
 import gleam/bool
 import gleam/float
 import gleam/int
-import gleam/io
 import gleam/list
 import gleam/order
 import gleam/set
@@ -4090,13 +4089,13 @@ pub fn mean(arr: List(Float)) -> Result(Float, Nil) {
 ///     </a>
 /// </div>
 ///
-/// Calculcate the harmonic mean $$\bar{x}$$ of the elements in a list:
+/// Calculcate the harmonic mean \\(\bar{x}\\) of the elements in a list:
 ///
 /// \\[
 ///   \bar{x} = \frac{n}{\sum_{i=1}^{n}\frac{1}{x_i}}
 /// \\]
 ///
-/// In the formula, $$n$$ is the sample size (the length of the list) and 
+/// In the formula, \\(n\\) is the sample size (the length of the list) and 
 /// \\(x_i\\) is the sample point in the input list indexed by \\(i\\).
 /// Note: The harmonic mean is only defined for positive numbers.
 ///
@@ -4159,7 +4158,7 @@ pub fn harmonic_mean(arr: List(Float)) -> Result(Float, Nil) {
 ///     </a>
 /// </div>
 ///
-/// Calculcate the geometric mean $$\bar{x}$$ of the elements in a list:
+/// Calculcate the geometric mean \\(\bar{x}\\) of the elements in a list:
 ///
 /// \\[
 ///   \bar{x} = \left(\prod^{n}_{i=1} x_i\right)^{\frac{1}{n}}
@@ -4704,6 +4703,100 @@ pub fn interquartile_range(arr: List(Float)) -> Result(Float, Nil) {
           }
         }
       }
+    }
+  }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// Calculate Pearson's sample correlation coefficient to determine the linear 
+/// relationship between the elements in two lists of equal 
+/// length. The correlation coefficient \\(r_{xy} \in \[-1, 1\]\\) is calculated
+/// as:
+///
+/// \\[
+/// r_{xy} =\frac{\sum ^n _{i=1}(x_i - \bar{x})(y_i - \bar{y})}{\sqrt{\sum^n _{i=1}(x_i - \bar{x})^2} \sqrt{\sum^n _{i=1}(y_i - \bar{y})^2}}
+/// \\]
+///
+/// In the formula, \\(n\\) is the sample size (the length of the input lists), 
+/// \\(x_i\\), \\(y_i\\) are the corresponding sample points indexed by \\(i\\) and 
+/// \\(\bar{x}\\), \\(\bar{y}\\) are the sample means.
+/// 
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths
+///
+///     pub fn example () {
+///       // An empty lists returns an error
+///       maths.correlation([], [])
+///       |> should.be_error()
+///     
+///       // Perfect positive correlation
+///       let xarr =
+///         list.range(0, 100)
+///         |> list.map(fn(x) { int.to_float(x) })
+///       let yarr =
+///         list.range(0, 100)
+///         |> list.map(fn(y) { int.to_float(y) })
+///       list.zip(xarr, yarr)
+///       |> maths.correlation()
+///       |> should.equal(Ok(1.0))
+///     
+///       // Perfect negative correlation
+///       let xarr =
+///         list.range(0, 100)
+///         |> list.map(fn(x) { -1.0 *. int.to_float(x) })
+///       let yarr =
+///         list.range(0, 100)
+///         |> list.map(fn(y) { int.to_float(y) })
+///       list.zip(xarr, yarr)
+///       |> maths.correlation()
+///       |> should.equal(Ok(-1.0))
+///     
+///       // No correlation (independent variables)
+///       let xarr = [1.0, 2.0, 3.0, 4.0]
+///       let yarr = [5.0, 5.0, 5.0, 5.0]
+///       list.zip(xarr, yarr)
+///       |> maths.correlation()
+///       |> should.equal(Ok(0.0))
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn correlation(arr: List(#(Float, Float))) -> Result(Float, Nil) {
+  let length = list.length(arr)
+  case length >= 2 {
+    False -> Error(Nil)
+    True -> {
+      let #(xarr, yarr) = list.unzip(arr)
+      let assert Ok(xmean) = mean(xarr)
+      let assert Ok(ymean) = mean(yarr)
+      let a =
+        list.map(arr, fn(tuple) -> Float {
+          { tuple.0 -. xmean } *. { tuple.1 -. ymean }
+        })
+        |> float.sum()
+      let b =
+        list.map(xarr, fn(x) { { x -. xmean } *. { x -. xmean } })
+        |> float.sum()
+      let c =
+        list.map(yarr, fn(y: Float) { { y -. ymean } *. { y -. ymean } })
+        |> float.sum()
+      // The argument is the product of two sums of squared differences
+      // it will never be negative. So just extract it directly:
+      let assert Ok(value) = float.square_root(b *. c)
+      Ok(a /. value)
     }
   }
 }
