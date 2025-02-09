@@ -3931,6 +3931,119 @@ pub fn chebyshev_distance_with_weights(
 ///     </a>
 /// </div>
 ///
+/// Calculcate the n'th moment about the mean of a list of elements.
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths
+///
+///     pub fn example () {
+///       // An empty list returns an error
+///       []
+///       |> maths.moment(0)
+///       |> should.be_error()
+///     
+///       // 0th moment about the mean is 1. per definition
+///       [0.0, 1.0, 2.0, 3.0, 4.0]
+///       |> maths.moment(0)
+///       |> should.equal(Ok(1.0))
+///     
+///       // 1st moment about the mean is 0. per definition
+///       [0.0, 1.0, 2.0, 3.0, 4.0]
+///       |> maths.moment(1)
+///       |> should.equal(Ok(0.0))
+///     
+///       // 2nd moment about the mean
+///       [0.0, 1.0, 2.0, 3.0, 4.0]
+///       |> maths.moment(2)
+///       |> should.equal(Ok(2.0))
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+// pub fn moment(arr: List(Float), n: Int) -> Result(Float, Nil) {
+//   case list.length(arr), n {
+//     0, _ -> Error(Nil)
+//     // 0th moment is always 1.0
+//     __, 0 -> Ok(1.0)
+//     // 1st moment (about the mean) is 0.0 by definition
+//     _, 1 -> Ok(0.0)
+//     _, n if n >= 0 -> {
+//       // Check if the list has enough elements for the nth moment
+//       case list.length(arr) >= n {
+//         True -> {
+//           // Usage of let assert: The function 'mean' will only return an error if the given list
+//           // is emptry. No error will occur since we already checked that the list is non-empty.
+//           let assert Ok(m1) = mean(arr)
+//           let result =
+//             list.try_fold(arr, 0.0, fn(acc, a) {
+//               case float.power(a -. m1, int.to_float(n)) {
+//                 Error(Nil) -> Error(Nil)
+//                 Ok(value) -> Ok(value +. acc)
+//               }
+//             })
+//           case result {
+//             Error(Nil) -> Error(Nil)
+//             Ok(value) -> Ok(value /. int.to_float(list.length(arr)))
+//           }
+//         }
+//         // Not enough elements for meaningful computation
+//         False -> Error(Nil)
+//       }
+//     }
+//     _, _ -> Error(Nil)
+//   }
+// }
+
+pub fn moment(arr: List(Float), n: Int) -> Result(Float, Nil) {
+  case arr, n {
+    // Handle empty list: no moments can be calculated
+    [], _ -> Error(Nil)
+    // 0th moment is always 1.0, regardless of the dataset
+    _, 0 -> Ok(1.0)
+    // 1st moment (about the mean) is always 0.0 by definition
+    _, 1 -> Ok(0.0)
+    // Higher moments for n >= 2
+    _, n if n > 1 -> {
+      // Calculate mean (safe because arr is non-empty)
+      let assert Ok(m1) = mean(arr)
+
+      // Compute nth moment
+      let result =
+        list.try_fold(arr, 0.0, fn(acc, a) {
+          // Compute (a - mean)^n
+          case float.power(a -. m1, int.to_float(n)) {
+            Error(_) -> Error(Nil)
+            // Error during power calculation
+            Ok(value) -> Ok(acc +. value)
+          }
+        })
+
+      // Finalize the result by dividing by the number of elements
+      case result {
+        Error(_) -> Error(Nil)
+        // Error during accumulation
+        Ok(value) -> Ok(value /. int.to_float(list.length(arr)))
+      }
+    }
+    // Negative moments or invalid input
+    _, _ -> Error(Nil)
+  }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
 /// Calculate the arithmetic mean of the elements in a list:
 ///
 /// \\[
@@ -3976,6 +4089,144 @@ pub fn mean(arr: List(Float)) -> Result(Float, Nil) {
 ///     </a>
 /// </div>
 ///
+/// Calculcate the harmonic mean \\(\bar{x}\\) of the elements in a list:
+///
+/// \\[
+///   \bar{x} = \frac{n}{\sum_{i=1}^{n}\frac{1}{x_i}}
+/// \\]
+///
+/// In the formula, \\(n\\) is the sample size (the length of the list) and 
+/// \\(x_i\\) is the sample point in the input list indexed by \\(i\\).
+/// Note: The harmonic mean is only defined for positive numbers.
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths
+///
+///     pub fn example () {
+///       // An empty list returns an error
+///       []
+///       |> maths.harmonic_mean()
+///       |> should.be_error()
+///
+///       // List with negative numbers returns an error
+///       [-1.0, -3.0, -6.0]
+///       |> maths.harmonic_mean()
+///       |> should.be_error()
+///     
+///       // Valid input returns a result
+///       [1.0, 3.0, 6.0]
+///       |> maths.harmonic_mean()
+///       |> should.equal(Ok(2.0))
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn harmonic_mean(arr: List(Float)) -> Result(Float, Nil) {
+  case arr {
+    [] -> Error(Nil)
+    _ -> {
+      let sum =
+        list.try_fold(arr, 0.0, fn(acc, a) {
+          case a {
+            a if a >. 0.0 -> Ok(1.0 /. a +. acc)
+            // If we encounter 0.0, then we can stop, as the geometric mean will be 0.0
+            a if a == 0.0 -> Error(0.0)
+            _ -> Error(-1.0)
+          }
+        })
+
+      case sum {
+        Ok(sum) -> Ok(int.to_float(list.length(arr)) /. sum)
+        Error(0.0) -> Ok(0.0)
+        Error(_) -> Error(Nil)
+      }
+    }
+  }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// Calculcate the geometric mean \\(\bar{x}\\) of the elements in a list:
+///
+/// \\[
+///   \bar{x} = \left(\prod^{n}_{i=1} x_i\right)^{\frac{1}{n}}
+/// \\]
+///
+/// In the formula, \\(n\\) is the sample size (the length of the list) and 
+/// \\(x_i\\) is the sample point in the input list indexed by \\(i\\).
+/// Note: The geometric mean is only defined for positive numbers.
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths
+///
+///     pub fn example () {
+///       // An empty list returns an error
+///       []
+///       |> maths.geometric_mean()
+///       |> should.be_error()
+///
+///       // List with negative numbers returns an error
+///       [-1.0, -3.0, -6.0]
+///       |> maths.geometric_mean()
+///       |> should.be_error()
+///
+///       // Valid input returns a result
+///       [1.0, 3.0, 9.0]
+///       |> maths.geometric_mean()
+///       |> should.equal(Ok(3.0))
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn geometric_mean(arr: List(Float)) -> Result(Float, Nil) {
+  case arr {
+    [] -> Error(Nil)
+    _ -> {
+      let product =
+        list.try_fold(arr, 1.0, fn(acc, a) {
+          case a {
+            a if a >. 0.0 -> Ok(acc *. a)
+            // If we encounter 0.0, then we can stop, as the geometric mean will be 0.0
+            a if a == 0.0 -> Error(0.0)
+            _ -> Error(-1.0)
+          }
+        })
+      case product {
+        Ok(product) ->
+          float.power(product, 1.0 /. int.to_float(list.length(arr)))
+        Error(0.0) -> Ok(0.0)
+        Error(_) -> Error(Nil)
+      }
+    }
+  }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
 /// Calculate the median of the elements in a list.
 ///
 /// <details>
@@ -4009,10 +4260,11 @@ pub fn median(arr: List(Float)) -> Result(Float, Nil) {
   use <- bool.guard(list.is_empty(arr), Error(Nil))
   let length = list.length(arr)
   let mid = length / 2
+  let arr_sorted = list.sort(arr, float.compare)
 
   case length % 2 == 0 {
-    True -> do_median(arr, mid, True, 0)
-    False -> do_median(arr, mid, False, 0)
+    True -> do_median(arr_sorted, mid, True, 0)
+    False -> do_median(arr_sorted, mid, False, 0)
   }
 }
 
@@ -4152,6 +4404,399 @@ pub fn standard_deviation(arr: List(Float), ddof: Int) -> Result(Float, Nil) {
       // 'ddof' is larger than or equal to zero 
       let assert Ok(variance) = variance(arr, ddof)
       float.square_root(variance)
+    }
+  }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// Calculcate the sample kurtosis of a list of elements using the 
+/// definition of Fisher. 
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths
+///
+///     pub fn example () {
+///       // An empty list returns an error
+///       []
+///       |> maths.kurtosis()
+///       |> should.be_error()
+///     
+///       // To calculate kurtosis at least four values are needed 
+///       [1.0, 2.0, 3.0]
+///       |> maths.kurtosis()
+///       |> should.be_error()
+///
+///       [1.0, 2.0, 3.0, 4.0]
+///       |> maths.kurtosis()
+///       |> should.equal(Ok(-1.36))
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn kurtosis(arr: List(Float)) -> Result(Float, Nil) {
+  case list.length(arr) < 4 {
+    True -> Error(Nil)
+    False -> {
+      case moment(arr, 2), moment(arr, 4) {
+        Ok(m2), Ok(m4) if m2 != 0.0 -> {
+          case float.power(m2, 2.0) {
+            Ok(value) -> Ok(m4 /. value -. 3.0)
+            Error(Nil) -> Error(Nil)
+          }
+        }
+        _, _ -> Error(Nil)
+      }
+    }
+  }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// Calculcate the sample skewness of a list of elements using the 
+/// Fisher-Pearson coefficient of skewness. 
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths
+///
+///     pub fn example () {
+///       // An empty list returns an error
+///       []
+///       |> maths.skewness()
+///       |> should.be_error()
+///     
+///       // To calculate skewness at least three values are needed 
+///       [1.0, 2.0, 3.0]
+///       |> maths.skewness()
+///       |> should.equal(Ok(0.0))
+/// 
+///       [1.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0, 3.0, 3.0, 4.0]
+///       |> maths.skewness()
+///       |> should.equal(Ok(0.6))
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn skewness(arr: List(Float)) -> Result(Float, Nil) {
+  case list.length(arr) < 3 {
+    True -> Error(Nil)
+    False -> {
+      case moment(arr, 2), moment(arr, 3) {
+        Ok(m2), Ok(m3) if m2 != 0.0 -> {
+          case float.power(m2, 1.5) {
+            Ok(value) -> Ok(m3 /. value)
+            Error(Nil) -> Error(Nil)
+          }
+        }
+        _, _ -> Error(Nil)
+      }
+    }
+  }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// Calculate the n'th percentile of the elements in a list using 
+/// linear interpolation between closest ranks.
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths
+///
+///     pub fn example () {
+///       // An empty list returns an error
+///       []
+///       |> maths.percentile(40)
+///       |> should.be_error()
+///     
+///       // Calculate 40th percentile 
+///       [15.0, 20.0, 35.0, 40.0, 50.0]
+///       |> maths.percentile(40)
+///       |> should.equal(Ok(29.0))
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn percentile(arr: List(Float), n: Int) -> Result(Float, Nil) {
+  case arr, n {
+    // Handle the special case when the given list is empty
+    [], _ -> Error(Nil)
+    // Handle the special case when the given list contains only a single element
+    [element], _ -> Ok(element)
+    _, n if n == 0 -> list.first(list.sort(arr, float.compare))
+    _, n if n == 100 -> list.last(list.sort(arr, float.compare))
+    _, n if n > 0 && n < 100 -> {
+      // Calculate the rank of the n'th percentile
+      let r: Float =
+        int.to_float(n) /. 100.0 *. int.to_float(list.length(arr) - 1)
+      let f: Int = float.truncate(r)
+      let sorted_arr = list.drop(list.sort(arr, float.compare), f)
+      // Directly extract the lower and upper values. Theoretically, an error value 
+      // will not be returned as the largest index in the array that is accessed will
+      // be the length of the array - 1 (last element). 
+      case list.take(sorted_arr, 2) {
+        [lower, upper] -> {
+          Ok(lower +. { upper -. lower } *. { r -. int.to_float(f) })
+        }
+        _ -> Error(Nil)
+      }
+    }
+    _, _ -> Error(Nil)
+  }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// Calculate the z-score of each value in the list relative to the sample 
+/// mean and standard deviation.
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths
+///
+///     pub fn example () {
+///       // An empty list returns an error
+///       []
+///       // Use degrees of freedom = 1
+///       |> maths.zscore(1)
+///       |> should.be_error()
+///     
+///       [1.0, 2.0, 3.0]
+///       // Use degrees of freedom = 1
+///       |> maths.zscore(1)
+///       |> should.equal(Ok([-1.0, 0.0, 1.0]))
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn zscore(arr: List(Float), ddof: Int) -> Result(List(Float), Nil) {
+  let length = list.length(arr)
+  case arr, ddof {
+    [], _ -> Error(Nil)
+    // Invalid degrees of freedom
+    _, ddof if ddof < 0 -> Error(Nil)
+    // Insufficient data points for the given degrees of freedom
+    _, ddof if length <= ddof -> Error(Nil)
+    // Valid input
+    _, _ -> {
+      case mean(arr), standard_deviation(arr, ddof) {
+        // The mean and standard deviation have been successfully computed
+        Ok(mean), Ok(stdev) if stdev != 0.0 ->
+          Ok(list.map(arr, fn(a) -> Float { { a -. mean } /. stdev }))
+        // The standard deviation is zero (e.g., all elements are identical)
+        _, _ -> Error(Nil)
+      }
+    }
+  }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// Calculate the interquartile range (IQR) of the elements in a list.
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths
+///
+///     pub fn example () {
+///       // An empty list returns an error
+///       []
+///       |> maths.interquartile_range()
+///       |> should.be_error()
+///     
+///       // Valid input returns a result
+///       [1.0, 2.0, 3.0, 4.0, 5.0]
+///       |> maths.interquartile_range()
+///       |> should.equal(Ok(3.0))
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn interquartile_range(arr: List(Float)) -> Result(Float, Nil) {
+  case arr {
+    [] -> Error(Nil)
+    _ -> {
+      let length = list.length(arr)
+      let arr_sorted = list.sort(arr, float.compare)
+
+      case int.is_even(length) {
+        True -> {
+          // 'lower_half' contains the smallest values
+          // 'upper_half' contains the largest values
+          let #(lower_half, upper_half) = list.split(arr_sorted, length / 2)
+
+          case median(lower_half), median(upper_half) {
+            // Compute IQR as Q3 - Q1
+            Ok(q1), Ok(q3) -> Ok(q3 -. q1)
+            // Handle potential errors from `median`
+            _, _ -> Error(Nil)
+          }
+        }
+        False -> {
+          // 'lower_half' contains the smallest values
+          let #(lower_half, _) = list.split(arr_sorted, { length - 1 } / 2)
+          // 'upper_half' contains the largest values
+          let #(_, upper_half) = list.split(arr_sorted, { length + 1 } / 2)
+
+          case median(lower_half), median(upper_half) {
+            // Compute IQR as Q3 - Q1
+            Ok(q1), Ok(q3) -> Ok(q3 -. q1)
+            // Handle potential errors from `median`
+            _, _ -> Error(Nil)
+          }
+        }
+      }
+    }
+  }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// Calculate Pearson's sample correlation coefficient to determine the linear 
+/// relationship between the elements in two lists of equal 
+/// length. The correlation coefficient \\(r_{xy} \in \[-1, 1\]\\) is calculated
+/// as:
+///
+/// \\[
+/// r_{xy} =\frac{\sum ^n _{i=1}(x_i - \bar{x})(y_i - \bar{y})}{\sqrt{\sum^n _{i=1}(x_i - \bar{x})^2} \sqrt{\sum^n _{i=1}(y_i - \bar{y})^2}}
+/// \\]
+///
+/// In the formula, \\(n\\) is the sample size (the length of the input lists), 
+/// \\(x_i\\), \\(y_i\\) are the corresponding sample points indexed by \\(i\\) and 
+/// \\(\bar{x}\\), \\(\bar{y}\\) are the sample means.
+/// 
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths
+///
+///     pub fn example () {
+///       // An empty lists returns an error
+///       maths.correlation([], [])
+///       |> should.be_error()
+///     
+///       // Perfect positive correlation
+///       let xarr =
+///         list.range(0, 100)
+///         |> list.map(fn(x) { int.to_float(x) })
+///       let yarr =
+///         list.range(0, 100)
+///         |> list.map(fn(y) { int.to_float(y) })
+///       list.zip(xarr, yarr)
+///       |> maths.correlation()
+///       |> should.equal(Ok(1.0))
+///     
+///       // Perfect negative correlation
+///       let xarr =
+///         list.range(0, 100)
+///         |> list.map(fn(x) { -1.0 *. int.to_float(x) })
+///       let yarr =
+///         list.range(0, 100)
+///         |> list.map(fn(y) { int.to_float(y) })
+///       list.zip(xarr, yarr)
+///       |> maths.correlation()
+///       |> should.equal(Ok(-1.0))
+///     
+///       // No correlation (independent variables)
+///       let xarr = [1.0, 2.0, 3.0, 4.0]
+///       let yarr = [5.0, 5.0, 5.0, 5.0]
+///       list.zip(xarr, yarr)
+///       |> maths.correlation()
+///       |> should.equal(Ok(0.0))
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn correlation(arr: List(#(Float, Float))) -> Result(Float, Nil) {
+  let length = list.length(arr)
+  case length >= 2 {
+    False -> Error(Nil)
+    True -> {
+      let #(xarr, yarr) = list.unzip(arr)
+      let assert Ok(xmean) = mean(xarr)
+      let assert Ok(ymean) = mean(yarr)
+      let a =
+        list.map(arr, fn(tuple) -> Float {
+          { tuple.0 -. xmean } *. { tuple.1 -. ymean }
+        })
+        |> float.sum()
+      let b =
+        list.map(xarr, fn(x) { { x -. xmean } *. { x -. xmean } })
+        |> float.sum()
+      let c =
+        list.map(yarr, fn(y: Float) { { y -. ymean } *. { y -. ymean } })
+        |> float.sum()
+      // The argument is the product of two sums of squared differences
+      // it will never be negative. So just extract it directly:
+      let assert Ok(value) = float.square_root(b *. c)
+      Ok(a /. value)
     }
   }
 }
