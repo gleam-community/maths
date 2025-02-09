@@ -242,6 +242,44 @@ pub fn list_euclidean_test() {
   |> should.be_error()
 }
 
+pub fn moment_test() {
+  // An empty list returns an error
+  []
+  |> maths.moment(0)
+  |> should.be_error()
+
+  [1.0, 2.0, 3.0]
+  |> maths.moment(-1)
+  |> should.be_error()
+
+  [2.0]
+  |> maths.moment(0)
+  |> should.equal(Ok(1.0))
+
+  [2.0]
+  |> maths.moment(1)
+  |> should.equal(Ok(0.0))
+
+  [2.0]
+  |> maths.moment(2)
+  |> should.equal(Ok(0.0))
+
+  // 0th moment about the mean is 1. per definition
+  [0.0, 1.0, 2.0, 3.0, 4.0]
+  |> maths.moment(0)
+  |> should.equal(Ok(1.0))
+
+  // 1st moment about the mean is 0. per definition
+  [0.0, 1.0, 2.0, 3.0, 4.0]
+  |> maths.moment(1)
+  |> should.equal(Ok(0.0))
+
+  // 2nd moment about the mean
+  [0.0, 1.0, 2.0, 3.0, 4.0]
+  |> maths.moment(2)
+  |> should.equal(Ok(2.0))
+}
+
 pub fn mean_test() {
   // An empty list returns an error
   []
@@ -249,6 +287,11 @@ pub fn mean_test() {
   |> should.be_error()
 
   // Valid input returns a result
+
+  [5.0]
+  |> maths.mean()
+  |> should.equal(Ok(5.0))
+
   [1.0, 2.0, 3.0]
   |> maths.mean()
   |> should.equal(Ok(2.0))
@@ -264,12 +307,20 @@ pub fn harmonic_mean_test() {
   |> maths.harmonic_mean()
   |> should.be_error()
 
+  [1.0, 2.0, 0.0]
+  |> maths.harmonic_mean()
+  |> should.equal(Ok(0.0))
+
   // List with negative numbers returns an error
   [-1.0, -3.0, -6.0]
   |> maths.harmonic_mean()
   |> should.be_error()
 
   // Valid input returns a result
+  [4.0]
+  |> maths.harmonic_mean()
+  |> should.equal(Ok(4.0))
+
   [1.0, 3.0, 6.0]
   |> maths.harmonic_mean()
   |> should.equal(Ok(2.0))
@@ -280,11 +331,21 @@ pub fn geometric_mean_test() {
   []
   |> maths.geometric_mean()
   |> should.be_error()
+
   // List with negative numbers returns an error
   [-1.0, -3.0, -6.0]
   |> maths.geometric_mean()
   |> should.be_error()
+
   // Valid input returns a result
+  [5.0]
+  |> maths.geometric_mean()
+  |> should.equal(Ok(5.0))
+
+  [1.0, 2.0, 0.0]
+  |> maths.geometric_mean()
+  |> should.equal(Ok(0.0))
+
   [1.0, 3.0, 9.0]
   |> maths.geometric_mean()
   |> should.equal(Ok(3.0))

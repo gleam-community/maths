@@ -3931,6 +3931,74 @@ pub fn chebyshev_distance_with_weights(
 ///     </a>
 /// </div>
 ///
+/// Calculcate the n'th moment about the mean of a list of elements.
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths
+///
+///     pub fn example () {
+///       // An empty list returns an error
+///       []
+///       |> maths.moment(0)
+///       |> should.be_error()
+///     
+///       // 0th moment about the mean is 1. per definition
+///       [0.0, 1.0, 2.0, 3.0, 4.0]
+///       |> maths.moment(0)
+///       |> should.equal(Ok(1.0))
+///     
+///       // 1st moment about the mean is 0. per definition
+///       [0.0, 1.0, 2.0, 3.0, 4.0]
+///       |> maths.moment(1)
+///       |> should.equal(Ok(0.0))
+///     
+///       // 2nd moment about the mean
+///       [0.0, 1.0, 2.0, 3.0, 4.0]
+///       |> maths.moment(2)
+///       |> should.equal(Ok(2.0))
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn moment(arr: List(Float), n: Int) -> Result(Float, Nil) {
+  case arr, n {
+    [], _ -> Error(Nil)
+    __, 0 -> Ok(1.0)
+    _, 1 -> Ok(0.0)
+    _, n if n >= 0 -> {
+      // Usage of let assert: The function 'mean' will only return an error if the given list
+      // is emptry. No error will occur since we already checked that the list is non-empty.
+      let assert Ok(m1) = mean(arr)
+      let result =
+        list.try_fold(arr, 0.0, fn(acc, a) {
+          case float.power(a -. m1, int.to_float(n)) {
+            Error(Nil) -> Error(Nil)
+            Ok(value) -> Ok(value +. acc)
+          }
+        })
+      case result {
+        Error(Nil) -> Error(Nil)
+        Ok(value) -> Ok(value /. int.to_float(list.length(arr)))
+      }
+    }
+    _, _ -> Error(Nil)
+  }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
 /// Calculate the arithmetic mean of the elements in a list:
 ///
 /// \\[
@@ -4020,20 +4088,20 @@ pub fn harmonic_mean(arr: List(Float)) -> Result(Float, Nil) {
   case arr {
     [] -> Error(Nil)
     _ -> {
-      let xarr =
-        list.try_map(arr, fn(a: Float) {
-          case a >=. 0.0 {
-            True -> Ok(1.0 /. a)
-
-            False -> Error(Nil)
+      let sum =
+        list.try_fold(arr, 0.0, fn(acc, a) {
+          case a {
+            a if a >. 0.0 -> Ok(1.0 /. a +. acc)
+            // If we encounter 0.0, then we can stop, as the geometric mean will be 0.0
+            a if a == 0.0 -> Error(0.0)
+            _ -> Error(-1.0)
           }
         })
-      case xarr {
-        Error(Nil) -> Error(Nil)
-        Ok(xarr) -> {
-          let sum = float.sum(xarr)
-          Ok(int.to_float(list.length(xarr)) /. sum)
-        }
+
+      case sum {
+        Ok(sum) -> Ok(int.to_float(list.length(arr)) /. sum)
+        Error(0.0) -> Ok(0.0)
+        Error(_) -> Error(Nil)
       }
     }
   }
@@ -4089,16 +4157,20 @@ pub fn geometric_mean(arr: List(Float)) -> Result(Float, Nil) {
   case arr {
     [] -> Error(Nil)
     _ -> {
-      let xval =
+      let product =
         list.try_fold(arr, 1.0, fn(acc, a) {
-          case a >=. 0.0 {
-            True -> Ok(acc *. a)
-            False -> Error(Nil)
+          case a {
+            a if a >. 0.0 -> Ok(acc *. a)
+            // If we encounter 0.0, then we can stop, as the geometric mean will be 0.0
+            a if a == 0.0 -> Error(0.0)
+            _ -> Error(-1.0)
           }
         })
-      case xval {
-        Error(Nil) -> Error(Nil)
-        Ok(xval) -> float.power(xval, 1.0 /. int.to_float(list.length(arr)))
+      case product {
+        Ok(product) ->
+          float.power(product, 1.0 /. int.to_float(list.length(arr)))
+        Error(0.0) -> Ok(0.0)
+        Error(_) -> Error(Nil)
       }
     }
   }
