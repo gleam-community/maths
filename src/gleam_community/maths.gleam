@@ -25,10 +25,8 @@
 import gleam/bool
 import gleam/float
 import gleam/int
-import gleam/io
 import gleam/list
 import gleam/order
-import gleam/result
 import gleam/set
 import gleam/yielder.{type Yielder, Done, Next}
 
