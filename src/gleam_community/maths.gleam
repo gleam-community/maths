@@ -25,6 +25,7 @@
 import gleam/bool
 import gleam/float
 import gleam/int
+import gleam/io
 import gleam/list
 import gleam/order
 import gleam/set
@@ -4260,10 +4261,11 @@ pub fn median(arr: List(Float)) -> Result(Float, Nil) {
   use <- bool.guard(list.is_empty(arr), Error(Nil))
   let length = list.length(arr)
   let mid = length / 2
+  let arr_sorted = list.sort(arr, float.compare)
 
   case length % 2 == 0 {
-    True -> do_median(arr, mid, True, 0)
-    False -> do_median(arr, mid, False, 0)
+    True -> do_median(arr_sorted, mid, True, 0)
+    False -> do_median(arr_sorted, mid, False, 0)
   }
 }
 
@@ -4630,6 +4632,77 @@ pub fn zscore(arr: List(Float), ddof: Int) -> Result(List(Float), Nil) {
           Ok(list.map(arr, fn(a) -> Float { { a -. mean } /. stdev }))
         // The standard deviation is zero (e.g., all elements are identical)
         _, _ -> Error(Nil)
+      }
+    }
+  }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// Calculate the interquartile range (IQR) of the elements in a list.
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths
+///
+///     pub fn example () {
+///       // An empty list returns an error
+///       []
+///       |> maths.interquartile_range()
+///       |> should.be_error()
+///     
+///       // Valid input returns a result
+///       [1.0, 2.0, 3.0, 4.0, 5.0]
+///       |> maths.interquartile_range()
+///       |> should.equal(Ok(3.0))
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn interquartile_range(arr: List(Float)) -> Result(Float, Nil) {
+  case arr {
+    [] -> Error(Nil)
+    _ -> {
+      let length = list.length(arr)
+      let arr_sorted = list.sort(arr, float.compare)
+
+      case int.is_even(length) {
+        True -> {
+          // 'lower_half' contains the smallest values
+          // 'upper_half' contains the largest values
+          let #(lower_half, upper_half) = list.split(arr_sorted, length / 2)
+
+          case median(lower_half), median(upper_half) {
+            // Compute IQR as Q3 - Q1
+            Ok(q1), Ok(q3) -> Ok(q3 -. q1)
+            // Handle potential errors from `median`
+            _, _ -> Error(Nil)
+          }
+        }
+        False -> {
+          // 'lower_half' contains the smallest values
+          let #(lower_half, _) = list.split(arr_sorted, { length - 1 } / 2)
+          // 'upper_half' contains the largest values
+          let #(_, upper_half) = list.split(arr_sorted, { length + 1 } / 2)
+
+          case median(lower_half), median(upper_half) {
+            // Compute IQR as Q3 - Q1
+            Ok(q1), Ok(q3) -> Ok(q3 -. q1)
+            // Handle potential errors from `median`
+            _, _ -> Error(Nil)
+          }
+        }
       }
     }
   }

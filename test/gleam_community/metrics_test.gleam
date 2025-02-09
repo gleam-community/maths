@@ -357,14 +357,38 @@ pub fn median_test() {
   |> maths.median()
   |> should.be_error()
 
-  // Valid input returns a result
-  [1.0, 2.0, 3.0]
+  // A single-element list returns the element itself
+  [42.0]
   |> maths.median()
-  |> should.equal(Ok(2.0))
+  |> should.equal(Ok(42.0))
 
+  // A two-element list returns the average of the two elements
+  [10.0, 20.0]
+  |> maths.median()
+  |> should.equal(Ok(15.0))
+
+  // An odd-length list returns the middle element
+  [1.0, 3.0, 5.0]
+  |> maths.median()
+  |> should.equal(Ok(3.0))
+
+  // An even-length list returns the average of the middle two elements
   [1.0, 2.0, 3.0, 4.0]
   |> maths.median()
   |> should.equal(Ok(2.5))
+
+  // Make sure an unsorted list is sorted before calculating the median
+  [9.0, 1.0, 4.0, 2.0, 8.0]
+  |> maths.median()
+  |> should.equal(Ok(4.0))
+
+  [8.0, 2.0, 4.0, 1.0, 9.0]
+  |> maths.median()
+  |> should.equal(Ok(4.0))
+
+  [4.0, 8.0, 9.0, 2.0, 1.0]
+  |> maths.median()
+  |> should.equal(Ok(4.0))
 }
 
 pub fn variance_test() {
@@ -646,6 +670,54 @@ pub fn zscore_test() {
   [1.5, 2.5, 3.5]
   |> maths.zscore(1)
   |> should.equal(Ok([-1.0, 0.0, 1.0]))
+}
+
+pub fn iqr_test() {
+  // An empty list returns an error
+  []
+  |> maths.interquartile_range()
+  |> should.be_error()
+
+  // A single-element list returns an error
+  [42.0]
+  |> maths.interquartile_range()
+  |> should.be_error()
+
+  // Try a two-element list
+  [10.0, 20.0]
+  |> maths.interquartile_range()
+  // Q1 = 10.0, Q3 = 20.0, IQR = Q3 - Q1 = 10.0
+  |> should.equal(Ok(10.0))
+
+  // A valid input with an odd number of elements
+  [1.0, 2.0, 3.0, 4.0, 5.0]
+  |> maths.interquartile_range()
+  // Q1 = 2.0, Q3 = 5.0, IQR = Q3 - Q1 = 3.0
+  |> should.equal(Ok(3.0))
+
+  // // A valid input with an even number of elements
+  [1.0, 2.0, 3.0, 4.0, 5.0, 6.0]
+  |> maths.interquartile_range()
+  // Q1 = 2.5, Q3 = 5.5, IQR = Q3 - Q1 = 3.0
+  |> should.equal(Ok(3.0))
+
+  // Make sure an unsorted list is sorted before calculating the IQR
+  [9.0, 1.0, 4.0, 2.0, 8.0, 3.0, 7.0]
+  |> maths.interquartile_range()
+  // Sorted: [1.0, 2.0, 3.0, 4.0, 7.0, 8.0, 9.0], IQR = 8.0 - 2.0 = 6.0
+  |> should.equal(Ok(6.0))
+
+  // A list with duplicates still computes the correct IQR
+  [1.0, 2.0, 2.0, 3.0, 3.0, 4.0, 5.0]
+  |> maths.interquartile_range()
+  // Q1 = 2.0, Q3 = 4.0, IQR = Q3 - Q1 = 2.0
+  |> should.equal(Ok(2.0))
+
+  // A list with all identical elements should return IQR = 0.0
+  [5.0, 5.0, 5.0, 5.0, 5.0]
+  |> maths.interquartile_range()
+  // Q1 = 5.0, Q3 = 5.0, IQR = Q3 - Q1 = 0.0
+  |> should.equal(Ok(0.0))
 }
 
 pub fn jaccard_index_test() {
