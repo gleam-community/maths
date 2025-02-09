@@ -408,6 +408,11 @@ pub fn list_logarithmic_space_test() {
   |> list.all(fn(x) { x == True })
   |> should.be_true()
 
+  // Check the special case when 'base' is equal to zero
+  maths.logarithmic_space(-1.0, 3.0, 3, False, 0.0) |> should.be_error()
+  maths.logarithmic_space(1.0, -3.0, 3, False, 0.0) |> should.be_error()
+  maths.logarithmic_space(-1.0, -3.0, 3, False, 0.0) |> should.be_error()
+
   // Check that when start == stop and steps > 0, then 
   // the value (start/stop) is just repeated, since the
   // step increment will be 0 
