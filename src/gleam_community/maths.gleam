@@ -4585,6 +4585,62 @@ pub fn percentile(arr: List(Float), n: Int) -> Result(Float, Nil) {
 ///     </a>
 /// </div>
 ///
+/// Calculate the z-score of each value in the list relative to the sample 
+/// mean and standard deviation.
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths
+///
+///     pub fn example () {
+///       // An empty list returns an error
+///       []
+///       // Use degrees of freedom = 1
+///       |> maths.zscore(1)
+///       |> should.be_error()
+///     
+///       [1.0, 2.0, 3.0]
+///       // Use degrees of freedom = 1
+///       |> maths.zscore(1)
+///       |> should.equal(Ok([-1.0, 0.0, 1.0]))
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn zscore(arr: List(Float), ddof: Int) -> Result(List(Float), Nil) {
+  let length = list.length(arr)
+  case arr, ddof {
+    [], _ -> Error(Nil)
+    // Invalid degrees of freedom
+    _, ddof if ddof < 0 -> Error(Nil)
+    // Insufficient data points for the given degrees of freedom
+    _, ddof if length <= ddof -> Error(Nil)
+    // Valid input
+    _, _ -> {
+      case mean(arr), standard_deviation(arr, ddof) {
+        // The mean and standard deviation have been successfully computed
+        Ok(mean), Ok(stdev) if stdev != 0.0 ->
+          Ok(list.map(arr, fn(a) -> Float { { a -. mean } /. stdev }))
+        // The standard deviation is zero (e.g., all elements are identical)
+        _, _ -> Error(Nil)
+      }
+    }
+  }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
 /// The Jaccard index measures similarity between two sets of elements. Mathematically, the 
 /// Jaccard index is defined as:
 ///

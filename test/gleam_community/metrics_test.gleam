@@ -540,12 +540,13 @@ pub fn percentile_test() {
   // Percentile 50 (median) for an even-length list
   [10.0, 20.0, 30.0, 40.0]
   |> maths.percentile(50)
-  |> should.equal(Ok(25.0))
   // Interpolates between 20.0 and 30.0
+  |> should.equal(Ok(25.0))
 
   // Percentile 50 (median) for an odd-length list
   [10.0, 20.0, 30.0, 40.0, 50.0]
   |> maths.percentile(50)
+  // Middle value
   |> should.equal(Ok(30.0))
 
   // Percentile 25 (lower quartile)
@@ -561,8 +562,8 @@ pub fn percentile_test() {
   // Percentile for a two-element list (interpolation)
   [10.0, 20.0]
   |> maths.percentile(50)
-  |> should.equal(Ok(15.0))
   // Interpolates between 10.0 and 20.0
+  |> should.equal(Ok(15.0))
 
   // Percentile outside valid range (negative percentile)
   [10.0, 20.0, 30.0]
@@ -577,12 +578,74 @@ pub fn percentile_test() {
   // Percentile 0 and 100 for an unsorted list (valid result after sorting)
   [50.0, 20.0, 40.0, 10.0, 30.0]
   |> maths.percentile(0)
-  |> should.equal(Ok(10.0))
   // Minimum after sorting
+  |> should.equal(Ok(10.0))
 
   [50.0, 20.0, 40.0, 10.0, 30.0]
   |> maths.percentile(100)
+  // Maximum after sorting
   |> should.equal(Ok(50.0))
+}
+
+pub fn zscore_test() {
+  let assert Ok(tol) = float.power(10.0, -6.0)
+
+  // An empty list returns an error
+  []
+  // Use degrees of freedom = 1
+  |> maths.zscore(1)
+  |> should.be_error()
+
+  [1.0, 2.0, 3.0]
+  // Use degrees of freedom = 1
+  |> maths.zscore(1)
+  |> should.equal(Ok([-1.0, 0.0, 1.0]))
+
+  // A single-element list should return an error
+  [42.0]
+  |> maths.zscore(1)
+  |> should.be_error()
+
+  // A typical case with multiple values
+  [1.0, 2.0, 3.0]
+  |> maths.zscore(1)
+  |> should.equal(Ok([-1.0, 0.0, 1.0]))
+
+  // Degrees of freedom = 0 (population standard deviation)
+  let assert Ok(zscores) =
+    [1.0, 2.0, 3.0]
+    |> maths.zscore(0)
+
+  let assert Ok(result) =
+    maths.all_close(
+      list.zip(zscores, [-1.224744871391589, 0.0, 1.224744871391589]),
+      0.0,
+      tol,
+    )
+  result
+  |> list.all(fn(x) { x == True })
+  |> should.be_true()
+
+  // Handling negative degrees of freedom (invalid input)
+  [1.0, 2.0, 3.0]
+  |> maths.zscore(-1)
+  |> should.be_error()
+
+  // A list with all identical values should return an error 
+  // (stdev = 0, division by zero not allowed)
+  [5.0, 5.0, 5.0]
+  |> maths.zscore(1)
+  |> should.be_error()
+
+  // A list with negative and positive values
+  [-2.0, 0.0, 2.0]
+  |> maths.zscore(1)
+  |> should.equal(Ok([-1.0, 0.0, 1.0]))
+
+  // A list with fractional values
+  [1.5, 2.5, 3.5]
+  |> maths.zscore(1)
+  |> should.equal(Ok([-1.0, 0.0, 1.0]))
 }
 
 pub fn jaccard_index_test() {
