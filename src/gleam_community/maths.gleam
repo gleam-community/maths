@@ -3999,12 +3999,12 @@ pub fn mean(arr: List(Float)) -> Result(Float, Nil) {
 ///       |> should.be_error()
 ///
 ///       // List with negative numbers returns an error
-///       [-1., -3., -6.]
+///       [-1.0, -3.0, -6.0]
 ///       |> maths.harmonic_mean()
 ///       |> should.be_error()
 ///     
 ///       // Valid input returns a result
-///       [1., 3., 6.]
+///       [1.0, 3.0, 6.0]
 ///       |> maths.harmonic_mean()
 ///       |> should.equal(Ok(2.0))
 ///     }
@@ -4034,6 +4034,71 @@ pub fn harmonic_mean(arr: List(Float)) -> Result(Float, Nil) {
           let sum = float.sum(xarr)
           Ok(int.to_float(list.length(xarr)) /. sum)
         }
+      }
+    }
+  }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// Calculcate the geometric mean $$\bar{x}$$ of the elements in a list:
+///
+/// \\[
+///   \bar{x} = \left(\prod^{n}_{i=1} x_i\right)^{\frac{1}{n}}
+/// \\]
+///
+/// In the formula, \\(n\\) is the sample size (the length of the list) and 
+/// \\(x_i\\) is the sample point in the input list indexed by \\(i\\).
+/// Note: The geometric mean is only defined for positive numbers.
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths
+///
+///     pub fn example () {
+///       // An empty list returns an error
+///       []
+///       |> maths.geometric_mean()
+///       |> should.be_error()
+///
+///       // List with negative numbers returns an error
+///       [-1.0, -3.0, -6.0]
+///       |> maths.geometric_mean()
+///       |> should.be_error()
+///
+///       // Valid input returns a result
+///       [1.0, 3.0, 9.0]
+///       |> maths.geometric_mean()
+///       |> should.equal(Ok(3.0))
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn geometric_mean(arr: List(Float)) -> Result(Float, Nil) {
+  case arr {
+    [] -> Error(Nil)
+    _ -> {
+      let xval =
+        list.try_fold(arr, 1.0, fn(acc, a) {
+          case a >=. 0.0 {
+            True -> Ok(acc *. a)
+            False -> Error(Nil)
+          }
+        })
+      case xval {
+        Error(Nil) -> Error(Nil)
+        Ok(xval) -> float.power(xval, 1.0 /. int.to_float(list.length(arr)))
       }
     }
   }

@@ -275,6 +275,21 @@ pub fn harmonic_mean_test() {
   |> should.equal(Ok(2.0))
 }
 
+pub fn geometric_mean_test() {
+  // An empty list returns an error
+  []
+  |> maths.geometric_mean()
+  |> should.be_error()
+  // List with negative numbers returns an error
+  [-1.0, -3.0, -6.0]
+  |> maths.geometric_mean()
+  |> should.be_error()
+  // Valid input returns a result
+  [1.0, 3.0, 9.0]
+  |> maths.geometric_mean()
+  |> should.equal(Ok(3.0))
+}
+
 pub fn median_test() {
   // An empty list returns an error
   []
