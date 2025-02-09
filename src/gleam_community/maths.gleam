@@ -3976,6 +3976,75 @@ pub fn mean(arr: List(Float)) -> Result(Float, Nil) {
 ///     </a>
 /// </div>
 ///
+/// Calculcate the harmonic mean $$\bar{x}$$ of the elements in a list:
+///
+/// \\[
+///   \bar{x} = \frac{n}{\sum_{i=1}^{n}\frac{1}{x_i}}
+/// \\]
+///
+/// In the formula, $$n$$ is the sample size (the length of the list) and 
+/// \\(x_i\\) is the sample point in the input list indexed by \\(i\\).
+/// Note: The harmonic mean is only defined for positive numbers.
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths
+///
+///     pub fn example () {
+///       // An empty list returns an error
+///       []
+///       |> maths.harmonic_mean()
+///       |> should.be_error()
+///
+///       // List with negative numbers returns an error
+///       [-1., -3., -6.]
+///       |> maths.harmonic_mean()
+///       |> should.be_error()
+///     
+///       // Valid input returns a result
+///       [1., 3., 6.]
+///       |> maths.harmonic_mean()
+///       |> should.equal(Ok(2.0))
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn harmonic_mean(arr: List(Float)) -> Result(Float, Nil) {
+  case arr {
+    [] -> Error(Nil)
+    _ -> {
+      let xarr =
+        list.try_map(arr, fn(a: Float) {
+          case a >=. 0.0 {
+            True -> Ok(1.0 /. a)
+
+            False -> Error(Nil)
+          }
+        })
+      case xarr {
+        Error(Nil) -> Error(Nil)
+        Ok(xarr) -> {
+          let sum = float.sum(xarr)
+          Ok(int.to_float(list.length(xarr)) /. sum)
+        }
+      }
+    }
+  }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
 /// Calculate the median of the elements in a list.
 ///
 /// <details>
