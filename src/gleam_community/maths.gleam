@@ -1476,19 +1476,15 @@ fn do_natural_logarithm(a: Float) -> Float
 /// </div>
 ///
 pub fn logarithm(x: Float, base: Float) -> Result(Float, Nil) {
-  case x >. 0.0 {
-    True ->
-      case base >. 0.0 && base != 1.0 {
-        False -> Error(Nil)
-        True -> {
-          // Apply the "change of base formula".
-          // Usage of let assert: No error will occur since 'x' and 'base' are within the 
-          // domain of the 'logarithm_10' function.
-          let assert Ok(numerator) = logarithm_10(x)
-          let assert Ok(denominator) = logarithm_10(base)
-          Ok(numerator /. denominator)
-        }
-      }
+  case x >. 0.0 && base >. 0.0 && base != 1.0 {
+    True -> {
+      // Apply the "change of base formula".
+      // Usage of let assert: No error will occur since 'x' and 'base' are within the 
+      // domain of the 'logarithm_10' function.
+      let assert Ok(numerator) = logarithm_10(x)
+      let assert Ok(denominator) = logarithm_10(base)
+      Ok(numerator /. denominator)
+    }
     _ -> Error(Nil)
   }
 }
