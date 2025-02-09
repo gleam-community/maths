@@ -397,6 +397,107 @@ pub fn standard_deviation_test() {
   |> should.equal(Ok(1.0))
 }
 
+pub fn kurtosis_test() {
+  let assert Ok(tol) = float.power(10.0, -6.0)
+
+  // An empty list returns an error
+  []
+  |> maths.kurtosis()
+  |> should.be_error()
+
+  // To calculate kurtosis at least four values are needed, so
+  // test that we receive an error with list of size 1, 2, 3, 4. 
+  [1.0]
+  |> maths.kurtosis()
+  |> should.be_error()
+
+  [1.0, 2.0]
+  |> maths.kurtosis()
+  |> should.be_error()
+
+  [1.0, 2.0, 3.0]
+  |> maths.kurtosis()
+  |> should.be_error()
+
+  [1.0, 2.0, 3.0, 4.0]
+  |> maths.kurtosis()
+  |> should.equal(Ok(-1.36))
+
+  // Try with a homogeneous list (variance is zero, so kurtosis is undefined)
+  [1.0, 1.0, 1.0, 1.0]
+  |> maths.kurtosis()
+  |> should.be_error()
+
+  // Try with another non-homogeneous list
+  let assert Ok(result) =
+    [1.0, 1.0, 1.0, 2.0]
+    |> maths.kurtosis()
+  result
+  |> maths.is_close(-0.666666666666666, 0.0, tol)
+  |> should.be_true()
+
+  // Try with a larger input list 
+  let assert Ok(result) =
+    [6.0, 7.0, 5.0, 7.0, 5.0, 4.0, 4.0, 6.0, 1.0, 3.0, 2.0, 8.0]
+    |> maths.kurtosis()
+  result
+  |> maths.is_close(-0.8548263591730101, 0.0, tol)
+  |> should.be_true()
+}
+
+pub fn skewness_test() {
+  let assert Ok(tol) = float.power(10.0, -6.0)
+
+  // An empty list returns an error
+  []
+  |> maths.skewness()
+  |> should.be_error()
+
+  // To calculate skewness at least three values are needed, so
+  // test that we receive an error with list of size 1, 2, 3. 
+  [1.0]
+  |> maths.skewness()
+  |> should.be_error()
+
+  [1.0, 2.0]
+  |> maths.skewness()
+  |> should.be_error()
+
+  // No skewness (zero skewness)
+  [1.0, 2.0, 3.0]
+  |> maths.skewness()
+  |> should.equal(Ok(0.0))
+
+  [1.0, 2.0, 3.0, 4.0]
+  |> maths.skewness()
+  |> should.equal(Ok(0.0))
+
+  [1.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0, 3.0, 3.0, 4.0]
+  |> maths.skewness()
+  |> should.equal(Ok(0.6))
+
+  // Try with a homogeneous list (variance is zero, so skewness is undefined)
+  [1.0, 1.0, 1.0, 1.0]
+  |> maths.skewness()
+  |> should.be_error()
+
+  // Try with another non-homogeneous list
+  let assert Ok(result) =
+    [1.0, 1.0, 1.0, 2.0]
+    |> maths.skewness()
+  result
+  |> maths.is_close(1.1547005383792515, 0.0, tol)
+  |> should.be_true()
+
+  // Try with a larger input list 
+  let assert Ok(result) =
+    [6.0, 7.0, 5.0, 7.0, 5.0, 4.0, 4.0, 6.0, 1.0, 3.0, 2.0, 8.0]
+    |> maths.skewness()
+  result
+  |> maths.is_close(-0.3078992452957464, 0.0, tol)
+  |> should.be_true()
+}
+
 pub fn jaccard_index_test() {
   maths.jaccard_index(set.from_list([]), set.from_list([]))
   |> should.equal(0.0)

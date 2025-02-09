@@ -3968,27 +3968,72 @@ pub fn chebyshev_distance_with_weights(
 ///     </a>
 /// </div>
 ///
+// pub fn moment(arr: List(Float), n: Int) -> Result(Float, Nil) {
+//   case list.length(arr), n {
+//     0, _ -> Error(Nil)
+//     // 0th moment is always 1.0
+//     __, 0 -> Ok(1.0)
+//     // 1st moment (about the mean) is 0.0 by definition
+//     _, 1 -> Ok(0.0)
+//     _, n if n >= 0 -> {
+//       // Check if the list has enough elements for the nth moment
+//       case list.length(arr) >= n {
+//         True -> {
+//           // Usage of let assert: The function 'mean' will only return an error if the given list
+//           // is emptry. No error will occur since we already checked that the list is non-empty.
+//           let assert Ok(m1) = mean(arr)
+//           let result =
+//             list.try_fold(arr, 0.0, fn(acc, a) {
+//               case float.power(a -. m1, int.to_float(n)) {
+//                 Error(Nil) -> Error(Nil)
+//                 Ok(value) -> Ok(value +. acc)
+//               }
+//             })
+//           case result {
+//             Error(Nil) -> Error(Nil)
+//             Ok(value) -> Ok(value /. int.to_float(list.length(arr)))
+//           }
+//         }
+//         // Not enough elements for meaningful computation
+//         False -> Error(Nil)
+//       }
+//     }
+//     _, _ -> Error(Nil)
+//   }
+// }
+
 pub fn moment(arr: List(Float), n: Int) -> Result(Float, Nil) {
   case arr, n {
+    // Handle empty list: no moments can be calculated
     [], _ -> Error(Nil)
-    __, 0 -> Ok(1.0)
+    // 0th moment is always 1.0, regardless of the dataset
+    _, 0 -> Ok(1.0)
+    // 1st moment (about the mean) is always 0.0 by definition
     _, 1 -> Ok(0.0)
-    _, n if n >= 0 -> {
-      // Usage of let assert: The function 'mean' will only return an error if the given list
-      // is emptry. No error will occur since we already checked that the list is non-empty.
+    // Higher moments for n >= 2
+    _, n if n > 1 -> {
+      // Calculate mean (safe because arr is non-empty)
       let assert Ok(m1) = mean(arr)
+
+      // Compute nth moment
       let result =
         list.try_fold(arr, 0.0, fn(acc, a) {
+          // Compute (a - mean)^n
           case float.power(a -. m1, int.to_float(n)) {
-            Error(Nil) -> Error(Nil)
-            Ok(value) -> Ok(value +. acc)
+            Error(_) -> Error(Nil)
+            // Error during power calculation
+            Ok(value) -> Ok(acc +. value)
           }
         })
+
+      // Finalize the result by dividing by the number of elements
       case result {
-        Error(Nil) -> Error(Nil)
+        Error(_) -> Error(Nil)
+        // Error during accumulation
         Ok(value) -> Ok(value /. int.to_float(list.length(arr)))
       }
     }
+    // Negative moments or invalid input
     _, _ -> Error(Nil)
   }
 }
@@ -4358,6 +4403,116 @@ pub fn standard_deviation(arr: List(Float), ddof: Int) -> Result(Float, Nil) {
       // 'ddof' is larger than or equal to zero 
       let assert Ok(variance) = variance(arr, ddof)
       float.square_root(variance)
+    }
+  }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// Calculcate the sample kurtosis of a list of elements using the 
+/// definition of Fisher. 
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths
+///
+///     pub fn example () {
+///       // An empty list returns an error
+///       []
+///       |> maths.kurtosis()
+///       |> should.be_error()
+///     
+///       // To calculate kurtosis at least four values are needed 
+///       [1.0, 2.0, 3.0]
+///       |> maths.kurtosis()
+///       |> should.be_error()
+///
+///       [1.0, 2.0, 3.0, 4.0]
+///       |> maths.kurtosis()
+///       |> should.equal(Ok(-1.36))
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn kurtosis(arr: List(Float)) -> Result(Float, Nil) {
+  case list.length(arr) < 4 {
+    True -> Error(Nil)
+    False -> {
+      case moment(arr, 2), moment(arr, 4) {
+        Ok(m2), Ok(m4) if m2 != 0.0 -> {
+          case float.power(m2, 2.0) {
+            Ok(value) -> Ok(m4 /. value -. 3.0)
+            Error(Nil) -> Error(Nil)
+          }
+        }
+        _, _ -> Error(Nil)
+      }
+    }
+  }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
+/// Calculcate the sample skewness of a list of elements using the 
+/// Fisher-Pearson coefficient of skewness. 
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths
+///
+///     pub fn example () {
+///       // An empty list returns an error
+///       []
+///       |> maths.skewness()
+///       |> should.be_error()
+///     
+///       // To calculate skewness at least three values are needed 
+///       [1.0, 2.0, 3.0]
+///       |> maths.skewness()
+///       |> should.equal(Ok(0.0))
+/// 
+///       [1.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0, 3.0, 3.0, 4.0]
+///       |> maths.skewness()
+///       |> should.equal(Ok(0.6))
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn skewness(arr: List(Float)) -> Result(Float, Nil) {
+  case list.length(arr) < 3 {
+    True -> Error(Nil)
+    False -> {
+      case moment(arr, 2), moment(arr, 3) {
+        Ok(m2), Ok(m3) if m2 != 0.0 -> {
+          case float.power(m2, 1.5) {
+            Ok(value) -> Ok(m3 /. value)
+            Error(Nil) -> Error(Nil)
+          }
+        }
+        _, _ -> Error(Nil)
+      }
     }
   }
 }
