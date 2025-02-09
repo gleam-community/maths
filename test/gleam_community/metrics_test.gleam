@@ -498,6 +498,93 @@ pub fn skewness_test() {
   |> should.be_true()
 }
 
+pub fn percentile_test() {
+  // An empty list returns an error
+  []
+  |> maths.percentile(40)
+  |> should.be_error()
+
+  // Percentile 0 (minimum value)
+  [15.0, 20.0, 35.0, 40.0, 50.0]
+  |> maths.percentile(0)
+  |> should.equal(Ok(15.0))
+
+  // Calculate 40th percentile 
+  [15.0, 20.0, 35.0, 40.0, 50.0]
+  |> maths.percentile(40)
+  |> should.equal(Ok(29.0))
+
+  // Percentile 100 (maximum value)
+  [15.0, 20.0, 35.0, 40.0, 50.0]
+  |> maths.percentile(100)
+  |> should.equal(Ok(50.0))
+
+  // Percentile 40 (interpolated value)
+  [15.0, 20.0, 35.0, 40.0, 50.0]
+  |> maths.percentile(40)
+  |> should.equal(Ok(29.0))
+
+  // Percentile for a single-element list (always returns the element)
+  [25.0]
+  |> maths.percentile(0)
+  |> should.equal(Ok(25.0))
+
+  [25.0]
+  |> maths.percentile(50)
+  |> should.equal(Ok(25.0))
+
+  [25.0]
+  |> maths.percentile(100)
+  |> should.equal(Ok(25.0))
+
+  // Percentile 50 (median) for an even-length list
+  [10.0, 20.0, 30.0, 40.0]
+  |> maths.percentile(50)
+  |> should.equal(Ok(25.0))
+  // Interpolates between 20.0 and 30.0
+
+  // Percentile 50 (median) for an odd-length list
+  [10.0, 20.0, 30.0, 40.0, 50.0]
+  |> maths.percentile(50)
+  |> should.equal(Ok(30.0))
+
+  // Percentile 25 (lower quartile)
+  [10.0, 20.0, 30.0, 40.0, 50.0]
+  |> maths.percentile(25)
+  |> should.equal(Ok(20.0))
+
+  // Percentile 75 (upper quartile)
+  [10.0, 20.0, 30.0, 40.0, 50.0]
+  |> maths.percentile(75)
+  |> should.equal(Ok(40.0))
+
+  // Percentile for a two-element list (interpolation)
+  [10.0, 20.0]
+  |> maths.percentile(50)
+  |> should.equal(Ok(15.0))
+  // Interpolates between 10.0 and 20.0
+
+  // Percentile outside valid range (negative percentile)
+  [10.0, 20.0, 30.0]
+  |> maths.percentile(-10)
+  |> should.be_error()
+
+  // Percentile outside valid range (greater than 100)
+  [10.0, 20.0, 30.0]
+  |> maths.percentile(110)
+  |> should.be_error()
+
+  // Percentile 0 and 100 for an unsorted list (valid result after sorting)
+  [50.0, 20.0, 40.0, 10.0, 30.0]
+  |> maths.percentile(0)
+  |> should.equal(Ok(10.0))
+  // Minimum after sorting
+
+  [50.0, 20.0, 40.0, 10.0, 30.0]
+  |> maths.percentile(100)
+  |> should.equal(Ok(50.0))
+}
+
 pub fn jaccard_index_test() {
   maths.jaccard_index(set.from_list([]), set.from_list([]))
   |> should.equal(0.0)

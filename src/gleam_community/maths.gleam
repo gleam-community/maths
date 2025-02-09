@@ -4523,6 +4523,68 @@ pub fn skewness(arr: List(Float)) -> Result(Float, Nil) {
 ///     </a>
 /// </div>
 ///
+/// Calculate the n'th percentile of the elements in a list using 
+/// linear interpolation between closest ranks.
+///
+/// <details>
+///     <summary>Example:</summary>
+///
+///     import gleeunit/should
+///     import gleam_community/maths
+///
+///     pub fn example () {
+///       // An empty list returns an error
+///       []
+///       |> maths.percentile(40)
+///       |> should.be_error()
+///     
+///       // Calculate 40th percentile 
+///       [15.0, 20.0, 35.0, 40.0, 50.0]
+///       |> maths.percentile(40)
+///       |> should.equal(Ok(29.0))
+///     }
+/// </details>
+///
+/// <div style="text-align: right;">
+///     <a href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
+pub fn percentile(arr: List(Float), n: Int) -> Result(Float, Nil) {
+  case arr, n {
+    // Handle the special case when the given list is empty
+    [], _ -> Error(Nil)
+    // Handle the special case when the given list contains only a single element
+    [element], _ -> Ok(element)
+    _, n if n == 0 -> list.first(list.sort(arr, float.compare))
+    _, n if n == 100 -> list.last(list.sort(arr, float.compare))
+    _, n if n > 0 && n < 100 -> {
+      // Calculate the rank of the n'th percentile
+      let r: Float =
+        int.to_float(n) /. 100.0 *. int.to_float(list.length(arr) - 1)
+      let f: Int = float.truncate(r)
+      let sorted_arr = list.drop(list.sort(arr, float.compare), f)
+      // Directly extract the lower and upper values. Theoretically, an error value 
+      // will not be returned as the largest index in the array that is accessed will
+      // be the length of the array - 1 (last element). 
+      case list.take(sorted_arr, 2) {
+        [lower, upper] -> {
+          Ok(lower +. { upper -. lower } *. { r -. int.to_float(f) })
+        }
+        _ -> Error(Nil)
+      }
+    }
+    _, _ -> Error(Nil)
+  }
+}
+
+/// <div style="text-align: right;">
+///     <a href="https://github.com/gleam-community/maths/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+/// </div>
+///
 /// The Jaccard index measures similarity between two sets of elements. Mathematically, the 
 /// Jaccard index is defined as:
 ///
