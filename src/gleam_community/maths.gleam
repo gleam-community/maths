@@ -212,7 +212,7 @@ pub fn divisors(n: Int) -> List(Int) {
 fn find_divisors(n: Int) -> set.Set(Int) {
   let nabs = float.absolute_value(int.to_float(n))
   // Usage of let assert: 'nabs' is non-negative so no error should occur. The function
-  // 'float.squre_root' will only return an error in case a non-negative value is given as input.
+  // 'float.square_root' will only return an error in case a negative value is given as input.
   let assert Ok(sqrt_result) = float.square_root(nabs)
   let max = float.round(sqrt_result) + 1
 
@@ -241,7 +241,7 @@ fn do_find_divisors(n: Int, max: Int, acc: set.Set(Int), i: Int) -> set.Set(Int)
 /// </div>
 ///
 /// The function returns all the positive divisors of an integer, excluding the
-/// number iteself.
+/// number itself.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -735,7 +735,7 @@ pub fn polar_to_cartesian(r: Float, theta: Float) -> #(Float, Float) {
 pub fn cartesian_to_polar(x: Float, y: Float) -> #(Float, Float) {
   // Calculate 'r' and 'theta'
   // Usage of let assert: a sum of squares is always non-negative so no error should occur, i.e., 
-  // the function 'float.squre_root' will only return an error in case a non-negative value is given
+  // the function 'float.square_root' will only return an error in case a negative value is given
   // as input.
   let assert Ok(r) = float.square_root(x *. x +. y *. y)
   let theta = atan2(y, x)
@@ -1706,7 +1706,7 @@ pub fn tau() -> Float {
 pub fn golden_ratio() -> Float {
   // Calculate the golden ratio: (1 + sqrt(5)) / 2
   // Usage of let assert: A positive number '5' is given a input so no error should occur, i.e., 
-  // the function 'float.squre_root' will only return an error in case a non-negative value is 
+  // the function 'float.square_root' will only return an error in case a negative value is 
   // given as input.
   let assert Ok(sqrt5) = float.square_root(5.0)
   { 1.0 +. sqrt5 } /. 2.0
