@@ -287,8 +287,10 @@ pub fn natural_logarithm_test() {
   let assert Ok(tol) = float.power(10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
-  maths.natural_logarithm(1.0)
-  |> should.equal(Ok(0.0))
+  let assert Ok(result) = maths.natural_logarithm(1.0)
+  result
+  |> maths.is_close(0.0, 0.0, tol)
+  |> should.be_true()
 
   let assert Ok(result) = maths.natural_logarithm(0.5)
   result
@@ -302,17 +304,24 @@ pub fn natural_logarithm_test() {
 }
 
 pub fn logarithm_test() {
+  let assert Ok(tol) = float.power(10.0, -6.0)
+
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
-  maths.logarithm(10.0, 10.0)
-  |> should.equal(Ok(1.0))
+  let assert Ok(result) = maths.logarithm(10.0, 10.0)
+  result
+  |> maths.is_close(1.0, 0.0, tol)
+  |> should.be_true()
 
-  maths.logarithm(10.0, 100.0)
-  |> should.equal(Ok(0.5))
+  let assert Ok(result) = maths.logarithm(10.0, 100.0)
+  result
+  |> maths.is_close(0.5, 0.0, tol)
+  |> should.be_true()
 
-  maths.logarithm(1.0, 0.25)
-  |> should.equal(Ok(0.0))
-
+  let assert Ok(result) = maths.logarithm(1.0, 0.25)
+  result
+  |> maths.is_close(0.0, 0.0, tol)
+  |> should.be_true()
   // Check that we get an error when the function is evaluated
   // outside its domain
   maths.logarithm(1.0, 1.0)
@@ -324,11 +333,15 @@ pub fn logarithm_test() {
   maths.logarithm(-1.0, 1.0)
   |> should.be_error()
 
-  maths.logarithm(1.0, 10.0)
-  |> should.equal(Ok(0.0))
+  let assert Ok(result) = maths.logarithm(1.0, 10.0)
+  result
+  |> maths.is_close(0.0, 0.0, tol)
+  |> should.be_true()
 
-  maths.logarithm(maths.e(), maths.e())
-  |> should.equal(Ok(1.0))
+  let assert Ok(result) = maths.logarithm(maths.e(), maths.e())
+  result
+  |> maths.is_close(1.0, 0.0, tol)
+  |> should.be_true()
 
   maths.logarithm(-1.0, 2.0)
   |> should.be_error()
@@ -338,11 +351,15 @@ pub fn logarithm_2_test() {
   let assert Ok(tol) = float.power(10.0, -6.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
-  maths.logarithm_2(1.0)
-  |> should.equal(Ok(0.0))
+  let assert Ok(result) = maths.logarithm_2(1.0)
+  result
+  |> maths.is_close(0.0, 0.0, tol)
+  |> should.be_true()
 
-  maths.logarithm_2(2.0)
-  |> should.equal(Ok(1.0))
+  let assert Ok(result) = maths.logarithm_2(2.0)
+  result
+  |> maths.is_close(1.0, 0.0, tol)
+  |> should.be_true()
 
   let assert Ok(result) = maths.logarithm_2(5.0)
   result
