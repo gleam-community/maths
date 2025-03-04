@@ -974,6 +974,7 @@ pub fn braycurtis_distance_test() {
   // Try different types of valid input
   maths.braycurtis_distance([#(0.0, 0.0), #(0.0, 0.0)])
   |> should.equal(Ok(0.0))
+
   maths.braycurtis_distance([#(1.0, -2.0), #(2.0, -1.0)])
   |> should.equal(Ok(3.0))
 
