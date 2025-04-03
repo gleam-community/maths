@@ -1,78 +1,63 @@
 import gleam/float
+import gleam/int
+import gleam/list
 import gleam/set
 import gleam_community/maths
 import gleeunit/should
 
+fn norm_test_cases() {
+  // Tuples of #(list, norm, expected result)
+  [
+    // An empty list will always return 0.0
+    #([], 1.0, 0.0),
+    #([1.0, 1.0, 1.0], 1.0, 3.0),
+    // Check the special case:
+    // The pseudo-norm when p = 0 (we count the number of non-zero elements in the given list)
+    #([1.0, 1.0, 1.0], 0.0, 3.0),
+    #([1.0, 1.0, 1.0], -1.0, 0.3333333333333333),
+    #([-1.0, -1.0, -1.0], -1.0, 0.3333333333333333),
+    // Check if we internally correctly remember to take the absolute
+    // value of each of the list elements
+    #([-1.0, -1.0, -1.0], 1.0, 3.0),
+    #([-1.0, -1.0, -1.0], 0.5, 9.0),
+    #([0.0, 0.0, 0.0], 1.0, 0.0),
+    // Check if we internally handle division by zero appropriately
+    #([0.0], -1.0, 0.0),
+    #([1.0, 2.0, 3.0, 0.0], -1.0, 0.0),
+    #([-1.0, -2.0, -3.0], -10.0, 0.9999007044905545),
+    #([-1.0, -2.0, -3.0], -100.0, 1.0),
+    // Test the Euclidean norm (p = 2)
+    #([-1.0, -2.0, -3.0], 2.0, 3.7416573867739413),
+  ]
+}
+
 pub fn list_norm_test() {
   let assert Ok(tol) = float.power(10.0, -6.0)
 
-  // An empty lists returns 0.0
-  []
-  |> maths.norm(1.0)
-  |> should.equal(Ok(0.0))
-
-  // Check that the function agrees, at some arbitrary input
-  // points, with known function values
-  let assert Ok(result) =
-    [1.0, 1.0, 1.0]
-    |> maths.norm(1.0)
-  result
-  |> maths.is_close(3.0, 0.0, tol)
-  |> should.be_true()
-
-  let assert Ok(result) =
-    [1.0, 1.0, 1.0]
-    |> maths.norm(-1.0)
-  result
-  |> maths.is_close(0.3333333333333333, 0.0, tol)
-  |> should.be_true()
-
-  let assert Ok(result) =
-    [-1.0, -1.0, -1.0]
-    |> maths.norm(-1.0)
-  result
-  |> maths.is_close(0.3333333333333333, 0.0, tol)
-  |> should.be_true()
-
-  let assert Ok(result) =
-    [-1.0, -1.0, -1.0]
-    |> maths.norm(1.0)
-  result
-  |> maths.is_close(3.0, 0.0, tol)
-  |> should.be_true()
-
-  let assert Ok(result) =
-    [-1.0, -2.0, -3.0]
-    |> maths.norm(-10.0)
-  result
-  |> maths.is_close(0.9999007044905545, 0.0, tol)
-  |> should.be_true()
-
-  let assert Ok(result) =
-    [-1.0, -2.0, -3.0]
-    |> maths.norm(-100.0)
-  result
-  |> maths.is_close(1.0, 0.0, tol)
-  |> should.be_true()
-
-  let assert Ok(result) =
-    [-1.0, -2.0, -3.0]
-    |> maths.norm(2.0)
-  result
-  |> maths.is_close(3.7416573867739413, 0.0, tol)
-  |> should.be_true()
+  norm_test_cases()
+  |> list.map(fn(tuple) {
+    let #(arr, p, expected) = tuple
+    let assert Ok(result) = maths.norm(arr, p)
+    result |> maths.is_close(expected, 0.0, tol) |> should.be_true()
+  })
 }
 
 pub fn list_norm_with_weights_test() {
   let assert Ok(tol) = float.power(10.0, -6.0)
 
-  // An empty lists returns 0.0
-  []
-  |> maths.norm_with_weights(1.0)
-  |> should.equal(Ok(0.0))
+  // Check that the weighted version of the norm function aligns with the
+  // non-weighted version by re-using the test cases for the non-weighted
+  // version by associating a weight of 1.0 to each elemet of the input lists
+  norm_test_cases()
+  |> list.map(fn(tuple) {
+    let #(arr, p, expected) = tuple
+    let new_arr = list.map(arr, fn(element) { #(element, 1.0) })
+    let assert Ok(result) = maths.norm_with_weights(new_arr, p)
+    result |> maths.is_close(expected, 0.0, tol)
+  })
 
-  // Check that the function agrees, at some arbitrary input
-  // points, with known function values
+  // Check that the function agrees, at some additional arbitrary input points
+  // with known function values
   let assert Ok(result) =
     [#(1.0, 1.0), #(1.0, 1.0), #(1.0, 1.0)]
     |> maths.norm_with_weights(1.0)
@@ -258,6 +243,44 @@ pub fn list_euclidean_test() {
   |> should.be_error()
 }
 
+pub fn moment_test() {
+  // An empty list returns an error
+  []
+  |> maths.moment(0)
+  |> should.be_error()
+
+  [1.0, 2.0, 3.0]
+  |> maths.moment(-1)
+  |> should.be_error()
+
+  [2.0]
+  |> maths.moment(0)
+  |> should.equal(Ok(1.0))
+
+  [2.0]
+  |> maths.moment(1)
+  |> should.equal(Ok(0.0))
+
+  [2.0]
+  |> maths.moment(2)
+  |> should.equal(Ok(0.0))
+
+  // 0th moment about the mean is 1. per definition
+  [0.0, 1.0, 2.0, 3.0, 4.0]
+  |> maths.moment(0)
+  |> should.equal(Ok(1.0))
+
+  // 1st moment about the mean is 0. per definition
+  [0.0, 1.0, 2.0, 3.0, 4.0]
+  |> maths.moment(1)
+  |> should.equal(Ok(0.0))
+
+  // 2nd moment about the mean
+  [0.0, 1.0, 2.0, 3.0, 4.0]
+  |> maths.moment(2)
+  |> should.equal(Ok(2.0))
+}
+
 pub fn mean_test() {
   // An empty list returns an error
   []
@@ -265,6 +288,11 @@ pub fn mean_test() {
   |> should.be_error()
 
   // Valid input returns a result
+
+  [5.0]
+  |> maths.mean()
+  |> should.equal(Ok(5.0))
+
   [1.0, 2.0, 3.0]
   |> maths.mean()
   |> should.equal(Ok(2.0))
@@ -274,20 +302,94 @@ pub fn mean_test() {
   |> should.equal(Ok(-2.0))
 }
 
+pub fn harmonic_mean_test() {
+  // An empty list returns an error
+  []
+  |> maths.harmonic_mean()
+  |> should.be_error()
+
+  [1.0, 2.0, 0.0]
+  |> maths.harmonic_mean()
+  |> should.equal(Ok(0.0))
+
+  // List with negative numbers returns an error
+  [-1.0, -3.0, -6.0]
+  |> maths.harmonic_mean()
+  |> should.be_error()
+
+  // Valid input returns a result
+  [4.0]
+  |> maths.harmonic_mean()
+  |> should.equal(Ok(4.0))
+
+  [1.0, 3.0, 6.0]
+  |> maths.harmonic_mean()
+  |> should.equal(Ok(2.0))
+}
+
+pub fn geometric_mean_test() {
+  // An empty list returns an error
+  []
+  |> maths.geometric_mean()
+  |> should.be_error()
+
+  // List with negative numbers returns an error
+  [-1.0, -3.0, -6.0]
+  |> maths.geometric_mean()
+  |> should.be_error()
+
+  // Valid input returns a result
+  [5.0]
+  |> maths.geometric_mean()
+  |> should.equal(Ok(5.0))
+
+  [1.0, 2.0, 0.0]
+  |> maths.geometric_mean()
+  |> should.equal(Ok(0.0))
+
+  [1.0, 3.0, 9.0]
+  |> maths.geometric_mean()
+  |> should.equal(Ok(3.0))
+}
+
 pub fn median_test() {
   // An empty list returns an error
   []
   |> maths.median()
   |> should.be_error()
 
-  // Valid input returns a result
-  [1.0, 2.0, 3.0]
+  // A single-element list returns the element itself
+  [42.0]
   |> maths.median()
-  |> should.equal(Ok(2.0))
+  |> should.equal(Ok(42.0))
 
+  // A two-element list returns the average of the two elements
+  [10.0, 20.0]
+  |> maths.median()
+  |> should.equal(Ok(15.0))
+
+  // An odd-length list returns the middle element
+  [1.0, 3.0, 5.0]
+  |> maths.median()
+  |> should.equal(Ok(3.0))
+
+  // An even-length list returns the average of the middle two elements
   [1.0, 2.0, 3.0, 4.0]
   |> maths.median()
   |> should.equal(Ok(2.5))
+
+  // Make sure an unsorted list is sorted before calculating the median
+  [9.0, 1.0, 4.0, 2.0, 8.0]
+  |> maths.median()
+  |> should.equal(Ok(4.0))
+
+  [8.0, 2.0, 4.0, 1.0, 9.0]
+  |> maths.median()
+  |> should.equal(Ok(4.0))
+
+  [4.0, 8.0, 9.0, 2.0, 1.0]
+  |> maths.median()
+  |> should.equal(Ok(4.0))
 }
 
 pub fn variance_test() {
@@ -318,6 +420,342 @@ pub fn standard_deviation_test() {
   [1.0, 2.0, 3.0]
   |> maths.standard_deviation(ddof)
   |> should.equal(Ok(1.0))
+}
+
+pub fn kurtosis_test() {
+  let assert Ok(tol) = float.power(10.0, -6.0)
+
+  // An empty list returns an error
+  []
+  |> maths.kurtosis()
+  |> should.be_error()
+
+  // To calculate kurtosis at least four values are needed, so
+  // test that we receive an error with list of size 1, 2, 3, 4.
+  [1.0]
+  |> maths.kurtosis()
+  |> should.be_error()
+
+  [1.0, 2.0]
+  |> maths.kurtosis()
+  |> should.be_error()
+
+  [1.0, 2.0, 3.0]
+  |> maths.kurtosis()
+  |> should.be_error()
+
+  [1.0, 2.0, 3.0, 4.0]
+  |> maths.kurtosis()
+  |> should.equal(Ok(-1.36))
+
+  // Try with a homogeneous list (variance is zero, so kurtosis is undefined)
+  [1.0, 1.0, 1.0, 1.0]
+  |> maths.kurtosis()
+  |> should.be_error()
+
+  // Try with another non-homogeneous list
+  let assert Ok(result) =
+    [1.0, 1.0, 1.0, 2.0]
+    |> maths.kurtosis()
+  result
+  |> maths.is_close(-0.666666666666666, 0.0, tol)
+  |> should.be_true()
+
+  // Try with a larger input list
+  let assert Ok(result) =
+    [6.0, 7.0, 5.0, 7.0, 5.0, 4.0, 4.0, 6.0, 1.0, 3.0, 2.0, 8.0]
+    |> maths.kurtosis()
+  result
+  |> maths.is_close(-0.8548263591730101, 0.0, tol)
+  |> should.be_true()
+}
+
+pub fn skewness_test() {
+  let assert Ok(tol) = float.power(10.0, -6.0)
+
+  // An empty list returns an error
+  []
+  |> maths.skewness()
+  |> should.be_error()
+
+  // To calculate skewness at least three values are needed, so
+  // test that we receive an error with list of size 1, 2, 3.
+  [1.0]
+  |> maths.skewness()
+  |> should.be_error()
+
+  [1.0, 2.0]
+  |> maths.skewness()
+  |> should.be_error()
+
+  // No skewness (zero skewness)
+  [1.0, 2.0, 3.0]
+  |> maths.skewness()
+  |> should.equal(Ok(0.0))
+
+  [1.0, 2.0, 3.0, 4.0]
+  |> maths.skewness()
+  |> should.equal(Ok(0.0))
+
+  [1.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0, 3.0, 3.0, 4.0]
+  |> maths.skewness()
+  |> should.equal(Ok(0.6))
+
+  // Try with a homogeneous list (variance is zero, so skewness is undefined)
+  [1.0, 1.0, 1.0, 1.0]
+  |> maths.skewness()
+  |> should.be_error()
+
+  // Try with another non-homogeneous list
+  let assert Ok(result) =
+    [1.0, 1.0, 1.0, 2.0]
+    |> maths.skewness()
+  result
+  |> maths.is_close(1.1547005383792515, 0.0, tol)
+  |> should.be_true()
+
+  // Try with a larger input list
+  let assert Ok(result) =
+    [6.0, 7.0, 5.0, 7.0, 5.0, 4.0, 4.0, 6.0, 1.0, 3.0, 2.0, 8.0]
+    |> maths.skewness()
+  result
+  |> maths.is_close(-0.3078992452957464, 0.0, tol)
+  |> should.be_true()
+}
+
+pub fn percentile_test() {
+  // An empty list returns an error
+  []
+  |> maths.percentile(40)
+  |> should.be_error()
+
+  // Percentile 0 (minimum value)
+  [15.0, 20.0, 35.0, 40.0, 50.0]
+  |> maths.percentile(0)
+  |> should.equal(Ok(15.0))
+
+  // Calculate 40th percentile
+  [15.0, 20.0, 35.0, 40.0, 50.0]
+  |> maths.percentile(40)
+  |> should.equal(Ok(29.0))
+
+  // Percentile 100 (maximum value)
+  [15.0, 20.0, 35.0, 40.0, 50.0]
+  |> maths.percentile(100)
+  |> should.equal(Ok(50.0))
+
+  // Percentile 40 (interpolated value)
+  [15.0, 20.0, 35.0, 40.0, 50.0]
+  |> maths.percentile(40)
+  |> should.equal(Ok(29.0))
+
+  // Percentile for a single-element list (always returns the element)
+  [25.0]
+  |> maths.percentile(0)
+  |> should.equal(Ok(25.0))
+
+  [25.0]
+  |> maths.percentile(50)
+  |> should.equal(Ok(25.0))
+
+  [25.0]
+  |> maths.percentile(100)
+  |> should.equal(Ok(25.0))
+
+  // Percentile 50 (median) for an even-length list
+  [10.0, 20.0, 30.0, 40.0]
+  |> maths.percentile(50)
+  // Interpolates between 20.0 and 30.0
+  |> should.equal(Ok(25.0))
+
+  // Percentile 50 (median) for an odd-length list
+  [10.0, 20.0, 30.0, 40.0, 50.0]
+  |> maths.percentile(50)
+  // Middle value
+  |> should.equal(Ok(30.0))
+
+  // Percentile 25 (lower quartile)
+  [10.0, 20.0, 30.0, 40.0, 50.0]
+  |> maths.percentile(25)
+  |> should.equal(Ok(20.0))
+
+  // Percentile 75 (upper quartile)
+  [10.0, 20.0, 30.0, 40.0, 50.0]
+  |> maths.percentile(75)
+  |> should.equal(Ok(40.0))
+
+  // Percentile for a two-element list (interpolation)
+  [10.0, 20.0]
+  |> maths.percentile(50)
+  // Interpolates between 10.0 and 20.0
+  |> should.equal(Ok(15.0))
+
+  // Percentile outside valid range (negative percentile)
+  [10.0, 20.0, 30.0]
+  |> maths.percentile(-10)
+  |> should.be_error()
+
+  // Percentile outside valid range (greater than 100)
+  [10.0, 20.0, 30.0]
+  |> maths.percentile(110)
+  |> should.be_error()
+
+  // Percentile 0 and 100 for an unsorted list (valid result after sorting)
+  [50.0, 20.0, 40.0, 10.0, 30.0]
+  |> maths.percentile(0)
+  // Minimum after sorting
+  |> should.equal(Ok(10.0))
+
+  [50.0, 20.0, 40.0, 10.0, 30.0]
+  |> maths.percentile(100)
+  // Maximum after sorting
+  |> should.equal(Ok(50.0))
+}
+
+pub fn zscore_test() {
+  let assert Ok(tol) = float.power(10.0, -6.0)
+
+  // An empty list returns an error
+  []
+  // Use degrees of freedom = 1
+  |> maths.zscore(1)
+  |> should.be_error()
+
+  [1.0, 2.0, 3.0]
+  // Use degrees of freedom = 1
+  |> maths.zscore(1)
+  |> should.equal(Ok([-1.0, 0.0, 1.0]))
+
+  // A single-element list should return an error
+  [42.0]
+  |> maths.zscore(1)
+  |> should.be_error()
+
+  // A typical case with multiple values
+  [1.0, 2.0, 3.0]
+  |> maths.zscore(1)
+  |> should.equal(Ok([-1.0, 0.0, 1.0]))
+
+  // Degrees of freedom = 0 (population standard deviation)
+  let assert Ok(zscores) =
+    [1.0, 2.0, 3.0]
+    |> maths.zscore(0)
+
+  maths.all_close(
+    list.zip(zscores, [-1.224744871391589, 0.0, 1.224744871391589]),
+    0.0,
+    tol,
+  )
+  |> list.all(fn(x) { x == True })
+  |> should.be_true()
+
+  // Handling negative degrees of freedom (invalid input)
+  [1.0, 2.0, 3.0]
+  |> maths.zscore(-1)
+  |> should.be_error()
+
+  // A list with all identical values should return an error
+  // (stdev = 0, division by zero not allowed)
+  [5.0, 5.0, 5.0]
+  |> maths.zscore(1)
+  |> should.be_error()
+
+  // A list with negative and positive values
+  [-2.0, 0.0, 2.0]
+  |> maths.zscore(1)
+  |> should.equal(Ok([-1.0, 0.0, 1.0]))
+
+  // A list with fractional values
+  [1.5, 2.5, 3.5]
+  |> maths.zscore(1)
+  |> should.equal(Ok([-1.0, 0.0, 1.0]))
+}
+
+pub fn iqr_test() {
+  // An empty list returns an error
+  []
+  |> maths.interquartile_range()
+  |> should.be_error()
+
+  // A single-element list returns an error
+  [42.0]
+  |> maths.interquartile_range()
+  |> should.be_error()
+
+  // Try a two-element list
+  [10.0, 20.0]
+  |> maths.interquartile_range()
+  // Q1 = 10.0, Q3 = 20.0, IQR = Q3 - Q1 = 10.0
+  |> should.equal(Ok(10.0))
+
+  // A valid input with an odd number of elements
+  [1.0, 2.0, 3.0, 4.0, 5.0]
+  |> maths.interquartile_range()
+  // Q1 = 2.0, Q3 = 5.0, IQR = Q3 - Q1 = 3.0
+  |> should.equal(Ok(3.0))
+
+  // // A valid input with an even number of elements
+  [1.0, 2.0, 3.0, 4.0, 5.0, 6.0]
+  |> maths.interquartile_range()
+  // Q1 = 2.5, Q3 = 5.5, IQR = Q3 - Q1 = 3.0
+  |> should.equal(Ok(3.0))
+
+  // Make sure an unsorted list is sorted before calculating the IQR
+  [9.0, 1.0, 4.0, 2.0, 8.0, 3.0, 7.0]
+  |> maths.interquartile_range()
+  // Sorted: [1.0, 2.0, 3.0, 4.0, 7.0, 8.0, 9.0], IQR = 8.0 - 2.0 = 6.0
+  |> should.equal(Ok(6.0))
+
+  // A list with duplicates still computes the correct IQR
+  [1.0, 2.0, 2.0, 3.0, 3.0, 4.0, 5.0]
+  |> maths.interquartile_range()
+  // Q1 = 2.0, Q3 = 4.0, IQR = Q3 - Q1 = 2.0
+  |> should.equal(Ok(2.0))
+
+  // A list with all identical elements should return IQR = 0.0
+  [5.0, 5.0, 5.0, 5.0, 5.0]
+  |> maths.interquartile_range()
+  // Q1 = 5.0, Q3 = 5.0, IQR = Q3 - Q1 = 0.0
+  |> should.equal(Ok(0.0))
+}
+
+pub fn correlation_test() {
+  // An empty list returns an error
+  maths.correlation([])
+  |> should.be_error()
+
+  // Lists with fewer than 2 elements return an error
+  maths.correlation([#(1.0, 1.0)])
+  |> should.be_error()
+
+  // Perfect positive correlation
+  let xarr =
+    list.range(0, 100)
+    |> list.map(fn(x) { int.to_float(x) })
+  let yarr =
+    list.range(0, 100)
+    |> list.map(fn(y) { int.to_float(y) })
+  list.zip(xarr, yarr)
+  |> maths.correlation()
+  |> should.equal(Ok(1.0))
+
+  // Perfect negative correlation
+  let xarr =
+    list.range(0, 100)
+    |> list.map(fn(x) { -1.0 *. int.to_float(x) })
+  let yarr =
+    list.range(0, 100)
+    |> list.map(fn(y) { int.to_float(y) })
+  list.zip(xarr, yarr)
+  |> maths.correlation()
+  |> should.equal(Ok(-1.0))
+
+  // No correlation (independent variables)
+  let xarr = [1.0, 2.0, 3.0, 4.0]
+  let yarr = [5.0, 5.0, 5.0, 5.0]
+  list.zip(xarr, yarr)
+  |> maths.correlation()
+  |> should.equal(Ok(0.0))
 }
 
 pub fn jaccard_index_test() {
@@ -383,6 +821,10 @@ pub fn overlap_coefficient_test() {
 pub fn cosine_similarity_test() {
   let assert Ok(tol) = float.power(10.0, -6.0)
 
+  // An empty list returns an error
+  maths.cosine_similarity([])
+  |> should.be_error()
+
   // Two orthogonal vectors (represented by lists)
   maths.cosine_similarity([#(-1.0, 1.0), #(1.0, 1.0), #(0.0, -1.0)])
   |> should.equal(Ok(0.0))
@@ -401,6 +843,10 @@ pub fn cosine_similarity_test() {
   result
   |> maths.is_close(0.9746318461970762, 0.0, tol)
   |> should.be_true()
+
+  // An empty list returns an error
+  maths.cosine_similarity_with_weights([])
+  |> should.be_error()
 
   // Try valid input with weights
   let assert Ok(result) =
@@ -454,7 +900,7 @@ pub fn cosine_similarity_test() {
 }
 
 pub fn chebyshev_distance_test() {
-  // Empty lists returns an error
+  // An empty list returns an error
   maths.chebyshev_distance([])
   |> should.be_error()
 
@@ -483,7 +929,7 @@ pub fn chebyshev_distance_test() {
 }
 
 pub fn canberra_distance_test() {
-  // Empty lists returns an error
+  // An empty list returns an error
   maths.canberra_distance([])
   |> should.be_error()
 
@@ -519,13 +965,14 @@ pub fn canberra_distance_test() {
 }
 
 pub fn braycurtis_distance_test() {
-  // Empty lists returns an error
+  // An empty list returns an error
   maths.braycurtis_distance([])
   |> should.be_error()
 
   // Try different types of valid input
   maths.braycurtis_distance([#(0.0, 0.0), #(0.0, 0.0)])
   |> should.equal(Ok(0.0))
+
   maths.braycurtis_distance([#(1.0, -2.0), #(2.0, -1.0)])
   |> should.equal(Ok(3.0))
 
