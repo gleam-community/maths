@@ -67,6 +67,7 @@ import gleam/yielder.{type Yielder, Done, Next}
 pub fn gcd(x: Int, y: Int) -> Int {
   let absx = int.absolute_value(x)
   let absy = int.absolute_value(y)
+
   do_gcd(absx, absy)
 }
 
@@ -167,6 +168,7 @@ pub fn euclidean_modulo(x: Int, y: Int) -> Int {
 pub fn lcm(x: Int, y: Int) -> Int {
   let absx = int.absolute_value(x)
   let absy = int.absolute_value(y)
+
   absx * absy / do_gcd(absx, absy)
 }
 
@@ -211,8 +213,9 @@ pub fn divisors(n: Int) -> List(Int) {
 
 fn find_divisors(n: Int) -> set.Set(Int) {
   let nabs = float.absolute_value(int.to_float(n))
-  // Usage of let assert: 'nabs' is non-negative so no error should occur. The function
-  // 'float.square_root' will only return an error in case a negative value is given as input.
+  // Usage of let assert: 'nabs' is non-negative so no error should occur. The
+  // function `float.square_root` will only return an error in case a negative
+  // value is given as input.
   let assert Ok(sqrt_result) = float.square_root(nabs)
   let max = float.round(sqrt_result) + 1
 
@@ -221,16 +224,15 @@ fn find_divisors(n: Int) -> set.Set(Int) {
 
 fn do_find_divisors(n: Int, max: Int, acc: set.Set(Int), i: Int) -> set.Set(Int) {
   case i <= max {
+    False -> acc
     True -> {
       let updated_acc = case n % i == 0 {
-        True -> {
-          set.insert(acc, i) |> set.insert(n / i)
-        }
+        True -> set.insert(acc, i) |> set.insert(n / i)
         False -> acc
       }
+
       do_find_divisors(n, max, updated_acc, i + 1)
     }
-    False -> acc
   }
 }
 
@@ -286,8 +288,8 @@ pub fn proper_divisors(n: Int) -> List(Int) {
 /// \sum_{i=1}^n w_i x_i
 /// \\]
 ///
-/// In the formula, \\(n\\) is the length of the list and \\(x_i \in \mathbb{R}\\) is
-/// the value in the input list indexed by \\(i\\), while the \\(w_i \in \mathbb{R}\\)
+/// In the formula, \\(n\\) is the length of the list and \\(x_i \in \mathbb{R}\\)
+/// is the value in the input list indexed by \\(i\\), while the \\(w_i \in \mathbb{R}\\)
 /// are corresponding positive weights.
 ///
 /// <details>
@@ -322,12 +324,12 @@ pub fn weighted_sum(arr: List(#(Float, Float))) -> Result(Float, Nil) {
   case arr {
     [] -> Ok(0.0)
     _ -> {
-      list.try_fold(arr, 0.0, fn(acc, tuple) {
-        case tuple.1 <. 0.0 {
-          True -> Error(Nil)
-          False -> Ok(tuple.0 *. tuple.1 +. acc)
-        }
-      })
+      use acc, tuple <- list.try_fold(arr, 0.0)
+
+      case tuple.1 <. 0.0 {
+        True -> Error(Nil)
+        False -> Ok(tuple.0 *. tuple.1 +. acc)
+      }
     }
   }
 }
@@ -384,16 +386,16 @@ pub fn weighted_product(arr: List(#(Float, Float))) -> Result(Float, Nil) {
   case arr {
     [] -> Ok(1.0)
     _ -> {
-      list.try_fold(arr, 1.0, fn(acc, tuple) {
-        case tuple.1 <. 0.0 {
-          True -> Error(Nil)
-          False ->
-            case float.power(tuple.0, tuple.1) {
-              Error(Nil) -> Error(Nil)
-              Ok(value) -> Ok(value *. acc)
-            }
-        }
-      })
+      use acc, tuple <- list.try_fold(arr, 1.0)
+
+      case tuple.1 <. 0.0 {
+        True -> Error(Nil)
+        False ->
+          case float.power(tuple.0, tuple.1) {
+            Error(Nil) -> Error(Nil)
+            Ok(value) -> Ok(value *. acc)
+          }
+      }
     }
   }
 }
@@ -504,11 +506,11 @@ pub fn int_cumulative_sum(arr: List(Int)) -> List(Int) {
 /// v_j = \prod_{i=1}^j x_i \\;\\; \forall j = 1,\dots, n
 /// \\]
 ///
-/// In the formula, \\(v_j\\) is the \\(j\\)'th element in the cumulative product of
-/// \\(n\\) elements. That is, \\(n\\) is the length of the list and
-/// \\(x_i \in \mathbb{R}\\) is the value in the input list indexed by \\(i\\). The
-/// value \\(v_j\\) is thus the sum of the \\(1\\) to \\(j\\) first elements in the
-/// given list.
+/// In the formula, \\(v_j\\) is the \\(j\\)'th element in the cumulative product
+/// of \\(n\\) elements. That is, \\(n\\) is the length of the list and
+/// \\(x_i \in \mathbb{R}\\) is the value in the input list indexed by \\(i\\).
+/// The value \\(v_j\\) is thus the sum of the \\(1\\) to \\(j\\) first elements
+/// in the given list.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -552,11 +554,11 @@ pub fn cumulative_product(arr: List(Float)) -> List(Float) {
 /// v_j = \prod_{i=1}^j x_i \\;\\; \forall j = 1,\dots, n
 /// \\]
 ///
-/// In the formula, \\(v_j\\) is the \\(j\\)'th element in the cumulative product of
-/// \\(n\\) elements. That is, \\(n\\) is the length of the list and
-/// \\(x_i \in \mathbb{Z}\\) is the value in the input list indexed by \\(i\\). The
-/// value \\(v_j\\) is thus the product of the \\(1\\) to \\(j\\) first elements in the
-/// given list.
+/// In the formula, \\(v_j\\) is the \\(j\\)'th element in the cumulative product
+/// of \\(n\\) elements. That is, \\(n\\) is the length of the list and
+/// \\(x_i \in \mathbb{Z}\\) is the value in the input list indexed by \\(i\\).
+/// The value \\(v_j\\) is thus the product of the \\(1\\) to \\(j\\) first elements
+/// in the given list.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -686,6 +688,7 @@ pub fn polar_to_cartesian(r: Float, theta: Float) -> #(Float, Float) {
   // Calculate x and y
   let x = r *. cos(theta)
   let y = r *. sin(theta)
+
   #(x, y)
 }
 
@@ -720,11 +723,12 @@ pub fn polar_to_cartesian(r: Float, theta: Float) -> #(Float, Float) {
 ///
 pub fn cartesian_to_polar(x: Float, y: Float) -> #(Float, Float) {
   // Calculate 'r' and 'theta'
-  // Usage of let assert: a sum of squares is always non-negative so no error should occur, i.e.,
-  // the function 'float.square_root' will only return an error in case a negative value is given
-  // as input.
+  // Usage of let assert: a sum of squares is always non-negative so no error
+  // should occur, i.e., the function `float.square_root` will only return an
+  // error in case a negative value is given as input.
   let assert Ok(r) = float.square_root(x *. x +. y *. y)
   let theta = atan2(y, x)
+
   #(r, theta)
 }
 
@@ -740,9 +744,10 @@ pub fn cartesian_to_polar(x: Float, y: Float) -> #(Float, Float) {
 /// \forall x \in \[-1, 1\],   \\; \cos^{-1}{(x)} = y \in \[0, \pi \]
 /// \\]
 ///
-/// The function takes a number \\(x\\) in its domain \\(\[-1, 1\]\\) as input and returns a
-/// numeric value \\(y\\) that lies in the range \\(\[0, \pi \]\\) (an angle in radians).
-/// If the input value is outside the domain of the function an error is returned.
+/// The function takes a number \\(x\\) in its domain \\(\[-1, 1\]\\) as input and
+/// returns a numeric value \\(y\\) that lies in the range \\(\[0, \pi \]\\) (an
+/// angle in radians). If the input value is outside the domain of the function
+/// an error is returned.
 ///
 /// <details>
 ///     <summary>Example</summary>
@@ -791,9 +796,10 @@ fn do_acos(a: Float) -> Float
 /// \forall x \in [1, +\infty\),   \\; \cosh^{-1}{(x)} = y \in \[0, +\infty\)
 /// \\]
 ///
-/// The function takes a number \\(x\\) in its domain \\(\[1, +\infty\)\\) as input and returns
-/// a numeric value \\(y\\) that lies in the range \\(\[0, +\infty\)\\) (an angle in radians).
-/// If the input value is outside the domain of the function an error is returned.
+/// The function takes a number \\(x\\) in its domain \\(\[1, +\infty\)\\) as input
+/// and returns a numeric value \\(y\\) that lies in the range \\(\[0, +\infty\)\\)
+/// (an angle in radians). If the input value is outside the domain of the function
+/// an error is returned.
 ///
 /// <details>
 ///     <summary>Example</summary>
@@ -890,9 +896,9 @@ fn do_asin(a: Float) -> Float
 /// \forall x \in \(-\infty, \infty\),   \\; \sinh^{-1}{(x)} = y \in \(-\infty, +\infty\)
 /// \\]
 ///
-/// The function takes a number \\(x\\) in its domain \\(\(-\infty, +\infty\)\\) as input and
-/// returns a numeric value \\(y\\) that lies in the range \\(\(-\infty, +\infty\)\\) (an angle in
-/// radians).
+/// The function takes a number \\(x\\) in its domain \\(\(-\infty, +\infty\)\\)
+/// as input and returns a numeric value \\(y\\) that lies in the range
+/// \\(\(-\infty, +\infty\)\\) (an angle in radians).
 ///
 /// <details>
 ///     <summary>Example</summary>
@@ -982,9 +988,10 @@ fn do_atan(a: Float) -> Float
 /// \end{cases}
 /// \\]
 ///
-/// The function returns the angle in radians from the x-axis to the line containing the
-/// origin \\(\(0, 0\)\\) and a point given as input with coordinates \\(\(x, y\)\\). The numeric
-/// value returned by \\(\text{atan2}(y, x)\\) is in the range \\(\[-\pi, \pi\]\\).
+/// The function returns the angle in radians from the x-axis to the line containing
+/// the origin \\(\(0, 0\)\\) and a point given as input with coordinates \\(\(x, y\)\\).
+/// The numeric value returned by \\(\text{atan2}(y, x)\\) is in the range
+/// \\(\[-\pi, \pi\]\\).
 ///
 /// <details>
 ///     <summary>Example</summary>
@@ -1463,10 +1470,11 @@ pub fn logarithm(x: Float, base: Float) -> Result(Float, Nil) {
   case x >. 0.0 && base >. 0.0 && base != 1.0 {
     True -> {
       // Apply the "change of base formula".
-      // Usage of let assert: No error will occur since 'x' and 'base' are within the
-      // domain of the 'logarithm_10' function.
+      // Usage of let assert: No error will occur since 'x' and 'base' are within
+      // the domain of the `logarithm_10` function.
       let assert Ok(numerator) = logarithm_10(x)
       let assert Ok(denominator) = logarithm_10(base)
+
       Ok(numerator /. denominator)
     }
     _ -> Error(Nil)
@@ -6344,22 +6352,18 @@ pub fn yield_linear_space(
   }
 
   let increment = case endpoint {
-    True -> {
-      float.absolute_value(start -. stop) /. int.to_float(steps - 1)
-    }
-    False -> {
-      float.absolute_value(start -. stop) /. int.to_float(steps)
-    }
+    True -> float.absolute_value(start -. stop) /. int.to_float(steps - 1)
+    False -> float.absolute_value(start -. stop) /. int.to_float(steps)
   }
+
   case steps > 0 {
-    True -> {
-      Ok(
-        yielder.map(yielder.range(0, steps - 1), fn(index) {
-          start +. int.to_float(index) *. increment *. direction
-        }),
-      )
-    }
     False -> Error(Nil)
+    True ->
+      Ok({
+        use index <- yielder.map(yielder.range(0, steps - 1))
+
+        start +. int.to_float(index) *. increment *. direction
+      })
   }
 }
 
@@ -6370,13 +6374,15 @@ pub fn yield_linear_space(
 /// </div>
 ///
 /// The function returns a list of logarithmically spaced points over a specified
-/// interval. The endpoint of the interval can optionally be included/excluded. The number of
-/// points, base, and whether the endpoint is included determine the spacing between values.
+/// interval. The endpoint of the interval can optionally be included/excluded.
+/// The number of points, base, and whether the endpoint is included determine
+/// the spacing between values.
 ///
-/// The values in the sequence are computed as powers of the given base, where the exponents are
-/// evenly spaced between `start` and `stop`. The `base` parameter must be positive, as negative
-/// bases lead to undefined behavior when computing fractional exponents. Similarly, the number of
-/// points (`steps`) must be positive; specifying zero or a negative value will result in an error.
+/// The values in the sequence are computed as powers of the given base, where
+/// the exponents are evenly spaced between `start` and `stop`. The `base`
+/// parameter must be positive, as negative bases lead to undefined behavior when
+/// computing fractional exponents. Similarly, the number of points (`steps`) must
+/// be positive; specifying zero or a negative value will result in an error.
 ///
 /// <details>
 ///     <summary>Example:</summary>
@@ -6414,20 +6420,24 @@ pub fn logarithmic_space(
 ) -> Result(List(Float), Nil) {
   case steps > 0 && base >. 0.0 {
     True -> {
-      // Usage of let assert: No error will occur since 'steps' > 0, i.e., a non-empty
-      // list will actually be returned.
+      // Usage of let assert: No error will occur since 'steps' > 0, i.e., a
+      // non-empty list will actually be returned.
       let assert Ok(linspace) = linear_space(start, stop, steps, endpoint)
 
-      Ok(
-        list.map(linspace, fn(value) {
-          // Usage of let assert: The function 'float.power' will only return an error if:
-          // 1. The base is negative and the exponent is fractional.
-          // 2. If the base is 0 and the exponent is negative.
-          // No error will occur below since the base is non-zero and positive.
-          let assert Ok(result) = float.power(base, value)
-          result
-        }),
-      )
+      Ok({
+        use value <- list.map(linspace)
+
+        // Usage of let assert: The function 'float.power' will only return an
+        // error if:
+        //
+        //   1. The base is negative and the exponent is fractional.
+        //   2. If the base is 0 and the exponent is negative.
+        //
+        // No error will occur below since the base is non-zero and positive.
+        let assert Ok(result) = float.power(base, value)
+
+        result
+      })
     }
     False -> Error(Nil)
   }
@@ -6482,23 +6492,27 @@ pub fn yield_logarithmic_space(
   base: Float,
 ) -> Result(Yielder(Float), Nil) {
   case steps > 0 && base >. 0.0 {
+    False -> Error(Nil)
     True -> {
-      // Usage of let assert: No error will occur since 'steps' > 0, i.e., a non-empty
-      // list will actually be returned.
+      // Usage of let assert: No error will occur since 'steps' > 0, i.e., a
+      // non-empty list will actually be returned.
       let assert Ok(linspace) = yield_linear_space(start, stop, steps, endpoint)
 
-      Ok(
-        yielder.map(linspace, fn(value) {
-          // Usage of let assert: The function 'float.power' will only return an error if:
-          // 1. The base is negative and the exponent is fractional.
-          // 2. If the base is 0 and the exponent is negative.
-          // No error will occur below since the base is non-zero and positive.
-          let assert Ok(result) = float.power(base, value)
-          result
-        }),
-      )
+      Ok({
+        use value <- yielder.map(linspace)
+
+        // Usage of let assert: The function 'float.power' will only return an
+        // error if:
+        //
+        //   1. The base is negative and the exponent is fractional.
+        //    2. If the base is 0 and the exponent is negative.
+        //
+        // No error will occur below since the base is non-zero and positive.
+        let assert Ok(result) = float.power(base, value)
+
+        result
+      })
     }
-    False -> Error(Nil)
   }
 }
 
@@ -6566,10 +6580,12 @@ pub fn geometric_space(
   case start <=. 0.0 || stop <=. 0.0 || steps < 0 {
     True -> Error(Nil)
     False -> {
-      // Usage of let assert: No error will occur since 'start' and 'stop' have been
-      // checked and we can ensure they will be within the domain of the 'logarithm_10' function.
+      // Usage of let assert: No error will occur since 'start' and 'stop' have
+      // been checked and we can ensure they will be within the domain of the
+      // `logarithm_10` function.
       let assert Ok(log_start) = logarithm_10(start)
       let assert Ok(log_stop) = logarithm_10(stop)
+
       logarithmic_space(log_start, log_stop, steps, endpoint, 10.0)
     }
   }
@@ -6624,14 +6640,14 @@ pub fn yield_geometric_space(
   case start <=. 0.0 || stop <=. 0.0 || steps < 0 {
     True -> Error(Nil)
     False -> {
-      // Usage of let assert: No error will occur since 'start' and 'stop' have been
-      // checked and we can ensure they will be within the domain of the 'logarithm_10' function.
+      // Usage of let assert: No error will occur since 'start' and 'stop' have
+      // been checked and we can ensure they will be within the domain of the
+      // `logarithm_10` function.
       let assert Ok(log_start) = logarithm_10(start)
       let assert Ok(log_stop) = logarithm_10(stop)
+
       yield_logarithmic_space(log_start, log_stop, steps, endpoint, 10.0)
     }
-
-    False -> Error(Nil)
   }
 }
 
@@ -6740,6 +6756,7 @@ pub fn yield_symmetric_space(
     True -> {
       let start = center -. radius
       let stop = center +. radius
+
       yield_linear_space(start, stop, steps, True)
     }
   }
