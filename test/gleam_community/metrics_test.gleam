@@ -11,7 +11,7 @@ fn norm_test_cases() {
     // An empty list will always return 0.0
     #([], 1.0, 0.0),
     #([1.0, 1.0, 1.0], 1.0, 3.0),
-    // Check the special case: 
+    // Check the special case:
     // The pseudo-norm when p = 0 (we count the number of non-zero elements in the given list)
     #([1.0, 1.0, 1.0], 0.0, 3.0),
     #([1.0, 1.0, 1.0], -1.0, 0.3333333333333333),
@@ -21,7 +21,7 @@ fn norm_test_cases() {
     #([-1.0, -1.0, -1.0], 1.0, 3.0),
     #([-1.0, -1.0, -1.0], 0.5, 9.0),
     #([0.0, 0.0, 0.0], 1.0, 0.0),
-    // Check if we internally handle division by zero appropriately 
+    // Check if we internally handle division by zero appropriately
     #([0.0], -1.0, 0.0),
     #([1.0, 2.0, 3.0, 0.0], -1.0, 0.0),
     #([-1.0, -2.0, -3.0], -10.0, 0.9999007044905545),
@@ -46,7 +46,7 @@ pub fn list_norm_with_weights_test() {
   let assert Ok(tol) = float.power(10.0, -6.0)
 
   // Check that the weighted version of the norm function aligns with the
-  // non-weighted version by re-using the test cases for the non-weighted 
+  // non-weighted version by re-using the test cases for the non-weighted
   // version by associating a weight of 1.0 to each elemet of the input lists
   norm_test_cases()
   |> list.map(fn(tuple) {
@@ -431,7 +431,7 @@ pub fn kurtosis_test() {
   |> should.be_error()
 
   // To calculate kurtosis at least four values are needed, so
-  // test that we receive an error with list of size 1, 2, 3, 4. 
+  // test that we receive an error with list of size 1, 2, 3, 4.
   [1.0]
   |> maths.kurtosis()
   |> should.be_error()
@@ -461,7 +461,7 @@ pub fn kurtosis_test() {
   |> maths.is_close(-0.666666666666666, 0.0, tol)
   |> should.be_true()
 
-  // Try with a larger input list 
+  // Try with a larger input list
   let assert Ok(result) =
     [6.0, 7.0, 5.0, 7.0, 5.0, 4.0, 4.0, 6.0, 1.0, 3.0, 2.0, 8.0]
     |> maths.kurtosis()
@@ -479,7 +479,7 @@ pub fn skewness_test() {
   |> should.be_error()
 
   // To calculate skewness at least three values are needed, so
-  // test that we receive an error with list of size 1, 2, 3. 
+  // test that we receive an error with list of size 1, 2, 3.
   [1.0]
   |> maths.skewness()
   |> should.be_error()
@@ -514,7 +514,7 @@ pub fn skewness_test() {
   |> maths.is_close(1.1547005383792515, 0.0, tol)
   |> should.be_true()
 
-  // Try with a larger input list 
+  // Try with a larger input list
   let assert Ok(result) =
     [6.0, 7.0, 5.0, 7.0, 5.0, 4.0, 4.0, 6.0, 1.0, 3.0, 2.0, 8.0]
     |> maths.skewness()
@@ -534,7 +534,7 @@ pub fn percentile_test() {
   |> maths.percentile(0)
   |> should.equal(Ok(15.0))
 
-  // Calculate 40th percentile 
+  // Calculate 40th percentile
   [15.0, 20.0, 35.0, 40.0, 50.0]
   |> maths.percentile(40)
   |> should.equal(Ok(29.0))
@@ -641,13 +641,11 @@ pub fn zscore_test() {
     [1.0, 2.0, 3.0]
     |> maths.zscore(0)
 
-  let assert Ok(result) =
-    maths.all_close(
-      list.zip(zscores, [-1.224744871391589, 0.0, 1.224744871391589]),
-      0.0,
-      tol,
-    )
-  result
+  maths.all_close(
+    list.zip(zscores, [-1.224744871391589, 0.0, 1.224744871391589]),
+    0.0,
+    tol,
+  )
   |> list.all(fn(x) { x == True })
   |> should.be_true()
 
@@ -656,7 +654,7 @@ pub fn zscore_test() {
   |> maths.zscore(-1)
   |> should.be_error()
 
-  // A list with all identical values should return an error 
+  // A list with all identical values should return an error
   // (stdev = 0, division by zero not allowed)
   [5.0, 5.0, 5.0]
   |> maths.zscore(1)

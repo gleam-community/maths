@@ -1,3 +1,4 @@
+import gleam/function
 import gleam/list
 import gleam_community/maths
 import gleeunit/should
@@ -24,18 +25,8 @@ pub fn float_list_all_close_test() {
   let rtol = 0.01
   let atol = 0.1
   maths.all_close(arr, rtol, atol)
-  |> fn(zarr: Result(List(Bool), Nil)) -> Result(Bool, Nil) {
-    case zarr {
-      Ok(arr) ->
-        arr
-        |> list.all(fn(a) { a })
-        |> Ok
-      _ ->
-        Nil
-        |> Error
-    }
-  }
-  |> should.equal(Ok(True))
+  |> list.all(function.identity)
+  |> should.equal(True)
 }
 
 pub fn float_is_fractional_test() {
