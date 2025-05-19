@@ -627,7 +627,7 @@ pub fn degrees_to_radians(x: Float) -> Float {
 ///     </a>
 /// </div>
 ///
-/// Convert a value in degrees to a value measured in radians.
+/// Convert a value in radians to a value measured in degrees.
 /// That is, \\(1 \text{ radians } = \frac{180}{\pi} \text{ degrees }\\).
 ///
 /// <details>
@@ -708,10 +708,10 @@ pub fn polar_to_cartesian(r: Float, theta: Float) -> #(Float, Float) {
 ///
 ///     pub fn example() {
 ///       maths.cartesian_to_polar(1.0, 0.0)
-///       |> should.equal((1.0, 0.0))
+///       |> should.equal(#(1.0, 0.0))
 ///
 ///       maths.cartesian_to_polar(0.0, 1.0)
-///       |> should.equal((1.0, float.pi() /. 2.0))
+///       |> should.equal(#(1.0, float.pi() /. 2.0))
 ///     }
 /// </details>
 ///
@@ -1138,7 +1138,7 @@ fn do_cos(a: Float) -> Float
 ///
 ///     pub fn example() {
 ///       maths.cosh(0.0)
-///       |> should.equal(0.0)
+///       |> should.equal(1.0)
 ///     }
 /// </details>
 ///
@@ -2409,6 +2409,7 @@ pub fn minmax(x: a, y: a, compare: fn(a, a) -> order.Order) {
 ///         <small>Back to top ↑</small>
 ///     </a>
 /// </div>
+/// 
 pub fn list_minimum(
   arr: List(a),
   compare: fn(a, a) -> order.Order,
@@ -2478,12 +2479,6 @@ pub fn list_maximum(
 }
 
 /// <div style="text-align: right;">
-///     <a href="#">
-///         <small>Back to top ↑</small>
-///     </a>
-/// </div>
-///
-/// <div style="text-align: right;">
 ///     <a href="https://github.com/gleam-community/maths/issues">
 ///         <small>Spot a typo? Open an issue!</small>
 ///     </a>
@@ -2543,12 +2538,6 @@ pub fn arg_minimum(
 }
 
 /// <div style="text-align: right;">
-///     <a href="#">
-///         <small>Back to top ↑</small>
-///     </a>
-/// </div>
-///
-/// <div style="text-align: right;">
 ///     <a href="https://github.com/gleam-community/maths/issues">
 ///         <small>Spot a typo? Open an issue!</small>
 ///     </a>
@@ -2607,12 +2596,6 @@ pub fn arg_maximum(
   }
 }
 
-/// <div style="text-align: right;">
-///     <a href="#">
-///         <small>Back to top ↑</small>
-///     </a>
-/// </div>
-///
 /// <div style="text-align: right;">
 ///     <a href="https://github.com/gleam-community/maths/issues">
 ///         <small>Spot a typo? Open an issue!</small>
@@ -3612,7 +3595,7 @@ pub fn manhattan_distance_with_weights(
 /// vectors):
 ///
 /// \\[
-/// \left( \sum_{i=1}^n w_{i} \left|x_i - y_i \right|^{p} \right)^{\frac{1}{p}}
+/// \left( \sum_{i=1}^n \left|x_i - y_i \right|^{p} \right)^{\frac{1}{p}}
 /// \\]
 ///
 /// In the formula, \\(p >= 1\\) is the order, \\(n\\) is the length of the two lists
@@ -4097,7 +4080,7 @@ pub fn harmonic_mean(arr: List(Float)) -> Result(Float, Nil) {
         list.try_fold(arr, 0.0, fn(acc, a) {
           case a {
             a if a >. 0.0 -> Ok(1.0 /. a +. acc)
-            // If we encounter 0.0, then we can stop, as the geometric mean will be 0.0
+            // If we encounter 0.0, then we can stop, as the harmonic mean will be 0.0
             a if a == 0.0 -> Error(0.0)
             _ -> Error(-1.0)
           }
@@ -5335,7 +5318,6 @@ pub fn canberra_distance_with_weights(
 ///         <small>Back to top ↑</small>
 ///     </a>
 /// </div>
-///
 ///
 pub fn braycurtis_distance(arr: List(#(Float, Float))) -> Result(Float, Nil) {
   case arr {
