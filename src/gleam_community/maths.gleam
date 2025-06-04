@@ -28,7 +28,7 @@ import gleam/int
 import gleam/list
 import gleam/order
 import gleam/set
-import gleam/yielder.{type Yielder, Done, Next}
+import gleam/yielder.{type Yielder}
 
 /// <div style="text-align: right;">
 ///     <a href="https://github.com/gleam-community/maths/issues">
