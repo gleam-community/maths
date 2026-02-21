@@ -47,13 +47,13 @@ pub fn list_norm_with_weights_test() {
 
   // Check that the weighted version of the norm function aligns with the
   // non-weighted version by re-using the test cases for the non-weighted
-  // version by associating a weight of 1.0 to each elemet of the input lists
+  // version by associating a weight of 1.0 to each element of the input lists
   norm_test_cases()
   |> list.map(fn(tuple) {
     let #(arr, p, expected) = tuple
     let new_arr = list.map(arr, fn(element) { #(element, 1.0) })
     let assert Ok(result) = maths.norm_with_weights(new_arr, p)
-    result |> maths.is_close(expected, 0.0, tol)
+    result |> maths.is_close(expected, 0.0, tol) |> should.be_true()
   })
 
   // Check that the function agrees, at some additional arbitrary input points
