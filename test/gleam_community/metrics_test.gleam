@@ -792,10 +792,10 @@ pub fn correlation_test() {
 
   // Perfect positive correlation
   let xarr =
-    list.range(0, 100)
+    int.range(0, 100, [], list.prepend)
     |> list.map(fn(x) { int.to_float(x) })
   let yarr =
-    list.range(0, 100)
+    int.range(0, 100, [], list.prepend)
     |> list.map(fn(y) { int.to_float(y) })
   list.zip(xarr, yarr)
   |> maths.correlation()
@@ -803,10 +803,10 @@ pub fn correlation_test() {
 
   // Perfect negative correlation
   let xarr =
-    list.range(0, 100)
+    int.range(0, 100, [], list.prepend)
     |> list.map(fn(x) { -1.0 *. int.to_float(x) })
   let yarr =
-    list.range(0, 100)
+    int.range(0, 100, [], list.prepend)
     |> list.map(fn(y) { int.to_float(y) })
   list.zip(xarr, yarr)
   |> maths.correlation()
