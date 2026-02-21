@@ -19,8 +19,8 @@ jobs:
 
       - uses: erlef/setup-beam@v1
         with:
-          otp-version: "27.0"
-          gleam-version: "1.11.0"
+          otp-version: "28.0"
+          gleam-version: "1.14.0"
 
       - uses: actions/setup-node@v4
         with:
