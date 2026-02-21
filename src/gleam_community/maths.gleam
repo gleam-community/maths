@@ -499,6 +499,7 @@ pub fn int_cumulative_product(arr: List(Int)) -> List(Int) {
 /// import gleeunit/should
 /// import gleam_community/maths
 ///
+/// ```gleam
 /// pub fn example() {
 ///   maths.degrees_to_radians(360.)
 ///   |> should.equal(2. *. maths.pi())
@@ -517,6 +518,7 @@ pub fn degrees_to_radians(x: Float) -> Float {
 /// <details>
 /// <summary>Examples</summary>
 ///
+/// ```gleam
 /// import gleeunit/should
 /// import gleam_community/maths
 ///
@@ -540,6 +542,7 @@ pub fn radians_to_degrees(x: Float) -> Float {
 /// <details>
 /// <summary>Examples</summary>
 ///
+/// ```gleam
 /// import gleeunit/should
 /// import gleam_community/maths
 ///
@@ -567,6 +570,7 @@ pub fn polar_to_cartesian(r: Float, theta: Float) -> #(Float, Float) {
 /// <details>
 /// <summary>Examples</summary>
 ///
+/// ```gleam
 /// import gleeunit/should
 /// import gleam_community/maths
 ///
@@ -606,6 +610,7 @@ pub fn cartesian_to_polar(x: Float, y: Float) -> #(Float, Float) {
 /// <details>
 /// <summary>Examples</summary>
 ///
+/// ```gleam
 /// import gleeunit/should
 /// import gleam_community/maths
 ///
@@ -647,6 +652,7 @@ fn do_acos(a: Float) -> Float
 /// <details>
 /// <summary>Examples</summary>
 ///
+/// ```gleam
 /// import gleeunit/should
 /// import gleam_community/maths
 ///
@@ -685,6 +691,7 @@ fn do_acosh(a: Float) -> Float
 /// <details>
 /// <summary>Examples</summary>
 ///
+/// ```gleam
 /// import gleeunit/should
 /// import gleam_community/maths
 ///
@@ -726,6 +733,7 @@ fn do_asin(a: Float) -> Float
 /// <details>
 /// <summary>Examples</summary>
 ///
+/// ```gleam
 /// import gleeunit/should
 /// import gleam_community/maths
 ///
@@ -758,6 +766,7 @@ fn do_asinh(a: Float) -> Float
 /// <details>
 /// <summary>Examples</summary>
 ///
+/// ```gleam
 /// import gleeunit/should
 /// import gleam_community/maths
 ///
@@ -799,6 +808,7 @@ fn do_atan(a: Float) -> Float
 /// <details>
 /// <summary>Examples</summary>
 ///
+/// ```gleam
 /// import gleeunit/should
 /// import gleam_community/maths
 ///
@@ -831,6 +841,7 @@ fn do_atan2(a: Float, b: Float) -> Float
 /// <details>
 /// <summary>Examples</summary>
 ///
+/// ```gleam
 /// import gleeunit/should
 /// import gleam_community/maths
 ///
@@ -871,6 +882,7 @@ fn do_atanh(a: Float) -> Float
 /// <details>
 /// <summary>Examples</summary>
 ///
+/// ```gleam
 /// import gleeunit/should
 /// import gleam_community/maths
 ///
@@ -906,6 +918,7 @@ fn do_cos(a: Float) -> Float
 /// <details>
 /// <summary>Examples</summary>
 ///
+/// ```gleam
 /// import gleeunit/should
 /// import gleam_community/maths
 ///
@@ -937,6 +950,7 @@ fn do_cosh(a: Float) -> Float
 /// <details>
 /// <summary>Examples</summary>
 ///
+/// ```gleam
 /// import gleeunit/should
 /// import gleam_community/maths
 ///
@@ -972,6 +986,7 @@ fn do_sin(a: Float) -> Float
 /// <details>
 /// <summary>Examples</summary>
 ///
+/// ```gleam
 /// import gleeunit/should
 /// import gleam_community/maths
 ///
@@ -1005,6 +1020,7 @@ fn do_sinh(a: Float) -> Float
 /// <details>
 /// <summary>Examples</summary>
 ///
+/// ```gleam
 /// import gleeunit/should
 /// import gleam_community/maths
 ///
@@ -1039,6 +1055,7 @@ fn do_tan(a: Float) -> Float
 /// <details>
 /// <summary>Examples</summary>
 ///
+/// ```gleam
 /// import gleeunit/should
 /// import gleam_community/maths
 ///
@@ -1077,6 +1094,7 @@ fn do_tanh(a: Float) -> Float
 /// <details>
 /// <summary>Examples</summary>
 ///
+/// ```gleam
 /// import gleeunit/should
 /// import gleam_community/maths
 ///
@@ -1109,6 +1127,7 @@ fn do_exponential(a: Float) -> Float
 /// <details>
 /// <summary>Examples</summary>
 ///
+/// ```gleam
 /// import gleeunit/should
 /// import gleam_community/maths
 ///
@@ -1141,16 +1160,17 @@ fn do_natural_logarithm(a: Float) -> Float
 /// The base \\(b\\) logarithm function (computed through the "change of base" formula):
 ///
 /// \\[
-/// \forall x \in \(0, \infty\) \textnormal{ and } b > 1,  \\; \log_{b}{(x)} = y \in \(-\infty, +\infty\)
+/// \forall x \in \(0, \infty\) \textnormal{ and } b \in (0, \infty) \setminus \{1\},  \\; \log_{b}{(x)} = y \in \(-\infty, +\infty\)
 /// \\]
 ///
-/// The function takes a number \\(x\\) in its domain \\(\(0, \infty\)\\) and a base \\(b > 1\\)
+/// The function takes a number \\(x\\) in its domain \\(\(0, \infty\)\\) and a base \\(b \in (0, \infty) \setminus \{1\}\\)
 /// as input and returns a numeric value \\(y\\) that lies in the range \\(\(-\infty, \infty\)\\).
-/// If the input value is outside the domain of the function an error is returned.
+/// If either \\(x\\) or \\(b\\) lies outside its domain, an error is returned.
 ///
 /// <details>
 /// <summary>Examples</summary>
 ///
+/// ```gleam
 /// import gleeunit/should
 /// import gleam_community/maths
 ///
@@ -1197,6 +1217,7 @@ pub fn logarithm(x: Float, base: Float) -> Result(Float, Nil) {
 /// <details>
 /// <summary>Examples</summary>
 ///
+/// ```gleam
 /// import gleeunit/should
 /// import gleam_community/maths
 ///
@@ -1238,6 +1259,7 @@ fn do_logarithm_2(a: Float) -> Float
 /// <details>
 /// <summary>Examples</summary>
 ///
+/// ```gleam
 /// import gleeunit/should
 /// import gleam_community/maths
 ///
@@ -1274,6 +1296,7 @@ fn do_logarithm_10(a: Float) -> Float
 /// <details>
 /// <summary>Examples</summary>
 ///
+/// ```gleam
 /// import gleeunit/should
 /// import gleam_community/maths
 ///
@@ -1325,6 +1348,7 @@ pub fn tau() -> Float {
 /// <details>
 /// <summary>Examples</summary>
 ///
+/// ```gleam
 /// import gleeunit/should
 /// import gleam_community/maths
 ///
@@ -1350,13 +1374,14 @@ pub fn golden_ratio() -> Float {
 /// <details>
 /// <summary>Examples</summary>
 ///
+/// ```gleam
 /// import gleeunit/should
 /// import gleam_community/maths
 ///
 /// pub fn example() {
 ///   let assert Ok(tolerance) = float.power(10.0, -6.0)
 ///
-///   // Test that the constant is approximately equal to 2.7128...
+///   // Test that the constant is approximately equal to 2.71828...
 ///   maths.e()
 ///   |> maths.is_close(2.7182818284590452353602, 0.0, tolerance)
 ///   |> should.be_true()
@@ -1396,6 +1421,7 @@ pub fn e() -> Float {
 /// <details>
 /// <summary>Examples</summary>
 ///
+/// ```gleam
 /// import gleeunit/should
 /// import gleam_community/maths
 ///
@@ -1456,6 +1482,7 @@ pub fn round_to_nearest(x: Float, p: Int) -> Float {
 /// <details>
 /// <summary>Examples</summary>
 ///
+/// ```gleam
 /// import gleeunit/should
 /// import gleam_community/maths
 ///
@@ -1508,6 +1535,7 @@ pub fn round_ties_away(x: Float, p: Int) -> Float {
 /// <details>
 /// <summary>Examples</summary>
 ///
+/// ```gleam
 /// import gleeunit/should
 /// import gleam_community/maths
 ///
@@ -1562,6 +1590,7 @@ pub fn round_ties_up(x: Float, p: Int) -> Float {
 /// <details>
 /// <summary>Examples</summary>
 ///
+/// ```gleam
 /// import gleeunit/should
 /// import gleam_community/maths
 ///
@@ -1617,6 +1646,7 @@ fn do_truncate_float(a: Float) -> Float
 /// <details>
 /// <summary>Examples</summary>
 ///
+/// ```gleam
 /// import gleeunit/should
 /// import gleam_community/maths
 ///
@@ -1668,6 +1698,7 @@ fn do_floor(a: Float) -> Float
 /// <details>
 /// <summary>Examples</summary>
 ///
+/// ```gleam
 /// import gleeunit/should
 /// import gleam_community/maths
 ///
@@ -1704,6 +1735,7 @@ fn do_ceiling(a: Float) -> Float
 /// <details>
 /// <summary>Examples</summary>
 ///
+/// ```gleam
 /// import gleeunit/should
 /// import gleam_community/maths
 ///
@@ -1834,6 +1866,7 @@ pub fn int_flip_sign(x: Int) -> Int {
 /// <details>
 /// <summary>Examples</summary>
 ///
+/// ```gleam
 /// import gleam/float
 /// import gleam/int
 /// import gleeunit/should
@@ -3830,20 +3863,22 @@ pub fn interquartile_range(arr: List(Float)) -> Result(Float, Nil) {
 /// <summary>Examples</summary>
 ///
 /// ```gleam
+/// import gleam/int
+/// import gleam/list
 /// import gleeunit/should
 /// import gleam_community/maths
 ///
 /// pub fn example () {
-///   // An empty lists returns an error
+///   // An empty list returns an error
 ///   maths.correlation([], [])
 ///   |> should.be_error()
 ///
 ///   // Perfect positive correlation
 ///   let xarr =
-///     list.range(0, 100)
+///     int.range(0, 100, [], list.prepend)
 ///     |> list.map(fn(x) { int.to_float(x) })
 ///   let yarr =
-///     list.range(0, 100)
+///     int.range(0, 100, [], list.prepend)
 ///     |> list.map(fn(y) { int.to_float(y) })
 ///   list.zip(xarr, yarr)
 ///   |> maths.correlation()
@@ -3851,10 +3886,10 @@ pub fn interquartile_range(arr: List(Float)) -> Result(Float, Nil) {
 ///
 ///   // Perfect negative correlation
 ///   let xarr =
-///     list.range(0, 100)
+///     int.range(0, 100, [], list.prepend)
 ///     |> list.map(fn(x) { -1.0 *. int.to_float(x) })
 ///   let yarr =
-///     list.range(0, 100)
+///     int.range(0, 100, [], list.prepend)
 ///     |> list.map(fn(y) { int.to_float(y) })
 ///   list.zip(xarr, yarr)
 ///   |> maths.correlation()
@@ -4482,6 +4517,7 @@ pub fn braycurtis_distance_with_weights(
 /// <details>
 /// <summary>Examples</summary>
 ///
+/// ```gleam
 /// import gleeunit/should
 /// import gleam_community/maths
 ///
@@ -4569,6 +4605,7 @@ pub fn all_close(
 /// <details>
 /// <summary>Examples</summary>
 ///
+/// ```gleam
 /// import gleeunit/should
 /// import gleam_community/maths
 ///
@@ -4996,13 +5033,13 @@ fn incomplete_gamma_sum(
 ///   maths.step_range(1.0, 5.0, 1.0)
 ///   |> should.equal([1.0, 2.0, 3.0, 4.0])
 ///
-///   // No points returned since
-///   // start is smaller than stop and the step is positive
+///   // No points are returned since
+///   // start is larger than stop and the step is positive
 ///   maths.step_range(5.0, 1.0, 1.0)
 ///   |> should.equal([])
 ///
-///   // Points returned since
-///   // start smaller than stop but negative step
+///   // Points are returned since
+///   // start is larger than stop and the step is negative
 ///   maths.step_range(5.0, 1.0, -1.0)
 ///   |> should.equal([5.0, 4.0, 3.0, 2.0])
 /// }
