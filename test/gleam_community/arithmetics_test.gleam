@@ -3,6 +3,15 @@ import gleam_community/maths
 import gleeunit/should
 
 pub fn int_gcd_test() {
+  maths.gcd(0, 0)
+  |> should.equal(0)
+
+  maths.gcd(0, 5)
+  |> should.equal(5)
+
+  maths.gcd(5, 0)
+  |> should.equal(5)
+
   maths.gcd(1, 1)
   |> should.equal(1)
 
@@ -27,27 +36,31 @@ pub fn euclidean_modulo_test() {
   // Note that the truncated, floored, and euclidean 
   // definitions should agree for this base case
   maths.euclidean_modulo(15, 4)
-  |> should.equal(3)
+  |> should.equal(Ok(3))
 
   // Case: Positive x, Negative y
   maths.euclidean_modulo(15, -4)
-  |> should.equal(3)
+  |> should.equal(Ok(3))
 
   // Case: Negative x, Positive y
   maths.euclidean_modulo(-15, 4)
-  |> should.equal(1)
+  |> should.equal(Ok(1))
 
   // Case: Negative x, Negative y
   maths.euclidean_modulo(-15, -4)
-  |> should.equal(1)
+  |> should.equal(Ok(1))
 
   // Case: Positive x, Zero y
   maths.euclidean_modulo(5, 0)
-  |> should.equal(0)
+  |> should.be_error()
 
-  // Case: Zero x, Negative y
+  // Case: Zero x, Zero y
+  maths.euclidean_modulo(0, 0)
+  |> should.be_error()
+
+  // Case: Zero x, Positive y
   maths.euclidean_modulo(0, 5)
-  |> should.equal(0)
+  |> should.equal(Ok(0))
 }
 
 pub fn lcm_test() {
@@ -68,46 +81,67 @@ pub fn lcm_test() {
 
   maths.lcm(-30, -42)
   |> should.equal(210)
+
+  maths.lcm(0, 5)
+  |> should.equal(0)
+
+  maths.lcm(5, 0)
+  |> should.equal(0)
+
+  maths.lcm(0, 0)
+  |> should.equal(0)
 }
 
 pub fn proper_divisors_test() {
   maths.proper_divisors(2)
-  |> should.equal([1])
+  |> should.equal(Ok([1]))
 
   maths.proper_divisors(6)
-  |> should.equal([1, 2, 3])
+  |> should.equal(Ok([1, 2, 3]))
 
   maths.proper_divisors(13)
-  |> should.equal([1])
+  |> should.equal(Ok([1]))
 
   maths.proper_divisors(18)
-  |> should.equal([1, 2, 3, 6, 9])
+  |> should.equal(Ok([1, 2, 3, 6, 9]))
 
   maths.proper_divisors(8128)
-  |> should.equal([1, 2, 4, 8, 16, 32, 64, 127, 254, 508, 1016, 2032, 4064])
+  |> should.equal(Ok([1, 2, 4, 8, 16, 32, 64, 127, 254, 508, 1016, 2032, 4064]))
+
+  maths.proper_divisors(-6)
+  |> should.equal(Ok([1, 2, 3]))
+
+  maths.proper_divisors(0)
+  |> should.be_error()
 }
 
 pub fn divisors_test() {
   maths.divisors(2)
-  |> should.equal([1, 2])
+  |> should.equal(Ok([1, 2]))
 
   maths.divisors(6)
-  |> should.equal([1, 2, 3, 6])
+  |> should.equal(Ok([1, 2, 3, 6]))
 
   maths.divisors(13)
-  |> should.equal([1, 13])
+  |> should.equal(Ok([1, 13]))
 
   maths.divisors(18)
-  |> should.equal([1, 2, 3, 6, 9, 18])
+  |> should.equal(Ok([1, 2, 3, 6, 9, 18]))
 
   maths.divisors(8128)
-  |> should.equal([
-    1, 2, 4, 8, 16, 32, 64, 127, 254, 508, 1016, 2032, 4064, 8128,
-  ])
+  |> should.equal(
+    Ok([1, 2, 4, 8, 16, 32, 64, 127, 254, 508, 1016, 2032, 4064, 8128]),
+  )
+
+  maths.divisors(-6)
+  |> should.equal(Ok([1, 2, 3, 6]))
+
+  maths.divisors(0)
+  |> should.be_error()
 }
 
 pub fn list_cumulative_sum_test() {
-  // An empty lists returns an empty list
+  // An empty list returns an empty list
   []
   |> maths.cumulative_sum()
   |> should.equal([])
@@ -123,7 +157,7 @@ pub fn list_cumulative_sum_test() {
 }
 
 pub fn int_list_cumulative_sum_test() {
-  // An empty lists returns an empty list
+  // An empty list returns an empty list
   []
   |> maths.int_cumulative_sum()
   |> should.equal([])
@@ -139,7 +173,7 @@ pub fn int_list_cumulative_sum_test() {
 }
 
 pub fn list_cumulative_product_test() {
-  // An empty lists returns an empty list
+  // An empty list returns an empty list
   []
   |> maths.cumulative_product()
   |> should.equal([])
@@ -155,7 +189,7 @@ pub fn list_cumulative_product_test() {
 }
 
 pub fn int_list_cumulative_product_test() {
-  // An empty lists returns an empty list
+  // An empty list returns an empty list
   []
   |> maths.int_cumulative_product()
   |> should.equal([])
@@ -171,14 +205,17 @@ pub fn int_list_cumulative_product_test() {
 }
 
 pub fn weighted_product_test() {
+  // Empty weighted products use the multiplicative identity.
   []
   |> maths.weighted_product()
   |> should.equal(Ok(1.0))
 
+  // Negative weights are invalid.
   [#(1.0, -1.0), #(2.0, -1.0), #(3.0, -1.0)]
   |> maths.weighted_product()
   |> should.equal(Error(Nil))
 
+  // Zero weights are ignored, leaving the multiplicative identity.
   [#(1.0, 0.0), #(2.0, 0.0), #(3.0, 0.0)]
   |> maths.weighted_product()
   |> should.equal(Ok(1.0))
@@ -187,7 +224,15 @@ pub fn weighted_product_test() {
   |> maths.weighted_product()
   |> should.equal(Ok(6.0))
 
-  let assert Ok(tolerance) = float.power(10.0, -6.0)
+  [#(-2.0, 2.0), #(3.0, 1.0)]
+  |> maths.weighted_product()
+  |> should.equal(Ok(12.0))
+
+  [#(-2.0, 0.5), #(3.0, 1.0)]
+  |> maths.weighted_product()
+  |> should.be_error()
+
+  let assert Ok(tolerance) = float.power(10.0, -9.0)
   let assert Ok(result) =
     [#(9.0, 0.5), #(10.0, 0.5), #(10.0, 0.5)]
     |> maths.weighted_product()
@@ -197,14 +242,17 @@ pub fn weighted_product_test() {
 }
 
 pub fn weighted_sum_test() {
+  // Empty weighted sums use the additive identity.
   []
   |> maths.weighted_sum()
   |> should.equal(Ok(0.0))
 
+  // Negative weights are invalid.
   [#(1.0, -1.0), #(2.0, -1.0), #(3.0, -1.0)]
   |> maths.weighted_sum()
   |> should.equal(Error(Nil))
 
+  // Zero weights are ignored, leaving the additive identity.
   [#(1.0, 0.0), #(2.0, 0.0), #(3.0, 0.0)]
   |> maths.weighted_sum()
   |> should.equal(Ok(0.0))

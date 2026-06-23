@@ -6,12 +6,23 @@ import gleeunit/should
 pub fn float_is_close_test() {
   let val = 99.0
   let ref_val = 100.0
-  // We set 'atol' and 'rtol' such that the values are equivalent
-  // if 'val' is within 1 percent of 'ref_val' +/- 0.1
+  // We set `atol` and `rtol` such that the values are equivalent
+  // if `val` is within 1 percent of `ref_val` +/- 0.1
   let rtol = 0.01
   let atol = 0.1
   maths.is_close(val, ref_val, rtol, atol)
   |> should.be_true()
+
+  maths.is_close(1.0, 2.0, 0.0, 0.1)
+  |> should.equal(False)
+}
+
+pub fn float_is_close_negative_tolerance_test() {
+  maths.is_close(1.0, 1.0, -0.1, 0.0)
+  |> should.equal(False)
+
+  maths.is_close(1.0, 1.0, 0.0, -0.1)
+  |> should.equal(False)
 }
 
 pub fn float_list_all_close_test() {
@@ -20,13 +31,24 @@ pub fn float_list_all_close_test() {
   let xarr = list.repeat(val, 42)
   let yarr = list.repeat(ref_val, 42)
   let arr = list.zip(xarr, yarr)
-  // We set 'atol' and 'rtol' such that the values are equivalent
-  // if 'val' is within 1 percent of 'ref_val' +/- 0.1
+  // We set `atol` and `rtol` such that the values are equivalent
+  // if `val` is within 1 percent of `ref_val` +/- 0.1
   let rtol = 0.01
   let atol = 0.1
   maths.all_close(arr, rtol, atol)
   |> list.all(function.identity)
   |> should.equal(True)
+
+  maths.all_close([#(1.0, 1.0), #(1.0, 2.0)], 0.0, 0.1)
+  |> should.equal([True, False])
+}
+
+pub fn float_list_all_close_negative_tolerance_test() {
+  maths.all_close([#(1.0, 1.0), #(2.0, 2.0)], -0.1, 0.0)
+  |> should.equal([False, False])
+
+  maths.all_close([#(1.0, 1.0), #(2.0, 2.0)], 0.0, -0.1)
+  |> should.equal([False, False])
 }
 
 pub fn float_is_fractional_test() {
@@ -57,9 +79,35 @@ pub fn int_is_power_test() {
   |> should.equal(True)
   maths.is_power(28, 3)
   |> should.equal(False)
+  maths.is_power(48, 2)
+  |> should.equal(False)
   maths.is_power(-1, 10)
   |> should.equal(False)
   maths.is_power(1, -10)
+  |> should.equal(True)
+  maths.is_power(-8, -2)
+  |> should.equal(True)
+  maths.is_power(16, -2)
+  |> should.equal(True)
+  maths.is_power(8, -2)
+  |> should.equal(False)
+  maths.is_power(-16, -2)
+  |> should.equal(False)
+  maths.is_power(-16, 2)
+  |> should.equal(False)
+  maths.is_power(1_073_741_824, 2)
+  |> should.equal(True)
+  maths.is_power(1_073_741_825, 2)
+  |> should.equal(False)
+  maths.is_power(1_073_741_824, -2)
+  |> should.equal(True)
+  maths.is_power(-1_073_741_824, -2)
+  |> should.equal(False)
+  maths.is_power(0, 0)
+  |> should.equal(True)
+  maths.is_power(1, 0)
+  |> should.equal(True)
+  maths.is_power(2, 0)
   |> should.equal(False)
 }
 
@@ -75,6 +123,10 @@ pub fn int_is_perfect_test() {
   maths.is_perfect(3)
   |> should.equal(False)
   maths.is_perfect(13)
+  |> should.equal(False)
+  maths.is_perfect(0)
+  |> should.equal(False)
+  maths.is_perfect(-6)
   |> should.equal(False)
 }
 
@@ -98,20 +150,30 @@ pub fn int_is_prime_test() {
   |> should.equal(False)
   maths.is_prime(7919)
   |> should.equal(True)
+  maths.is_prime(999_983)
+  |> should.equal(True)
   // Test 1st Carmichael number
   maths.is_prime(561)
   |> should.equal(False)
   // Test 2nd Carmichael number
   maths.is_prime(1105)
   |> should.equal(False)
+  maths.is_prime(1_000_000)
+  |> should.equal(False)
 }
 
 pub fn is_between_test() {
+  maths.is_between(4.9, 5.0, 6.0)
+  |> should.equal(False)
   maths.is_between(5.5, 5.0, 6.0)
   |> should.equal(True)
+  maths.is_between(6.1, 5.0, 6.0)
+  |> should.equal(False)
   maths.is_between(5.0, 5.0, 6.0)
   |> should.equal(False)
   maths.is_between(6.0, 5.0, 6.0)
+  |> should.equal(False)
+  maths.is_between(5.5, 6.0, 5.0)
   |> should.equal(False)
 }
 
@@ -120,11 +182,19 @@ pub fn is_divisible_test() {
   |> should.equal(True)
   maths.is_divisible(7, 3)
   |> should.equal(False)
+  maths.is_divisible(10, 0)
+  |> should.equal(False)
+  maths.is_divisible(0, 0)
+  |> should.equal(False)
 }
 
 pub fn is_multiple_test() {
   maths.is_multiple(15, 5)
   |> should.equal(True)
   maths.is_multiple(14, 5)
+  |> should.equal(False)
+  maths.is_multiple(10, 0)
+  |> should.equal(False)
+  maths.is_multiple(0, 0)
   |> should.equal(False)
 }

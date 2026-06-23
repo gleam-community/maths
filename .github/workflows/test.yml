@@ -13,6 +13,10 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        gleam-version: ["1.14.0", "1.17.0"]
 
     steps:
       - uses: actions/checkout@v4
@@ -20,13 +24,14 @@ jobs:
       - uses: erlef/setup-beam@v1
         with:
           otp-version: "28.0"
-          gleam-version: "1.14.0"
+          gleam-version: ${{ matrix.gleam-version }}
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "20.x"
+          node-version: "24.x"
 
-      - run: gleam format --check
+      - if: matrix.gleam-version == '1.17.0'
+        run: gleam format --check
 
       - run: gleam test --target erlang
       - run: gleam test --target javascript

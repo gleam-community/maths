@@ -3,7 +3,7 @@ import gleam_community/maths
 import gleeunit/should
 
 pub fn acos_test() {
-  let assert Ok(tol) = float.power(10.0, -6.0)
+  let assert Ok(tol) = float.power(10.0, -9.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   let assert Ok(result) = maths.acos(1.0)
@@ -13,7 +13,7 @@ pub fn acos_test() {
 
   let assert Ok(result) = maths.acos(0.5)
   result
-  |> maths.is_close(1.047197, 0.0, tol)
+  |> maths.is_close(1.0471975511965979, 0.0, tol)
   |> should.be_true()
 
   // Check that we get an error when the function is evaluated
@@ -26,12 +26,17 @@ pub fn acos_test() {
 }
 
 pub fn acosh_test() {
-  let assert Ok(tol) = float.power(10.0, -6.0)
+  let assert Ok(tol) = float.power(10.0, -9.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   let assert Ok(result) = maths.acosh(1.0)
   result
   |> maths.is_close(0.0, 0.0, tol)
+  |> should.be_true()
+
+  let assert Ok(result) = maths.acosh(2.0)
+  result
+  |> maths.is_close(1.3169578969248166, 0.0, tol)
   |> should.be_true()
 
   // Check that we get an error when the function is evaluated
@@ -46,10 +51,10 @@ pub fn asin_test() {
   maths.asin(0.0)
   |> should.equal(Ok(0.0))
 
-  let assert Ok(tol) = float.power(10.0, -6.0)
+  let assert Ok(tol) = float.power(10.0, -9.0)
   let assert Ok(result) = maths.asin(0.5)
   result
-  |> maths.is_close(0.523598, 0.0, tol)
+  |> maths.is_close(0.5235987755982989, 0.0, tol)
   |> should.be_true()
 
   // Check that we get an error when the function is evaluated
@@ -62,7 +67,7 @@ pub fn asin_test() {
 }
 
 pub fn asinh_test() {
-  let assert Ok(tol) = float.power(10.0, -6.0)
+  let assert Ok(tol) = float.power(10.0, -9.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   maths.asinh(0.0)
@@ -70,12 +75,16 @@ pub fn asinh_test() {
   |> should.be_true()
 
   maths.asinh(0.5)
-  |> maths.is_close(0.481211, 0.0, tol)
+  |> maths.is_close(0.48121182505960347, 0.0, tol)
+  |> should.be_true()
+
+  maths.asinh(-0.5)
+  |> maths.is_close(-0.48121182505960347, 0.0, tol)
   |> should.be_true()
 }
 
 pub fn atan_test() {
-  let assert Ok(tol) = float.power(10.0, -6.0)
+  let assert Ok(tol) = float.power(10.0, -9.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   maths.atan(0.0)
@@ -83,12 +92,12 @@ pub fn atan_test() {
   |> should.be_true()
 
   maths.atan(0.5)
-  |> maths.is_close(0.463647, 0.0, tol)
+  |> maths.is_close(0.4636476090008061, 0.0, tol)
   |> should.be_true()
 }
 
 pub fn math_atan2_test() {
-  let assert Ok(tol) = float.power(10.0, -6.0)
+  let assert Ok(tol) = float.power(10.0, -9.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   maths.atan2(0.0, 0.0)
@@ -136,7 +145,7 @@ pub fn math_atan2_test() {
 }
 
 pub fn atanh_test() {
-  let assert Ok(tol) = float.power(10.0, -6.0)
+  let assert Ok(tol) = float.power(10.0, -9.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   let assert Ok(result) = maths.atanh(0.0)
@@ -146,7 +155,7 @@ pub fn atanh_test() {
 
   let assert Ok(result) = maths.atanh(0.5)
   result
-  |> maths.is_close(0.549306, 0.0, tol)
+  |> maths.is_close(0.5493061443340548, 0.0, tol)
   |> should.be_true()
 
   // Check that we get an error when the function is evaluated
@@ -165,7 +174,7 @@ pub fn atanh_test() {
 }
 
 pub fn cos_test() {
-  let assert Ok(tol) = float.power(10.0, -6.0)
+  let assert Ok(tol) = float.power(10.0, -9.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   maths.cos(0.0)
@@ -177,12 +186,12 @@ pub fn cos_test() {
   |> should.be_true()
 
   maths.cos(0.5)
-  |> maths.is_close(0.877582, 0.0, tol)
+  |> maths.is_close(0.8775825618903728, 0.0, tol)
   |> should.be_true()
 }
 
 pub fn cosh_test() {
-  let assert Ok(tol) = float.power(10.0, -6.0)
+  let assert Ok(tol) = float.power(10.0, -9.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   maths.cosh(0.0)
@@ -190,7 +199,7 @@ pub fn cosh_test() {
   |> should.be_true()
 
   maths.cosh(0.5)
-  |> maths.is_close(1.127625, 0.0, tol)
+  |> maths.is_close(1.1276259652063807, 0.0, tol)
   |> should.be_true()
   // An (overflow) error might occur when given an input
   // value that will result in a too large output value
@@ -199,7 +208,7 @@ pub fn cosh_test() {
 }
 
 pub fn sin_test() {
-  let assert Ok(tol) = float.power(10.0, -6.0)
+  let assert Ok(tol) = float.power(10.0, -9.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   maths.sin(0.0)
@@ -211,12 +220,12 @@ pub fn sin_test() {
   |> should.be_true()
 
   maths.sin(0.5)
-  |> maths.is_close(0.479425, 0.0, tol)
+  |> maths.is_close(0.479425538604203, 0.0, tol)
   |> should.be_true()
 }
 
 pub fn sinh_test() {
-  let assert Ok(tol) = float.power(10.0, -6.0)
+  let assert Ok(tol) = float.power(10.0, -9.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   maths.sinh(0.0)
@@ -224,7 +233,7 @@ pub fn sinh_test() {
   |> should.be_true()
 
   maths.sinh(0.5)
-  |> maths.is_close(0.521095, 0.0, tol)
+  |> maths.is_close(0.5210953054937474, 0.0, tol)
   |> should.be_true()
   // An (overflow) error might occur when given an input
   // value that will result in a too large output value
@@ -233,52 +242,69 @@ pub fn sinh_test() {
 }
 
 pub fn math_tan_test() {
-  let assert Ok(tol) = float.power(10.0, -6.0)
+  let assert Ok(tol) = float.power(10.0, -9.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
-  maths.tan(0.0)
+  let assert Ok(tan_zero) = maths.tan(0.0)
+  tan_zero
   |> maths.is_close(0.0, 0.0, tol)
   |> should.be_true()
 
-  maths.tan(0.5)
-  |> maths.is_close(0.546302, 0.0, tol)
+  let assert Ok(tan_half) = maths.tan(0.5)
+  tan_half
+  |> maths.is_close(0.5463024898437905, 0.0, tol)
   |> should.be_true()
 
-  maths.tan(maths.pi() /. 4.0)
+  let assert Ok(tan_pi_quarter) = maths.tan(maths.pi() /. 4.0)
+  tan_pi_quarter
   |> maths.is_close(1.0, 0.0, tol)
   |> should.be_true()
 
-  maths.tan(-1.0 *. maths.pi() /. 4.0)
+  let assert Ok(tan_negative_pi_quarter) = maths.tan(-1.0 *. maths.pi() /. 4.0)
+  tan_negative_pi_quarter
   |> maths.is_close(-1.0, 0.0, tol)
   |> should.be_true()
 
   // Test periodicity: tan(x) = tan(x + π)
-  maths.tan(0.5 +. maths.pi())
-  |> maths.is_close(maths.tan(0.5), 0.0, tol)
+  let assert Ok(tan_periodic) = maths.tan(0.5 +. maths.pi())
+  tan_periodic
+  |> maths.is_close(tan_half, 0.0, tol)
   |> should.be_true()
 
   // Test symmetry: tan(-x) = -tan(x)
-  maths.tan(-0.75)
-  |> maths.is_close(-1.0 *. maths.tan(0.75), 0.0, tol)
+  let assert Ok(tan_negative) = maths.tan(-0.75)
+  let assert Ok(tan_positive) = maths.tan(0.75)
+  tan_negative
+  |> maths.is_close(-1.0 *. tan_positive, 0.0, tol)
   |> should.be_true()
+
+  // Exact poles return Error(Nil); nearby values remain finite and are
+  // checked below.
+  maths.tan(maths.pi() /. 2.0)
+  |> should.be_error()
+
+  maths.tan(-1.0 *. maths.pi() /. 2.0)
+  |> should.be_error()
 
   // Near asymptote: pi/2 from below so the result
   // should be large positive number
   let assert Ok(large_number) = float.power(10.0, 6.0)
   let assert Ok(small_number) = float.power(10.0, -6.0)
-  let result =
-    maths.tan(maths.pi() /. 2.0 -. 1.0 *. small_number) >. large_number
+  let assert Ok(tan_near_left) =
+    maths.tan(maths.pi() /. 2.0 -. 1.0 *. small_number)
+  let result = tan_near_left >. large_number
   should.be_true(result)
 
-  // Near asymptote: pi/2 from above so the result 
-  // should be a large negative number 
-  let result =
-    maths.tan(maths.pi() /. 2.0 +. 1.0 *. small_number) <. -1.0 *. large_number
+  // Near asymptote: pi/2 from above so the result
+  // should be a large negative number
+  let assert Ok(tan_near_right) =
+    maths.tan(maths.pi() /. 2.0 +. 1.0 *. small_number)
+  let result = tan_near_right <. -1.0 *. large_number
   should.be_true(result)
 }
 
 pub fn math_tanh_test() {
-  let assert Ok(tol) = float.power(10.0, -6.0)
+  let assert Ok(tol) = float.power(10.0, -9.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   maths.tanh(0.0)
@@ -294,12 +320,12 @@ pub fn math_tanh_test() {
   |> should.be_true()
 
   maths.tanh(0.5)
-  |> maths.is_close(0.462117, 0.0, tol)
+  |> maths.is_close(0.46211715726000974, 0.0, tol)
   |> should.be_true()
 }
 
 pub fn exponential_test() {
-  let assert Ok(tol) = float.power(10.0, -6.0)
+  let assert Ok(tol) = float.power(10.0, -9.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   maths.exponential(0.0)
@@ -307,7 +333,7 @@ pub fn exponential_test() {
   |> should.be_true()
 
   maths.exponential(0.5)
-  |> maths.is_close(1.648721, 0.0, tol)
+  |> maths.is_close(1.6487212707001282, 0.0, tol)
   |> should.be_true()
   // An (overflow) error might occur when given an input
   // value that will result in a too large output value
@@ -316,7 +342,7 @@ pub fn exponential_test() {
 }
 
 pub fn natural_logarithm_test() {
-  let assert Ok(tol) = float.power(10.0, -6.0)
+  let assert Ok(tol) = float.power(10.0, -9.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   let assert Ok(result) = maths.natural_logarithm(1.0)
@@ -326,17 +352,20 @@ pub fn natural_logarithm_test() {
 
   let assert Ok(result) = maths.natural_logarithm(0.5)
   result
-  |> maths.is_close(-0.693147, 0.0, tol)
+  |> maths.is_close(-0.6931471805599453, 0.0, tol)
   |> should.be_true()
 
   // Check that we get an error when the function is evaluated
   // outside its domain
+  maths.natural_logarithm(0.0)
+  |> should.be_error()
+
   maths.natural_logarithm(-1.0)
   |> should.be_error()
 }
 
 pub fn logarithm_test() {
-  let assert Ok(tol) = float.power(10.0, -6.0)
+  let assert Ok(tol) = float.power(10.0, -9.0)
 
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
@@ -356,6 +385,12 @@ pub fn logarithm_test() {
   |> should.be_true()
   // Check that we get an error when the function is evaluated
   // outside its domain
+  maths.logarithm(0.0, 10.0)
+  |> should.be_error()
+
+  maths.logarithm(10.0, 0.0)
+  |> should.be_error()
+
   maths.logarithm(1.0, 1.0)
   |> should.be_error()
 
@@ -380,7 +415,7 @@ pub fn logarithm_test() {
 }
 
 pub fn logarithm_2_test() {
-  let assert Ok(tol) = float.power(10.0, -6.0)
+  let assert Ok(tol) = float.power(10.0, -9.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   let assert Ok(result) = maths.logarithm_2(1.0)
@@ -395,17 +430,20 @@ pub fn logarithm_2_test() {
 
   let assert Ok(result) = maths.logarithm_2(5.0)
   result
-  |> maths.is_close(2.321928, 0.0, tol)
+  |> maths.is_close(2.321928094887362, 0.0, tol)
   |> should.be_true()
 
   // Check that we get an error when the function is evaluated
   // outside its domain
+  maths.logarithm_2(0.0)
+  |> should.be_error()
+
   maths.logarithm_2(-1.0)
   |> should.be_error()
 }
 
 pub fn logarithm_10_test() {
-  let assert Ok(tol) = float.power(10.0, -6.0)
+  let assert Ok(tol) = float.power(10.0, -9.0)
   // Check that the function agrees, at some arbitrary input
   // points, with known function values
   let assert Ok(result) = maths.logarithm_10(1.0)
@@ -420,16 +458,21 @@ pub fn logarithm_10_test() {
 
   let assert Ok(result) = maths.logarithm_10(50.0)
   result
-  |> maths.is_close(1.69897, 0.0, tol)
+  |> maths.is_close(1.6989700043360187, 0.0, tol)
   |> should.be_true()
 
   // Check that we get an error when the function is evaluated
   // outside its domain
+  maths.logarithm_10(0.0)
+  |> should.be_error()
+
   maths.logarithm_10(-1.0)
   |> should.be_error()
 }
 
 pub fn nth_root_test() {
+  let assert Ok(tol) = float.power(10.0, -9.0)
+
   maths.nth_root(9.0, 2)
   |> should.equal(Ok(3.0))
 
@@ -442,23 +485,39 @@ pub fn nth_root_test() {
   maths.nth_root(256.0, 4)
   |> should.equal(Ok(4.0))
 
-  // An error should be returned as an imaginary number would otherwise
-  // have to be returned
+  // Negative input values have real roots for odd root degrees
+  let assert Ok(result) = maths.nth_root(-27.0, 3)
+  result
+  |> maths.is_close(-3.0, 0.0, tol)
+  |> should.be_true()
+
+  // Negative input values have no real root for even root degrees
   maths.nth_root(-1.0, 4)
+  |> should.be_error()
+
+  maths.nth_root(4.0, 0)
+  |> should.be_error()
+
+  maths.nth_root(4.0, -2)
   |> should.be_error()
 }
 
 pub fn constants_test() {
   let assert Ok(tolerance) = float.power(10.0, -12.0)
 
-  // Test that the constant is approximately equal to 2.7128...
+  // Test that the constant is approximately equal to 2.71828...
   maths.e()
   |> maths.is_close(2.7182818284590452353602, 0.0, tolerance)
   |> should.be_true()
 
-  // Test that the constant is approximately equal to 2.7128...
+  // Test that the constant is approximately equal to 3.14159...
   maths.pi()
-  |> maths.is_close(3.14159265359, 0.0, tolerance)
+  |> maths.is_close(3.141592653589793, 0.0, tolerance)
+  |> should.be_true()
+
+  // Test that tau is equal to 2π.
+  maths.tau()
+  |> maths.is_close(2.0 *. maths.pi(), 0.0, tolerance)
   |> should.be_true()
 
   // Test that the constant is approximately equal to 1.6180...
